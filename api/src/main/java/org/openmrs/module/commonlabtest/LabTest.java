@@ -67,6 +67,10 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 		return null;
 	}
 	
+	public Order getOrder() {
+		return order;
+	}
+	
 	public void setOrder(Order order) {
 		this.order = order;
 	}

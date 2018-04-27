@@ -218,4 +218,14 @@ public class CommonLabTestDAO {
 	public void purgeLabTestSample(LabTestSample labTestSample) {
 		sessionFactory.getCurrentSession().delete(labTestSample);
 	}
+	
+	public List<LabTest> getLabTestsByAttributeType(LabTestAttributeType labTestAttributeType) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public List<LabTest> getLabTestsByType(LabTestType labTestType) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
