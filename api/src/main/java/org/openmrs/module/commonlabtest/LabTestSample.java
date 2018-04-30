@@ -26,6 +26,8 @@ public class LabTestSample extends BaseOpenmrsData {
 	
 	private Integer labTestSampleId;
 	
+	private LabTest labTest;
+	
 	private Concept specimenType;
 	
 	private Concept site;
@@ -60,6 +62,20 @@ public class LabTestSample extends BaseOpenmrsData {
 	@Override
 	public void setId(Integer id) {
 		this.labTestSampleId = id;
+	}
+	
+	/**
+	 * @return the labTest
+	 */
+	public LabTest getLabTest() {
+		return labTest;
+	}
+	
+	/**
+	 * @param labTest the labTest to set
+	 */
+	public void setLabTest(LabTest labTest) {
+		this.labTest = labTest;
 	}
 	
 	/**

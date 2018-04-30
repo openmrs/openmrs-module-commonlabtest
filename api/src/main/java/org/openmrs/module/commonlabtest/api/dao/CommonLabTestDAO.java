@@ -13,17 +13,25 @@
  */
 package org.openmrs.module.commonlabtest.api.dao;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.Concept;
+import org.openmrs.Encounter;
+import org.openmrs.Patient;
+import org.openmrs.Provider;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
+import org.openmrs.module.commonlabtest.LabTestGroup;
 import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.LabTestType;
 
@@ -32,16 +40,11 @@ import org.openmrs.module.commonlabtest.LabTestType;
  */
 public class CommonLabTestDAO {
 	
+	private static final int MAX_FETCH_LIMIT = 100;
+	
 	protected final Log log = LogFactory.getLog(this.getClass());
 	
 	private SessionFactory sessionFactory;
-	
-	/**
-	 * @param sessionFactory the sessionFactory to set
-	 */
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
 	
 	/**
 	 * @return the sessionFactory
@@ -50,39 +53,11 @@ public class CommonLabTestDAO {
 		return sessionFactory;
 	}
 	
-	/* Lab Test Type */
-	public LabTestType getLabTestTypeByUuid(String uuid) {
-		// TODO
-		return null;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<LabTestType> getAllLabTestTypes(boolean includeRetired) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestType.class);
-		criteria.addOrder(Order.asc("name"));
-		if (!includeRetired) {
-			criteria.add(Restrictions.eq("retired", false));
-		}
-		return criteria.list();
-	}
-	
-	public LabTestType getLabTestType(Integer labTestTypeId) {
-		return (LabTestType) sessionFactory.getCurrentSession().get(LabTestType.class, labTestTypeId);
-	}
-	
-	public LabTestType saveLabTestType(LabTestType labTestType) {
-		sessionFactory.getCurrentSession().save(labTestType);
-		return labTestType;
-	}
-	
-	public void purgeLabTestType(LabTestType labTestType) {
-		sessionFactory.getCurrentSession().delete(labTestType);
-	}
-	
-	/* Lab Test Attribute Type */
-	public LabTestAttributeType getLabTestAttributeTypeByUuid(String uuid) {
-		// TODO
-		return null;
+	/**
+	 * @param sessionFactory the sessionFactory to set
+	 */
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -96,12 +71,51 @@ public class CommonLabTestDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<LabTestAttributeType> getLabTestAttributesByTestType(Integer labTestTypeId, boolean includeRetired) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttributeType.class);
-		criteria.createAlias("labTestType", "ltt").add(Restrictions.eq("ltt.labTestTypeId", labTestTypeId));
+	public List<LabTestType> getAllLabTestTypes(boolean includeRetired) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestType.class);
+		criteria.addOrder(Order.asc("name"));
 		if (!includeRetired) {
 			criteria.add(Restrictions.eq("retired", false));
 		}
+		return criteria.list();
+	}
+	
+	public LabTest getLabTest(Integer labTestId) {
+		return (LabTest) sessionFactory.getCurrentSession().get(LabTest.class, labTestId);
+	}
+	
+	public LabTestAttribute getLabTestAttribute(Integer labTestAttributeId) {
+		return (LabTestAttribute) sessionFactory.getCurrentSession().get(LabTestAttribute.class, labTestAttributeId);
+	}
+	
+	public LabTestAttribute getLabTestAttributeByUuid(String uuid) {
+		return (LabTestAttribute) sessionFactory.getCurrentSession()
+		        .createQuery("from LabTestAttribute l where l.uuid = :uuid").setString("uuid", uuid).uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, LabTestType labTestType,
+	        Patient patient, String valueReference, Date from, Date to, boolean includeVoided) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttribute.class);
+		if (labTestAttributeType != null) {
+			// TODO:
+		}
+		if (labTestType != null) {
+			// TODO:
+		}
+		if (patient != null) {
+			// TODO:
+		}
+		if (valueReference != null) {
+			criteria.add(Restrictions.ilike("valueReference", valueReference, MatchMode.START));
+		}
+		if (from != null && to != null) {
+			criteria.add(Restrictions.between("dateCreated", from, to));
+		}
+		if (!includeVoided) {
+			criteria.add(Restrictions.eq("voided", false));
+		}
+		criteria.addOrder(Order.asc("testOrderId")).addOrder(Order.asc("voided")).list();
 		return criteria.list();
 	}
 	
@@ -110,38 +124,110 @@ public class CommonLabTestDAO {
 		    labTestAttributeTypeId);
 	}
 	
-	public LabTestAttributeType saveLabTestAttributeType(LabTestAttributeType labTestAttributeType) {
-		sessionFactory.getCurrentSession().save(labTestAttributeType);
-		return labTestAttributeType;
+	public LabTestAttributeType getLabTestAttributeTypeByUuid(String uuid) {
+		return (LabTestAttributeType) sessionFactory.getCurrentSession()
+		        .createQuery("from LabTestAttributeType l where l.uuid = :uuid").setString("uuid", uuid).uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname,
+	        boolean includeRetired) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttributeType.class);
+		if (name != null) {
+			criteria.add(Restrictions.ilike("name", name));
+		}
+		if (datatypeClassname != null) {
+			criteria.add(Restrictions.eq("datatypeClassname", datatypeClassname));
+		}
+		if (!includeRetired) {
+			criteria.add(Restrictions.eq("retired", false));
+		}
+		criteria.addOrder(Order.asc("name")).addOrder(Order.asc("retired")).list();
+		return criteria.list();
+	}
+	
+	public LabTest getLabTestByUuid(String uuid) {
+		return (LabTest) sessionFactory.getCurrentSession().createQuery("from LabTest l where l.uuid = :uuid")
+		        .setString("uuid", uuid).uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LabTest> getLabTests(LabTestType labTestType, Patient patient, LabTestSample sample, String orderNumber,
+	        String referenceNumber, Concept orderConcept, Provider orderer, Date from, Date to,
+	        boolean includeVoided) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTest.class);
+		criteria.createAlias("order", "o");
+		if (labTestType != null) {
+			criteria.add(Restrictions.eq("labTestType", labTestType));
+		}
+		if (patient != null) {
+			criteria.add(Restrictions.eq("o.patient", patient));
+		}
+		if (sample != null) {
+			// TODO:
+		}
+		if (orderNumber != null) {
+			criteria.add(Restrictions.ilike("o.orderReference", orderNumber, MatchMode.START));
+		}
+		if (orderConcept != null) {
+			criteria.add(Restrictions.eq("o.concept", orderConcept));
+		}
+		if (orderer != null) {
+			criteria.add(Restrictions.eq("o.orderer", orderer));
+		}
+		if (referenceNumber != null) {
+			criteria.add(Restrictions.ilike("referenceNumber", referenceNumber, MatchMode.START));
+		}
+		if (from != null && to != null) {
+			criteria.add(Restrictions.between("dateCreated", from, to));
+		}
+		if (!includeVoided) {
+			criteria.add(Restrictions.eq("voided", false));
+		}
+		criteria.addOrder(Order.asc("testOrderId")).addOrder(Order.asc("voided")).list();
+		return criteria.list();
+	}
+	
+	public LabTestSample getLabTestSample(Integer labTestSampleId) {
+		return (LabTestSample) sessionFactory.getCurrentSession().get(LabTestSample.class, labTestSampleId);
+	}
+	
+	public LabTestSample getLabTestSampleByUuid(String uuid) {
+		return (LabTestSample) sessionFactory.getCurrentSession().createQuery("from LabTestSample l where l.uuid = :uuid")
+		        .setString("uuid", uuid).uniqueResult();
+	}
+	
+	public List<LabTestSample> getLabTestSamples(Patient patient, Provider collector, boolean includeVoided) {
+		return null;
+	}
+	
+	public LabTestType getLabTestType(Integer labTestTypeId) {
+		return (LabTestType) sessionFactory.getCurrentSession().get(LabTestType.class, labTestTypeId);
+	}
+	
+	public LabTestType getLabTestTypeByUuid(String uuid) {
+		return (LabTestType) sessionFactory.getCurrentSession().createQuery("from LabTestType l where l.uuid = :uuid")
+		        .setString("uuid", uuid).uniqueResult();
+	}
+	
+	public void purgeLabTest(LabTest labTest) {
+		sessionFactory.getCurrentSession().delete(labTest);
+	}
+	
+	public void purgeLabTestAttribute(LabTestAttribute labTestAttribute) {
+		sessionFactory.getCurrentSession().delete(labTestAttribute);
 	}
 	
 	public void purgeLabTestAttributeType(LabTestAttributeType labTestAttributeType) {
 		sessionFactory.getCurrentSession().delete(labTestAttributeType);
 	}
 	
-	/* Lab Test */
-	public LabTest getLabTestByUuid(String uuid) {
-		// TODO
-		return null;
+	public void purgeLabTestSample(LabTestSample labTestSample) {
+		sessionFactory.getCurrentSession().delete(labTestSample);
 	}
 	
-	public LabTest getLabTest(Integer labTestId) {
-		return (LabTest) sessionFactory.getCurrentSession().get(LabTest.class, labTestId);
-	}
-	
-	public List<LabTest> getLabTestsByPatient(Integer patientId, boolean includeVoided) {
-		// TODO:
-		return null;
-	}
-	
-	public List<LabTest> getLabTestsByPatientAndType(Integer patientId, Integer labTestTypeId, boolean includeVoided) {
-		// TODO: when creating criteria, apply order clause on test type
-		return null;
-	}
-	
-	public List<LabTest> getLabTestsBySample(Integer labTestSampleId, boolean includeVoided) {
-		// TODO: when creating criteria, apply order clause on test date
-		return null;
+	public void purgeLabTestType(LabTestType labTestType) {
+		sessionFactory.getCurrentSession().delete(labTestType);
 	}
 	
 	public LabTest saveLabTest(LabTest labTest) {
@@ -149,65 +235,14 @@ public class CommonLabTestDAO {
 		return labTest;
 	}
 	
-	public void purgeLabTest(LabTest labTest) {
-		sessionFactory.getCurrentSession().delete(labTest);
-	}
-	
-	/* Lab Test Attribute */
-	public LabTestAttribute getLabTestAttributeByUuid(String uuid) {
-		return null;
-	}
-	
-	public LabTestAttributeType getLabTestAttribute(Integer labTestAttributeId) {
-		// TODO:
-		return null;
-	}
-	
-	public List<LabTestAttributeType> getLabTestAttributesByAttributeType(Integer labTestAttributeTypeId,
-	        boolean includeRetired) {
-		// TODO:
-		return null;
-	}
-	
-	public List<LabTestAttributeType> getLabTestAttributesByPatient(Integer patientId, boolean includeRetired) {
-		// TODO:
-		return null;
-	}
-	
-	public List<LabTestAttributeType> getLabTestAttributesByPatientAndAttributeType(Integer labTestAttributeTypeId,
-	        Integer patientId, boolean includeRetired) {
-		// TODO:
-		return null;
-	}
-	
 	public LabTestAttribute saveLabTestAttribute(LabTestAttribute labTestAttribute) {
 		sessionFactory.getCurrentSession().save(labTestAttribute);
 		return labTestAttribute;
 	}
 	
-	public void purgeLabTestAttribute(LabTestAttribute labTestAttribute) {
-		sessionFactory.getCurrentSession().delete(labTestAttribute);
-	}
-	
-	/* Lab Test Sample */
-	public LabTestSample getLabTestSampleByUuid(String uuid) {
-		// TODO
-		return null;
-	}
-	
-	public LabTestSample getLabTestSample(Integer labTestSampleId) {
-		// TODO:
-		return null;
-	}
-	
-	public List<LabTestSample> getLabTestSamplesByPatient(Integer patientId, boolean includeVoided) {
-		// TODO:
-		return null;
-	}
-	
-	public List<LabTestSample> getLabTestSamplesByCollector(Integer collectorId, boolean includeVoided) {
-		// TODO:
-		return null;
+	public LabTestAttributeType saveLabTestAttributeType(LabTestAttributeType labTestAttributeType) {
+		sessionFactory.getCurrentSession().save(labTestAttributeType);
+		return labTestAttributeType;
 	}
 	
 	public LabTestSample saveLabTestSample(LabTestSample labTestSample) {
@@ -215,17 +250,111 @@ public class CommonLabTestDAO {
 		return labTestSample;
 	}
 	
-	public void purgeLabTestSample(LabTestSample labTestSample) {
-		sessionFactory.getCurrentSession().delete(labTestSample);
+	public LabTestType saveLabTestType(LabTestType labTestType) {
+		sessionFactory.getCurrentSession().save(labTestType);
+		return labTestType;
 	}
 	
-	public List<LabTest> getLabTestsByAttributeType(LabTestAttributeType labTestAttributeType) {
+	public LabTest getLabTest(Encounter orderEncounter) {
+		// TODO
+		return null;
+	}
+	
+	public List<LabTestSample> getLabTestSamples(org.openmrs.Order order, boolean includeVoided) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
-	public List<LabTest> getLabTestsByType(LabTestType labTestType) {
-		// TODO Auto-generated method stub
-		return null;
+	@SuppressWarnings("unchecked")
+	public List<LabTestType> getAllLabTestTypes(String name, String shortName, LabTestGroup testGroup,
+	        Concept referenceConcept, boolean includeRetired) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestType.class);
+		if (name != null) {
+			criteria.add(Restrictions.ilike("name", name));
+		}
+		if (shortName != null) {
+			criteria.add(Restrictions.ilike("shortName", name));
+		}
+		if (testGroup != null) {
+			criteria.add(Restrictions.eq("testGroup", testGroup));
+		}
+		if (referenceConcept != null) {
+			criteria.add(Restrictions.ilike("referenceConcept", referenceConcept));
+		}
+		if (!includeRetired) {
+			criteria.add(Restrictions.eq("retired", false));
+		}
+		criteria.addOrder(Order.asc("name")).addOrder(Order.asc("retired")).list();
+		return criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LabTest> getNLabTests(Patient patient, int n, boolean firstNObjects, boolean lastNObjects,
+	        boolean includeVoided) {
+		// Disallow fetching more than 100 records per query
+		if (n > MAX_FETCH_LIMIT) {
+			n = MAX_FETCH_LIMIT;
+		}
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTest.class);
+		List<LabTest> firstN = null;
+		List<LabTest> lastN = null;
+		if (patient != null) {
+			criteria.add(Restrictions.eq("order.patient", patient));
+		}
+		if (!includeVoided) {
+			criteria.add(Restrictions.eq("voided", false));
+		}
+		if (firstNObjects) {
+			criteria.addOrder(Order.asc("dateCreated"));
+			firstN = criteria.list();
+		}
+		if (lastNObjects) {
+			criteria.addOrder(Order.desc("dateCreated"));
+			lastN = criteria.list();
+		}
+		criteria.setMaxResults(n);
+		List<LabTest> list = new ArrayList<LabTest>();
+		if (firstN != null) {
+			list.addAll(firstN);
+		}
+		if (lastN != null) {
+			list.addAll(lastN);
+		}
+		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LabTestSample> getNLabTestSamples(Patient patient, int n, boolean firstNObjects, boolean lastNObjects,
+	        boolean includeVoided) {
+		// Disallow fetching more than 100 records per query
+		if (n > MAX_FETCH_LIMIT) {
+			n = MAX_FETCH_LIMIT;
+		}
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
+		List<LabTestSample> firstN = null;
+		List<LabTestSample> lastN = null;
+		if (patient != null) {
+			criteria.add(Restrictions.eq("labTest.order.patient", patient));
+		}
+		if (!includeVoided) {
+			criteria.add(Restrictions.eq("voided", false));
+		}
+		if (firstNObjects) {
+			criteria.addOrder(Order.asc("dateCreated"));
+			firstN = criteria.list();
+		}
+		if (lastNObjects) {
+			criteria.addOrder(Order.desc("dateCreated"));
+			lastN = criteria.list();
+		}
+		criteria.setMaxResults(n);
+		List<LabTestSample> list = new ArrayList<LabTestSample>();
+		if (firstN != null) {
+			list.addAll(firstN);
+		}
+		if (lastN != null) {
+			list.addAll(lastN);
+		}
+		return list;
 	}
 }

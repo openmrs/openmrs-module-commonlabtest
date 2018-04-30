@@ -70,11 +70,11 @@ public class LabTestType extends BaseOpenmrsMetadata {
 		this.testGroup = testGroup;
 	}
 	
-	public Boolean getIsSpecimenRequired() {
+	public Boolean isSpecimenRequired() {
 		return isSpecimenRequired;
 	}
 	
-	public void setIsSpecimenRequired(Boolean isSpecimenRequired) {
+	public void setSpecimenRequired(Boolean isSpecimenRequired) {
 		this.isSpecimenRequired = isSpecimenRequired;
 	}
 	

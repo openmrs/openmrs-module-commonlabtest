@@ -33,13 +33,17 @@ public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTes
 		this.labTestAttributeId = id;
 	}
 	
-	@Override
-	public LabTest getOwner() {
-		return null;
+	/**
+	 * @return the visit
+	 */
+	public LabTest getLabTest() {
+		return getOwner();
 	}
 	
-	@Override
-	public void setOwner(LabTest test) {
+	/**
+	 * @param labTest the visit to set
+	 */
+	public void setLabTest(LabTest labTest) {
+		setOwner(labTest);
 	}
-	
 }
