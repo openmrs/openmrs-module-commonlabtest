@@ -27,7 +27,7 @@ public class LabTestType extends BaseOpenmrsMetadata {
 	
 	private LabTestGroup testGroup;
 	
-	private Boolean isSpecimenRequired;
+	private Boolean requiresSpecimen;
 	
 	private Concept referenceConcept;
 	
@@ -70,12 +70,12 @@ public class LabTestType extends BaseOpenmrsMetadata {
 		this.testGroup = testGroup;
 	}
 	
-	public Boolean isSpecimenRequired() {
-		return isSpecimenRequired;
+	public Boolean getRequiresSpecimen() {
+		return requiresSpecimen;
 	}
 	
-	public void setSpecimenRequired(Boolean isSpecimenRequired) {
-		this.isSpecimenRequired = isSpecimenRequired;
+	public void setRequiresSpecimen(Boolean requiresSpecimen) {
+		this.requiresSpecimen = requiresSpecimen;
 	}
 	
 	public Concept getReferenceConcept() {

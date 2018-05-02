@@ -130,8 +130,7 @@ public class CommonLabTestDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname,
-	        boolean includeRetired) {
+	public List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname, boolean includeRetired) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttributeType.class);
 		if (name != null) {
 			criteria.add(Restrictions.ilike("name", name));
@@ -153,8 +152,7 @@ public class CommonLabTestDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<LabTest> getLabTests(LabTestType labTestType, Patient patient, LabTestSample sample, String orderNumber,
-	        String referenceNumber, Concept orderConcept, Provider orderer, Date from, Date to,
-	        boolean includeVoided) {
+	        String referenceNumber, Concept orderConcept, Provider orderer, Date from, Date to, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTest.class);
 		criteria.createAlias("order", "o");
 		if (labTestType != null) {

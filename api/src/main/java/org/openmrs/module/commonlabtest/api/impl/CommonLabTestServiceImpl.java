@@ -23,7 +23,6 @@ import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
-import org.openmrs.api.OrderService;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.commonlabtest.CommonLabTestConfig;
 import org.openmrs.module.commonlabtest.LabTest;
@@ -33,14 +32,13 @@ import org.openmrs.module.commonlabtest.LabTestGroup;
 import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.LabTestType;
+import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO;
 import org.springframework.transaction.annotation.Transactional;
 
-public class CommonLabTestServiceImpl extends BaseOpenmrsService {
+public class CommonLabTestServiceImpl extends BaseOpenmrsService implements CommonLabTestService {
 	
 	CommonLabTestDAO dao;
-	
-	OrderService orderService;
 	
 	/**
 	 * Injected in moduleApplicationContext.xml
@@ -50,19 +48,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Injected in moduleApplicationContext.xml
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getAllLabTestAttributeTypes(boolean)
 	 */
-	public void setOrderService(OrderService orderService) {
-		this.orderService = orderService;
-	}
-	
-	/**
-	 * Returns list of all LabTestAttributeType objects
-	 * 
-	 * @param includeRetired
-	 * @return
-	 * @throws APIException
-	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestAttributeType> getAllLabTestAttributeTypes(boolean includeRetired) throws APIException {
@@ -70,12 +58,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns list of all objects of LabTestType
-	 * 
-	 * @param includeRetired
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getAllLabTestTypes(boolean)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestType> getAllLabTestTypes(boolean includeRetired) throws APIException {
@@ -83,12 +68,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns first LabTest object by given Patient
-	 * 
-	 * @param patient
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getEarliestLabTest(org.openmrs.Patient)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTest getEarliestLabTest(Patient patient) throws APIException {
@@ -100,13 +82,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns first LabTestSample object by given Patient and LabTestSampleStatus
-	 * 
-	 * @param patient
-	 * @param status
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getEarliestLabTestSample(org.openmrs.Patient,
+	 *      org.openmrs.module.commonlabtest.LabTestSampleStatus)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTestSample getEarliestLabTestSample(Patient patient, LabTestSampleStatus status) throws APIException {
@@ -118,12 +97,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns a LabTest object by generated ID
-	 * 
-	 * @param labTestId
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTest(java.lang.Integer)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTest getLabTest(Integer labTestId) throws APIException {
@@ -131,12 +107,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns a LabTestAttribute object by its generated ID
-	 * 
-	 * @param labTestAttributeTypeId
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttribute(java.lang.Integer)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTestAttribute getLabTestAttribute(Integer labTestAttributeId) throws APIException {
@@ -144,13 +117,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns a LabTestAttribute object by uuid. It can be called by any authenticated user. It is
-	 * fetched in read only transaction.
-	 * 
-	 * @param uuid
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributeByUuid(java.lang.String)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTestAttribute getLabTestAttributeByUuid(String uuid) throws APIException {
@@ -158,19 +127,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Get a list of LabTestAttribute objects using various parameters available. This is similar to
-	 * getByExample(...) methods, except that instead of passing similar object, properties are
-	 * passed as parameters
-	 * 
-	 * @param labTestAttributeType
-	 * @param patient
-	 * @param valueReference
-	 * @param from
-	 * @param to
-	 * @param includeVoided
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType,
+	 *      org.openmrs.Patient, java.lang.String, java.util.Date, java.util.Date, boolean)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, Patient patient,
@@ -179,38 +139,38 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * @see List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType, Patient, String, Date,
-	 *      Date, boolean)
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType,
+	 *      boolean)
 	 */
+	@Override
 	public List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, boolean includeVoided)
 	        throws APIException {
 		return getLabTestAttributes(labTestAttributeType, null, null, null, null, includeVoided);
 	}
 	
 	/**
-	 * @see List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType, Patient, String, Date,
-	 *      Date, boolean)
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributes(org.openmrs.Patient,
+	 *      boolean)
 	 */
+	@Override
 	public List<LabTestAttribute> getLabTestAttributes(Patient patient, boolean includeVoided) throws APIException {
 		return getLabTestAttributes(null, patient, null, null, null, includeVoided);
 	}
 	
 	/**
-	 * @see List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType, Patient, String, Date,
-	 *      Date, boolean)
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributes(org.openmrs.Patient,
+	 *      org.openmrs.module.commonlabtest.LabTestAttributeType, boolean)
 	 */
+	@Override
 	public List<LabTestAttribute> getLabTestAttributes(Patient patient, LabTestAttributeType labTestAttributeType,
 	        boolean includeVoided) throws APIException {
 		return getLabTestAttributes(labTestAttributeType, patient, null, null, null, includeVoided);
 	}
 	
 	/**
-	 * Returns a LabTestAttributeType object by its generated ID
-	 * 
-	 * @param labTestAttributeTypeId
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributeType(java.lang.Integer)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTestAttributeType getLabTestAttributeType(Integer labTestAttributeTypeId) throws APIException {
@@ -218,13 +178,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns a LabTestAttributeType object by uuid. It can be called by any authenticated user. It
-	 * is fetched in read only transaction.
-	 * 
-	 * @param uuid
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributeTypeByUuid(java.lang.String)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTestAttributeType getLabTestAttributeTypeByUuid(String uuid) throws APIException {
@@ -232,16 +188,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Get a list of LabTestAttributeType objects using various parameters available. This is
-	 * similar to getByExample(...) methods, except that instead of passing similar object,
-	 * properties are passed as parameters
-	 * 
-	 * @param name
-	 * @param datatypeClassname
-	 * @param includeRetired
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributeTypes(java.lang.String,
+	 *      java.lang.String, boolean)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname, boolean includeRetired)
@@ -250,13 +200,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns a LabTest object by uuid. It can be called by any authenticated user. It is fetched
-	 * in read only transaction.
-	 * 
-	 * @param uuid
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestByUuid(java.lang.String)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTest getLabTestByUuid(String uuid) throws APIException {
@@ -264,30 +210,25 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns a LabTest object by Encounter object in LabTest Order object
-	 * 
-	 * @param orderEncounter
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTest(org.openmrs.Encounter)
 	 */
+	@Override
 	public LabTest getLabTest(Encounter orderEncounter) throws APIException {
 		return dao.getLabTest(orderEncounter);
 	}
 	
 	/**
-	 * @see LabTest getLabTest(Encounter orderEncounter)
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTest(org.openmrs.Order)
 	 */
+	@Override
 	public LabTest getLabTest(Order order) throws APIException {
 		return getLabTest(order.getEncounter());
 	}
 	
 	/**
-	 * Returns a LabTestSample object by its generated ID
-	 * 
-	 * @param labTestSampleId
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSample(java.lang.Integer)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTestSample getLabTestSample(Integer labTestSampleId) throws APIException {
@@ -295,13 +236,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns a LabTestSample object by uuid. It can be called by any authenticated user. It is
-	 * fetched in read only transaction.
-	 * 
-	 * @param uuid
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSampleByUuid(java.lang.String)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTestSample getLabTestSampleByUuid(String uuid) throws APIException {
@@ -309,23 +246,12 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Get a list of LabTestSample objects using various parameters available. This is similar to
-	 * getByExample(...) methods, except that instead of passing similar object, properties are
-	 * passed as parameters
-	 * 
-	 * @param labTest
-	 * @param patient
-	 * @param labSampleIdentifier
-	 * @param orderNumber
-	 * @param labReferenceNumber
-	 * @param specimenName
-	 * @param status
-	 * @param from
-	 * @param to
-	 * @param includeVoided
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest,
+	 *      org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSampleStatus,
+	 *      java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+	 *      org.openmrs.Provider, java.util.Date, java.util.Date, boolean)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestSample> getLabTestSamples(LabTest labTest, Patient patient, LabTestSampleStatus status,
@@ -336,16 +262,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns a list of LabTestSample objects by matching given identifier and/or order number
-	 * and/or lab reference number
-	 * 
-	 * @param labSampleIdentifier
-	 * @param orderNumber
-	 * @param labReferenceNumber
-	 * @param includeVoided
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(java.lang.String,
+	 *      java.lang.String, java.lang.String, boolean)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestSample> getLabTestSamples(String labSampleIdentifier, String orderNumber, String labReferenceNumber,
@@ -355,57 +275,46 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * @see List<LabTestSample> getLabTestSamples(LabTest, Patient, LabTestSampleStatus, String,
-	 *      String, String, String, Provider, Date, Date, boolean)
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest,
+	 *      boolean)
 	 */
+	@Override
 	public List<LabTestSample> getLabTestSamples(LabTest labTest, boolean includeVoided) throws APIException {
 		return getLabTestSamples(labTest, null, null, null, null, null, null, null, null, null, includeVoided);
 	}
 	
 	/**
-	 * @see List<LabTestSample> getLabTestSamples(LabTest, Patient, LabTestSampleStatus, String,
-	 *      String, String, String, Provider, Date, Date, boolean)
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(org.openmrs.Provider,
+	 *      boolean)
 	 */
+	@Override
 	public List<LabTestSample> getLabTestSamples(Provider collector, boolean includeVoided) throws APIException {
 		return getLabTestSamples(null, null, null, null, null, null, null, collector, null, null, includeVoided);
 	}
 	
 	/**
-	 * Returns list of LabTestSample objects by matching given order with associated LabTest Order
-	 * object
-	 * 
-	 * @param order
-	 * @param includeVoided
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(org.openmrs.Order,
+	 *      boolean)
 	 */
+	@Override
 	public List<LabTestSample> getLabTestSamples(Order order, boolean includeVoided) throws APIException {
 		return dao.getLabTestSamples(order, includeVoided);
 	}
 	
 	/**
-	 * Returns list of LabTestSample objects by matching status property and date range. This can be
-	 * used to get samples which are yet to be processed
-	 * 
-	 * @param status
-	 * @param from
-	 * @param to
-	 * @param includeVoided
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(org.openmrs.module.commonlabtest.LabTestSampleStatus,
+	 *      java.util.Date, java.util.Date, boolean)
 	 */
+	@Override
 	public List<LabTestSample> getLabTestSamples(LabTestSampleStatus status, Date from, Date to, boolean includeVoided)
 	        throws APIException {
 		return getLabTestSamples(null, null, status, null, null, null, null, null, from, to, includeVoided);
 	}
 	
 	/**
-	 * Returns LabTestType object by its generated ID
-	 * 
-	 * @param labTestTypeId
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestType(java.lang.Integer)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTestType getLabTestType(Integer labTestTypeId) throws APIException {
@@ -413,13 +322,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns LabTestType object by uuid. It can be called by any authenticated user. It is fetched
-	 * in read only transaction.
-	 * 
-	 * @param uuid
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestTypeByUuid(java.lang.String)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTestType getLabTestTypeByUuid(String uuid) throws APIException {
@@ -427,29 +332,21 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Get a list of LabTestType objects using various parameters available. This is similar to
-	 * getByExample(...) methods, except that instead of passing similar object, properties are
-	 * passed as parameters
-	 * 
-	 * @param name
-	 * @param shortName
-	 * @param testGroup
-	 * @param isSpecimenRequired
-	 * @param referenceConcept
-	 * @param includeRetired
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestTypes(java.lang.String,
+	 *      java.lang.String, org.openmrs.module.commonlabtest.LabTestGroup, java.lang.Boolean,
+	 *      org.openmrs.Concept, boolean)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup,
 	        final Boolean isSpecimenRequired, Concept referenceConcept, boolean includeRetired) throws APIException {
-		List<LabTestType> labTestTypes = dao.getAllLabTestTypes(name, shortName, testGroup, referenceConcept,
-		    includeRetired);
+		List<LabTestType> labTestTypes = dao
+		        .getAllLabTestTypes(name, shortName, testGroup, referenceConcept, includeRetired);
 		if (isSpecimenRequired != null) {
 			for (Iterator<LabTestType> iterator = labTestTypes.iterator(); iterator.hasNext();) {
 				LabTestType labTestType = iterator.next();
-				if (!labTestType.isSpecimenRequired().equals(isSpecimenRequired)) {
+				if (!labTestType.getRequiresSpecimen().equals(isSpecimenRequired)) {
 					iterator.remove();
 				}
 			}
@@ -458,20 +355,12 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Get a list of LabTest objects using various parameters available. This is similar to
-	 * getByExample(...) methods, except that instead of passing similar object, properties are
-	 * passed as parameters
-	 * 
-	 * @param labTestType
-	 * @param patient
-	 * @param sample
-	 * @param referenceNumber
-	 * @param from
-	 * @param to
-	 * @param includeVoided
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTests(org.openmrs.module.commonlabtest.LabTestType,
+	 *      org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSample, java.lang.String,
+	 *      java.lang.String, org.openmrs.Concept, org.openmrs.Provider, java.util.Date,
+	 *      java.util.Date, boolean)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTest> getLabTests(LabTestType labTestType, Patient patient, LabTestSample sample, String orderNumber,
@@ -482,13 +371,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns a list of LabTest objects by LabTestType
-	 * 
-	 * @param labTestType
-	 * @param includeVoided
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTests(org.openmrs.module.commonlabtest.LabTestType,
+	 *      boolean)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTest> getLabTests(LabTestType labTestType, boolean includeVoided) throws APIException {
@@ -496,13 +382,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns a list of LabTest objects by matching Concept object in LabTest Order
-	 * 
-	 * @param orderConcept
-	 * @param includeVoided
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTests(org.openmrs.Concept,
+	 *      boolean)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTest> getLabTests(Concept orderConcept, boolean includeVoided) throws APIException {
@@ -510,13 +393,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns a list of LabTest objects by LabTest Order Provider object
-	 * 
-	 * @param orderer
-	 * @param includeVoided
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTests(org.openmrs.Provider,
+	 *      boolean)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTest> getLabTests(Provider orderer, boolean includeVoided) throws APIException {
@@ -524,13 +404,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns a list of LabTest objects by given Patient
-	 * 
-	 * @param patient
-	 * @param includeVoided
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTests(org.openmrs.Patient,
+	 *      boolean)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTest> getLabTests(Patient patient, boolean includeVoided) throws APIException {
@@ -538,12 +415,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns a list of LabTest objects by matching reference number
-	 * 
-	 * @param referenceNumber
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTests(java.lang.String,
+	 *      boolean)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTest> getLabTests(String referenceNumber, boolean includeVoided) throws APIException {
@@ -554,12 +429,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns most recent LabTest object by given Patient
-	 * 
-	 * @param patient
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLatestLabTest(org.openmrs.Patient)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTest getLatestLabTest(Patient patient) throws APIException {
@@ -571,13 +443,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Returns most recent LabTestSample object by given Patient and LabTestSampleStatus
-	 * 
-	 * @param patient
-	 * @param status
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLatestLabTestSample(org.openmrs.Patient,
+	 *      org.openmrs.module.commonlabtest.LabTestSampleStatus)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTestSample getLatestLabTestSample(Patient patient, LabTestSampleStatus status) throws APIException {
@@ -586,12 +455,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Saves a LabTest objects
-	 * 
-	 * @param labTest
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#saveLabTest(org.openmrs.module.commonlabtest.LabTest)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public LabTest saveLabTest(LabTest labTest) throws APIException {
@@ -599,14 +465,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Saves a LabTestSample objects
-	 * 
-	 * @param labTest
-	 * @param labTestSample
-	 * @param labTestAttributes
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#saveLabTest(org.openmrs.module.commonlabtest.LabTest,
+	 *      org.openmrs.module.commonlabtest.LabTestSample, java.util.Collection)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public LabTest saveLabTest(LabTest labTest, LabTestSample labTestSample, Collection<LabTestAttribute> labTestAttributes)
@@ -622,13 +484,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Saves a LabTestAttribute object. Sets the owner to superuser, if it is not set. It can be
-	 * called by users with this module's privilege. It is executed in a transaction.
-	 * 
-	 * @param labTestAttribute
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#saveLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public LabTestAttribute saveLabTestAttribute(LabTestAttribute labTestAttribute) throws APIException {
@@ -636,13 +494,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Saves a list of LabTestAttribute objects. Call this when a set of attributes are being saved
-	 * as a group
-	 * 
-	 * @param labTestAttributes
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#saveLabTestAttributes(java.util.List)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public List<LabTestAttribute> saveLabTestAttributes(List<LabTestAttribute> labTestAttributes) throws APIException {
@@ -653,13 +507,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Saves a LabTestAttributeType object. Sets the owner to superuser, if it is not set. It can be
-	 * called by users with this module's privilege. It is executed in a transaction.
-	 * 
-	 * @param labTestAttributeType
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#saveLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
 	public LabTestAttributeType saveLabTestAttributeType(LabTestAttributeType labTestAttributeType) throws APIException {
@@ -667,12 +517,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Saves a LabTestSample objects
-	 * 
-	 * @param labTestSample
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#saveLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public LabTestSample saveLabTestSample(LabTestSample labTestSample) throws APIException {
@@ -680,13 +527,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Saves a LabTestType object. Sets the owner to superuser, if it is not set. It can be called
-	 * by users with this module's privilege. It is executed in a transaction.
-	 * 
-	 * @param labTestType
-	 * @return
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#saveLabTestType(org.openmrs.module.commonlabtest.LabTestType)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
 	public LabTestType saveLabTestType(LabTestType labTestType) throws APIException {
@@ -694,12 +537,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Retires a LabTestType object
-	 * 
-	 * @param labTestType
-	 * @param cascade
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#retireLabTestType(org.openmrs.module.commonlabtest.LabTestType)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.PURGE_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
 	public void retireLabTestType(LabTestType labTestType) throws APIException {
@@ -707,11 +547,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Retires a LabTestAttribute object
-	 * 
-	 * @param labTestAttributeType
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#retireLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.PURGE_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
 	public void retireLabTestAttributeType(LabTestAttributeType labTestAttributeType) throws APIException {
@@ -719,11 +557,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Unretires a LabTestAttribute object
-	 * 
-	 * @param labTestAttributeType
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#unretireLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.PURGE_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
 	public void unretireLabTestAttributeType(LabTestAttributeType labTestAttributeType) throws APIException {
@@ -731,12 +567,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Unretires a LabTestType object
-	 * 
-	 * @param labTestType
-	 * @param cascade
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#unretireLabTestType(org.openmrs.module.commonlabtest.LabTestType)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.PURGE_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
 	public void unretireLabTestType(LabTestType labTestType) throws APIException {
@@ -744,11 +577,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Voids a LabTest object
-	 * 
-	 * @param labTest
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#voidLabTest(org.openmrs.module.commonlabtest.LabTest)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public void voidLabTest(LabTest labTest) throws APIException {
@@ -756,11 +587,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Voids a LabTestAttribute object
-	 * 
-	 * @param labTestAttribute
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#voidLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public void voidLabTestAttribute(LabTestAttribute labTestAttribute) throws APIException {
@@ -768,11 +597,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Deletes a LabTestSample object
-	 * 
-	 * @param labTestSample
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#voidLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public void voidLabTestSample(LabTestSample labTestSample) throws APIException {
@@ -780,11 +607,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Unvoids a LabTest object
-	 * 
-	 * @param labTest
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#unvoidLabTest(org.openmrs.module.commonlabtest.LabTest)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public void unvoidLabTest(LabTest labTest) throws APIException {
@@ -792,11 +617,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Unvoids a LabTestAttribute object
-	 * 
-	 * @param labTestAttribute
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#unvoidLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public void unvoidLabTestAttribute(LabTestAttribute labTestAttribute) throws APIException {
@@ -804,11 +627,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Unvoids a LabTestSample object
-	 * 
-	 * @param labTestSample
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#unvoidLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public void unvoidLabTestSample(LabTestSample labTestSample) throws APIException {
@@ -816,11 +637,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Deletes a LabTest object
-	 * 
-	 * @param labTest
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTest(org.openmrs.module.commonlabtest.LabTest)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public void deleteLabTest(LabTest labTest) throws APIException {
@@ -828,11 +647,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Deletes a LabTestAttribute object
-	 * 
-	 * @param labTestAttribute
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public void deleteLabTestAttribute(LabTestAttribute labTestAttribute) throws APIException {
@@ -840,9 +657,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestAttributeType(LabTestAttributeType,
-	 *      boolean)
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.PURGE_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
 	public void deleteLabTestAttributeType(LabTestAttributeType labTestAttributeType) throws APIException {
@@ -850,13 +667,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Deletes a LabTestAttributeType object. Enabling cascade will delete all the dependent objects
-	 * and then purge this object
-	 * 
-	 * @param labTestType
-	 * @param cascade
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType,
+	 *      boolean)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.PURGE_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
 	public void deleteLabTestAttributeType(LabTestAttributeType labTestAttributeType, boolean cascade) throws APIException {
@@ -875,11 +689,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	}
 	
 	/**
-	 * Deletes a LabTestSample object
-	 * 
-	 * @param labTestSample
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public void deleteLabTestSample(LabTestSample labTestSample) throws APIException {
@@ -889,18 +701,16 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService {
 	/**
 	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestType(org.openmrs.module.commonlabtest.LabTestType)
 	 */
+	@Override
 	public void deleteLabTestType(LabTestType labTestType) throws APIException {
 		deleteLabTestType(labTestType, false);
 	}
 	
 	/**
-	 * Deletes a LabTestType object. Enabling cascade will delete all the dependent objects and then
-	 * purge this object
-	 * 
-	 * @param labTestType
-	 * @param cascade
-	 * @throws APIException
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestType(org.openmrs.module.commonlabtest.LabTestType,
+	 *      boolean)
 	 */
+	@Override
 	@Authorized(CommonLabTestConfig.PURGE_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
 	public void deleteLabTestType(LabTestType labTestType, boolean cascade) throws APIException {

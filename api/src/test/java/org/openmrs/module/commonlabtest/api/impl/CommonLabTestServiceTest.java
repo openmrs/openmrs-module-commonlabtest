@@ -7,16 +7,15 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.commonlabtest;
+package org.openmrs.module.commonlabtest.api.impl;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.api.UserService;
+import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO;
-import org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl;
 
 /**
  * This is a unit test, which verifies logic in CommonLabTestService. It doesn't extend
@@ -25,7 +24,7 @@ import org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl;
 public class CommonLabTestServiceTest {
 	
 	@InjectMocks
-	CommonLabTestServiceImpl basicModuleService;
+	CommonLabTestService labTestService;
 	
 	@Mock
 	CommonLabTestDAO dao;
@@ -36,23 +35,5 @@ public class CommonLabTestServiceTest {
 	@Before
 	public void setupMocks() {
 		MockitoAnnotations.initMocks(this);
-	}
-	
-	@Test
-	public void saveItem_shouldSetOwnerIfNotSet() {
-		//Given
-		//		Item item = new Item();
-		//		item.setDescription("some description");
-		//		
-		//		when(dao.saveItem(item)).thenReturn(item);
-		//		
-		//		User user = new User();
-		//		when(orderService.getUser(1)).thenReturn(user);
-		//		
-		//		//When
-		//		basicModuleService.saveItem(item);
-		//		
-		//		//Then
-		//		assertThat(item, hasProperty("owner", is(user)));
 	}
 }

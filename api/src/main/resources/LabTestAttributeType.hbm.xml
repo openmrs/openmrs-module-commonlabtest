@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated May 2, 2018 11:47:45 AM by Hibernate Tools 5.3.0.Beta2 --><!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.openmrs.module.commonlabtest">
+    <class name="LabTestAttributeType" table="commonlab_test_attribute_type">
+        <id name="testAttributeTypeId" type="java.lang.Integer">
+            <column name="test_attribute_type_id"/>
+            <generator class="identity"/>
+        </id>
+        <many-to-one class="CommonlabTestType" embed-xml="true" fetch="select" insert="true" name="commonlabTestType" not-found="exception" optimistic-lock="true" unique="false" update="true">
+            <column name="test_type_id" not-null="true"/>
+        </many-to-one>
+        <property name="name" optimistic-lock="true" type="string" unique="false">
+            <column name="name"/>
+        </property>
+        <property name="datatype" optimistic-lock="true" type="string" unique="false">
+            <column name="datatype" not-null="true">
+                <comment>Data types used to define concepts is reused here</comment>
+            </column>
+        </property>
+        <property name="minOccur" optimistic-lock="true" type="int" unique="false">
+            <column name="min_occur" not-null="true"/>
+        </property>
+        <property name="maxOccur" optimistic-lock="true" type="java.lang.Integer" unique="false">
+            <column name="max_occur"/>
+        </property>
+        <property name="datatypeConfig" optimistic-lock="true" type="string" unique="false">
+            <column name="datatype_config">
+                <comment>For example, specify Concept ID where datatype is "Concept", or enter Regular expression where datatype is "RegexValidatedTextDatatype"</comment>
+            </column>
+        </property>
+        <property name="handlerConfig" optimistic-lock="true" type="string" unique="false">
+            <column name="handler_config"/>
+        </property>
+        <property name="sortWeight" optimistic-lock="true" type="int" unique="false">
+            <column name="sort_weight" not-null="true">
+                <comment>Order in which this attribute type should appear for given test type</comment>
+            </column>
+        </property>
+        <property name="description" optimistic-lock="true" type="string" unique="false">
+            <column name="description"/>
+        </property>
+		<many-to-one name="creator" class="User" not-null="true" />
+        <property name="dateCreated" optimistic-lock="true" type="timestamp" unique="false">
+            <column length="19" name="date_created" not-null="true"/>
+        </property>
+		<many-to-one name="changedBy" class="User" column="changed_by" />
+        <property name="dateChanged" optimistic-lock="true" type="timestamp" unique="false">
+            <column length="19" name="date_changed"/>
+        </property>
+        <property name="retired" optimistic-lock="true" type="boolean" unique="false">
+            <column name="retired" not-null="true"/>
+        </property>
+		<many-to-one name="retiredBy" class="User" column="retired_by" />
+        <property name="retiredReason" optimistic-lock="true" type="string" unique="false">
+            <column name="retired_reason"/>
+        </property>
+        <property name="dateRetired" optimistic-lock="true" type="timestamp" unique="false">
+            <column length="19" name="date_retired"/>
+        </property>
+        <property name="uuid" optimistic-lock="true" type="string" unique="false">
+            <column length="38" name="uuid" not-null="true" unique="true"/>
+        </property>
+    </class>
+</hibernate-mapping>

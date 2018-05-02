@@ -23,6 +23,8 @@ public class LabTestAttributeType extends BaseAttributeType<LabTest> implements 
 	
 	private Integer labTestAttributeTypeId;
 	
+	private LabTestType labTestType;
+	
 	private Integer sortWeight;
 	
 	@Override
@@ -33,6 +35,14 @@ public class LabTestAttributeType extends BaseAttributeType<LabTest> implements 
 	@Override
 	public void setId(Integer id) {
 		labTestAttributeTypeId = id;
+	}
+	
+	public LabTestType getLabTestType() {
+		return labTestType;
+	}
+	
+	public void setLabTestType(LabTestType labTestType) {
+		this.labTestType = labTestType;
 	}
 	
 	public Integer getSortWeight() {

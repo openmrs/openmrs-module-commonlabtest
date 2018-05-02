@@ -7,13 +7,17 @@
 <br/>
 <table>
   <tr>
-   <th>User Id</th>
-   <th>Username</th>
+   <th>Lab Test Type:</th>
+   <th>Short Name:</th>
+   <th>Test Group:</th>
+   <th>Description:</th>
   </tr>
-  <c:forEach var="user" items="${users}">
+  <c:forEach var="ltt" items="${labtesttypes}">
       <tr>
-        <td>${user.userId}</td>
-        <td>${user.systemId}</td>
+        <td>${ltt.name}</td>
+        <td>${ltt.shortName}</td>
+        <td>${ltt.testGroup}</td>
+        <td>${ltt.description}</td>
       </tr>		
   </c:forEach>
 </table>

@@ -30,7 +30,7 @@ public class LabTestSample extends BaseOpenmrsData {
 	
 	private Concept specimenType;
 	
-	private Concept site;
+	private Concept specimenSite;
 	
 	private Date collectionDate;
 	
@@ -99,15 +99,15 @@ public class LabTestSample extends BaseOpenmrsData {
 	 * 
 	 * @return
 	 */
-	public Concept getSite() {
-		return site;
+	public Concept getSpecimenSite() {
+		return specimenSite;
 	}
 	
 	/**
-	 * @param site
+	 * @param specimenSite
 	 */
-	public void setSite(Concept site) {
-		this.site = site;
+	public void setSpecimenSite(Concept specimenSite) {
+		this.specimenSite = specimenSite;
 	}
 	
 	/**
