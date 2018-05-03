@@ -21,7 +21,7 @@ public class CommonLabTestConfig {
 	
 	public static final String EDIT_LAB_TEST_METADATA_PRIVILEGE = "Edit Common Lab Test Metadata";
 	
-	public static final String PURGE_LAB_TEST_METADATA_PRIVILEGE = "Delete Common Lab Test Metadata";
+	public static final String DELETE_LAB_TEST_METADATA_PRIVILEGE = "Delete Common Lab Test Metadata";
 	
 	public static final String VIEW_LAB_TEST_METADATA_PRIVILEGE = "View Common Lab Test Metadata";
 	

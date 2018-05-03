@@ -27,14 +27,14 @@
 
     <!-- Wraps CommonLabTestService methods in DB transactions and OpenMRS interceptors,
     which set audit info like dateCreated, changedBy, etc.-->
-    <bean id="commonlabtest.api.CommonLabTestService"
+    <bean id="commonlabtest.CommonLabTestService"
             class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager">
             <ref bean="transactionManager" />
         </property>
         <property name="target">
             <bean class="org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl">
-                <property name="dao" ref="commonlabtest.api.dao.CommonLabTestDAO" />
+                <property name="dao" ref="commonlabtest.CommonLabTestDao" />
             </bean>
         </property>
         <property name="preInterceptors">
@@ -51,7 +51,7 @@
         <property name="moduleService">
             <list>
                 <value>org.openmrs.module.commonlabtest.api.CommonLabTestService</value>
-                <ref bean="CommonLabTestService" />
+                <ref bean="commonlabtest.CommonLabTestService" />
             </list>
         </property>
     </bean>

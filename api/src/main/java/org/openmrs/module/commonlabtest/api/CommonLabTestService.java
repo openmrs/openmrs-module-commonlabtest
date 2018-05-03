@@ -9,17 +9,14 @@ import org.openmrs.Encounter;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
-import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
-import org.openmrs.module.commonlabtest.CommonLabTestConfig;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
-import org.openmrs.module.commonlabtest.LabTestGroup;
 import org.openmrs.module.commonlabtest.LabTestSample;
-import org.openmrs.module.commonlabtest.LabTestSampleStatus;
+import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.LabTestType;
-import org.springframework.transaction.annotation.Transactional;
+import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 
 public interface CommonLabTestService {
 	
@@ -250,17 +247,6 @@ public interface CommonLabTestService {
 	List<LabTestSample> getLabTestSamples(Provider collector, boolean includeVoided) throws APIException;
 	
 	/**
-	 * Returns list of LabTestSample objects by matching given order with associated LabTest Order
-	 * object
-	 * 
-	 * @param order
-	 * @param includeVoided
-	 * @return
-	 * @throws APIException
-	 */
-	List<LabTestSample> getLabTestSamples(Order order, boolean includeVoided) throws APIException;
-	
-	/**
 	 * Returns list of LabTestSample objects by matching status property and date range. This can be
 	 * used to get samples which are yet to be processed
 	 * 
@@ -317,7 +303,6 @@ public interface CommonLabTestService {
 	 * 
 	 * @param labTestType
 	 * @param patient
-	 * @param sample
 	 * @param referenceNumber
 	 * @param from
 	 * @param to
@@ -325,9 +310,8 @@ public interface CommonLabTestService {
 	 * @return
 	 * @throws APIException
 	 */
-	List<LabTest> getLabTests(LabTestType labTestType, Patient patient, LabTestSample sample, String orderNumber,
-	        String referenceNumber, Concept orderConcept, Provider orderer, Date from, Date to, boolean includeVoided)
-	        throws APIException;
+	List<LabTest> getLabTests(LabTestType labTestType, Patient patient, String orderNumber, String referenceNumber,
+	        Concept orderConcept, Provider orderer, Date from, Date to, boolean includeVoided) throws APIException;
 	
 	/**
 	 * Returns a list of LabTest objects by LabTestType
@@ -388,7 +372,8 @@ public interface CommonLabTestService {
 	LabTest getLatestLabTest(Patient patient) throws APIException;
 	
 	/**
-	 * Returns most recent LabTestSample object by given Patient and LabTestSampleStatus
+	 * Returns most recent LabTestSample object by given Patient and LabTestSampleStatus (optional,
+	 * set null to skip)
 	 * 
 	 * @param patient
 	 * @param status
@@ -474,7 +459,7 @@ public interface CommonLabTestService {
 	 * @param cascade
 	 * @throws APIException
 	 */
-	void retireLabTestType(LabTestType labTestType) throws APIException;
+	void retireLabTestType(LabTestType labTestType, String retireReason) throws APIException;
 	
 	/**
 	 * Retires a LabTestAttribute object
@@ -482,7 +467,7 @@ public interface CommonLabTestService {
 	 * @param labTestAttributeType
 	 * @throws APIException
 	 */
-	void retireLabTestAttributeType(LabTestAttributeType labTestAttributeType) throws APIException;
+	void retireLabTestAttributeType(LabTestAttributeType labTestAttributeType, String retireReason) throws APIException;
 	
 	/**
 	 * Unretires a LabTestAttribute object
@@ -502,12 +487,12 @@ public interface CommonLabTestService {
 	void unretireLabTestType(LabTestType labTestType) throws APIException;
 	
 	/**
-	 * Voids a LabTest object
+	 * Voids a LabTest object and all LabTestSample and LabTestAttribute objects associated with it
 	 * 
 	 * @param labTest
 	 * @throws APIException
 	 */
-	void voidLabTest(LabTest labTest) throws APIException;
+	void voidLabTest(LabTest labTest, String voidReason) throws APIException;
 	
 	/**
 	 * Voids a LabTestAttribute object
@@ -515,7 +500,7 @@ public interface CommonLabTestService {
 	 * @param labTestAttribute
 	 * @throws APIException
 	 */
-	void voidLabTestAttribute(LabTestAttribute labTestAttribute) throws APIException;
+	void voidLabTestAttribute(LabTestAttribute labTestAttribute, String voidReason) throws APIException;
 	
 	/**
 	 * Deletes a LabTestSample object
@@ -523,10 +508,12 @@ public interface CommonLabTestService {
 	 * @param labTestSample
 	 * @throws APIException
 	 */
-	void voidLabTestSample(LabTestSample labTestSample) throws APIException;
+	void voidLabTestSample(LabTestSample labTestSample, String voidReason) throws APIException;
 	
 	/**
-	 * Unvoids a LabTest object
+	 * Unvoids a LabTest object along with all LabTestSample and LabTestAttribute objects, which
+	 * were voided with the same reason on same time. This way, the dependent objects which were
+	 * manually void will stay voided.
 	 * 
 	 * @param labTest
 	 * @throws APIException

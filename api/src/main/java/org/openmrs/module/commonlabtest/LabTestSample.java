@@ -15,6 +15,21 @@ package org.openmrs.module.commonlabtest;
 
 import java.util.Date;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.search.annotations.Field;
 import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Concept;
 import org.openmrs.Provider;
@@ -22,30 +37,73 @@ import org.openmrs.Provider;
 /**
  * @author owais.hussain@ihsinformatics.com
  */
+@Entity(name = "commonlabtest.LabTestSample")
+@Table(name = "commonlabtest_sample")
 public class LabTestSample extends BaseOpenmrsData {
 	
+	/**
+	 * Enumerated type to represent status of sample
+	 */
+	public enum LabTestSampleStatus {
+		COLLECTED, // First state of sample, when received by sample collector
+		ACCEPTED, // When lab accepts the sample for processing
+		NOT_ACCEPTED, // Set when lab does not accept the sample due to any reason (contamination, insufficient quantity, etc.)
+		PROCESSED // After the sample has been processed by lab
+	}
+	
+	private static final long serialVersionUID = 1169373793251683587L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "test_sample_id")
 	private Integer labTestSampleId;
 	
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "test_order_id")
 	private LabTest labTest;
 	
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "specimen_type")
 	private Concept specimenType;
 	
+	@ManyToOne
+	@JoinColumn(name = "specimen_site")
 	private Concept specimenSite;
 	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "collection_date")
 	private Date collectionDate;
 	
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "collector")
 	private Provider collector;
 	
+	@Field
+	@Column(name = "quantity")
 	private Double quantity;
 	
-	private String unit;
+	@Basic
+	@Column(name = "units")
+	private String units;
 	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "expiry_date")
 	private Date expiryDate;
 	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "processed_date")
 	private Date processedDate;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status", length = 50)
 	private LabTestSampleStatus status;
 	
+	@Basic
+	@Column(name = "lab_sample_identifier", length = 255)
+	private String sampleIdentifier;
+	
+	@Basic
+	@Column(name = "comments", length = 255)
 	private String comments;
 	
 	/**
@@ -175,19 +233,19 @@ public class LabTestSample extends BaseOpenmrsData {
 	}
 	
 	/**
-	 * Unit of quantity
+	 * Unit(s) of quantity
 	 * 
 	 * @return
 	 */
-	public String getUnit() {
-		return unit;
+	public String getUnits() {
+		return units;
 	}
 	
 	/**
-	 * @param unit
+	 * @param units
 	 */
-	public void setUnit(String unit) {
-		this.unit = unit;
+	public void setUnits(String units) {
+		this.units = units;
 	}
 	
 	/**
@@ -220,6 +278,22 @@ public class LabTestSample extends BaseOpenmrsData {
 	 */
 	public void setStatus(LabTestSampleStatus status) {
 		this.status = status;
+	}
+	
+	/**
+	 * Sample identifier used by lab
+	 * 
+	 * @return
+	 */
+	public String getSampleIdentifier() {
+		return sampleIdentifier;
+	}
+	
+	/**
+	 * @param sampleIdentifier
+	 */
+	public void setSampleIdentifier(String sampleIdentifier) {
+		this.sampleIdentifier = sampleIdentifier;
 	}
 	
 	/**

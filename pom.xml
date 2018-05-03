@@ -13,7 +13,7 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Common Lab Test</name>
-	<description>Simple module to manage Laboratory tests</description>
+	<description>Basic module to manage Laboratory tests</description>
 
 	<url>https://wiki.openmrs.org/x/FQ4z</url>
 
@@ -53,6 +53,6 @@
 	</pluginRepositories>
 
     <properties>
-        <openmrsPlatformVersion>1.11.6</openmrsPlatformVersion>
+        <openmrsPlatformVersion>2.1.3</openmrsPlatformVersion>
     </properties>
 </project>
