@@ -13,19 +13,50 @@
  */
 package org.openmrs.module.commonlabtest;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.search.annotations.Field;
 import org.openmrs.attribute.AttributeType;
 import org.openmrs.attribute.BaseAttributeType;
 
 /**
+ * This entity represents attribute types associated with each type of test. This class extends
+ * BaseAttributeType of type LabTest.
+ * 
  * @author owais.hussain@ihsinformatics.com
  */
+@Entity(name = "commonlabtest.LabTestAttributeType")
+@Table(name = "commonlabtest_attribute_type")
 public class LabTestAttributeType extends BaseAttributeType<LabTest> implements AttributeType<LabTest> {
 	
+	private static final long serialVersionUID = -5724984364122528275L;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "test_attribute_type_id")
 	private Integer labTestAttributeTypeId;
 	
+	@ManyToOne
+	@JoinColumn(name = "test_type_id")
 	private LabTestType labTestType;
 	
+	@Field
+	@Column(name = "sort_weight")
 	private Integer sortWeight;
+	
+	public LabTestAttributeType() {
+	}
+	
+	public LabTestAttributeType(Integer id) {
+		setId(id);
+	}
 	
 	@Override
 	public Integer getId() {

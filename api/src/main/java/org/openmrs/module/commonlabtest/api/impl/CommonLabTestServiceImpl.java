@@ -91,7 +91,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTestSample getEarliestLabTestSample(Patient patient, LabTestSampleStatus status) throws APIException {
-		List<LabTestSample> labTestSamples = dao.getNLabTestSamples(patient, null, 1, true, false, false);
+		List<LabTestSample> labTestSamples = dao.getNLabTestSamples(patient, status, 1, true, false, false);
 		if (!labTestSamples.isEmpty()) {
 			return labTestSamples.get(0);
 		}

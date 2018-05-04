@@ -35,6 +35,10 @@ import org.openmrs.Concept;
 import org.openmrs.Provider;
 
 /**
+ * This entity represents a test sample on which certain lab test is performed. A LabTestType has a
+ * property requiresSpecimen, which determines if a LabTestSample object is needed in order to run
+ * the test.
+ * 
  * @author owais.hussain@ihsinformatics.com
  */
 @Entity(name = "commonlabtest.LabTestSample")
@@ -52,7 +56,7 @@ public class LabTestSample extends BaseOpenmrsData {
 	}
 	
 	private static final long serialVersionUID = 1169373793251683587L;
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "test_sample_id")
@@ -95,8 +99,8 @@ public class LabTestSample extends BaseOpenmrsData {
 	private Date processedDate;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "status", length = 50)
-	private LabTestSampleStatus status;
+	@Column(name = "status", nullable = false, length = 50)
+	private LabTestSampleStatus status = LabTestSampleStatus.COLLECTED;
 	
 	@Basic
 	@Column(name = "lab_sample_identifier", length = 255)
@@ -105,6 +109,19 @@ public class LabTestSample extends BaseOpenmrsData {
 	@Basic
 	@Column(name = "comments", length = 255)
 	private String comments;
+	
+	/**
+	 * Default constructor
+	 */
+	public LabTestSample() {
+	}
+	
+	/**
+	 * @param id
+	 */
+	public LabTestSample(Integer id) {
+		setId(id);
+	}
 	
 	/**
 	 * @see org.openmrs.OpenmrsObject#getId()
