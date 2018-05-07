@@ -35,16 +35,20 @@ import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author owais.hussain@ihsinformatics.com
  */
+@Component
 public class CommonLabTestDao {
 	
 	private static final int MAX_FETCH_LIMIT = 100;
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
 	
+	@Autowired
 	private SessionFactory sessionFactory;
 	
 	/**

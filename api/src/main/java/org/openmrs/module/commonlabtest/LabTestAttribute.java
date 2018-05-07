@@ -39,6 +39,19 @@ public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTes
 	@Column(name = "test_attribute_id")
 	private Integer labTestAttributeId;
 	
+	/**
+	 * Default constructor
+	 */
+	public LabTestAttribute() {
+	}
+	
+	/**
+	 * @param id
+	 */
+	public LabTestAttribute(Integer id) {
+		setId(id);
+	}
+	
 	@Override
 	public Integer getId() {
 		return labTestAttributeId;

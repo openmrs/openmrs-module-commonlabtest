@@ -20,6 +20,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -48,6 +49,7 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	
 	private static final long serialVersionUID = 2561859108258402721L;
 	
+	@Id
 	@OneToOne(optional = false)
 	@JoinColumn(name = "test_order_id")
 	private Order order;
@@ -61,7 +63,23 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	private String labReferenceNumber;
 	
 	@ContainedIn
-	private Set<LabTestSample> labTestSamples = new HashSet<>(0);
+	private transient Set<LabTestSample> labTestSamples = new HashSet<>(0);
+	
+	/**
+	 * Default constructor
+	 */
+	public LabTest() {
+	}
+	
+	/**
+	 * Overloaded constructor.
+	 * 
+	 * @param order since LabTest has one-to-one identifying relationship with Order class
+	 */
+	public LabTest(Order order) {
+		setId(order.getId());
+		setOrder(order);
+	}
 	
 	/**
 	 * @see org.openmrs.Order#getOrderId()

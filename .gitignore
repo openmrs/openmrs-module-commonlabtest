@@ -1,0 +1,6 @@
+
+*.class
+*.prefs
+omod/.project
+.project
+api/.classpath
