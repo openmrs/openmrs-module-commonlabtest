@@ -21,8 +21,11 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.hamcrest.Matchers;
@@ -32,9 +35,15 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.openmrs.Concept;
+import org.openmrs.ConceptClass;
+import org.openmrs.ConceptName;
+import org.openmrs.Order;
 import org.openmrs.Patient;
+import org.openmrs.Provider;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
+import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.commonlabtest.api.dao.CommonLabTestDao;
 import org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl;
@@ -47,8 +56,6 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	private static final String DATA_XML = "CommonLabTestService-initialData.xml";
-	
-	private static final String IN_MEMORY_TESTDATASET_XML = "org/openmrs/include/initialInMemoryTestDataSet.xml";
 	
 	@InjectMocks
 	CommonLabTestServiceImpl service;
@@ -110,12 +117,192 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	Set<LabTestAttribute> hermioneGxpResults;
 	
+	Provider owais;
+	
+	Provider tahira;
+	
 	@Before
 	public void runBeforeTest() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		//service = Context.getService(CommonLabTestServiceImpl.class); // This should not be required when Mocking.
+		initializeInMemoryDatabase();
 		executeDataSet(DATA_XML);
-		executeDataSet(IN_MEMORY_TESTDATASET_XML);
+		initData();
+	}
+	
+	/**
+	 * Initialize all objects
+	 * 
+	 * @throws Exception
+	 */
+	public void initData() throws Exception {
+		
+		Context.getService(CommonLabTestService.class);
+		
+		owais = Context.getProviderService().getProvider(3);
+		tahira = Context.getProviderService().getProvider(4);
+		
+		harry = Context.getPatientService().getPatient(100);
+		hermione = Context.getPatientService().getPatient(101);
+		
+		ConceptClass testClass = new ConceptClass(1);
+		testClass.setName("Test");
+		Concept gxpConcept = new Concept(1);
+		Concept cxrConcept = new Concept(2);
+		gxpConcept.addName(new ConceptName("GeneXpert Test", Locale.ENGLISH));
+		gxpConcept.setShortName(new ConceptName("GXP", Locale.ENGLISH));
+		gxpConcept.setConceptClass(testClass);
+		
+		cxrConcept.addName(new ConceptName("Chest X-ray Test", Locale.ENGLISH));
+		cxrConcept.setShortName(new ConceptName("CXR", Locale.ENGLISH));
+		cxrConcept.setConceptClass(testClass);
+		
+		geneXpert = new LabTestType(1);
+		geneXpert.setName("GeneXpert Test");
+		geneXpert.setShortName("GXP");
+		geneXpert.setTestGroup(LabTestGroup.BACTERIOLOGY);
+		geneXpert.setRequiresSpecimen(Boolean.TRUE);
+		geneXpert.setReferenceConcept(gxpConcept);
+		
+		chestXRay = new LabTestType(2);
+		chestXRay.setName("Chest X-ray Test");
+		chestXRay.setShortName("CXR");
+		chestXRay.setTestGroup(LabTestGroup.RADIOLOGY);
+		chestXRay.setRequiresSpecimen(Boolean.FALSE);
+		chestXRay.setReferenceConcept(cxrConcept);
+		
+		Arrays.asList(geneXpert, chestXRay);
+		
+		cartridgeId = new LabTestAttributeType(1);
+		cartridgeId.setName("Cartridge ID");
+		cartridgeId.setLabTestType(geneXpert);
+		cartridgeId.setSortWeight(1);
+		cartridgeId.setDatatypeClassname("org.openmrs.customdatatype.FreeTextDatatype");
+		cartridgeId.setMinOccurs(1);
+		cartridgeId.setMinOccurs(1);
+		
+		mtbResult = new LabTestAttributeType(2);
+		mtbResult.setName("GeneXpert MTB Result");
+		mtbResult.setLabTestType(geneXpert);
+		mtbResult.setSortWeight(1);
+		mtbResult.setDatatypeClassname("org.openmrs.customdatatype.ConceptDatatype");
+		mtbResult.setMinOccurs(0);
+		mtbResult.setMinOccurs(1);
+		
+		rifResult = new LabTestAttributeType(3);
+		rifResult.setName("GeneXpert RIF Result");
+		rifResult.setLabTestType(geneXpert);
+		rifResult.setSortWeight(1);
+		rifResult.setDatatypeClassname("org.openmrs.customdatatype.ConceptDatatype");
+		rifResult.setMinOccurs(0);
+		rifResult.setMinOccurs(1);
+		
+		cxrResult = new LabTestAttributeType(4);
+		cxrResult.setName("Chest X-Ray Result");
+		cxrResult.setLabTestType(chestXRay);
+		cxrResult.setSortWeight(1);
+		cxrResult.setDatatypeClassname("org.openmrs.customdatatype.RegexValidatedTextDatatype");
+		cxrResult.setDatatypeConfig("(AB)?NORMAL|ERROR");
+		cxrResult.setMinOccurs(1);
+		cxrResult.setMinOccurs(1);
+		
+		radiologistRemarks = new LabTestAttributeType(5);
+		radiologistRemarks.setName("Cartridge ID");
+		radiologistRemarks.setLabTestType(chestXRay);
+		radiologistRemarks.setSortWeight(1);
+		radiologistRemarks.setDatatypeClassname("org.openmrs.customdatatype.FreeTextDatatype");
+		radiologistRemarks.setMinOccurs(0);
+		radiologistRemarks.setMinOccurs(5);
+		
+		Arrays.asList(cartridgeId, mtbResult, rifResult, cxrResult, radiologistRemarks);
+		
+		harrySample = new LabTestSample(1);
+		harrySample.setCollector(owais);
+		Calendar collectionDate = Calendar.getInstance();
+		collectionDate.set(2018 - 1900, 5, 1);
+		harrySample.setCollectionDate(collectionDate.getTime());
+		harrySample.setStatus(LabTestSampleStatus.PROCESSED);
+		harrySample.setSpecimenType(new Concept(99));
+		harrySample.setSpecimenSite(new Concept(100));
+		harrySample.setSampleIdentifier("HARRY-SPUTUM-1");
+		Calendar processingDate = Calendar.getInstance();
+		processingDate.set(2018 - 1900, 5, 3);
+		harrySample.setProcessedDate(processingDate.getTime());
+		harrySample.setQuantity(20D);
+		harrySample.setUnits("ml");
+		
+		hermioneSample = new LabTestSample(1);
+		hermioneSample.setCollector(owais);
+		collectionDate = Calendar.getInstance();
+		collectionDate.set(2018 - 1900, 5, 2);
+		hermioneSample.setCollectionDate(collectionDate.getTime());
+		hermioneSample.setStatus(LabTestSampleStatus.ACCEPTED);
+		hermioneSample.setSpecimenType(new Concept(99));
+		hermioneSample.setSpecimenSite(new Concept(100));
+		hermioneSample.setSampleIdentifier("HERMIONE-SPUTUM-1");
+		hermioneSample.setQuantity(30D);
+		hermioneSample.setUnits("ml");
+		
+		harryCartridgeId = new LabTestAttribute(1);
+		harryCartridgeId.setLabTest(harryGxp);
+		harryCartridgeId.setAttributeType(cartridgeId);
+		harryCartridgeId.setValueReferenceInternal("201805071211");
+		
+		harryMtbResult = new LabTestAttribute(2);
+		harryMtbResult.setLabTest(harryGxp);
+		harryMtbResult.setAttributeType(mtbResult);
+		harryMtbResult.setValueReferenceInternal("MTB DETECTED");
+		
+		harryRifResult = new LabTestAttribute(3);
+		harryRifResult.setLabTest(harryGxp);
+		harryRifResult.setAttributeType(rifResult);
+		harryRifResult.setValueReferenceInternal("DETECTED");
+		
+		harryCxrResult = new LabTestAttribute(4);
+		harryCxrResult.setLabTest(harryCxr);
+		harryCxrResult.setAttributeType(cxrResult);
+		harryCxrResult.setValueReferenceInternal("ABNORMAL");
+		
+		harryRadiologistRemarks = new LabTestAttribute(5);
+		harryRadiologistRemarks.setLabTest(harryCxr);
+		harryRadiologistRemarks.setAttributeType(radiologistRemarks);
+		harryRadiologistRemarks.setValueReferenceInternal("Not just abnormal, but paranormal");
+		
+		hermioneCartridgeId = new LabTestAttribute(6);
+		hermioneCartridgeId.setLabTest(hermioneGxp);
+		hermioneCartridgeId.setAttributeType(cartridgeId);
+		hermioneCartridgeId.setValueReferenceInternal("201805071325");
+		
+		hermioneMtbResult = new LabTestAttribute(7);
+		hermioneMtbResult.setLabTest(hermioneGxp);
+		hermioneMtbResult.setAttributeType(mtbResult);
+		hermioneMtbResult.setValueReferenceInternal("NOT DETECTED");
+		
+		Order harryGxpOrder = Context.getOrderService().getOrder(1);
+		Order harryCxrOrder = Context.getOrderService().getOrder(2);
+		Order hermioneGxpOrder = Context.getOrderService().getOrder(3);
+		
+		harryGxp = new LabTest(harryGxpOrder);
+		harryGxp.setLabTestType(geneXpert);
+		harryGxp.addLabTestSample(harrySample);
+		harryGxp.setLabReferenceNumber("HARRY-GXP-1");
+		harryGxpResults = new HashSet<>();
+		harryGxpResults.addAll(Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
+		harryGxp.setAttributes(harryGxpResults);
+		
+		harryCxr = new LabTest(harryCxrOrder);
+		harryCxr.setLabTestType(chestXRay);
+		harryCxr.setLabReferenceNumber("HARRY-CXR-1");
+		harryCxrResults = new HashSet<>();
+		harryCxrResults.addAll(Arrays.asList(harryCxrResult, harryRadiologistRemarks));
+		harryCxr.setAttributes(harryCxrResults);
+		
+		hermioneGxp = new LabTest(hermioneGxpOrder);
+		hermioneGxp.setLabTestType(geneXpert);
+		hermioneGxp.addLabTestSample(hermioneSample);
+		hermioneGxp.setLabReferenceNumber("HERMIONE-GXP-1");
+		hermioneGxpResults = new HashSet<>();
+		hermioneGxpResults.addAll(Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
+		hermioneGxp.setAttributes(hermioneGxpResults);
 	}
 	
 	/**
@@ -128,7 +315,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getAllLabTestAttributeTypes(boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getAllLabTestAttributeTypes(boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -141,7 +329,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getAllLabTestAttributeTypes(boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getAllLabTestAttributeTypes(boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -156,7 +345,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getAllLabTestTypes(boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getAllLabTestTypes(boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -169,7 +359,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getAllLabTestTypes(boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getAllLabTestTypes(boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -184,7 +375,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getEarliestLabTest(org.openmrs.Patient)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getEarliestLabTest(org.openmrs.Patient)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -197,7 +389,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getEarliestLabTestSample(org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getEarliestLabTestSample(org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -211,7 +404,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttribute(java.lang.Integer)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttribute(java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -224,7 +418,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -238,7 +433,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributes(org.openmrs.Patient, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributes(org.openmrs.Patient, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -258,7 +454,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributes(org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestAttributeType, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributes(org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestAttributeType, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -268,7 +465,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributeType(java.lang.Integer)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributeType(java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -278,7 +476,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributeTypeByUuid(java.lang.String)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributeTypeByUuid(java.lang.String)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -288,7 +487,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributeTypes(java.lang.String, java.lang.String, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributeTypes(java.lang.String, java.lang.String, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -298,7 +498,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestByUuid(java.lang.String)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestByUuid(java.lang.String)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -308,7 +509,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTest(org.openmrs.Encounter)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTest(org.openmrs.Encounter)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -318,7 +520,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTest(org.openmrs.Order)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTest(org.openmrs.Order)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -328,7 +531,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSample(java.lang.Integer)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSample(java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -338,7 +542,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSampleByUuid(java.lang.String)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSampleByUuid(java.lang.String)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -348,7 +553,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus, java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.openmrs.Provider, java.util.Date, java.util.Date, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus, java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.openmrs.Provider, java.util.Date, java.util.Date, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -358,7 +564,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(java.lang.String, java.lang.String, java.lang.String, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(java.lang.String, java.lang.String, java.lang.String, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -368,7 +575,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -378,7 +586,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(org.openmrs.Provider, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(org.openmrs.Provider, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -388,7 +597,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus, java.util.Date, java.util.Date, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus, java.util.Date, java.util.Date, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -398,7 +608,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestType(java.lang.Integer)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestType(java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -408,7 +619,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestTypeByUuid(java.lang.String)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestTypeByUuid(java.lang.String)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -418,7 +630,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestTypes(java.lang.String, java.lang.String, org.openmrs.module.commonlabtest.LabTestType.LabTestGroup, java.lang.Boolean, org.openmrs.Concept, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestTypes(java.lang.String, java.lang.String, org.openmrs.module.commonlabtest.LabTestType.LabTestGroup, java.lang.Boolean, org.openmrs.Concept, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -428,7 +641,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.module.commonlabtest.LabTestType, org.openmrs.Patient, java.lang.String, java.lang.String, org.openmrs.Concept, org.openmrs.Provider, java.util.Date, java.util.Date, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.module.commonlabtest.LabTestType, org.openmrs.Patient, java.lang.String, java.lang.String, org.openmrs.Concept, org.openmrs.Provider, java.util.Date, java.util.Date, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -438,7 +652,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.module.commonlabtest.LabTestType, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.module.commonlabtest.LabTestType, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -448,7 +663,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.Concept, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.Concept, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -458,7 +674,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.Provider, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.Provider, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -468,7 +685,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.Patient, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.Patient, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -478,7 +696,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(java.lang.String, boolean)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(java.lang.String, boolean)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -488,7 +707,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLatestLabTest(org.openmrs.Patient)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLatestLabTest(org.openmrs.Patient)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -500,7 +720,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLatestLabTestSample(org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLatestLabTestSample(org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -513,7 +734,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTest(org.openmrs.module.commonlabtest.LabTest)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTest(org.openmrs.module.commonlabtest.LabTest)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -522,7 +744,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTest(org.openmrs.module.commonlabtest.LabTest, org.openmrs.module.commonlabtest.LabTestSample, java.util.Collection)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTest(org.openmrs.module.commonlabtest.LabTest, org.openmrs.module.commonlabtest.LabTestSample, java.util.Collection)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -532,7 +755,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -542,7 +766,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestAttributes(java.util.List)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestAttributes(java.util.List)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -552,7 +777,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -567,7 +793,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -582,7 +809,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestType(org.openmrs.module.commonlabtest.LabTestType)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestType(org.openmrs.module.commonlabtest.LabTestType)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -597,7 +825,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#retireLabTestType(org.openmrs.module.commonlabtest.LabTestType, java.lang.String)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#retireLabTestType(org.openmrs.module.commonlabtest.LabTestType, java.lang.String)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -610,7 +839,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#retireLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType, java.lang.String)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#retireLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType, java.lang.String)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -620,7 +850,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unretireLabTestType(org.openmrs.module.commonlabtest.LabTestType)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unretireLabTestType(org.openmrs.module.commonlabtest.LabTestType)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -630,7 +861,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unretireLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unretireLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -640,7 +872,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#voidLabTest(org.openmrs.module.commonlabtest.LabTest, java.lang.String)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#voidLabTest(org.openmrs.module.commonlabtest.LabTest, java.lang.String)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -650,7 +883,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#voidLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute, java.lang.String)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#voidLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute, java.lang.String)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -660,7 +894,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#voidLabTestSample(org.openmrs.module.commonlabtest.LabTestSample, java.lang.String)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#voidLabTestSample(org.openmrs.module.commonlabtest.LabTestSample, java.lang.String)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -670,7 +905,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unvoidLabTest(org.openmrs.module.commonlabtest.LabTest)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unvoidLabTest(org.openmrs.module.commonlabtest.LabTest)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -680,7 +916,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unvoidLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unvoidLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -690,7 +927,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unvoidLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unvoidLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -700,7 +938,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTest(org.openmrs.module.commonlabtest.LabTest)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTest(org.openmrs.module.commonlabtest.LabTest)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -710,7 +949,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -723,7 +963,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -736,7 +977,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)}
+	 * .
 	 */
 	@Test
 	@Ignore
@@ -749,7 +991,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTestType(org.openmrs.module.commonlabtest.LabTestType)}.
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTestType(org.openmrs.module.commonlabtest.LabTestType)}
+	 * .
 	 */
 	@Test
 	@Ignore
