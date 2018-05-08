@@ -236,8 +236,7 @@ public class CommonLabTestDao {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname,
-	        boolean includeRetired) {
+	public List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname, boolean includeRetired) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttributeType.class);
 		if (name != null) {
 			criteria.add(Restrictions.ilike("name", name));

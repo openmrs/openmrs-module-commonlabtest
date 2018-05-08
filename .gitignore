@@ -1,6 +1,6 @@
-
+# Ignore build files
+*/target/**
 *.class
 *.prefs
-omod/.project
-.project
-api/.classpath
+*.project
+*.classpath

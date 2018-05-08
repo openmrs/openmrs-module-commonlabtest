@@ -24,6 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -50,8 +51,10 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	private static final long serialVersionUID = 2561859108258402721L;
 	
 	@Id
-	@OneToOne(optional = false)
-	@JoinColumn(name = "test_order_id")
+	private Integer test_order_id;
+	
+	@OneToOne(optional = false, targetEntity = Order.class)
+	@PrimaryKeyJoinColumn(name = "test_order_id")
 	private Order order;
 	
 	@ManyToOne(optional = false)
@@ -94,7 +97,8 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	 */
 	@Override
 	public void setId(Integer id) {
-		order.setId(id);
+		test_order_id = id;
+		order.setId(test_order_id);
 	}
 	
 	/**

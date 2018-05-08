@@ -40,15 +40,7 @@ import org.openmrs.Concept;
 public class LabTestType extends BaseOpenmrsMetadata {
 	
 	public enum LabTestGroup {
-		BACTERIOLOGY,
-		BIOCHEMISTRY,
-		BLOOD_BANK,
-		CYTOLOGY,
-		HEMATOLOGY,
-		IMMUNOLOGY,
-		MICROBIOLOGY,
-		RADIOLOGY,
-		URINALYSIS
+		BACTERIOLOGY, BIOCHEMISTRY, BLOOD_BANK, CYTOLOGY, HEMATOLOGY, IMMUNOLOGY, MICROBIOLOGY, RADIOLOGY, URINALYSIS
 	}
 	
 	private static final long serialVersionUID = -4734826044571156784L;
@@ -71,7 +63,7 @@ public class LabTestType extends BaseOpenmrsMetadata {
 	private Boolean requiresSpecimen = Boolean.FALSE;
 	
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "reference_concept")
+	@JoinColumn(name = "reference_concept_id")
 	private Concept referenceConcept;
 	
 	/**

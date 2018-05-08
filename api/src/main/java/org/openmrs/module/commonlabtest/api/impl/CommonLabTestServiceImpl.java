@@ -334,8 +334,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Transactional(readOnly = true)
 	public List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup,
 	        final Boolean isSpecimenRequired, Concept referenceConcept, boolean includeRetired) throws APIException {
-		List<LabTestType> labTestTypes = dao.getAllLabTestTypes(name, shortName, testGroup, referenceConcept,
-		    includeRetired);
+		List<LabTestType> labTestTypes = dao
+		        .getAllLabTestTypes(name, shortName, testGroup, referenceConcept, includeRetired);
 		if (isSpecimenRequired != null) {
 			for (Iterator<LabTestType> iterator = labTestTypes.iterator(); iterator.hasNext();) {
 				LabTestType labTestType = iterator.next();
@@ -643,8 +643,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		}
 		for (LabTestAttribute attribute : labTest.getAttributes()) {
 			boolean reasonMatched = attribute.getVoidReason().equals(labTest.getVoidReason());
-			boolean dateMatched = DateUtil.truncateToSeconds(labTest.getDateVoided())
-			        .compareTo(attribute.getDateVoided()) == 0;
+			boolean dateMatched = DateUtil.truncateToSeconds(labTest.getDateVoided()).compareTo(attribute.getDateVoided()) == 0;
 			if (reasonMatched && dateMatched) {
 				unvoidLabTestAttribute(attribute);
 			}

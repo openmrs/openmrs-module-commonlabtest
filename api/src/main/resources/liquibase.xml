@@ -1,39 +1,317 @@
 <?xml version="1.0" encoding="UTF-8"?>
- 
+
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
- 
-    <!--
-    	See http://wiki.openmrs.org/display/docs/Module+liquibase+File for 
-    	documentation on this file.
-    
-        See http://www.liquibase.org/manual/home#available_database_refactorings
-        for a list of supported elements and attributes
-    -->
- 
- 	<!-- Uncomment the changeset below if you want to make the Item class persistable, see also Item and CommonLabTestDaoTest -->
- 	<!--
-	<changeSet id="commonlabtest-2016-08-02-12-21" author="raff">
+
+	<!-- See http://wiki.openmrs.org/display/docs/Module+liquibase+File for documentation on this file. See http://www.liquibase.org/manual/home#available_database_refactorings 
+		for a list of supported elements and attributes -->
+
+	<changeSet id="commonlabtest-2018-05-08-1" author="owais.hussain">
 		<preConditions onFail="MARK_RAN">
-			<not><tableExists tableName="commonlabtest_item"/></not>
+			<not>
+				<tableExists tableName="commonlabtest_type" />
+			</not>
 		</preConditions>
 		<comment>
-			Creating the commonlabtest_item table
+			Creating the commonlabtest_test_type table
 		</comment>
-		<createTable tableName="commonlabtest_item">
-			<column name="commonlabtest_item_id" type="int" autoIncrement="true">
-				<constraints primaryKey="true" nullable="false"/>
+		<createTable tableName="commonlabtest_type">
+			<column name="test_type_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
 			</column>
+			<column name="name" defaultValue="" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="short_name" type="varchar(20)" />
+			<column name="test_group" type="varchar(20)">
+				<!-- Name of the group that this test type belongs to. For example, Radiology, Bacteriology. This is an Enumeration in Object 
+					model -->
+				<constraints nullable="false" />
+			</column>
+			<column defaultValueBoolean="true" name="requires_specimen" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="reference_concept_id" type="int">
+				<!-- Concept ID with which this test type maps to. Ideally, the class of this concept should be "Test" -->
+				<constraints nullable="false" />
+			</column>
+			<column name="description" type="text">
+				<constraints nullable="false" />
+			</column>
+			<column defaultValueNumeric="0" name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="DATETIME" />
+			<column defaultValueBoolean="false" name="retired" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="DATETIME" />
+			<column name="retire_reason" type="varchar(255)" />
 			<column name="uuid" type="char(38)">
 				<constraints nullable="false" unique="true"></constraints>
 			</column>
-			<column name="owner" type="int" />
-			<column name="description" type="varchar(255)" />
 		</createTable>
-        <addForeignKeyConstraint constraintName="commonlabtest_item_owner_fk" baseTableName="commonlabtest_item" baseColumnNames="owner"  referencedTableName="users"
-                                 referencedColumnNames="user_id" />
-    </changeSet> -->
- 
+		<addForeignKeyConstraint constraintName="commonlabtest_type_creator_fk"
+			baseTableName="commonlabtest_type" baseColumnNames="creator" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_type_reference_concept_fk"
+			baseTableName="commonlabtest_type" baseColumnNames="reference_concept_id" referencedTableName="concept"
+			referencedColumnNames="concept_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_type_changed_by_fk"
+			baseTableName="commonlabtest_type" baseColumnNames="changed_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_type_retired_by_fk"
+			baseTableName="commonlabtest_type" baseColumnNames="retired_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="commonlabtest-2018-05-08-2" author="owais.hussain">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="commonlabtest_attribute_type" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the commonlabtest_attribute_type table
+		</comment>
+		<createTable tableName="commonlabtest_attribute_type">
+			<column name="test_attribute_type_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="test_type_id" type="int">
+				<!-- Each attribute type belongs to a test type -->
+				<constraints nullable="false" />
+			</column>
+			<column name="name" defaultValue="" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="datatype" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="min_occurs" defaultValueNumeric="0" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="max_occurs" type="int" />
+			<column name="datatype_config" type="varchar(255)" />
+			<column name="handler_config" type="varchar(255)" />
+			<column name="sort_weight" type="double" />
+			<column name="description" type="text">
+				<constraints nullable="false" />
+			</column>
+			<column name="creator" defaultValueNumeric="0" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="DATETIME" />
+			<column name="retired" defaultValueBoolean="false" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="DATETIME" />
+			<column name="retire_reason" type="varchar(255)" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true"></constraints>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="commonlabtest_attribute_type_test_type_fk"
+			baseTableName="commonlabtest_attribute_type" baseColumnNames="test_type_id" referencedTableName="commonlabtest_type"
+			referencedColumnNames="test_type_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_attribute_type_creator_fk"
+			baseTableName="commonlabtest_attribute_type" baseColumnNames="creator" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_attribute_type_changed_by_fk"
+			baseTableName="commonlabtest_attribute_type" baseColumnNames="changed_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_attribute_type_retired_by_fk"
+			baseTableName="commonlabtest_attribute_type" baseColumnNames="retired_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="commonlabtest-2018-05-08-3" author="owais.hussain">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="commonlabtest_test" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the commonlabtest_test table
+		</comment>
+		<createTable tableName="commonlabtest_test">
+			<column name="test_order_id" type="int" autoIncrement="true">
+				<!-- A lab test has one-to-one mapping with orders -->
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="test_type_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="lab_reference_number" type="varchar(255)" />
+			<column name="creator" defaultValueNumeric="0" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="DATETIME" />
+			<column name="voided" defaultValueBoolean="false" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="voided_by" type="int" />
+			<column name="date_voided" type="DATETIME" />
+			<column name="void_reason" type="varchar(255)" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true"></constraints>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="commonlabtest_test_orders_fk"
+			baseTableName="commonlabtest_test" baseColumnNames="test_order_id" referencedTableName="orders"
+			referencedColumnNames="order_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_test_type_fk"
+			baseTableName="commonlabtest_test" baseColumnNames="test_type_id" referencedTableName="commonlabtest_type"
+			referencedColumnNames="test_type_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_test_creator_fk"
+			baseTableName="commonlabtest_test" baseColumnNames="creator" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_test_changed_by_fk"
+			baseTableName="commonlabtest_test" baseColumnNames="changed_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_test_voided_by_fk"
+			baseTableName="commonlabtest_test" baseColumnNames="voided_by" referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="commonlabtest-2018-05-08-4" author="owais.hussain">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="commonlabtest_attribute" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the commonlabtest_attribute table
+		</comment>
+		<createTable tableName="commonlabtest_attribute">
+			<column name="test_attribute_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="test_order_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="attribute_type_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="value_reference" type="varchar(255)" />
+			<column name="creator" defaultValueNumeric="0" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="DATETIME" />
+			<column name="voided" defaultValueBoolean="false" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="voided_by" type="int" />
+			<column name="date_voided" type="DATETIME" />
+			<column name="void_reason" type="varchar(255)" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true"></constraints>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="commonlabtest_attribute_test_fk"
+			baseTableName="commonlabtest_attribute" baseColumnNames="test_order_id" referencedTableName="commonlabtest_test"
+			referencedColumnNames="test_order_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_attribute_attribute_type_fk"
+			baseTableName="commonlabtest_attribute" baseColumnNames="attribute_type_id"
+			referencedTableName="commonlabtest_attribute_type" referencedColumnNames="test_attribute_type_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_attribute_creator_fk"
+			baseTableName="commonlabtest_attribute" baseColumnNames="creator" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_attribute_changed_by_fk"
+			baseTableName="commonlabtest_attribute" baseColumnNames="changed_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_attribute_voided_by_fk"
+			baseTableName="commonlabtest_attribute" baseColumnNames="voided_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="commonlabtest-2018-05-08-5" author="owais.hussain">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="commonlabtest_sample" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the commonlabtest_sample table
+		</comment>
+		<createTable tableName="commonlabtest_sample">
+			<column name="test_attribute_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="test_order_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="specimen_type" type="int">
+				<!-- Concept representing the name of the specimen, like "Sputum", "Blood", "Bone Marrow", etc. -->
+				<constraints nullable="false" />
+			</column>
+			<column name="specimen_site" type="int">
+				<!-- Concept representing the body part where the sample was collected from -->
+			</column>
+			<column name="is_expirable" defaultValueBoolean="true" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="expiry_datetime" type="DATETIME" />
+			<column name="lab_sample_identifier" type="varchar(50)" />
+			<column name="collector" defaultValueNumeric="0" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="description" type="varchar(255)" />
+			<column name="creator" defaultValueNumeric="0" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="DATETIME" />
+			<column name="voided" defaultValueBoolean="false" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="voided_by" type="int" />
+			<column name="date_voided" type="DATETIME" />
+			<column name="void_reason" type="varchar(255)" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true"></constraints>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="commonlabtest_sample_test_fk"
+			baseTableName="commonlabtest_sample" baseColumnNames="test_order_id" referencedTableName="commonlabtest_test"
+			referencedColumnNames="test_order_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_sample_specimen_type_fk"
+			baseTableName="commonlabtest_sample" baseColumnNames="specimen_type" referencedTableName="concept"
+			referencedColumnNames="concept_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_sample_specimen_site_fk"
+			baseTableName="commonlabtest_sample" baseColumnNames="specimen_site" referencedTableName="concept"
+			referencedColumnNames="concept_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_sample_collector_fk"
+			baseTableName="commonlabtest_sample" baseColumnNames="collector" referencedTableName="provider"
+			referencedColumnNames="provider_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_sample_creator_fk"
+			baseTableName="commonlabtest_sample" baseColumnNames="creator" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_attribute_changed_by_fk"
+			baseTableName="commonlabtest_sample" baseColumnNames="changed_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="commonlabtest_attribute_voided_by_fk"
+			baseTableName="commonlabtest_sample" baseColumnNames="voided_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
+
 </databaseChangeLog>
