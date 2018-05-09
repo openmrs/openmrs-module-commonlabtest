@@ -33,6 +33,10 @@
 		date_created="2017-02-14 15:51:57.0" version="" uuid="a8102d6d-c528-477a-80bd-acc38ebc6252" />
 	<concept concept_id="600" retired="false" datatype_id="2" class_id="1" is_set="false" creator="1"
 		date_created="2004-01-01 00:00:57.0" version="" uuid="a9103d6e-d538-488a-81bd-acc38acc6525" />
+	<concept concept_id="700" retired="false" datatype_id="2" class_id="1" is_set="false" creator="1"
+		date_created="2016-01-01 00:00:57.0" version="" uuid="deb16ee8-5344-11e8-9c7c-40b034c3cfee" />
+	<concept concept_id="800" retired="false" datatype_id="2" class_id="1" is_set="false" creator="1"
+		date_created="2016-01-01 00:00:57.0" version="" uuid="e721ec30-5344-11e8-9c7c-40b034c3cfee" />
 
 	<concept_description concept_description_id="500" concept_id="500"
 		description="GeneXpert is a type of bacteriology test for Tuberculosis." locale="en_GB" creator="1"
@@ -40,6 +44,12 @@
 	<concept_description concept_description_id="600" concept_id="600"
 		description="Chest X-Ray is a common radiology test." locale="en_GB" creator="1" date_created="2004-05-12 00:00:00.0"
 		uuid="99e79be4-52b9-11e8-b60d-080027ea421d" />
+	<concept_description concept_description_id="700" concept_id="700"
+		description="Sputum - Specimen type for medical tests." locale="en_GB" creator="1" date_created="2017-05-12 00:00:00.0"
+		uuid="298b75eb-5345-11e8-9c7c-40b034c3cfee" />
+	<concept_description concept_description_id="800" concept_id="800"
+		description="Lungs." locale="en_GB" creator="1" date_created="2017-05-12 00:00:00.0"
+		uuid="3209c732-5345-11e8-9c7c-40b034c3cfee" />
 
 	<concept_name concept_name_id="500" concept_id="500" name="GENEXPERT TEST" locale="en_GB" creator="1"
 		date_created="2014-01-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false"
@@ -47,6 +57,12 @@
 	<concept_name concept_name_id="600" concept_id="600" name="CHEST XRAY TEST" locale="en_GB" creator="1"
 		date_created="2004-05-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false"
 		uuid="b0de794a-52b9-11e8-b60d-080027ea421d" />
+	<concept_name concept_name_id="700" concept_id="700" name="GENEXPERT TEST" locale="en_GB" creator="1"
+		date_created="2017-01-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false"
+		uuid="9f027306-5345-11e8-9c7c-40b034c3cfee" />
+	<concept_name concept_name_id="800" concept_id="800" name="CHEST XRAY TEST" locale="en_GB" creator="1"
+		date_created="2017-05-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false"
+		uuid="a457ac00-5345-11e8-9c7c-40b034c3cfee" />
 
 	<!-- Patients -->
 	<person person_id="1000" gender="M" birthdate="1980-07-31" birthdate_estimated="0" dead="0" creator="1"
@@ -130,8 +146,13 @@
 		date_created="2018-05-04 18:02:27" voided="0" uuid="d175e92e-dc93-11e8-d298-40b034c3cfee" />
 
 	<!-- commonlabtest_sample entries -->
+	<commonlabtest_sample test_sample_id="1" test_order_id="1" specimen_type="700" specimen_site="800" status="PROCESSED"
+		is_expirable="true" lab_sample_identifier="GXP-IRS12345-1" collector="300" creator="300" 
+		date_created="2017-05-05 18:02:27" voided="false" uuid="f4bffc2f-5343-11e8-9c7c-40b034c3cfee" />
+	<commonlabtest_sample test_sample_id="2" test_order_id="3" specimen_type="700" specimen_site="800" status=""
+		is_expirable="true" lab_sample_identifier="GXP-IRS12345-1" collector="400" creator="300" 
+		date_created="2017-08-15 18:02:27" voided="false" uuid="f40420f8-5346-11e8-9c7c-40b034c3cfee" />
 
-<!-- 
 	<commonlabtest_attribute test_attribute_id="1" test_order_id="1" attribute_type_id="1"
 		value_reference="1301" creator="300" date_created="2018-04-24 18:19:19" voided="0"
 		uuid="2c9737d9-47c2-11e8-943c-40b034c3cfee" />
@@ -145,12 +166,13 @@
 		value_reference="100" creator="300" date_created="2018-04-24 18:19:23" voided="0"
 		uuid="2efe1af7-47c2-11e8-943c-40b034c3cfee" />
 	<commonlabtest_attribute test_attribute_id="5" test_order_id="2" attribute_type_id="5"
-		value_reference="1" creator="300" date_created="2018-04-24 18:19:24" voided="0" uuid="2f9066fb-47c2-11e8-943c-40b034c3cfee" />
+		value_reference="1" creator="300" date_created="2018-04-24 18:19:24" voided="0" 
+		uuid="2f9066fb-47c2-11e8-943c-40b034c3cfee" />
 	<commonlabtest_attribute test_attribute_id="6" test_order_id="3" attribute_type_id="1"
 		value_reference="1302" creator="400" date_created="2018-04-24 18:19:19" voided="0"
 		uuid="b46ad728-51f0-11e8-b60d-080027ea421d" />
 	<commonlabtest_attribute test_attribute_id="7" test_order_id="3" attribute_type_id="3"
 		value_reference="2018220454" creator="400" date_created="2018-05-04 18:19:22" voided="0"
 		uuid="acbf3ff5-51f0-11e8-b60d-080027ea421d" />
- -->
+ 
 </dataset>

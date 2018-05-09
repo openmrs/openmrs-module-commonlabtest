@@ -24,7 +24,8 @@ import org.openmrs.attribute.Attribute;
 import org.openmrs.attribute.BaseAttribute;
 
 /**
- * This
+ * This class represents attribtues of a LabTest object; it extends BaseAttribute class and
+ * implements Attributable interface. Results of a lab test should be stored as attributes.
  * 
  * @author owais.hussain@ihsinformatics.com
  */
@@ -38,6 +39,18 @@ public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTes
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "test_attribute_id")
 	private Integer labTestAttributeId;
+	
+	/* These three objects are only to map base class attributes for hibernate (this approach avoids adding hibernate mapping XML file). 
+	Base class is not annotated, neither is defined in API's mapped files.
+	*/
+	@Column(name = "test_order_id")
+	private Integer testOrderId;
+	
+	@Column(name = "attribute_type_id")
+	private Integer attributeTypeId;
+	
+	@Column(name = "value_reference")
+	private String valueReference;
 	
 	/**
 	 * Default constructor
@@ -63,6 +76,22 @@ public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTes
 	}
 	
 	/**
+	 * @return the testOrderId
+	 */
+	public Integer getTestOrderId() {
+		return getLabTest().getId();
+	}
+	
+	/**
+	 * @param testOrderId the testOrderId to set
+	 * @deprecated use <code>setLabTest</code> instead
+	 */
+	@Deprecated
+	public void setTestOrderId(Integer testOrderId) {
+		getLabTest().setId(testOrderId);
+	}
+	
+	/**
 	 * @return the labTest
 	 */
 	public LabTest getLabTest() {
@@ -74,5 +103,37 @@ public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTes
 	 */
 	public void setLabTest(LabTest labTest) {
 		setOwner(labTest);
+	}
+	
+	/**
+	 * @return the attributeTypeId
+	 */
+	public Integer getAttributeTypeId() {
+		return attributeTypeId;
+	}
+	
+	/**
+	 * @param attributeTypeId the attributeTypeId to set
+	 * @deprecated use <code>setAttributeType</code> instead
+	 */
+	@Deprecated
+	public void setAttributeTypeId(Integer attributeTypeId) {
+		getAttributeType().setId(attributeTypeId);
+	}
+	
+	/**
+	 * @return the valueReference
+	 */
+	@Override
+	public String getValueReference() {
+		return valueReference;
+	}
+	
+	/**
+	 * @param valueReference the valueReference to set
+	 */
+	public void setValueReference(String valueReference) {
+		this.valueReference = valueReference;
+		super.setValueReferenceInternal(getValueReference());
 	}
 }

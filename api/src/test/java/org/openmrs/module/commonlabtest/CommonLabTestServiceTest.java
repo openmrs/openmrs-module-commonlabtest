@@ -22,22 +22,19 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Concept;
-import org.openmrs.ConceptClass;
-import org.openmrs.ConceptName;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
@@ -136,25 +133,14 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	public void initData() throws Exception {
 		
-		Context.getService(CommonLabTestService.class);
+		owais = Context.getProviderService().getProvider(300);
+		tahira = Context.getProviderService().getProvider(400);
 		
-		owais = Context.getProviderService().getProvider(3);
-		tahira = Context.getProviderService().getProvider(4);
+		harry = Context.getPatientService().getPatient(1000);
+		hermione = Context.getPatientService().getPatient(2000);
 		
-		harry = Context.getPatientService().getPatient(100);
-		hermione = Context.getPatientService().getPatient(101);
-		
-		ConceptClass testClass = new ConceptClass(1);
-		testClass.setName("Test");
-		Concept gxpConcept = new Concept(1);
-		Concept cxrConcept = new Concept(2);
-		gxpConcept.addName(new ConceptName("GeneXpert Test", Locale.ENGLISH));
-		gxpConcept.setShortName(new ConceptName("GXP", Locale.ENGLISH));
-		gxpConcept.setConceptClass(testClass);
-		
-		cxrConcept.addName(new ConceptName("Chest X-ray Test", Locale.ENGLISH));
-		cxrConcept.setShortName(new ConceptName("CXR", Locale.ENGLISH));
-		cxrConcept.setConceptClass(testClass);
+		Concept gxpConcept = Context.getConceptService().getConcept(500);
+		Concept cxrConcept = Context.getConceptService().getConcept(600);
 		
 		geneXpert = new LabTestType(1);
 		geneXpert.setName("GeneXpert Test");
@@ -170,7 +156,7 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 		chestXRay.setRequiresSpecimen(Boolean.FALSE);
 		chestXRay.setReferenceConcept(cxrConcept);
 		
-		Arrays.asList(geneXpert, chestXRay);
+		labTestTypes = Arrays.asList(geneXpert, chestXRay);
 		
 		cartridgeId = new LabTestAttributeType(1);
 		cartridgeId.setName("Cartridge ID");
@@ -213,7 +199,7 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 		radiologistRemarks.setMinOccurs(0);
 		radiologistRemarks.setMinOccurs(5);
 		
-		Arrays.asList(cartridgeId, mtbResult, rifResult, cxrResult, radiologistRemarks);
+		labTestAttributeTypes = Arrays.asList(cartridgeId, mtbResult, rifResult, cxrResult, radiologistRemarks);
 		
 		harrySample = new LabTestSample(1);
 		harrySample.setCollector(owais);
@@ -319,7 +305,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetAllLabTestAttributeTypes() {
 		when(dao.getAllLabTestAttributeTypes(Boolean.TRUE)).thenReturn(labTestAttributeTypes);
 		List<LabTestAttributeType> list = service.getAllLabTestAttributeTypes(Boolean.TRUE);
@@ -333,7 +318,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetAllActiveLabTestAttributeTypes() {
 		labTestAttributeTypes.get(0).setRetired(Boolean.TRUE);
 		List<LabTestAttributeType> activeList = labTestAttributeTypes.subList(1, labTestAttributeTypes.size() - 1);
@@ -349,7 +333,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetAllLabTestTypes() {
 		when(dao.getAllLabTestTypes(Boolean.TRUE)).thenReturn(labTestTypes);
 		List<LabTestType> list = service.getAllLabTestTypes(Boolean.TRUE);
@@ -363,14 +346,13 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetAllActiveLabTestTypes() {
 		labTestTypes.get(0).setRetired(Boolean.TRUE);
 		List<LabTestType> activeList = labTestTypes.subList(1, labTestTypes.size() - 1);
 		when(dao.getAllLabTestTypes(Boolean.FALSE)).thenReturn(activeList);
 		List<LabTestType> list = service.getAllLabTestTypes(Boolean.FALSE);
 		assertThat(list, Matchers.hasItems(activeList.toArray(new LabTestType[] {})));
-		verify(dao, times(1)).getAllLabTestTypes(Boolean.TRUE);
+		verify(dao, times(1)).getAllLabTestTypes(Boolean.FALSE);
 	}
 	
 	/**
@@ -379,12 +361,11 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetEarliestLabTest() {
-		when(dao.getNLabTests(any(Patient.class), 1, true, false, true)).thenReturn(Arrays.asList(harryGxp));
+		when(dao.getNLabTests(any(Patient.class), 1, true, false, false)).thenReturn(Arrays.asList(harryGxp));
 		LabTest labTest = service.getEarliestLabTest(harry);
 		assertThat(labTest, Matchers.is(harryGxp));
-		verify(dao, times(1)).getNLabTests(any(Patient.class), 1, true, false, true);
+		verify(dao, times(1)).getNLabTests(any(Patient.class), 1, true, false, false);
 	}
 	
 	/**
@@ -393,13 +374,12 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetEarliestLabTestSample() {
-		when(dao.getNLabTestSamples(any(Patient.class), any(LabTestSampleStatus.class), 1, true, false, true))
+		when(dao.getNLabTestSamples(any(Patient.class), LabTestSampleStatus.PROCESSED, 1, true, false, false))
 		        .thenReturn(Arrays.asList(harrySample));
-		LabTestSample labTestSample = service.getEarliestLabTestSample(harry, null);
+		LabTestSample labTestSample = service.getEarliestLabTestSample(harry, LabTestSampleStatus.PROCESSED);
 		assertThat(labTestSample, Matchers.is(harrySample));
-		verify(dao, times(1)).getNLabTestSamples(any(Patient.class), any(LabTestSampleStatus.class), 1, true, false, true);
+		verify(dao, times(1)).getNLabTestSamples(any(Patient.class), LabTestSampleStatus.PROCESSED, 1, true, false, false);
 	}
 	
 	/**
@@ -408,7 +388,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestAttribute() {
 		when(dao.getLabTestAttribute(any(Integer.class))).thenReturn(harryMtbResult);
 		LabTestAttribute labTestAttribute = service.getLabTestAttribute(harryMtbResult.getId());
@@ -422,7 +401,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestAttributesByLabTestAttributeType() {
 		when(dao.getLabTestAttributes(mtbResult, null, null, null, null, null, false))
 		        .thenReturn(Arrays.asList(harryMtbResult, hermioneMtbResult));
@@ -437,7 +415,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestAttributesByPatient() {
 		List<LabTestAttribute> expected = new ArrayList<>();
 		for (Iterator<LabTestAttribute> iter = harryGxpResults.iterator(); iter.hasNext();) {
@@ -458,9 +435,15 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
-	public final void testGetLabTestAttributesByPatientAndLabTestAttributeType() {
+	public final void testGetLabTestAttributesByDateRange() {
 		// TODO
+		List<LabTestAttribute> expected = new ArrayList<>();
+		expected.addAll(harryGxpResults);
+		expected.addAll(harryCxrResults);
+		when(dao.getLabTestAttributes(null, null, null, null, any(Date.class), any(Date.class), false)).thenReturn(expected);
+		List<LabTestAttribute> list = service.getLabTestAttributes(null, null, null, new Date(), new Date(), false);
+		assertThat(list, Matchers.hasItems(harryCartridgeId, harryMtbResult, harryRifResult, harryCxrResult, harryRadiologistRemarks));
+		verify(dao, times(1)).getLabTestAttributes(null, null, null, null, any(Date.class), any(Date.class), false);
 	}
 	
 	/**
@@ -469,9 +452,12 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestAttributeType() {
 		// TODO
+		when(dao.getLabTestAttributeType(any(Integer.class))).thenReturn(mtbResult);
+		LabTestAttributeType attributeType = service.getLabTestAttributeType(1);
+		assertEquals(mtbResult, attributeType);
+		verify(dao, times(1)).getLabTestAttributeType(any(Integer.class));
 	}
 	
 	/**
@@ -480,7 +466,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestAttributeTypeByUuid() {
 		// TODO
 	}
@@ -491,7 +476,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestAttributeTypes() {
 		// TODO
 	}
@@ -502,7 +486,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestByUuid() {
 		// TODO
 	}
@@ -513,7 +496,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestEncounter() {
 		// TODO
 	}
@@ -524,7 +506,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestOrder() {
 		// TODO
 	}
@@ -535,7 +516,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestSample() {
 		// TODO
 	}
@@ -546,7 +526,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestSampleByUuid() {
 		// TODO
 	}
@@ -557,7 +536,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestSamplesLabTestPatientLabTestSampleStatusStringStringStringStringProviderDateDateBoolean() {
 		// TODO
 	}
@@ -568,7 +546,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestSamplesStringStringStringBoolean() {
 		// TODO
 	}
@@ -579,7 +556,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestSamplesLabTestBoolean() {
 		// TODO
 	}
@@ -590,7 +566,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestSamplesProviderBoolean() {
 		// TODO
 	}
@@ -601,7 +576,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestSamplesLabTestSampleStatusDateDateBoolean() {
 		// TODO
 	}
@@ -612,7 +586,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestType() {
 		// TODO
 	}
@@ -623,7 +596,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestTypeByUuid() {
 		// TODO
 	}
@@ -634,7 +606,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestTypes() {
 		// TODO
 	}
@@ -645,7 +616,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestsLabTestTypePatientStringStringConceptProviderDateDateBoolean() {
 		// TODO
 	}
@@ -656,7 +626,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestsLabTestTypeBoolean() {
 		// TODO
 	}
@@ -667,7 +636,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestsConceptBoolean() {
 		// TODO
 	}
@@ -678,7 +646,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestsProviderBoolean() {
 		// TODO
 	}
@@ -689,7 +656,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestsPatientBoolean() {
 		// TODO
 	}
@@ -700,7 +666,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLabTestsStringBoolean() {
 		// TODO
 	}
@@ -711,7 +676,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLatestLabTest() {
 		when(dao.getNLabTests(harry, 1, false, true, true)).thenReturn(Arrays.asList(harryGxp));
 		LabTest labTest = service.getLatestLabTest(harry);
@@ -724,7 +688,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testGetLatestLabTestSample() {
 		when(dao.getNLabTestSamples(any(Patient.class), any(LabTestSampleStatus.class), 1, false, true, true))
 		        .thenReturn(Arrays.asList(harrySample));
@@ -738,8 +701,8 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testSaveLabTestLabTest() {
+		// TODO
 	}
 	
 	/**
@@ -748,7 +711,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testSaveLabTestLabTestLabTestSampleCollectionOfLabTestAttribute() {
 		// TODO
 	}
@@ -759,7 +721,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testSaveLabTestAttribute() {
 		// TODO
 	}
@@ -770,7 +731,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testSaveLabTestAttributes() {
 		// TODO
 	}
@@ -781,7 +741,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testSaveLabTestAttributeType() {
 		when(dao.saveLabTestAttributeType(any(LabTestAttributeType.class))).thenReturn(cartridgeId);
 		LabTestAttributeType labTestAttributeType = new LabTestAttributeType(99);
@@ -797,7 +756,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testSaveLabTestSample() {
 		when(dao.saveLabTestSample(any(LabTestSample.class))).thenReturn(harrySample);
 		LabTestSample labTestSample = new LabTestSample(99);
@@ -813,7 +771,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testSaveLabTestType() {
 		when(dao.saveLabTestType(any(LabTestType.class))).thenReturn(geneXpert);
 		LabTestType labTestType = new LabTestType(99);
@@ -829,7 +786,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testRetireLabTestType() {
 		doNothing().when(dao).saveLabTestType(any(LabTestType.class));
 		service.retireLabTestType(chestXRay, "Got too old");
@@ -843,7 +799,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testRetireLabTestAttributeType() {
 		// TODO
 	}
@@ -854,7 +809,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testUnretireLabTestType() {
 		// TODO
 	}
@@ -865,7 +819,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testUnretireLabTestAttributeType() {
 		// TODO
 	}
@@ -876,7 +829,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testVoidLabTest() {
 		// TODO
 	}
@@ -887,7 +839,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testVoidLabTestAttribute() {
 		// TODO
 	}
@@ -898,7 +849,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testVoidLabTestSample() {
 		// TODO
 	}
@@ -909,7 +859,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testUnvoidLabTest() {
 		// TODO
 	}
@@ -920,7 +869,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testUnvoidLabTestAttribute() {
 		// TODO
 	}
@@ -931,7 +879,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testUnvoidLabTestSample() {
 		// TODO
 	}
@@ -942,7 +889,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void shouldNotDeleteLabTest() {
 		// TODO
 	}
@@ -953,7 +899,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testDeleteLabTestAttribute() {
 		doNothing().when(dao).purgeLabTestAttribute(any(LabTestAttribute.class));
 		service.deleteLabTestAttribute(harryCartridgeId);
@@ -967,7 +912,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testDeleteLabTestAttributeType() {
 		doNothing().when(dao).purgeLabTestAttributeType(any(LabTestAttributeType.class));
 		service.deleteLabTestAttributeType(cartridgeId, true);
@@ -981,7 +925,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void testDeleteLabTestSample() {
 		doNothing().when(dao).purgeLabTestSample(any(LabTestSample.class));
 		service.deleteLabTestSample(hermioneSample);
@@ -995,7 +938,6 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	@Ignore
 	public final void shouldNotDeleteLabTestType() {
 		doNothing().when(dao).purgeLabTestType(any(LabTestType.class));
 		service.deleteLabTestType(chestXRay, true);

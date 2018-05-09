@@ -273,7 +273,8 @@
 			<column name="collector" defaultValueNumeric="0" type="int">
 				<constraints nullable="false" />
 			</column>
-			<column name="description" type="varchar(255)" />
+			<column name="status" type="varchar(50)" />
+			<column name="comments" type="varchar(255)" />
 			<column name="creator" defaultValueNumeric="0" type="int">
 				<constraints nullable="false" />
 			</column>

@@ -51,10 +51,11 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	private static final long serialVersionUID = 2561859108258402721L;
 	
 	@Id
-	private Integer test_order_id;
+	@Column(name = "test_order_id")
+	private Integer testOrderId;
 	
 	@OneToOne(optional = false, targetEntity = Order.class)
-	@PrimaryKeyJoinColumn(name = "test_order_id")
+	@PrimaryKeyJoinColumn(name = "testOrderId")
 	private Order order;
 	
 	@ManyToOne(optional = false)
@@ -80,7 +81,7 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	 * @param order since LabTest has one-to-one identifying relationship with Order class
 	 */
 	public LabTest(Order order) {
-		setId(order.getId());
+		setTestOrderId(order.getId());
 		setOrder(order);
 	}
 	
@@ -97,8 +98,8 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	 */
 	@Override
 	public void setId(Integer id) {
-		test_order_id = id;
-		order.setId(test_order_id);
+		setTestOrderId(id);
+		order.setId(getTestOrderId());
 	}
 	
 	/**
@@ -178,6 +179,20 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 		}
 	}
 	
+	/**
+	 * @return the testOrderId
+	 */
+	public Integer getTestOrderId() {
+		return testOrderId;
+	}
+
+	/**
+	 * @param testOrderId the testOrderId to set
+	 */
+	public void setTestOrderId(Integer testOrderId) {
+		this.testOrderId = testOrderId;
+	}
+
 	public Order getOrder() {
 		return order;
 	}

@@ -90,6 +90,10 @@ public class LabTestSample extends BaseOpenmrsData {
 	@Column(name = "units")
 	private String units;
 	
+	@Column(name = "is_expirable", nullable = false)
+	@Field
+	private Boolean expirable = Boolean.FALSE;
+	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "expiry_date")
 	private Date expiryDate;
@@ -217,6 +221,20 @@ public class LabTestSample extends BaseOpenmrsData {
 		this.collector = collector;
 	}
 	
+	/**
+	 * @return the expirable
+	 */
+	public Boolean getExpirable() {
+		return expirable;
+	}
+
+	/**
+	 * @param expirable the expirable to set
+	 */
+	public void setExpirable(Boolean expirable) {
+		this.expirable = expirable;
+	}
+
 	/**
 	 * In case of non-expirable sample, this should be null
 	 * 
