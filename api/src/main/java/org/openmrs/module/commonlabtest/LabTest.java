@@ -263,6 +263,17 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	}
 	
 	/**
+	 * Remove labTestAttribute object from the existing set
+	 * 
+	 * @param labTestAttribute
+	 */
+	public void removeLabTestAttribute(LabTestAttribute labTestAttribute) {
+		if (getAttributes() != null && labTestAttribute != null) {
+			getAttributes().remove(labTestAttribute);
+		}
+	}
+	
+	/**
 	 * Returns first non-voided object in labTestSamples matching the given status, or null.
 	 * 
 	 * @param status

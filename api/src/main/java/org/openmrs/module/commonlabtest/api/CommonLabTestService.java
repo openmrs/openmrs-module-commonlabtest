@@ -239,6 +239,12 @@ public interface CommonLabTestService {
 	 *      String, String, String, Provider, Date, Date, boolean)
 	 */
 	List<LabTestSample> getLabTestSamples(LabTest labTest, boolean includeVoided) throws APIException;
+
+	/**
+	 * @see List<LabTestSample> getLabTestSamples(LabTest, Patient, LabTestSampleStatus, String,
+	 *      String, String, String, Provider, Date, Date, boolean)
+	 */
+	List<LabTestSample> getLabTestSamples(Patient patient, boolean includeVoided) throws APIException;
 	
 	/**
 	 * @see List<LabTestSample> getLabTestSamples(LabTest, Patient, LabTestSampleStatus, String,

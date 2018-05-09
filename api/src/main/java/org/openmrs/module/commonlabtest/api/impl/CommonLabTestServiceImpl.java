@@ -282,7 +282,16 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	 */
 	@Override
 	public List<LabTestSample> getLabTestSamples(LabTest labTest, boolean includeVoided) throws APIException {
-		return getLabTestSamples(labTest, null, null, null, null, null, null, null, null, null, includeVoided);
+		return dao.getLabTestSamples(labTest, includeVoided);
+	}
+	
+	/**
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(org.openmrs.Patient,
+	 *      boolean)
+	 */
+	@Override
+	public List<LabTestSample> getLabTestSamples(Patient patient, boolean includeVoided) throws APIException {
+		return dao.getLabTestSamples(patient, includeVoided);
 	}
 	
 	/**
@@ -291,7 +300,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	 */
 	@Override
 	public List<LabTestSample> getLabTestSamples(Provider collector, boolean includeVoided) throws APIException {
-		return getLabTestSamples(null, null, null, null, null, null, null, collector, null, null, includeVoided);
+		return dao.getLabTestSamples(collector, includeVoided);
 	}
 	
 	/**
@@ -335,7 +344,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	public List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup,
 	        final Boolean isSpecimenRequired, Concept referenceConcept, boolean includeRetired) throws APIException {
 		List<LabTestType> labTestTypes = dao
-		        .getAllLabTestTypes(name, shortName, testGroup, referenceConcept, includeRetired);
+		        .getLabTestTypes(name, shortName, testGroup, referenceConcept, includeRetired);
 		if (isSpecimenRequired != null) {
 			for (Iterator<LabTestType> iterator = labTestTypes.iterator(); iterator.hasNext();) {
 				LabTestType labTestType = iterator.next();

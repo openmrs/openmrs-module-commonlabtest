@@ -12,6 +12,7 @@ package org.openmrs.module.commonlabtest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -21,12 +22,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -35,260 +33,29 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Concept;
-import org.openmrs.Order;
+import org.openmrs.Encounter;
 import org.openmrs.Patient;
-import org.openmrs.Provider;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
-import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
-import org.openmrs.module.commonlabtest.api.dao.CommonLabTestDao;
+import org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl;
 import org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 /**
  * This is a unit test, which verifies logic in CommonLabTestService. It doesn't extend
  * BaseModuleContextSensitiveTest, thus it is run without the in-memory DB and Spring context.
  */
-public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
-	
-	private static final String DATA_XML = "CommonLabTestService-initialData.xml";
+public class CommonLabTestServiceTest extends CommonLabTestBaseTest {
 	
 	@InjectMocks
 	CommonLabTestServiceImpl service;
 	
 	@Mock
-	CommonLabTestDao dao;
-	
-	Patient harry;
-	
-	Patient hermione;
-	
-	LabTestType geneXpert;
-	
-	LabTestType chestXRay;
-	
-	List<LabTestType> labTestTypes;
-	
-	LabTestAttributeType cartridgeId;
-	
-	LabTestAttributeType mtbResult;
-	
-	LabTestAttributeType rifResult;
-	
-	LabTestAttributeType cxrResult;
-	
-	LabTestAttributeType radiologistRemarks;
-	
-	List<LabTestAttributeType> labTestAttributeTypes;
-	
-	LabTest harryGxp;
-	
-	LabTest harryCxr;
-	
-	LabTest hermioneGxp;
-	
-	LabTestSample harrySample;
-	
-	LabTestSample hermioneSample;
-	
-	LabTestAttribute harryCartridgeId;
-	
-	LabTestAttribute harryMtbResult;
-	
-	LabTestAttribute harryRifResult;
-	
-	LabTestAttribute harryCxrResult;
-	
-	LabTestAttribute harryRadiologistRemarks;
-	
-	LabTestAttribute hermioneCartridgeId;
-	
-	LabTestAttribute hermioneMtbResult;
-	
-	LabTestAttribute hermioneRifResult;
-	
-	Set<LabTestAttribute> harryGxpResults;
-	
-	Set<LabTestAttribute> harryCxrResults;
-	
-	Set<LabTestAttribute> hermioneGxpResults;
-	
-	Provider owais;
-	
-	Provider tahira;
+	CommonLabTestDaoImpl dao;
 	
 	@Before
-	public void runBeforeTest() throws Exception {
+	public void initMockito() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		initializeInMemoryDatabase();
-		executeDataSet(DATA_XML);
-		initData();
-	}
-	
-	/**
-	 * Initialize all objects
-	 * 
-	 * @throws Exception
-	 */
-	public void initData() throws Exception {
-		
-		owais = Context.getProviderService().getProvider(300);
-		tahira = Context.getProviderService().getProvider(400);
-		
-		harry = Context.getPatientService().getPatient(1000);
-		hermione = Context.getPatientService().getPatient(2000);
-		
-		Concept gxpConcept = Context.getConceptService().getConcept(500);
-		Concept cxrConcept = Context.getConceptService().getConcept(600);
-		
-		geneXpert = new LabTestType(1);
-		geneXpert.setName("GeneXpert Test");
-		geneXpert.setShortName("GXP");
-		geneXpert.setTestGroup(LabTestGroup.BACTERIOLOGY);
-		geneXpert.setRequiresSpecimen(Boolean.TRUE);
-		geneXpert.setReferenceConcept(gxpConcept);
-		
-		chestXRay = new LabTestType(2);
-		chestXRay.setName("Chest X-ray Test");
-		chestXRay.setShortName("CXR");
-		chestXRay.setTestGroup(LabTestGroup.RADIOLOGY);
-		chestXRay.setRequiresSpecimen(Boolean.FALSE);
-		chestXRay.setReferenceConcept(cxrConcept);
-		
-		labTestTypes = Arrays.asList(geneXpert, chestXRay);
-		
-		cartridgeId = new LabTestAttributeType(1);
-		cartridgeId.setName("Cartridge ID");
-		cartridgeId.setLabTestType(geneXpert);
-		cartridgeId.setSortWeight(1);
-		cartridgeId.setDatatypeClassname("org.openmrs.customdatatype.FreeTextDatatype");
-		cartridgeId.setMinOccurs(1);
-		cartridgeId.setMinOccurs(1);
-		
-		mtbResult = new LabTestAttributeType(2);
-		mtbResult.setName("GeneXpert MTB Result");
-		mtbResult.setLabTestType(geneXpert);
-		mtbResult.setSortWeight(1);
-		mtbResult.setDatatypeClassname("org.openmrs.customdatatype.ConceptDatatype");
-		mtbResult.setMinOccurs(0);
-		mtbResult.setMinOccurs(1);
-		
-		rifResult = new LabTestAttributeType(3);
-		rifResult.setName("GeneXpert RIF Result");
-		rifResult.setLabTestType(geneXpert);
-		rifResult.setSortWeight(1);
-		rifResult.setDatatypeClassname("org.openmrs.customdatatype.ConceptDatatype");
-		rifResult.setMinOccurs(0);
-		rifResult.setMinOccurs(1);
-		
-		cxrResult = new LabTestAttributeType(4);
-		cxrResult.setName("Chest X-Ray Result");
-		cxrResult.setLabTestType(chestXRay);
-		cxrResult.setSortWeight(1);
-		cxrResult.setDatatypeClassname("org.openmrs.customdatatype.RegexValidatedTextDatatype");
-		cxrResult.setDatatypeConfig("(AB)?NORMAL|ERROR");
-		cxrResult.setMinOccurs(1);
-		cxrResult.setMinOccurs(1);
-		
-		radiologistRemarks = new LabTestAttributeType(5);
-		radiologistRemarks.setName("Cartridge ID");
-		radiologistRemarks.setLabTestType(chestXRay);
-		radiologistRemarks.setSortWeight(1);
-		radiologistRemarks.setDatatypeClassname("org.openmrs.customdatatype.FreeTextDatatype");
-		radiologistRemarks.setMinOccurs(0);
-		radiologistRemarks.setMinOccurs(5);
-		
-		labTestAttributeTypes = Arrays.asList(cartridgeId, mtbResult, rifResult, cxrResult, radiologistRemarks);
-		
-		harrySample = new LabTestSample(1);
-		harrySample.setCollector(owais);
-		Calendar collectionDate = Calendar.getInstance();
-		collectionDate.set(2018 - 1900, 5, 1);
-		harrySample.setCollectionDate(collectionDate.getTime());
-		harrySample.setStatus(LabTestSampleStatus.PROCESSED);
-		harrySample.setSpecimenType(new Concept(99));
-		harrySample.setSpecimenSite(new Concept(100));
-		harrySample.setSampleIdentifier("HARRY-SPUTUM-1");
-		Calendar processingDate = Calendar.getInstance();
-		processingDate.set(2018 - 1900, 5, 3);
-		harrySample.setProcessedDate(processingDate.getTime());
-		harrySample.setQuantity(20D);
-		harrySample.setUnits("ml");
-		
-		hermioneSample = new LabTestSample(1);
-		hermioneSample.setCollector(owais);
-		collectionDate = Calendar.getInstance();
-		collectionDate.set(2018 - 1900, 5, 2);
-		hermioneSample.setCollectionDate(collectionDate.getTime());
-		hermioneSample.setStatus(LabTestSampleStatus.ACCEPTED);
-		hermioneSample.setSpecimenType(new Concept(99));
-		hermioneSample.setSpecimenSite(new Concept(100));
-		hermioneSample.setSampleIdentifier("HERMIONE-SPUTUM-1");
-		hermioneSample.setQuantity(30D);
-		hermioneSample.setUnits("ml");
-		
-		harryCartridgeId = new LabTestAttribute(1);
-		harryCartridgeId.setLabTest(harryGxp);
-		harryCartridgeId.setAttributeType(cartridgeId);
-		harryCartridgeId.setValueReferenceInternal("201805071211");
-		
-		harryMtbResult = new LabTestAttribute(2);
-		harryMtbResult.setLabTest(harryGxp);
-		harryMtbResult.setAttributeType(mtbResult);
-		harryMtbResult.setValueReferenceInternal("MTB DETECTED");
-		
-		harryRifResult = new LabTestAttribute(3);
-		harryRifResult.setLabTest(harryGxp);
-		harryRifResult.setAttributeType(rifResult);
-		harryRifResult.setValueReferenceInternal("DETECTED");
-		
-		harryCxrResult = new LabTestAttribute(4);
-		harryCxrResult.setLabTest(harryCxr);
-		harryCxrResult.setAttributeType(cxrResult);
-		harryCxrResult.setValueReferenceInternal("ABNORMAL");
-		
-		harryRadiologistRemarks = new LabTestAttribute(5);
-		harryRadiologistRemarks.setLabTest(harryCxr);
-		harryRadiologistRemarks.setAttributeType(radiologistRemarks);
-		harryRadiologistRemarks.setValueReferenceInternal("Not just abnormal, but paranormal");
-		
-		hermioneCartridgeId = new LabTestAttribute(6);
-		hermioneCartridgeId.setLabTest(hermioneGxp);
-		hermioneCartridgeId.setAttributeType(cartridgeId);
-		hermioneCartridgeId.setValueReferenceInternal("201805071325");
-		
-		hermioneMtbResult = new LabTestAttribute(7);
-		hermioneMtbResult.setLabTest(hermioneGxp);
-		hermioneMtbResult.setAttributeType(mtbResult);
-		hermioneMtbResult.setValueReferenceInternal("NOT DETECTED");
-		
-		Order harryGxpOrder = Context.getOrderService().getOrder(1);
-		Order harryCxrOrder = Context.getOrderService().getOrder(2);
-		Order hermioneGxpOrder = Context.getOrderService().getOrder(3);
-		
-		harryGxp = new LabTest(harryGxpOrder);
-		harryGxp.setLabTestType(geneXpert);
-		harryGxp.addLabTestSample(harrySample);
-		harryGxp.setLabReferenceNumber("HARRY-GXP-1");
-		harryGxpResults = new HashSet<>();
-		harryGxpResults.addAll(Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
-		harryGxp.setAttributes(harryGxpResults);
-		
-		harryCxr = new LabTest(harryCxrOrder);
-		harryCxr.setLabTestType(chestXRay);
-		harryCxr.setLabReferenceNumber("HARRY-CXR-1");
-		harryCxrResults = new HashSet<>();
-		harryCxrResults.addAll(Arrays.asList(harryCxrResult, harryRadiologistRemarks));
-		harryCxr.setAttributes(harryCxrResults);
-		
-		hermioneGxp = new LabTest(hermioneGxpOrder);
-		hermioneGxp.setLabTestType(geneXpert);
-		hermioneGxp.addLabTestSample(hermioneSample);
-		hermioneGxp.setLabReferenceNumber("HERMIONE-GXP-1");
-		hermioneGxpResults = new HashSet<>();
-		hermioneGxpResults.addAll(Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
-		hermioneGxp.setAttributes(hermioneGxpResults);
 	}
 	
 	/**
@@ -436,58 +203,14 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	public final void testGetLabTestAttributesByDateRange() {
-		// TODO
 		List<LabTestAttribute> expected = new ArrayList<>();
 		expected.addAll(harryGxpResults);
 		expected.addAll(harryCxrResults);
 		when(dao.getLabTestAttributes(null, null, null, null, any(Date.class), any(Date.class), false)).thenReturn(expected);
 		List<LabTestAttribute> list = service.getLabTestAttributes(null, null, null, new Date(), new Date(), false);
-		assertThat(list, Matchers.hasItems(harryCartridgeId, harryMtbResult, harryRifResult, harryCxrResult, harryRadiologistRemarks));
+		assertThat(list,
+		    Matchers.hasItems(harryCartridgeId, harryMtbResult, harryRifResult, harryCxrResult, harryRadiologistRemarks));
 		verify(dao, times(1)).getLabTestAttributes(null, null, null, null, any(Date.class), any(Date.class), false);
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributeType(java.lang.Integer)}
-	 * .
-	 */
-	@Test
-	public final void testGetLabTestAttributeType() {
-		// TODO
-		when(dao.getLabTestAttributeType(any(Integer.class))).thenReturn(mtbResult);
-		LabTestAttributeType attributeType = service.getLabTestAttributeType(1);
-		assertEquals(mtbResult, attributeType);
-		verify(dao, times(1)).getLabTestAttributeType(any(Integer.class));
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributeTypeByUuid(java.lang.String)}
-	 * .
-	 */
-	@Test
-	public final void testGetLabTestAttributeTypeByUuid() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributeTypes(java.lang.String, java.lang.String, boolean)}
-	 * .
-	 */
-	@Test
-	public final void testGetLabTestAttributeTypes() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestByUuid(java.lang.String)}
-	 * .
-	 */
-	@Test
-	public final void testGetLabTestByUuid() {
-		// TODO
 	}
 	
 	/**
@@ -496,48 +219,12 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	public final void testGetLabTestEncounter() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTest(org.openmrs.Order)}
-	 * .
-	 */
-	@Test
-	public final void testGetLabTestOrder() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSample(java.lang.Integer)}
-	 * .
-	 */
-	@Test
-	public final void testGetLabTestSample() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSampleByUuid(java.lang.String)}
-	 * .
-	 */
-	@Test
-	public final void testGetLabTestSampleByUuid() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus, java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.openmrs.Provider, java.util.Date, java.util.Date, boolean)}
-	 * .
-	 */
-	@Test
-	public final void testGetLabTestSamplesLabTestPatientLabTestSampleStatusStringStringStringStringProviderDateDateBoolean() {
-		// TODO
+	public final void testGetLabTestByEncounter() {
+		when(dao.getLabTest(any(Encounter.class))).thenReturn(harryCxr);
+		Encounter encounter = Context.getEncounterService().getEncounter(2000);
+		LabTest labTest = service.getLabTest(encounter);
+		assertEquals(harryCxr, labTest);
+		verify(dao, times(1)).getLabTest(any(Encounter.class));
 	}
 	
 	/**
@@ -546,18 +233,11 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	public final void testGetLabTestSamplesStringStringStringBoolean() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest, boolean)}
-	 * .
-	 */
-	@Test
-	public final void testGetLabTestSamplesLabTestBoolean() {
-		// TODO
+	public final void testGetLabTestSamplesByLabTest() {
+		when(dao.getLabTestSamples(harryGxp, false)).thenReturn(Arrays.asList(harrySample));
+		Iterable<LabTestSample> list = service.getLabTestSamples(harryGxp, false);
+		assertThat(list, Matchers.hasItems(harrySample));
+		verify(dao, times(1)).getLabTestSamples(harryGxp, false);
 	}
 	
 	/**
@@ -566,8 +246,11 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	public final void testGetLabTestSamplesProviderBoolean() {
-		// TODO
+	public final void testGetLabTestSamplesByProvider() {
+		when(dao.getLabTestSamples(owais, false)).thenReturn(Arrays.asList(harrySample));
+		List<LabTestSample> list = service.getLabTestSamples(owais, false);
+		assertThat(list, Matchers.hasItems(harrySample));
+		verify(dao, times(1)).getLabTestSamples(owais, false);
 	}
 	
 	/**
@@ -576,8 +259,11 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	public final void testGetLabTestSamplesLabTestSampleStatusDateDateBoolean() {
-		// TODO
+	public final void testGetLabTestSamplesByPatient() {
+		when(dao.getLabTestSamples(harry, false)).thenReturn(Arrays.asList(harrySample));
+		List<LabTestSample> list = service.getLabTestSamples(harry, false);
+		assertThat(list, Matchers.hasItems(harrySample));
+		verify(dao, times(1)).getLabTestSamples(harry, false);
 	}
 	
 	/**
@@ -592,42 +278,16 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestTypeByUuid(java.lang.String)}
-	 * .
-	 */
-	@Test
-	public final void testGetLabTestTypeByUuid() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestTypes(java.lang.String, java.lang.String, org.openmrs.module.commonlabtest.LabTestType.LabTestGroup, java.lang.Boolean, org.openmrs.Concept, boolean)}
-	 * .
-	 */
-	@Test
-	public final void testGetLabTestTypes() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.module.commonlabtest.LabTestType, org.openmrs.Patient, java.lang.String, java.lang.String, org.openmrs.Concept, org.openmrs.Provider, java.util.Date, java.util.Date, boolean)}
-	 * .
-	 */
-	@Test
-	public final void testGetLabTestsLabTestTypePatientStringStringConceptProviderDateDateBoolean() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.module.commonlabtest.LabTestType, boolean)}
 	 * .
 	 */
 	@Test
-	public final void testGetLabTestsLabTestTypeBoolean() {
-		// TODO
+	public final void testGetLabTestsByLabTestType() {
+		when(dao.getLabTests(any(LabTestType.class), null, null, null, null, null, null, null, false))
+		        .thenReturn(Arrays.asList(harryGxp, hermioneGxp));
+		List<LabTest> list = service.getLabTests(geneXpert, false);
+		assertThat(list, Matchers.hasItems(harryGxp, hermioneGxp));
+		verify(dao, times(1)).getLabTests(any(LabTestType.class), null, null, null, null, null, null, null, false);
 	}
 	
 	/**
@@ -636,8 +296,11 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	public final void testGetLabTestsConceptBoolean() {
-		// TODO
+	public final void testGetLabTestsByConcept() {
+		when(dao.getLabTests(null, null, null, null, any(Concept.class), null, null, null, false))
+		        .thenReturn(Arrays.asList(harryGxp, hermioneGxp));
+		service.getLabTests(null, null, null, null, geneXpert.getReferenceConcept(), null, null, null, false);
+		verify(dao, times(1)).getLabTests(null, null, null, null, any(Concept.class), null, null, null, false);
 	}
 	
 	/**
@@ -646,7 +309,7 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	public final void testGetLabTestsProviderBoolean() {
+	public final void testGetLabTestsByProvider() {
 		// TODO
 	}
 	
@@ -656,7 +319,7 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	public final void testGetLabTestsPatientBoolean() {
+	public final void testGetLabTestsByPatient() {
 		// TODO
 	}
 	
@@ -666,7 +329,16 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 * .
 	 */
 	@Test
-	public final void testGetLabTestsStringBoolean() {
+	public final void testGetLabTestsByReferenceNumber() {
+		// TODO
+	}
+	
+	/**
+	 * Test method for
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(...)} .
+	 */
+	@Test
+	public final void testGetLabTestsByDateRange() {
 		// TODO
 	}
 	
@@ -702,37 +374,17 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	public final void testSaveLabTestLabTest() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTest(org.openmrs.module.commonlabtest.LabTest, org.openmrs.module.commonlabtest.LabTestSample, java.util.Collection)}
-	 * .
-	 */
-	@Test
-	public final void testSaveLabTestLabTestLabTestSampleCollectionOfLabTestAttribute() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)}
-	 * .
-	 */
-	@Test
-	public final void testSaveLabTestAttribute() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestAttributes(java.util.List)}
-	 * .
-	 */
-	@Test
-	public final void testSaveLabTestAttributes() {
-		// TODO
+		when(dao.saveLabTest(any(LabTest.class))).thenReturn(harryGxp);
+		when(dao.saveLabTestSample(any(LabTestSample.class))).thenReturn(harrySample);
+		for (LabTestAttribute labTestAttribute : harryGxpResults) {
+			when(dao.saveLabTestAttribute(labTestAttribute)).thenReturn(labTestAttribute);
+		}
+		LabTest saveLabTest = service.saveLabTest(harryGxp, harrySample, harryGxpResults);
+		assertTrue(saveLabTest.getAttributes().size() == harryGxpResults.size());
+		verify(dao, times(1)).saveLabTest(any(LabTest.class));
+		verify(dao, times(1)).saveLabTestSample(any(LabTestSample.class));
+		verify(dao, times(3)).saveLabTestAttribute(any(LabTestAttribute.class));
+		verifyNoMoreInteractions(dao);
 	}
 	
 	/**
@@ -800,7 +452,10 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	public final void testRetireLabTestAttributeType() {
-		// TODO
+		doNothing().when(dao).saveLabTestAttributeType(any(LabTestAttributeType.class));
+		service.retireLabTestAttributeType(radiologistRemarks, "Not required");
+		verify(dao, times(1)).saveLabTestAttributeType(any(LabTestAttributeType.class));
+		verifyNoMoreInteractions(dao);
 	}
 	
 	/**
@@ -810,7 +465,10 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	public final void testUnretireLabTestType() {
-		// TODO
+		when(dao.saveLabTestType(any(LabTestType.class))).thenReturn(null);
+		service.unretireLabTestType(chestXRay);
+		verify(dao, times(1)).saveLabTestType(any(LabTestType.class));
+		verifyNoMoreInteractions(dao);
 	}
 	
 	/**
@@ -820,77 +478,10 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	public final void testUnretireLabTestAttributeType() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#voidLabTest(org.openmrs.module.commonlabtest.LabTest, java.lang.String)}
-	 * .
-	 */
-	@Test
-	public final void testVoidLabTest() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#voidLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute, java.lang.String)}
-	 * .
-	 */
-	@Test
-	public final void testVoidLabTestAttribute() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#voidLabTestSample(org.openmrs.module.commonlabtest.LabTestSample, java.lang.String)}
-	 * .
-	 */
-	@Test
-	public final void testVoidLabTestSample() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unvoidLabTest(org.openmrs.module.commonlabtest.LabTest)}
-	 * .
-	 */
-	@Test
-	public final void testUnvoidLabTest() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unvoidLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)}
-	 * .
-	 */
-	@Test
-	public final void testUnvoidLabTestAttribute() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unvoidLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)}
-	 * .
-	 */
-	@Test
-	public final void testUnvoidLabTestSample() {
-		// TODO
-	}
-	
-	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTest(org.openmrs.module.commonlabtest.LabTest)}
-	 * .
-	 */
-	@Test
-	public final void shouldNotDeleteLabTest() {
-		// TODO
+		doNothing().when(dao).saveLabTestAttributeType(any(LabTestAttributeType.class));
+		service.unretireLabTestAttributeType(radiologistRemarks);
+		verify(dao, times(1)).saveLabTestAttributeType(any(LabTestAttributeType.class));
+		verifyNoMoreInteractions(dao);
 	}
 	
 	/**
@@ -913,9 +504,14 @@ public class CommonLabTestServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	public final void testDeleteLabTestAttributeType() {
+		when(dao.getLabTestAttributes(any(LabTestAttributeType.class), null, null, null, null, null, false))
+		        .thenReturn(Arrays.asList(harryCartridgeId, hermioneCartridgeId));
 		doNothing().when(dao).purgeLabTestAttributeType(any(LabTestAttributeType.class));
+		doNothing().when(dao).purgeLabTestAttribute(any(LabTestAttribute.class));
 		service.deleteLabTestAttributeType(cartridgeId, true);
+		verify(dao, times(1)).getLabTestAttributes(any(LabTestAttributeType.class), null, null, null, null, null, false);
 		verify(dao, times(1)).purgeLabTestAttributeType(any(LabTestAttributeType.class));
+		verify(dao, times(2)).purgeLabTestAttribute(any(LabTestAttribute.class));
 		verifyNoMoreInteractions(dao);
 	}
 	

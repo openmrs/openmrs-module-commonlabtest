@@ -29,7 +29,7 @@
 			<ref bean="transactionManager" />
 		</property>
 		<property name="target">
-			<bean class="${project.parent.groupId}.${project.parent.artifactId}.api.dao.CommonLabTestDao">
+			<bean class="${project.parent.groupId}.${project.parent.artifactId}.api.dao.impl.CommonLabTestDaoImpl">
 				<property name="sessionFactory">
 					<ref bean="sessionFactory" />
 				</property>
