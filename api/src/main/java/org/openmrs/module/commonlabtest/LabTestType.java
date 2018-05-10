@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.commonlabtest;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -40,7 +39,7 @@ import org.openmrs.Concept;
 public class LabTestType extends BaseOpenmrsMetadata {
 	
 	public enum LabTestGroup {
-		BACTERIOLOGY, BIOCHEMISTRY, BLOOD_BANK, CYTOLOGY, HEMATOLOGY, IMMUNOLOGY, MICROBIOLOGY, RADIOLOGY, URINALYSIS
+		BACTERIOLOGY, BIOCHEMISTRY, BLOOD_BANK, CYTOLOGY, HEMATOLOGY, IMMUNOLOGY, MICROBIOLOGY, RADIOLOGY, SONOLOGY, URINALYSIS
 	}
 	
 	private static final long serialVersionUID = -4734826044571156784L;
@@ -50,7 +49,7 @@ public class LabTestType extends BaseOpenmrsMetadata {
 	@Column(name = "test_type_id")
 	private Integer labTestTypeId;
 	
-	@Basic
+	@Field
 	@Column(name = "short_name", length = 50)
 	private String shortName;
 	

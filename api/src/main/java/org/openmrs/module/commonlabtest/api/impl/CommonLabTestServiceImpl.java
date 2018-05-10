@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.openmrs.Concept;
-import org.openmrs.Encounter;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
@@ -212,19 +211,11 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	}
 	
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTest(org.openmrs.Encounter)
-	 */
-	@Override
-	public LabTest getLabTest(Encounter orderEncounter) throws APIException {
-		return dao.getLabTest(orderEncounter);
-	}
-	
-	/**
 	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTest(org.openmrs.Order)
 	 */
 	@Override
 	public LabTest getLabTest(Order order) throws APIException {
-		return getLabTest(order.getEncounter());
+		return dao.getLabTest(order);
 	}
 	
 	/**
@@ -478,10 +469,12 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	public LabTest saveLabTest(LabTest labTest, LabTestSample labTestSample, Collection<LabTestAttribute> labTestAttributes)
 	        throws APIException {
 		LabTest savedLabTest = saveLabTest(labTest);
-		dao.saveLabTestSample(labTestSample);
+		LabTestSample saveLabTestSample = saveLabTestSample(labTestSample);
+		labTest.removeLabTestSample(labTestSample);
+		labTest.addLabTestSample(saveLabTestSample);
 		Set<LabTestAttribute> attributes = new HashSet<>();
 		for (LabTestAttribute labTestAttribute : labTestAttributes) {
-			attributes.add(dao.saveLabTestAttribute(labTestAttribute));
+			attributes.add(saveLabTestAttribute(labTestAttribute));
 		}
 		savedLabTest.setAttributes(attributes);
 		return savedLabTest;

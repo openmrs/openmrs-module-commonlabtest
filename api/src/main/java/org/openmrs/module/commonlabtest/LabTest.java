@@ -193,26 +193,44 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 		this.testOrderId = testOrderId;
 	}
 
+	/**
+	 * @return the order
+	 */
 	public Order getOrder() {
 		return order;
 	}
 	
+	/**
+	 * @param the order to set
+	 */
 	public void setOrder(Order order) {
 		this.order = order;
 	}
 	
+	/**
+	 * @return the labTestType
+	 */
 	public LabTestType getLabTestType() {
 		return labTestType;
 	}
 	
+	/**
+	 * @param labTestType the labTestType to set
+	 */
 	public void setLabTestType(LabTestType labTestType) {
 		this.labTestType = labTestType;
 	}
 	
+	/**
+	 * @return the labReferenceNumber
+	 */
 	public String getLabReferenceNumber() {
 		return labReferenceNumber;
 	}
 	
+	/**
+	 * @param labReferenceNumber the labReferenceNumber to set
+	 */
 	public void setLabReferenceNumber(String labReferenceNumber) {
 		this.labReferenceNumber = labReferenceNumber;
 	}

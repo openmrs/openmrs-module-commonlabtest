@@ -49,7 +49,7 @@ public class LabTestAttributeType extends BaseAttributeType<LabTest> implements 
 	
 	@Field
 	@Column(name = "sort_weight")
-	private Integer sortWeight;
+	private Double sortWeight;
 	
 	public LabTestAttributeType() {
 	}
@@ -76,11 +76,11 @@ public class LabTestAttributeType extends BaseAttributeType<LabTest> implements 
 		this.labTestType = labTestType;
 	}
 	
-	public Integer getSortWeight() {
+	public Double getSortWeight() {
 		return sortWeight;
 	}
 	
-	public void setSortWeight(Integer sortWeight) {
+	public void setSortWeight(Double sortWeight) {
 		this.sortWeight = sortWeight;
 	}
 }

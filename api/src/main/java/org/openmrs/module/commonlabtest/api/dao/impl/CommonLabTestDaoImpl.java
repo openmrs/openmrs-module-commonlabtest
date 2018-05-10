@@ -25,7 +25,6 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
-import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.module.commonlabtest.LabTest;
@@ -127,9 +126,9 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDao#getLabTest(org.openmrs.Encounter)
 	 */
 	@Override
-	public LabTest getLabTest(Encounter orderEncounter) {
+	public LabTest getLabTest(org.openmrs.Order order) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTest.class);
-		criteria.add(Restrictions.eq("order.encounter", orderEncounter));
+		criteria.add(Restrictions.eq("testOrderId", order.getId()));
 		return (LabTest) criteria.uniqueResult();
 	}
 	
@@ -154,8 +153,9 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	public LabTestAttribute getLabTestAttributeByUuid(String uuid) {
-		return (LabTestAttribute) sessionFactory.getCurrentSession()
-		        .createQuery("from LabTestAttribute l where l.uuid = :uuid").setString("uuid", uuid).uniqueResult();
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttribute.class);
+		criteria.add(Restrictions.eq("uuid", uuid.toLowerCase()));
+		return (LabTestAttribute) criteria.uniqueResult();
 	}
 	
 	/**
@@ -169,13 +169,13 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	        Patient patient, String valueReference, Date from, Date to, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttribute.class);
 		if (labTestAttributeType != null) {
-			criteria.add(Restrictions.eqOrIsNull("attributeType", labTestAttributeType));
+			criteria.add(Restrictions.eqOrIsNull("attributeTypeId", labTestAttributeType.getId()));
 		}
 		if (labTest != null) {
 			criteria.add(Restrictions.eqOrIsNull("owner.labTestType", labTestAttributeType));
 		}
 		if (patient != null) {
-			criteria.add(Restrictions.eqOrIsNull("owner.order.patient", patient));
+			criteria.add(Restrictions.eqOrIsNull("owner.order.patient.patientId", patient.getId()));
 		}
 		if (valueReference != null) {
 			criteria.add(Restrictions.ilike("valueReference", valueReference, MatchMode.START));
@@ -204,8 +204,9 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	public LabTestAttributeType getLabTestAttributeTypeByUuid(String uuid) {
-		return (LabTestAttributeType) sessionFactory.getCurrentSession()
-		        .createQuery("from LabTestAttributeType l where l.uuid = :uuid").setString("uuid", uuid).uniqueResult();
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttributeType.class);
+		criteria.add(Restrictions.eq("uuid", uuid.toLowerCase()));
+		return (LabTestAttributeType) criteria.uniqueResult();
 	}
 	
 	/**
@@ -235,8 +236,9 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	public LabTest getLabTestByUuid(String uuid) {
-		return (LabTest) sessionFactory.getCurrentSession().createQuery("from LabTest l where l.uuid = :uuid")
-		        .setString("uuid", uuid).uniqueResult();
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTest.class);
+		criteria.add(Restrictions.eq("uuid", uuid.toLowerCase()));
+		return (LabTest) criteria.uniqueResult();
 	}
 	
 	/**
@@ -254,16 +256,16 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 			criteria.add(Restrictions.eq("labTestType", labTestType));
 		}
 		if (patient != null) {
-			criteria.add(Restrictions.eq("o.patient", patient));
+			criteria.add(Restrictions.eq("o.patient.patientId", patient.getPatientId()));
 		}
 		if (orderNumber != null) {
 			criteria.add(Restrictions.ilike("o.orderReference", orderNumber, MatchMode.START));
 		}
 		if (orderConcept != null) {
-			criteria.add(Restrictions.eq("o.concept", orderConcept));
+			criteria.add(Restrictions.eq("o.concept.conceptId", orderConcept.getConceptId()));
 		}
 		if (orderer != null) {
-			criteria.add(Restrictions.eq("o.orderer", orderer));
+			criteria.add(Restrictions.eq("o.orderer.providerId", orderer.getProviderId()));
 		}
 		if (referenceNumber != null) {
 			criteria.add(Restrictions.ilike("referenceNumber", referenceNumber, MatchMode.START));
@@ -291,8 +293,9 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	public LabTestSample getLabTestSampleByUuid(String uuid) {
-		return (LabTestSample) sessionFactory.getCurrentSession().createQuery("from LabTestSample l where l.uuid = :uuid")
-		        .setString("uuid", uuid).uniqueResult();
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
+		criteria.add(Restrictions.eq("uuid", uuid.toLowerCase()));
+		return (LabTestSample) criteria.uniqueResult();
 	}
 	
 	/**
@@ -303,7 +306,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	@SuppressWarnings("unchecked")
 	public List<LabTestSample> getLabTestSamples(LabTest labTest, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
-		criteria.add(Restrictions.eq("labTest", labTest));
+		criteria.add(Restrictions.eq("labTest.testOrderId", labTest.getId()));
 		if (!includeVoided) {
 			criteria.add(Restrictions.eq("voided", false));
 		}
@@ -319,7 +322,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	@SuppressWarnings("unchecked")
 	public List<LabTestSample> getLabTestSamples(Patient patient, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
-		criteria.add(Restrictions.eq("order.patient", patient));
+		criteria.add(Restrictions.eq("order.patient.patientId", patient.getPatientId()));
 		if (!includeVoided) {
 			criteria.add(Restrictions.eq("voided", false));
 		}
@@ -335,7 +338,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	@SuppressWarnings("unchecked")
 	public List<LabTestSample> getLabTestSamples(Provider collector, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
-		criteria.add(Restrictions.eq("collector", collector));
+		criteria.add(Restrictions.eq("collector.providerId", collector.getProviderId()));
 		if (!includeVoided) {
 			criteria.add(Restrictions.eq("voided", false));
 		}
@@ -356,8 +359,9 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	public LabTestType getLabTestTypeByUuid(String uuid) {
-		return (LabTestType) sessionFactory.getCurrentSession().createQuery("from LabTestType l where l.uuid = :uuid")
-		        .setString("uuid", uuid).uniqueResult();
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestType.class);
+		criteria.add(Restrictions.eq("uuid", uuid.toLowerCase()));
+		return (LabTestType) criteria.uniqueResult();
 	}
 	
 	/**
@@ -376,7 +380,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 		List<LabTest> firstN = null;
 		List<LabTest> lastN = null;
 		if (patient != null) {
-			criteria.add(Restrictions.eq("order.patient", patient));
+			criteria.add(Restrictions.eq("order.patient.patientId", patient.getPatientId()));
 		}
 		if (!includeVoided) {
 			criteria.add(Restrictions.eq("voided", false));
@@ -416,7 +420,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
 		List<LabTestSample> firstN = null;
 		List<LabTestSample> lastN = null;
-		criteria.add(Restrictions.eq("labTest.order.patient", patient));
+		criteria.add(Restrictions.eq("labTest.order.patient.patientId", patient.getPatientId()));
 		if (status != null) {
 			criteria.add(Restrictions.eq("status", status));
 		}

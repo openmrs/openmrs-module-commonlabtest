@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.openmrs.Concept;
-import org.openmrs.Encounter;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
@@ -164,15 +163,6 @@ public interface CommonLabTestService {
 	 * @throws APIException
 	 */
 	LabTest getLabTestByUuid(String uuid) throws APIException;
-	
-	/**
-	 * Returns a LabTest object by Encounter object in LabTest Order object
-	 * 
-	 * @param orderEncounter
-	 * @return
-	 * @throws APIException
-	 */
-	LabTest getLabTest(Encounter orderEncounter) throws APIException;
 	
 	/**
 	 * @see LabTest getLabTest(Encounter orderEncounter)

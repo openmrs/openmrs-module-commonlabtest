@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.openmrs.Concept;
-import org.openmrs.Encounter;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
@@ -48,12 +47,12 @@ public interface CommonLabTestDao {
 	        boolean includeRetired);
 	
 	/**
-	 * Returns {@link LabTest} object by matching given encounter in respective {@link Order} object
+	 * Returns {@link LabTest} object by matching given {@link Order} object
 	 * 
-	 * @param orderEncounter
+	 * @param order
 	 * @return
 	 */
-	LabTest getLabTest(Encounter orderEncounter);
+	LabTest getLabTest(Order order);
 	
 	/**
 	 * Returns {@link LabTest} object by generated ID

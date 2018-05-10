@@ -33,7 +33,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Concept;
-import org.openmrs.Encounter;
+import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
@@ -219,12 +219,12 @@ public class CommonLabTestServiceTest extends CommonLabTestBaseTest {
 	 * .
 	 */
 	@Test
-	public final void testGetLabTestByEncounter() {
-		when(dao.getLabTest(any(Encounter.class))).thenReturn(harryCxr);
-		Encounter encounter = Context.getEncounterService().getEncounter(2000);
-		LabTest labTest = service.getLabTest(encounter);
+	public final void testGetLabTestByOrder() {
+		when(dao.getLabTest(any(Order.class))).thenReturn(harryCxr);
+		Order order = Context.getOrderService().getOrder(3);
+		LabTest labTest = service.getLabTest(order);
 		assertEquals(harryCxr, labTest);
-		verify(dao, times(1)).getLabTest(any(Encounter.class));
+		verify(dao, times(1)).getLabTest(any(Order.class));
 	}
 	
 	/**
@@ -373,7 +373,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBaseTest {
 	 * .
 	 */
 	@Test
-	public final void testSaveLabTestLabTest() {
+	public final void testSaveLabTest() {
 		when(dao.saveLabTest(any(LabTest.class))).thenReturn(harryGxp);
 		when(dao.saveLabTestSample(any(LabTestSample.class))).thenReturn(harrySample);
 		for (LabTestAttribute labTestAttribute : harryGxpResults) {
