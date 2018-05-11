@@ -195,11 +195,8 @@ public interface CommonLabTestService {
 	 * 
 	 * @param labTest
 	 * @param patient
-	 * @param labSampleIdentifier
-	 * @param orderNumber
-	 * @param labReferenceNumber
-	 * @param specimenName
 	 * @param status
+	 * @param labSampleIdentifier
 	 * @param from
 	 * @param to
 	 * @param includeVoided
@@ -207,8 +204,8 @@ public interface CommonLabTestService {
 	 * @throws APIException
 	 */
 	List<LabTestSample> getLabTestSamples(LabTest labTest, Patient patient, LabTestSampleStatus status,
-	        String labSampleIdentifier, String orderNumber, String labReferenceNumber, String specimenName,
-	        Provider collector, Date from, Date to, boolean includeVoided) throws APIException;
+	        String labSampleIdentifier, Provider collector, Date from, Date to,
+	        boolean includeVoided) throws APIException;
 	
 	/**
 	 * Returns a list of LabTestSample objects by matching given identifier and/or order number
@@ -229,7 +226,7 @@ public interface CommonLabTestService {
 	 *      String, String, String, Provider, Date, Date, boolean)
 	 */
 	List<LabTestSample> getLabTestSamples(LabTest labTest, boolean includeVoided) throws APIException;
-
+	
 	/**
 	 * @see List<LabTestSample> getLabTestSamples(LabTest, Patient, LabTestSampleStatus, String,
 	 *      String, String, String, Provider, Date, Date, boolean)

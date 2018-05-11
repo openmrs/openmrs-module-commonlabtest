@@ -51,7 +51,7 @@ public class LabTestSample extends BaseOpenmrsData {
 	public enum LabTestSampleStatus {
 		COLLECTED, // First state of sample, when received by sample collector
 		ACCEPTED, // When lab accepts the sample for processing
-		NOT_ACCEPTED, // Set when lab does not accept the sample due to any reason (contamination, insufficient quantity, etc.)
+		REJECTED, // Set when lab does not accept the sample due to any reason (contamination, insufficient quantity, etc.)
 		PROCESSED // After the sample has been processed by lab
 	}
 	
@@ -227,14 +227,14 @@ public class LabTestSample extends BaseOpenmrsData {
 	public Boolean getExpirable() {
 		return expirable;
 	}
-
+	
 	/**
 	 * @param expirable the expirable to set
 	 */
 	public void setExpirable(Boolean expirable) {
 		this.expirable = expirable;
 	}
-
+	
 	/**
 	 * In case of non-expirable sample, this should be null
 	 * 

@@ -67,7 +67,7 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	private String labReferenceNumber;
 	
 	@ContainedIn
-	private transient Set<LabTestSample> labTestSamples = new HashSet<>(0);
+	private transient Set<LabTestSample> labTestSamples = new HashSet<LabTestSample>(0);
 	
 	/**
 	 * Default constructor
@@ -185,14 +185,14 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	public Integer getTestOrderId() {
 		return testOrderId;
 	}
-
+	
 	/**
 	 * @param testOrderId the testOrderId to set
 	 */
 	public void setTestOrderId(Integer testOrderId) {
 		this.testOrderId = testOrderId;
 	}
-
+	
 	/**
 	 * @return the order
 	 */
@@ -264,7 +264,7 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 			}
 		}
 		if (labTestSamples == null) {
-			labTestSamples = new HashSet<>();
+			labTestSamples = new HashSet<LabTestSample>();
 		}
 		labTestSamples.add(labTestSample);
 	}

@@ -100,14 +100,14 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup, Concept referenceConcept,
-	        boolean includeRetired) {
+	public List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup,
+	        Concept referenceConcept, boolean includeRetired) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestType.class);
 		if (name != null) {
-			criteria.add(Restrictions.ilike("name", name));
+			criteria.add(Restrictions.ilike("name", name, MatchMode.START));
 		}
 		if (shortName != null) {
-			criteria.add(Restrictions.ilike("shortName", name));
+			criteria.add(Restrictions.ilike("shortName", name, MatchMode.START));
 		}
 		if (testGroup != null) {
 			criteria.add(Restrictions.eq("testGroup", testGroup));
@@ -215,11 +215,10 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname,
-	        boolean includeRetired) {
+	public List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname, boolean includeRetired) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttributeType.class);
 		if (name != null) {
-			criteria.add(Restrictions.ilike("name", name));
+			criteria.add(Restrictions.ilike("name", name, MatchMode.START));
 		}
 		if (datatypeClassname != null) {
 			criteria.add(Restrictions.eq("datatypeClassname", datatypeClassname));
@@ -394,7 +393,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 			lastN = criteria.list();
 		}
 		criteria.setMaxResults(n);
-		List<LabTest> list = new ArrayList<>();
+		List<LabTest> list = new ArrayList<LabTest>();
 		if (firstN != null) {
 			list.addAll(firstN);
 		}
@@ -436,7 +435,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 			lastN = criteria.list();
 		}
 		criteria.setMaxResults(n);
-		List<LabTestSample> list = new ArrayList<>();
+		List<LabTestSample> list = new ArrayList<LabTestSample>();
 		if (firstN != null) {
 			list.addAll(firstN);
 		}

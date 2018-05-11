@@ -33,4 +33,5 @@ public class CommonLabTestConfig {
 	
 	public static final String DELETE_LAB_TEST_PRIVILEGE = "Delete Common Lab Tests";
 	
+	public static final Boolean AUTO_VOID_REJECTED_SAMPLES = Boolean.TRUE;
 }

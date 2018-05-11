@@ -1,0 +1,202 @@
+@CHARSET "UTF-8";
+
+.ui-dialog-buttonpane { 
+	text-align: center !important; 
+}
+
+/* Style the tab */
+#buttonDiv {
+    /* overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1; */
+    margin-top: 3px;	
+	margin-bottom: 7px;
+}
+
+/* Style the buttons inside the tab */
+/* #buttonDiv input {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 5px 5px ;
+    transition: 0.3s;
+    font-size: 17px;
+} */
+
+/* Change background color of buttons on hover */
+/* #buttonDiv input:hover {
+    background-color: #ddd;
+} */
+
+/* Create an active/current tablink class */
+/* #buttonDiv input.active {
+    background-color: #ccc;
+} */
+
+/* Style the tab content */
+/* .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    -webkit-animation: fadeEffect 1s;
+    animation: fadeEffect 1s;
+} */
+
+/* Fade in tabs */
+/* @-webkit-keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+ */
+/* @keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+} */
+
+
+
+
+
+.lowercase {
+	text-transform: lowercase; 
+}
+.uppercase {
+	text-transform: uppercase; 
+}
+.capitalize {
+	text-transform: capitalize; 
+}
+
+* {
+	font-family: 'Arial' !important;
+}
+
+#addMedicationLink {
+	float: left;	
+	padding-top: 8px;
+    vertical-align: bottom;
+}
+
+#buttonDiv {
+	width: 100%; 
+	 
+	margin: 0 auto; 
+	 
+	text-align: center;
+	
+}
+
+#addNewRegimenDialog {
+	/* newly added -- start */
+	width: 65% !important; 
+	margin: 0 auto; 
+	text-align: center;
+	/* newly added -- end */
+}
+
+#addNewRegimenDialog .box {
+	height: 340px;
+	
+	/* newly added -- start */
+	background-color: #fcfdfd;  
+	margin: 0 auto;
+	border-radius: 25px;
+	border-width: 1px;
+	/* newly added -- end */
+}
+
+#addIndividualDrug table {
+	margin: 0 auto !important;
+}
+
+#addIndividualDrug table th {
+	font-size: 1.5em !important;
+}
+
+.lastrow {
+	border-bottom: 1px solid #1AAC9B !important;
+}
+
+textarea {
+	font-size: 0.9em !important;
+}
+
+.padding {
+	padding-top: 5px;
+	padding-left: 5px;
+	font-size: 1.1em !important;
+	padding-bottom: 5px;
+	vertical-align: bottom;	
+}
+
+.error {
+	font-color: red;
+}
+
+#openmrs_error {
+	margin-top: 0px !important;
+}
+
+.regimenPortletCurrent div.boxHeader  {
+	background-color: #1AAC9B;
+	border: 1px solid #1AAC9B;
+}
+
+.regimenPortletCurrent div.box {
+	border: 1px solid #1AAC9B;
+}
+
+h2#regimenPortlet {
+	font-weight: bold;
+	font-size: 14px;
+}	
+
+select {
+	height: 22px;
+	border-radius: 5px;
+	background-color: #F8F8F8;
+	border-style: groove !important;
+	
+}
+
+#drugSuggestBox {
+    height: 16px;
+    border-radius: 5px;
+    background-color: #F8F8F8;
+    border-style: groove !important;
+    font-size: 1em !important;
+    width: 300px !important;
+}
+
+#duration {
+	width: 50px;
+	padding-right: 2px;
+	border: 1px solid #1AAC9B;
+}
+
+#dose {
+	width: 50px;
+	padding-right: 2px;
+	border: 1px solid #1AAC9B;
+}
+
+.required{
+      color:red;
+      font-weight: bold;
+      font-size: 1.4em;
+}
+
+@-moz-document url-prefix() {
+    #addNewRegimenDialog .box {
+    	height: 400px;
+    }
+    
+    textarea {
+    	height: 40px !important;
+    }
+    
+    #drugSuggestBox {
+    	height: 22px !important;
+    }
+}

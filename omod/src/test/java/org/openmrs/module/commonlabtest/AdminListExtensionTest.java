@@ -9,13 +9,15 @@
  */
 package org.openmrs.module.commonlabtest;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Map;
 
 import org.junit.Test;
 import org.openmrs.module.Extension;
 import org.openmrs.module.commonlabtest.extension.html.AdminList;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 
 /**
  * This test validates the AdminList extension class
@@ -28,11 +30,9 @@ public class AdminListExtensionTest {
 	@Test
 	public void testValidatesLinks() {
 		AdminList ext = new AdminList();
-		
 		Map<String, String> links = ext.getLinks();
-		
-		assertThat(links, is(notNullValue()));
-		assertThat(links.size(), is(not(0)));
+		assertNotNull(links);
+		assertFalse(links.isEmpty());
 	}
 	
 	/**
@@ -41,8 +41,7 @@ public class AdminListExtensionTest {
 	@Test
 	public void testMediaTypeIsHtml() {
 		AdminList ext = new AdminList();
-		
-		assertThat(ext.getMediaType(), is(Extension.MEDIA_TYPE.html));
+		assertEquals(ext.getMediaType(), Extension.MEDIA_TYPE.html);
 	}
 	
 }

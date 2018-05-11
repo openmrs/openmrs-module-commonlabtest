@@ -142,8 +142,8 @@ public class CommonLabTestServiceTest extends CommonLabTestBaseTest {
 	 */
 	@Test
 	public final void testGetEarliestLabTestSample() {
-		when(dao.getNLabTestSamples(any(Patient.class), LabTestSampleStatus.PROCESSED, 1, true, false, false))
-		        .thenReturn(Arrays.asList(harrySample));
+		when(dao.getNLabTestSamples(any(Patient.class), LabTestSampleStatus.PROCESSED, 1, true, false, false)).thenReturn(
+		    Arrays.asList(harrySample));
 		LabTestSample labTestSample = service.getEarliestLabTestSample(harry, LabTestSampleStatus.PROCESSED);
 		assertThat(labTestSample, Matchers.is(harrySample));
 		verify(dao, times(1)).getNLabTestSamples(any(Patient.class), LabTestSampleStatus.PROCESSED, 1, true, false, false);
@@ -169,8 +169,8 @@ public class CommonLabTestServiceTest extends CommonLabTestBaseTest {
 	 */
 	@Test
 	public final void testGetLabTestAttributesByLabTestAttributeType() {
-		when(dao.getLabTestAttributes(mtbResult, null, null, null, null, null, false))
-		        .thenReturn(Arrays.asList(harryMtbResult, hermioneMtbResult));
+		when(dao.getLabTestAttributes(mtbResult, null, null, null, null, null, false)).thenReturn(
+		    Arrays.asList(harryMtbResult, hermioneMtbResult));
 		List<LabTestAttribute> list = service.getLabTestAttributes(mtbResult, false);
 		assertThat(list, Matchers.hasItems(harryMtbResult, hermioneMtbResult));
 		verify(dao, times(1)).getLabTestAttributes(mtbResult, null, null, null, null, null, false);
@@ -183,7 +183,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBaseTest {
 	 */
 	@Test
 	public final void testGetLabTestAttributesByPatient() {
-		List<LabTestAttribute> expected = new ArrayList<>();
+		List<LabTestAttribute> expected = new ArrayList<LabTestAttribute>();
 		for (Iterator<LabTestAttribute> iter = harryGxpResults.iterator(); iter.hasNext();) {
 			expected.add(iter.next());
 		}
@@ -203,7 +203,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBaseTest {
 	 */
 	@Test
 	public final void testGetLabTestAttributesByDateRange() {
-		List<LabTestAttribute> expected = new ArrayList<>();
+		List<LabTestAttribute> expected = new ArrayList<LabTestAttribute>();
 		expected.addAll(harryGxpResults);
 		expected.addAll(harryCxrResults);
 		when(dao.getLabTestAttributes(null, null, null, null, any(Date.class), any(Date.class), false)).thenReturn(expected);
@@ -283,8 +283,8 @@ public class CommonLabTestServiceTest extends CommonLabTestBaseTest {
 	 */
 	@Test
 	public final void testGetLabTestsByLabTestType() {
-		when(dao.getLabTests(any(LabTestType.class), null, null, null, null, null, null, null, false))
-		        .thenReturn(Arrays.asList(harryGxp, hermioneGxp));
+		when(dao.getLabTests(any(LabTestType.class), null, null, null, null, null, null, null, false)).thenReturn(
+		    Arrays.asList(harryGxp, hermioneGxp));
 		List<LabTest> list = service.getLabTests(geneXpert, false);
 		assertThat(list, Matchers.hasItems(harryGxp, hermioneGxp));
 		verify(dao, times(1)).getLabTests(any(LabTestType.class), null, null, null, null, null, null, null, false);
@@ -297,8 +297,8 @@ public class CommonLabTestServiceTest extends CommonLabTestBaseTest {
 	 */
 	@Test
 	public final void testGetLabTestsByConcept() {
-		when(dao.getLabTests(null, null, null, null, any(Concept.class), null, null, null, false))
-		        .thenReturn(Arrays.asList(harryGxp, hermioneGxp));
+		when(dao.getLabTests(null, null, null, null, any(Concept.class), null, null, null, false)).thenReturn(
+		    Arrays.asList(harryGxp, hermioneGxp));
 		service.getLabTests(null, null, null, null, geneXpert.getReferenceConcept(), null, null, null, false);
 		verify(dao, times(1)).getLabTests(null, null, null, null, any(Concept.class), null, null, null, false);
 	}
@@ -334,8 +334,8 @@ public class CommonLabTestServiceTest extends CommonLabTestBaseTest {
 	}
 	
 	/**
-	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(...)} .
+	 * Test method for {@link
+	 * org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(...)} .
 	 */
 	@Test
 	public final void testGetLabTestsByDateRange() {
@@ -361,8 +361,8 @@ public class CommonLabTestServiceTest extends CommonLabTestBaseTest {
 	 */
 	@Test
 	public final void testGetLatestLabTestSample() {
-		when(dao.getNLabTestSamples(any(Patient.class), any(LabTestSampleStatus.class), 1, false, true, true))
-		        .thenReturn(Arrays.asList(harrySample));
+		when(dao.getNLabTestSamples(any(Patient.class), any(LabTestSampleStatus.class), 1, false, true, true)).thenReturn(
+		    Arrays.asList(harrySample));
 		LabTestSample labTestSample = service.getLatestLabTestSample(harry, null);
 		assertThat(labTestSample, Matchers.is(harrySample));
 	}
@@ -504,8 +504,8 @@ public class CommonLabTestServiceTest extends CommonLabTestBaseTest {
 	 */
 	@Test
 	public final void testDeleteLabTestAttributeType() {
-		when(dao.getLabTestAttributes(any(LabTestAttributeType.class), null, null, null, null, null, false))
-		        .thenReturn(Arrays.asList(harryCartridgeId, hermioneCartridgeId));
+		when(dao.getLabTestAttributes(any(LabTestAttributeType.class), null, null, null, null, null, false)).thenReturn(
+		    Arrays.asList(harryCartridgeId, hermioneCartridgeId));
 		doNothing().when(dao).purgeLabTestAttributeType(any(LabTestAttributeType.class));
 		doNothing().when(dao).purgeLabTestAttribute(any(LabTestAttribute.class));
 		service.deleteLabTestAttributeType(cartridgeId, true);

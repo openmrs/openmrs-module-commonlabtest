@@ -292,7 +292,7 @@ public class CommonLabTestBaseTest extends BaseModuleContextSensitiveTest {
 		harryGxp.setLabTestType(geneXpert);
 		harryGxp.addLabTestSample(harrySample);
 		harryGxp.setLabReferenceNumber("HARRY-GXP-1");
-		harryGxpResults = new HashSet<>();
+		harryGxpResults = new HashSet<LabTestAttribute>();
 		harryGxpResults.addAll(Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
 		harryGxp.setAttributes(harryGxpResults);
 		harryGxp.setUuid("d175e92e-47bf-11e8-943c-40b034c3cfee");
@@ -300,7 +300,7 @@ public class CommonLabTestBaseTest extends BaseModuleContextSensitiveTest {
 		harryCxr = new LabTest(harryCxrOrder);
 		harryCxr.setLabTestType(chestXRay);
 		harryCxr.setLabReferenceNumber("HARRY-CXR-1");
-		harryCxrResults = new HashSet<>();
+		harryCxrResults = new HashSet<LabTestAttribute>();
 		harryCxrResults.addAll(Arrays.asList(harryCxrResult, harryRadiologistRemarks));
 		harryCxr.setAttributes(harryCxrResults);
 		harryCxr.setUuid("d23c2576-47bf-11e8-943c-40b034c3cfee");
@@ -309,10 +309,9 @@ public class CommonLabTestBaseTest extends BaseModuleContextSensitiveTest {
 		hermioneGxp.setLabTestType(geneXpert);
 		hermioneGxp.addLabTestSample(hermioneSample);
 		hermioneGxp.setLabReferenceNumber("HERMIONE-GXP-1");
-		hermioneGxpResults = new HashSet<>();
+		hermioneGxpResults = new HashSet<LabTestAttribute>();
 		hermioneGxpResults.addAll(Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
 		hermioneGxp.setAttributes(hermioneGxpResults);
 		hermioneGxp.setUuid("d175e92e-dc93-11e8-d298-40b034c3cfee");
 	}
-	
 }
