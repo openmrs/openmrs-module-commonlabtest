@@ -98,8 +98,8 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="max_occurs" type="int" />
-			<column name="datatype_config" type="varchar(65535)" />
-			<column name="handler_config" type="varchar(65535)" />
+			<column name="datatype_config" type="varchar(21845)" />
+			<column name="handler_config" type="varchar(21845)" />
 			<column name="sort_weight" type="double" />
 			<column name="description" type="text">
 				<constraints nullable="false" />
