@@ -145,7 +145,7 @@ public class CommonLabTestController {
 	}
 	
 	/**
-	 * Returns {@link LabTestType} objects by generated Id
+	 * Returns {@link LabTestType} object by generated Id
 	 * 
 	 * @param id
 	 * @return
@@ -234,7 +234,7 @@ public class CommonLabTestController {
 	}
 	
 	/**
-	 * Returns {@link LabTestAttributeType} objects by generated Id
+	 * Returns {@link LabTestAttributeType} object by generated Id
 	 * 
 	 * @param model
 	 * @param id
@@ -308,7 +308,7 @@ public class CommonLabTestController {
 	/******************************************************/
 	
 	/**
-	 * Returns {@link LabTestSample} objects by generated Id
+	 * Returns {@link LabTestSample} object by generated Id
 	 * 
 	 * @param model
 	 * @param id
@@ -334,8 +334,8 @@ public class CommonLabTestController {
 	}
 	
 	/**
-	 * Searches for {@link LabTestType} objects by given non-null parameters. At one parameter must
-	 * be defined; parameters <code>status</code> must coexist with <code>from and to</code>
+	 * Searches for {@link LabTestType} objects by given non-null parameters. At least one parameter
+	 * must be defined; parameters <code>status</code> must coexist with <code>from and to</code>
 	 * 
 	 * @param patient
 	 * @param labTest
@@ -452,11 +452,33 @@ public class CommonLabTestController {
 	/********************** LAB TESTS *********************/
 	/******************************************************/
 	
+	/**
+	 * Returns {@link LabTestSample} object by generated Id
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "labTest", method = RequestMethod.GET)
 	protected LabTest getLabTest(@RequestParam(value = "id", required = true) Integer id) throws Exception {
 		return service.getLabTest(id);
 	}
 	
+	/**
+	 * Searches for {@link LabTest} objects by given non-null parameters. At least one parameter
+	 * must be defined; parameters <code>status</code> must coexist with <code>from and to</code>
+	 * 
+	 * @param labTestTypeId
+	 * @param patientId
+	 * @param orderNumber
+	 * @param referenceNumber
+	 * @param ordererId
+	 * @param from
+	 * @param to
+	 * @param includeVoided
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "findLabTests", method = RequestMethod.GET)
 	protected List<LabTest> getLabTests(@RequestParam(value = "labTestTypeId") Integer labTestTypeId,
 	        @RequestParam(value = "id") Integer patientId, @RequestParam(value = "orderNumber") String orderNumber,
@@ -491,52 +513,128 @@ public class CommonLabTestController {
 		    includeVoided);
 	}
 	
+	/**
+	 * Saves {@link LabTest} object
+	 * 
+	 * @param labTest
+	 * @return
+	 */
 	@RequestMapping(value = "labTest", method = RequestMethod.POST)
 	protected LabTest saveLabTest(@ModelAttribute("labTest") LabTest labTest) {
 		return service.saveLabTest(labTest);
 	}
 	
+	/**
+	 * Deletes {@link LabTest} object
+	 * 
+	 * @param labTest
+	 */
 	@RequestMapping(value = "labTest", method = RequestMethod.DELETE)
 	protected void deleteLabTest(@ModelAttribute("labTest") LabTest labTest) {
 		service.deleteLabTest(labTest);
 	}
 	
 	/******************************************************/
-	/******************* LAB TEST RESULTS *****************/
+	/***************** LAB TEST ATTRIBUTES ****************/
 	/******************************************************/
 	
-	@RequestMapping(value = "labTest", method = RequestMethod.GET)
-	protected LabTestAttribute getLabTestResult(Integer id) {
-		// TODO
-		return null;
+	/**
+	 * Returns {@link LabTestSample} object by generated Id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "labTestAttribute", method = RequestMethod.GET)
+	protected LabTestAttribute getLabTestAttribute(Integer id) {
+		return service.getLabTestAttribute(id);
 	}
 	
-	@RequestMapping(value = "labTest", method = RequestMethod.GET)
-	protected List<LabTestAttribute> getLabTestResults(Integer labTestId) {
-		// TODO
-		return null;
+	/**
+	 * Returns list of {@link LabTestAttribute} objects by patient
+	 * 
+	 * @param patientId
+	 * @return
+	 */
+	@RequestMapping(value = "labTestAttributes", method = RequestMethod.GET)
+	protected List<LabTestAttribute> getLabTestAttributes(
+	        @RequestParam(value = "patientId", required = true) Integer patientId) {
+		Patient patient = Context.getPatientService().getPatient(patientId);
+		return service.getLabTestAttributes(patient, false);
 	}
 	
-	@RequestMapping(value = "findLabTests", method = RequestMethod.GET)
-	protected List<LabTestAttribute> getLabTestResults() {
-		// TODO
-		return null;
+	/**
+	 * Searches for {@link LabTestAttribute} objects by given non-null parameters. At least one
+	 * parameter must be defined; parameters <code>status</code> must coexist with
+	 * <code>from and to</code>
+	 * 
+	 * @param labTestAttributeTypeId
+	 * @param patientId
+	 * @param value
+	 * @param from
+	 * @param to
+	 * @param includeVoided
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "findLabTestAttributes", method = RequestMethod.GET)
+	protected List<LabTestAttribute> getLabTestAttributes(
+	        @RequestParam(value = "labTestAttributeTypeId") Integer labTestAttributeTypeId,
+	        @RequestParam(value = "id") Integer patientId, @RequestParam(value = "valueReference") String value,
+	        @RequestParam(value = "from") Date from, @RequestParam(value = "to") Date to,
+	        @RequestParam(value = "voided") Boolean includeVoided) throws Exception {
+		LabTestAttributeType labTestAttributeType = null;
+		Patient patient = null;
+		if (labTestAttributeTypeId != null) {
+			labTestAttributeType = service.getLabTestAttributeType(labTestAttributeTypeId);
+		}
+		if (patientId != null) {
+			patient = Context.getPatientService().getPatient(patientId);
+		}
+		if (from != null || to != null) {
+			if (from == null || to == null || labTestAttributeTypeId == null) {
+				throw new Exception(
+				        "Unable to find LabTestAttributes. When searching by date range, the required parameters: from, to and labTestAttributeTypeId must be provided.");
+			}
+			// Swap dates if difference is negative
+			if (from.compareTo(to) > 0) {
+				Date tmp = from;
+				from = to;
+				to = tmp;
+			}
+		}
+		return service.getLabTestAttributes(labTestAttributeType, patient, value, from, to, includeVoided);
 	}
 	
-	@RequestMapping(value = "labTest", method = RequestMethod.POST)
-	protected LabTestAttribute saveLabTestResult() {
-		// TODO
-		return null;
+	/**
+	 * Saves {@link LabTestAttribute} object
+	 * 
+	 * @param labTestAttribute
+	 * @return
+	 */
+	@RequestMapping(value = "labTestAttribute", method = RequestMethod.POST)
+	protected LabTestAttribute saveLabTestAttribute(@ModelAttribute("labTestAttribute") LabTestAttribute labTestAttribute) {
+		return service.saveLabTestAttribute(labTestAttribute);
 	}
 	
-	@RequestMapping(value = "labTest", method = RequestMethod.POST)
-	protected List<LabTestAttribute> saveLabTestResults(List<LabTestAttribute> labTestResults) {
-		// TODO
-		return null;
+	/**
+	 * Saves a list of {@link LabTestAttribute} objects
+	 * 
+	 * @param labTestAttributes
+	 * @return
+	 */
+	@RequestMapping(value = "labTestAttribute", method = RequestMethod.POST)
+	protected List<LabTestAttribute> saveLabTestAttributes(
+	        @ModelAttribute("labTestAttributes") List<LabTestAttribute> labTestAttributes) {
+		return service.saveLabTestAttributes(labTestAttributes);
 	}
 	
-	@RequestMapping(value = "labTest", method = RequestMethod.DELETE)
-	protected void deleteLabTestResult() {
-		// TODO
+	/**
+	 * Deletes {@link LabTestAttribute} object
+	 * 
+	 * @param labTestAttribute
+	 */
+	@RequestMapping(value = "labTestAttribute", method = RequestMethod.DELETE)
+	protected void deleteLabTestAttribute(@ModelAttribute("labTestAttribute") LabTestAttribute labTestAttribute) {
+		service.deleteLabTestAttribute(labTestAttribute);
 	}
 }
