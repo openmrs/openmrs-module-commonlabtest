@@ -19,6 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.CommonLabTestConfig;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
@@ -37,23 +38,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * This class configured as controller using annotation and mapped with the URL
- * of 'module/${rootArtifactid}/${rootArtifactid}Link.form'.
+ * This class configured as controller using annotation and mapped with the URL of
+ * 'module/${rootArtifactid}/${rootArtifactid}Link.form'.
  */
 @Controller
 // ("${rootrootArtifactid}.CommonLabTestController")
 @RequestMapping(value = "module/${rootArtifactid}/${rootArtifactid}/")
 public class CommonLabTestController {
-
+	
 	/** Logger for this class and subclasses */
 	protected final Log log = LogFactory.getLog(getClass());
-
+	
 	@Autowired
 	CommonLabTestService service;
-
+	
 	/** Success form view name */
-	private final String VIEW = "/module/${rootArtifactid}/${rootArtifactid}";
-
+	private static final String VIEW = "/module/${rootArtifactid}/${rootArtifactid}";
+	
 	/**
 	 * Initially called after the getUsers method to get the landing form name
 	 * 
@@ -63,7 +64,7 @@ public class CommonLabTestController {
 	public String onGet() {
 		return VIEW;
 	}
-
+	
 	/**
 	 * All the parameters are optional based on the necessity
 	 * 
@@ -74,12 +75,13 @@ public class CommonLabTestController {
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public String onPost(HttpSession httpSession, @ModelAttribute("anyRequestObject") Object anyRequestObject,
-			BindingResult errors) {
+	        BindingResult errors) {
 		if (errors.hasErrors()) {
+			// Do nothing
 		}
 		return VIEW;
 	}
-
+	
 	/**
 	 * Returns a list of {@link LabTestGroup} enum values as String list
 	 * 
@@ -94,7 +96,7 @@ public class CommonLabTestController {
 		}
 		return list;
 	}
-
+	
 	/**
 	 * Returns a list of {@link LabTestSampleStatus} enum values as String list
 	 * 
@@ -109,11 +111,11 @@ public class CommonLabTestController {
 		}
 		return list;
 	}
-
+	
 	/******************************************************/
 	/******************* LAB TEST TYPES *******************/
 	/******************************************************/
-
+	
 	/**
 	 * Returns list of active (unvoided) {@link LabTestType} objects
 	 * 
@@ -122,13 +124,12 @@ public class CommonLabTestController {
 	 */
 	@RequestMapping(value = "labTestTypes", method = RequestMethod.GET)
 	protected List<LabTestType> getAllLabTestTypes() throws Exception {
-		List<LabTestType> list = service.getAllLabTestTypes(Boolean.FALSE);
-		return list;
+		return service.getAllLabTestTypes(Boolean.FALSE);
 	}
-
+	
 	/**
-	 * Searches for {@link LabTestType} objects by given non-null parameters. At
-	 * least one parameter must be defined
+	 * Searches for {@link LabTestType} objects by given non-null parameters. At least one parameter
+	 * must be defined
 	 * 
 	 * @param name
 	 * @param group
@@ -138,12 +139,11 @@ public class CommonLabTestController {
 	 */
 	@RequestMapping(value = "findLabTestTypes", method = RequestMethod.GET)
 	protected List<LabTestType> getLabTestTypes(@RequestParam(value = "name", required = true) String name,
-			@RequestParam(value = "group", required = true) LabTestGroup group,
-			@RequestParam(value = "retired", required = true) Boolean retired) throws Exception {
-		List<LabTestType> list = service.getLabTestTypes(name, null, group, null, null, retired);
-		return list;
+	        @RequestParam(value = "group", required = true) LabTestGroup group,
+	        @RequestParam(value = "retired", required = true) Boolean retired) throws Exception {
+		return service.getLabTestTypes(name, null, group, null, null, retired);
 	}
-
+	
 	/**
 	 * Returns {@link LabTestType} objects by generated Id
 	 * 
@@ -155,7 +155,7 @@ public class CommonLabTestController {
 	protected LabTestType getLabTestType(@RequestParam(value = "id", required = true) Integer id) throws Exception {
 		return service.getLabTestType(id);
 	}
-
+	
 	/**
 	 * Saves {@link LabTestType} object
 	 * 
@@ -165,10 +165,10 @@ public class CommonLabTestController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "labTestType", method = RequestMethod.POST)
-	protected LabTestSample saveLabTestType(@RequestParam(value = "sample") LabTestSample sample) throws Exception {
+	protected LabTestSample saveLabTestType(@ModelAttribute("sample") LabTestSample sample) throws Exception {
 		return service.saveLabTestSample(sample);
 	}
-
+	
 	/**
 	 * Retires an active {@link LabTestType} object
 	 * 
@@ -177,14 +177,14 @@ public class CommonLabTestController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "retireLabTestType", method = RequestMethod.POST)
-	protected void retireLabTestType(@RequestParam(value = "labTestType", required = true) LabTestType labTestType,
-			@RequestParam(value = "reason", required = true) String reason) throws Exception {
+	protected void retireLabTestType(@ModelAttribute("labTestType") LabTestType labTestType,
+	        @RequestParam(value = "reason", required = true) String reason) throws Exception {
 		if ("".equals(reason)) {
 			throw new Exception("Cannot retire the object. Provide a reason.");
 		}
 		service.retireLabTestType(labTestType, reason);
 	}
-
+	
 	/**
 	 * Activates a retired {@link LabTestType} object
 	 * 
@@ -193,11 +193,10 @@ public class CommonLabTestController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "unretireLabTestType", method = RequestMethod.POST)
-	protected void unretireLabTestType(@RequestParam(value = "labTestType", required = true) LabTestType labTestType)
-			throws Exception {
+	protected void unretireLabTestType(@ModelAttribute("labTestType") LabTestType labTestType) throws Exception {
 		service.unretireLabTestType(labTestType);
 	}
-
+	
 	/**
 	 * Deletes {@link LabTestType} object. Only a retired object can be deleted.
 	 * 
@@ -205,18 +204,17 @@ public class CommonLabTestController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "labTestType", method = RequestMethod.DELETE)
-	protected void deleteLabTestType(@RequestParam(value = "labTest", required = true) LabTestType labTestType)
-			throws Exception {
+	protected void deleteLabTestType(@ModelAttribute("labTestType") LabTestType labTestType) throws Exception {
 		if (!labTestType.getRetired()) {
 			throw new Exception("Unable to delete the object. Make sure that the object is retired/voided first.");
 		}
 		service.deleteLabTestType(labTestType);
 	}
-
+	
 	/******************************************************/
 	/*************** LAB TEST ATTRIBUTE TYPES *************/
 	/******************************************************/
-
+	
 	/**
 	 * Returns list of all {@link LabTestAttributeType} objects matching parameters
 	 * 
@@ -227,14 +225,14 @@ public class CommonLabTestController {
 	 */
 	@RequestMapping(value = "labTestAttributeTypes", method = RequestMethod.GET)
 	protected List<LabTestAttributeType> getLabTestAttributeTypes(@RequestParam(value = "name") String name,
-			@RequestParam(value = "retired") Boolean includeRetired) throws Exception {
+	        @RequestParam(value = "retired") Boolean includeRetired) throws Exception {
 		if (name == null && includeRetired == null) {
 			return service.getAllLabTestAttributeTypes(false);
 		}
 		service.getAllLabTestAttributeTypes(false);
 		return service.getLabTestAttributeTypes(name, null, includeRetired);
 	}
-
+	
 	/**
 	 * Returns {@link LabTestAttributeType} objects by generated Id
 	 * 
@@ -245,10 +243,10 @@ public class CommonLabTestController {
 	 */
 	@RequestMapping(value = "labTestAttributeType", method = RequestMethod.GET)
 	protected LabTestAttributeType getLabTestAttributeType(@RequestParam(value = "id", required = true) Integer id)
-			throws Exception {
+	        throws Exception {
 		return service.getLabTestAttributeType(id);
 	}
-
+	
 	/**
 	 * Saves {@link LabTestAttributeType} object
 	 * 
@@ -259,11 +257,10 @@ public class CommonLabTestController {
 	 */
 	@RequestMapping(value = "labTestAttributeType", method = RequestMethod.POST)
 	protected LabTestAttributeType saveLabTestAttributeType(
-			@RequestParam(value = "labTestAttributeType", required = true) LabTestAttributeType labTestAttributeType)
-			throws Exception {
+	        @ModelAttribute("labTestAttributeType") LabTestAttributeType labTestAttributeType) throws Exception {
 		return service.saveLabTestAttributeType(labTestAttributeType);
 	}
-
+	
 	/**
 	 * Retires a {@link LabTestAttributeType} object
 	 * 
@@ -273,14 +270,14 @@ public class CommonLabTestController {
 	 */
 	@RequestMapping(value = "retireLabTestAttributeType", method = RequestMethod.POST)
 	protected void retireLabTestAttributeType(
-			@RequestParam(value = "labTestAttributeType", required = true) LabTestAttributeType labTestAttributeType,
-			@RequestParam(value = "reason", required = true) String reason) throws Exception {
+	        @ModelAttribute("labTestAttributeType") LabTestAttributeType labTestAttributeType,
+	        @RequestParam(value = "reason", required = true) String reason) throws Exception {
 		if ("".equals(reason)) {
 			throw new Exception("Cannot retire the object. Provide a reason.");
 		}
 		service.retireLabTestAttributeType(labTestAttributeType, reason);
 	}
-
+	
 	/**
 	 * Revives back a retired {@link LabTestAttributeType} object
 	 * 
@@ -290,14 +287,10 @@ public class CommonLabTestController {
 	 */
 	@RequestMapping(value = "unretireLabTestAttributeType", method = RequestMethod.POST)
 	protected void unretireLabTestAttributeType(
-			@RequestParam(value = "labTestAttributeType", required = true) LabTestAttributeType labTestAttributeType,
-			@RequestParam(value = "reason", required = true) String reason) throws Exception {
-		if ("".equals(reason)) {
-			throw new Exception("Cannot retire the object. Provide a reason.");
-		}
+	        @ModelAttribute("labTestAttributeType") LabTestAttributeType labTestAttributeType) throws Exception {
 		service.unretireLabTestAttributeType(labTestAttributeType);
 	}
-
+	
 	/**
 	 * Deletes {@link LabTestAttributeType} object
 	 * 
@@ -306,15 +299,14 @@ public class CommonLabTestController {
 	 */
 	@RequestMapping(value = "labTestAttributeType", method = RequestMethod.DELETE)
 	protected void deleteLabTestAttributeType(
-			@RequestParam(value = "labTestAttributeType", required = true) LabTestAttributeType labTestAttributeType)
-			throws Exception {
+	        @ModelAttribute("labTestAttributeType") LabTestAttributeType labTestAttributeType) throws Exception {
 		service.deleteLabTestAttributeType(labTestAttributeType);
 	}
-
+	
 	/******************************************************/
 	/****************** LAB TEST SAMPLES ******************/
 	/******************************************************/
-
+	
 	/**
 	 * Returns {@link LabTestSample} objects by generated Id
 	 * 
@@ -327,7 +319,7 @@ public class CommonLabTestController {
 	protected LabTestSample getLabTestSample(@RequestParam(value = "id", required = true) Integer id) throws Exception {
 		return service.getLabTestSample(id);
 	}
-
+	
 	/**
 	 * Returns list of {@link LabTestSample} objects by given {@link LabTest} object
 	 * 
@@ -337,14 +329,13 @@ public class CommonLabTestController {
 	 */
 	@RequestMapping(value = "labTestSamples", method = RequestMethod.GET)
 	protected List<LabTestSample> getLabTestSamples(@RequestParam(value = "labTest", required = true) LabTest labTest)
-			throws Exception {
+	        throws Exception {
 		return service.getLabTestSamples(labTest, false);
 	}
-
+	
 	/**
-	 * Searches for {@link LabTestType} objects by given non-null parameters. At one
-	 * parameter must be defined; parameters <code>status</code> must coexist with
-	 * <code>from and to</code>
+	 * Searches for {@link LabTestType} objects by given non-null parameters. At one parameter must
+	 * be defined; parameters <code>status</code> must coexist with <code>from and to</code>
 	 * 
 	 * @param patient
 	 * @param labTest
@@ -359,18 +350,17 @@ public class CommonLabTestController {
 	 */
 	@RequestMapping(value = "findLabTestSamples", method = RequestMethod.GET)
 	protected List<LabTestSample> getLabTestSamples(@RequestParam(value = "patient") Patient patient,
-			@RequestParam(value = "labTest") LabTest labTest,
-			@RequestParam(value = "status") LabTestSampleStatus status,
-			@RequestParam(value = "identifier") String labSampleIdentifier,
-			@RequestParam(value = "collector") Provider collector, @RequestParam(value = "from") Date from,
-			@RequestParam(value = "to") Date to, @RequestParam(value = "voided", required = true) Boolean includeVoided)
-			throws Exception {
-		boolean patientOnly = (patient != null) && (labTest == null) && (status == null)
-				&& (labSampleIdentifier == null) && (collector == null) && (from == null);
-		boolean labTestOnly = (labTest != null) && (patient == null) && (status == null)
-				&& (labSampleIdentifier == null) && (collector == null) && (from == null);
+	        @RequestParam(value = "labTest") LabTest labTest, @RequestParam(value = "status") LabTestSampleStatus status,
+	        @RequestParam(value = "identifier") String labSampleIdentifier,
+	        @RequestParam(value = "collector") Provider collector, @RequestParam(value = "from") Date from,
+	        @RequestParam(value = "to") Date to, @RequestParam(value = "voided", required = true) Boolean includeVoided)
+	        throws Exception {
+		boolean patientOnly = (patient != null) && (labTest == null) && (status == null) && (labSampleIdentifier == null)
+		        && (collector == null) && (from == null);
+		boolean labTestOnly = (labTest != null) && (patient == null) && (status == null) && (labSampleIdentifier == null)
+		        && (collector == null) && (from == null);
 		boolean collectorOnly = (collector != null) && (labTest == null) && (patient == null) && (status == null)
-				&& (labSampleIdentifier == null) && (from == null);
+		        && (labSampleIdentifier == null) && (from == null);
 		if (includeVoided == null) {
 			includeVoided = Boolean.FALSE;
 		}
@@ -386,7 +376,7 @@ public class CommonLabTestController {
 		if (from != null || to != null) {
 			if (from == null || to == null || status == null) {
 				throw new Exception(
-						"Unable to find LabTestSamples. When searching by date range, all 3 of the parameters: from, to and status must be provided.");
+				        "Unable to find LabTestSamples. When searching by date range, the required parameters: from, to and status must be provided.");
 			}
 			// Swap dates if difference is negative
 			if (from.compareTo(to) > 0) {
@@ -396,22 +386,21 @@ public class CommonLabTestController {
 			}
 			return service.getLabTestSamples(status, from, to, includeVoided);
 		}
-		return service.getLabTestSamples(labTest, patient, status, labSampleIdentifier, collector, from, to,
-				includeVoided);
+		return service.getLabTestSamples(labTest, patient, status, labSampleIdentifier, collector, from, to, includeVoided);
 	}
-
+	
 	/**
 	 * Saves {@link LabTestSample} object
 	 * 
 	 * @param model
 	 * @param labTestId
-	 * @param sample
+	 * @param labTestSample
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "labTestSample", method = RequestMethod.POST)
-	protected LabTestSample saveLabTestSample(@RequestParam(value = "labtestid", required = true) Integer labTestId,
-			@RequestParam(value = "sample", required = true) LabTestSample sample) throws Exception {
+	protected LabTestSample saveLabTestSample(@ModelAttribute("labTestSample") LabTestSample labTestSample,
+	        @RequestParam(value = "labTestId", required = true) Integer labTestId) throws Exception {
 		LabTest labTest = service.getLabTest(labTestId);
 		if (labTest == null) {
 			throw new Exception("Unable to find LabTest object matching given labTestId.");
@@ -419,117 +408,133 @@ public class CommonLabTestController {
 		if (labTest.getLabTestType().getRequiresSpecimen()) {
 			throw new Exception("Cannot save the object. Associated LabTestType does not accept LabTestSample.");
 		}
-		return service.saveLabTestSample(sample);
+		return service.saveLabTestSample(labTestSample);
 	}
-
+	
 	/**
-	 * Sets {@link LabTestSampleStatus} to ACCEPTED and saves the
-	 * {@link LabTestSample} object
+	 * Sets {@link LabTestSampleStatus} to ACCEPTED and saves the {@link LabTestSample} object
 	 * 
 	 * @param labTestSample
 	 */
 	@RequestMapping(value = "acceptLabTestSample", method = RequestMethod.POST)
-	protected void acceptLabTestSample(@RequestParam(value = "sample") LabTestSample labTestSample) {
+	protected void acceptLabTestSample(@ModelAttribute("labTestSample") LabTestSample labTestSample) {
 		labTestSample.setStatus(LabTestSampleStatus.ACCEPTED);
 		service.saveLabTestSample(labTestSample);
 	}
-
+	
 	/**
-	 * Sets {@link LabTestSampleStatus} to REJECTED and saves the
-	 * {@link LabTestSample} object. Also voids the object if
-	 * AUTO_VOID_REJECTED_SAMPLES property is true in {@link CommonLabTestConfig}
+	 * Sets {@link LabTestSampleStatus} to REJECTED and saves the {@link LabTestSample} object. Also
+	 * voids the object if AUTO_VOID_REJECTED_SAMPLES property is true in
+	 * {@link CommonLabTestConfig}
 	 * 
 	 * @param labTestSample
 	 */
 	@RequestMapping(value = "rejectLabTestSample", method = RequestMethod.POST)
-	protected void rejectLabTestSample(@RequestParam(value = "sample") LabTestSample labTestSample) {
+	protected void rejectLabTestSample(@ModelAttribute("labTestSample") LabTestSample labTestSample) {
 		labTestSample.setStatus(LabTestSampleStatus.REJECTED);
 		service.saveLabTestSample(labTestSample);
 		if (CommonLabTestConfig.AUTO_VOID_REJECTED_SAMPLES) {
 			service.voidLabTestSample(labTestSample, "Sample " + LabTestSampleStatus.REJECTED);
 		}
 	}
-
+	
 	/**
 	 * Deletes {@link LabTestSample} object
 	 * 
 	 * @param labTestSample
 	 */
-	@RequestMapping(value = "labTest", method = RequestMethod.DELETE)
-	protected void deleteLabTestSample(
-			@RequestParam(value = "labTestSample", required = true) LabTestSample labTestSample) throws Exception {
+	@RequestMapping(value = "labTestSample", method = RequestMethod.DELETE)
+	protected void deleteLabTestSample(@ModelAttribute("sample") LabTestSample labTestSample) throws Exception {
 		service.deleteLabTestSample(labTestSample);
 	}
-
+	
 	/******************************************************/
 	/********************** LAB TESTS *********************/
 	/******************************************************/
-
+	
 	@RequestMapping(value = "labTest", method = RequestMethod.GET)
-	protected LabTest getLabTest(Integer id) {
-		// TODO
-		return null;
+	protected LabTest getLabTest(@RequestParam(value = "id", required = true) Integer id) throws Exception {
+		return service.getLabTest(id);
 	}
-
+	
 	@RequestMapping(value = "findLabTests", method = RequestMethod.GET)
-	protected List<LabTest> getLabTests() {
-		// TODO
-		return null;
+	protected List<LabTest> getLabTests(@RequestParam(value = "labTestTypeId") Integer labTestTypeId,
+	        @RequestParam(value = "id") Integer patientId, @RequestParam(value = "orderNumber") String orderNumber,
+	        @RequestParam(value = "referenceNumber") String referenceNumber,
+	        @RequestParam(value = "ordererId") Integer ordererId, @RequestParam(value = "from") Date from,
+	        @RequestParam(value = "to") Date to, @RequestParam(value = "voided") Boolean includeVoided) throws Exception {
+		LabTestType labTestType = null;
+		Patient patient = null;
+		Provider orderer = null;
+		if (labTestTypeId != null) {
+			labTestType = service.getLabTestType(labTestTypeId);
+		}
+		if (patientId != null) {
+			patient = Context.getPatientService().getPatient(patientId);
+		}
+		if (ordererId != null) {
+			orderer = Context.getProviderService().getProvider(ordererId);
+		}
+		if (from != null || to != null) {
+			if (from == null || to == null || labTestTypeId == null) {
+				throw new Exception(
+				        "Unable to find LabTestSamples. When searching by date range, the required parameters: from, to and labTestTypeId must be provided.");
+			}
+			// Swap dates if difference is negative
+			if (from.compareTo(to) > 0) {
+				Date tmp = from;
+				from = to;
+				to = tmp;
+			}
+		}
+		return service.getLabTests(labTestType, patient, orderNumber, referenceNumber, null, orderer, from, to,
+		    includeVoided);
 	}
-
+	
 	@RequestMapping(value = "labTest", method = RequestMethod.POST)
-	protected LabTest saveLabTest() {
-		// TODO
-		return null;
+	protected LabTest saveLabTest(@ModelAttribute("labTest") LabTest labTest) {
+		return service.saveLabTest(labTest);
 	}
-
-	@RequestMapping(value = "completeLabTest", method = RequestMethod.POST)
-	protected LabTest completeLabTest() {
-		// Set sample status to PROCESSED
-		// Any other actions (e.g. closing Order)
-		// TODO
-		return null;
-	}
-
+	
 	@RequestMapping(value = "labTest", method = RequestMethod.DELETE)
-	protected void deleteLabTest() {
-		// TODO
+	protected void deleteLabTest(@ModelAttribute("labTest") LabTest labTest) {
+		service.deleteLabTest(labTest);
 	}
-
+	
 	/******************************************************/
 	/******************* LAB TEST RESULTS *****************/
 	/******************************************************/
-
+	
 	@RequestMapping(value = "labTest", method = RequestMethod.GET)
 	protected LabTestAttribute getLabTestResult(Integer id) {
 		// TODO
 		return null;
 	}
-
+	
 	@RequestMapping(value = "labTest", method = RequestMethod.GET)
 	protected List<LabTestAttribute> getLabTestResults(Integer labTestId) {
 		// TODO
 		return null;
 	}
-
+	
 	@RequestMapping(value = "findLabTests", method = RequestMethod.GET)
 	protected List<LabTestAttribute> getLabTestResults() {
 		// TODO
 		return null;
 	}
-
+	
 	@RequestMapping(value = "labTest", method = RequestMethod.POST)
 	protected LabTestAttribute saveLabTestResult() {
 		// TODO
 		return null;
 	}
-
+	
 	@RequestMapping(value = "labTest", method = RequestMethod.POST)
 	protected List<LabTestAttribute> saveLabTestResults(List<LabTestAttribute> labTestResults) {
 		// TODO
 		return null;
 	}
-
+	
 	@RequestMapping(value = "labTest", method = RequestMethod.DELETE)
 	protected void deleteLabTestResult() {
 		// TODO
