@@ -241,15 +241,13 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	/**
 	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest,
 	 *      org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSampleStatus,
-	 *      java.lang.String, org.openmrs.Provider, java.util.Date, java.util.Date,
-	 *      boolean)
+	 *      java.lang.String, org.openmrs.Provider, java.util.Date, java.util.Date, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestSample> getLabTestSamples(LabTest labTest, Patient patient, LabTestSampleStatus status,
-	        String labSampleIdentifier, Provider collector, Date from, Date to,
-	        boolean includeVoided) throws APIException {
+	        String labSampleIdentifier, Provider collector, Date from, Date to, boolean includeVoided) throws APIException {
 		// TODO
 		return null;
 	}
@@ -649,7 +647,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		}
 		for (LabTestAttribute attribute : labTest.getAttributes()) {
 			boolean reasonMatched = attribute.getVoidReason().equals(labTest.getVoidReason());
-			boolean dateMatched = DateUtil.truncateToSeconds(labTest.getDateVoided()).compareTo(attribute.getDateVoided()) == 0;
+			boolean dateMatched = DateUtil.truncateToSeconds(labTest.getDateVoided())
+			        .compareTo(attribute.getDateVoided()) == 0;
 			if (reasonMatched && dateMatched) {
 				unvoidLabTestAttribute(attribute);
 			}
@@ -759,12 +758,16 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
 	public void deleteLabTestType(LabTestType labTestType, boolean cascade) throws APIException {
-		if (cascade) {
-			List<LabTest> labTests = getLabTests(labTestType, true);
+		List<LabTest> labTests = getLabTests(labTestType, true);
+		if (labTests == null) {
+			dao.purgeLabTestType(labTestType);
+		} else if (cascade) {
 			for (LabTest labTest : labTests) {
 				dao.purgeLabTest(labTest);
 			}
+			dao.purgeLabTestType(labTestType);
+		} else {
+			throw new APIException("Cannot delete LabTestType because of Foreign Key Violation.");
 		}
-		dao.purgeLabTestType(labTestType);
 	}
 }

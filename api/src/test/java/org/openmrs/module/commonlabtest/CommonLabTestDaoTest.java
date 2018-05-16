@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.Concept;
 import org.openmrs.Order;
@@ -32,10 +33,15 @@ import org.springframework.beans.factory.annotation.Autowired;
  * standardTestDataset.xml in openmrs-api. All test methods are executed in transactions, which are
  * rolled back by the end of each test method.
  */
-public class CommonLabTestDaoTest extends CommonLabTestBaseTest {
+public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	@Autowired
 	CommonLabTestDaoImpl dao;
+	
+	@Before
+	public void runBeforeEachTest() throws Exception {
+		super.initTestData();
+	}
 	
 	/**
 	 * Test method for
