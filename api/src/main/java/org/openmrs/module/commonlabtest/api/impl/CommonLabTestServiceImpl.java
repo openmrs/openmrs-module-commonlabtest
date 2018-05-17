@@ -35,8 +35,10 @@ import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.commonlabtest.api.dao.CommonLabTestDao;
 import org.openmrs.util.DateUtil;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class CommonLabTestServiceImpl extends BaseOpenmrsService implements CommonLabTestService {
 	
 	CommonLabTestDao dao;
@@ -647,8 +649,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		}
 		for (LabTestAttribute attribute : labTest.getAttributes()) {
 			boolean reasonMatched = attribute.getVoidReason().equals(labTest.getVoidReason());
-			boolean dateMatched = DateUtil.truncateToSeconds(labTest.getDateVoided())
-			        .compareTo(attribute.getDateVoided()) == 0;
+			boolean dateMatched = DateUtil.truncateToSeconds(labTest.getDateVoided()).compareTo(attribute.getDateVoided()) == 0;
 			if (reasonMatched && dateMatched) {
 				unvoidLabTestAttribute(attribute);
 			}

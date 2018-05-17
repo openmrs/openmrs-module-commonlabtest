@@ -204,8 +204,7 @@ public interface CommonLabTestService {
 	 * @throws APIException
 	 */
 	List<LabTestSample> getLabTestSamples(LabTest labTest, Patient patient, LabTestSampleStatus status,
-	        String labSampleIdentifier, Provider collector, Date from, Date to,
-	        boolean includeVoided) throws APIException;
+	        String labSampleIdentifier, Provider collector, Date from, Date to, boolean includeVoided) throws APIException;
 	
 	/**
 	 * Returns a list of LabTestSample objects by matching given identifier and/or order number
