@@ -25,6 +25,7 @@ public class AdminList extends AdministrationSectionExt {
 	/**
 	 * @see org.openmrs.module.web.extension.AdministrationSectionExt#getMediaType()
 	 */
+	@Override
 	public Extension.MEDIA_TYPE getMediaType() {
 		return Extension.MEDIA_TYPE.html;
 	}
@@ -32,6 +33,7 @@ public class AdminList extends AdministrationSectionExt {
 	/**
 	 * @see org.openmrs.module.web.extension.AdministrationSectionExt#getTitle()
 	 */
+	@Override
 	public String getTitle() {
 		return "commonlabtest.title";
 	}
@@ -39,12 +41,12 @@ public class AdminList extends AdministrationSectionExt {
 	/**
 	 * @see org.openmrs.module.web.extension.AdministrationSectionExt#getLinks()
 	 */
+	@Override
 	public Map<String, String> getLinks() {
 		
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("/module/commonlabtest/commonlabtest.form", "commonlabtest.title");
-		map.put("/module/commonlabtest/pages/managetesttypes.form", "commonlabtest.admin.managetesttypes");
-		map.put("/module/commonlabtest/pages/managetestattributetypes.form", "commonlabtest.admin.managetestattributetypes");
+		map.put("/module/commonlabtest/pages/manageTestTypes.form", "commonlabtest.admin.managetesttypes");
+		map.put("/module/commonlabtest/pages/manageTestAttributeTypes.form", "commonlabtest.admin.managetestattributetypes");
 		return map;
 	}
 	
