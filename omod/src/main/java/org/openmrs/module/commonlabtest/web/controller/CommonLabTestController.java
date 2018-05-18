@@ -29,8 +29,9 @@ import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,18 +43,16 @@ import org.springframework.web.bind.annotation.RequestParam;
  * 'module/${rootArtifactid}/${rootArtifactid}Link.form'.
  */
 @Controller
-// ("${rootrootArtifactid}.CommonLabTestController")
-@RequestMapping(value = "module/${rootArtifactid}/${rootArtifactid}/")
+@RequestMapping(value = "module/${rootArtifactid}/")
 public class CommonLabTestController {
 	
 	/** Logger for this class and subclasses */
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	@Autowired
-	CommonLabTestService service;
+	CommonLabTestService service = Context.getService(CommonLabTestServiceImpl.class);
 	
 	/** Success form view name */
-	private static final String VIEW = "/module/${rootArtifactid}/${rootArtifactid}";
+	private static final String VIEW = "/module/${rootArtifactid}/";
 	
 	/**
 	 * Initially called after the getUsers method to get the landing form name
@@ -123,8 +122,9 @@ public class CommonLabTestController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "labTestTypes", method = RequestMethod.GET)
-	protected List<LabTestType> getAllLabTestTypes() throws Exception {
-		return service.getAllLabTestTypes(Boolean.FALSE);
+	protected void getAllLabTestTypes(ModelMap map) throws Exception {
+		List<LabTestType> list = service.getAllLabTestTypes(Boolean.FALSE);
+		map.put("labTestTypes", list);
 	}
 	
 	/**
@@ -138,10 +138,11 @@ public class CommonLabTestController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "findLabTestTypes", method = RequestMethod.GET)
-	protected List<LabTestType> getLabTestTypes(@RequestParam(value = "name", required = true) String name,
+	protected void getLabTestTypes(ModelMap map, @RequestParam(value = "name", required = true) String name,
 	        @RequestParam(value = "group", required = true) LabTestGroup group,
 	        @RequestParam(value = "retired", required = true) Boolean retired) throws Exception {
-		return service.getLabTestTypes(name, null, group, null, null, retired);
+		List<LabTestType> list = service.getLabTestTypes(name, null, group, null, null, retired);
+		map.put("labTestTypes", list);
 	}
 	
 	/**
@@ -152,8 +153,8 @@ public class CommonLabTestController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "labTestType", method = RequestMethod.GET)
-	protected LabTestType getLabTestType(@RequestParam(value = "id", required = true) Integer id) throws Exception {
-		return service.getLabTestType(id);
+	protected void getLabTestType(ModelMap map, @RequestParam(value = "id", required = true) Integer id) throws Exception {
+		map.put("labTestType", service.getLabTestType(id));
 	}
 	
 	/**

@@ -40,7 +40,7 @@ public class CommonLabTestExt extends PatientDashboardTabExt {
 	 */
 	@Override
 	public String getPortletUrl() {
-		return "patientlabtests";
+		return "patientLabTests";
 	}
 	
 }

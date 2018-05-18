@@ -43,10 +43,9 @@ public class AdminList extends AdministrationSectionExt {
 	 */
 	@Override
 	public Map<String, String> getLinks() {
-		
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("/module/commonlabtest/pages/manageTestTypes.form", "commonlabtest.admin.managetesttypes");
-		map.put("/module/commonlabtest/pages/manageTestAttributeTypes.form", "commonlabtest.admin.managetestattributetypes");
+		map.put("/module/commonlabtest/manageLabTestTypes.form", "commonlabtest.labtesttype.manage");
+		map.put("/module/commonlabtest/manageLabTestAttributeTypes.form", "commonlabtest.labtestattributetype.manage");
 		return map;
 	}
 	
