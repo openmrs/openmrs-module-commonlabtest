@@ -490,7 +490,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	public LabTest saveLabTest(LabTest labTest) {
-		sessionFactory.getCurrentSession().save(labTest);
+		sessionFactory.getCurrentSession().saveOrUpdate(labTest);
 		return labTest;
 	}
 	
@@ -499,7 +499,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	public LabTestAttribute saveLabTestAttribute(LabTestAttribute labTestAttribute) {
-		sessionFactory.getCurrentSession().save(labTestAttribute);
+		sessionFactory.getCurrentSession().saveOrUpdate(labTestAttribute);
 		return labTestAttribute;
 	}
 	
@@ -508,7 +508,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	public LabTestAttributeType saveLabTestAttributeType(LabTestAttributeType labTestAttributeType) {
-		sessionFactory.getCurrentSession().save(labTestAttributeType);
+		sessionFactory.getCurrentSession().saveOrUpdate(labTestAttributeType);
 		return labTestAttributeType;
 	}
 	
@@ -517,7 +517,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	public LabTestSample saveLabTestSample(LabTestSample labTestSample) {
-		sessionFactory.getCurrentSession().save(labTestSample);
+		sessionFactory.getCurrentSession().saveOrUpdate(labTestSample);
 		return labTestSample;
 	}
 	
@@ -526,7 +526,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	public LabTestType saveLabTestType(LabTestType labTestType) {
-		sessionFactory.getCurrentSession().save(labTestType);
+		sessionFactory.getCurrentSession().saveOrUpdate(labTestType);
 		return labTestType;
 	}
 }
