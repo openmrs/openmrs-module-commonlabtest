@@ -100,8 +100,8 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup,
-	        Concept referenceConcept, boolean includeRetired) {
+	public List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup, 
+			Concept referenceConcept, boolean includeRetired) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestType.class);
 		if (name != null) {
 			criteria.add(Restrictions.ilike("name", name, MatchMode.START));
@@ -227,6 +227,22 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 			criteria.add(Restrictions.eq("retired", false));
 		}
 		criteria.addOrder(Order.asc("name")).addOrder(Order.asc("retired")).list();
+		return criteria.list();
+	}
+	
+	/**
+	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDao#getLabTestAttributeTypes(org.openmrs.module.commonlabtest.LabTestType,
+	 *      boolean)
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<LabTestAttributeType> getLabTestAttributeTypes(LabTestType labTestType, boolean includeRetired) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttributeType.class);
+		criteria.add(Restrictions.eq("labTestType", labTestType));
+		if (!includeRetired) {
+			criteria.add(Restrictions.eq("retired", false));
+		}
+		criteria.addOrder(Order.asc("sortWeight")).addOrder(Order.asc("retired")).list();
 		return criteria.list();
 	}
 	

@@ -25,6 +25,14 @@ public class CommonLabTestConfig {
 	
 	public static final String VIEW_LAB_TEST_METADATA_PRIVILEGE = "View Common Lab Test Metadata";
 	
+	public static final String ADD_LAB_TEST_SAMPLE_PRIVILEGE = "Add Common Lab Test Samples";
+	
+	public static final String EDIT_LAB_TEST_SAMPLE_PRIVILEGE = "Edit Common Lab Test Samples";
+	
+	public static final String VIEW_LAB_TEST_SAMPLE_PRIVILEGE = "View Common Lab Test Samples";
+	
+	public static final String DELETE_LAB_TEST_SAMPLE_PRIVILEGE = "Delete Common Lab Test Samples";
+	
 	public static final String ADD_LAB_TEST_PRIVILEGE = "Add Common Lab Tests";
 	
 	public static final String EDIT_LAB_TEST_PRIVILEGE = "Edit Common Lab Tests";

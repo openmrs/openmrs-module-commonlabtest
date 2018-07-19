@@ -114,6 +114,15 @@ public interface CommonLabTestDao {
 	List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname, boolean includeRetired);
 	
 	/**
+	 * Returns list of {@link LabTestAttributeType} objects by given {@link LabTestType} parameter
+	 * 
+	 * @param labTestType
+	 * @param includeRetired
+	 * @return
+	 */
+	List<LabTestAttributeType> getLabTestAttributeTypes(LabTestType labTestType, boolean includeRetired);
+	
+	/**
 	 * Returns {@link LabTest} object by UUID
 	 * 
 	 * @param uuid
