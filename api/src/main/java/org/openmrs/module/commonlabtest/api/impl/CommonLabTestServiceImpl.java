@@ -23,7 +23,6 @@ import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
-import org.openmrs.api.MissingRequiredPropertyException;
 import org.openmrs.api.OrderContext;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -499,16 +498,16 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	        throws APIException {
 		// Check mandatory fields
 		if (labTest.getOrder() == null) {
-			throw new MissingRequiredPropertyException("org.openmrs.Order", (Object[]) null);
+			throw new APIException("org.openmrs.Order", (Object[]) null);
 		}
 		if (labTest.getOrder().getEncounter() == null) {
-			throw new MissingRequiredPropertyException(Order.class, "org.openmrs.Encounter");
+			throw new APIException("org.openmrs.Encounter", (Object[]) null);
 		}
 		if (labTest.getOrder().getConcept() == null) {
-			throw new MissingRequiredPropertyException(Order.class, "org.openmrs.Concept");
+			throw new APIException("org.openmrs.Concept", (Object[]) null);
 		}
 		if (labTest.getOrder().getOrderer() == null) {
-			throw new MissingRequiredPropertyException(Order.class, "org.openmrs.Orderer");
+			throw new APIException("org.openmrs.Orderer", (Object[]) null);
 		}
 		Order order = labTest.getOrder();
 		order.setOrderType(Context.getOrderService().getOrderTypeByUuid(OrderType.TEST_ORDER_TYPE_UUID));
