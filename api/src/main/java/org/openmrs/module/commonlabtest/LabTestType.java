@@ -39,10 +39,12 @@ import org.openmrs.Concept;
 public class LabTestType extends BaseOpenmrsMetadata {
 	
 	public enum LabTestGroup {
-		BACTERIOLOGY, BIOCHEMISTRY, BLOOD_BANK, CYTOLOGY, HEMATOLOGY, IMMUNOLOGY, MICROBIOLOGY, RADIOLOGY, SONOLOGY, URINALYSIS
+		SEROLOGY, CARDIOLOGY, OPHTHALMOLOGY, BACTERIOLOGY, BIOCHEMISTRY, BLOOD_BANK, CYTOLOGY, HEMATOLOGY, IMMUNOLOGY, MICROBIOLOGY, RADIOLOGY, SONOLOGY, URINALYSIS, OTHER
 	}
 	
 	private static final long serialVersionUID = -4734826044571156784L;
+	
+	public static final String UNKNOWN_TEST_UUID = "ee9b140e-9a29-11e8-a296-40b034c3cfee";
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -78,6 +80,14 @@ public class LabTestType extends BaseOpenmrsMetadata {
 	@Override
 	public Integer getId() {
 		return labTestTypeId;
+	}
+	
+	public Integer getLabTestTypeId() {
+		return labTestTypeId;
+	}
+	
+	public void setLabTestTypeId(Integer id) {
+		setId(id);
 	}
 	
 	@Override

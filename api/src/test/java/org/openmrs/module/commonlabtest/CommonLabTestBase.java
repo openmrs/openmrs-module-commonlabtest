@@ -36,9 +36,25 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 	
 	protected static final String DATA_XML = "CommonLabTestService-initialData.xml";
 	
+	protected Provider owais;
+	
+	protected Provider tahira;
+	
+	private Concept gxpConcept;
+	
+	private Concept cxrConcept;
+	
+	private Order harryGxpOrder;
+	
+	private Order harryCxrOrder;
+	
+	private Order hermioneGxpOrder;
+	
 	protected Patient harry;
 	
 	protected Patient hermione;
+	
+	protected LabTestType unknownTest;
 	
 	protected LabTestType geneXpert;
 	
@@ -96,10 +112,6 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 	
 	protected Set<LabTestAttribute> hermioneGxpResults;
 	
-	protected Provider owais;
-	
-	protected Provider tahira;
-	
 	/**
 	 * Initialize all data objects before each test
 	 * 
@@ -115,10 +127,21 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		harry = Context.getPatientService().getPatient(1000);
 		hermione = Context.getPatientService().getPatient(2000);
 		
-		Concept gxpConcept = Context.getConceptService().getConcept(500);
-		Concept cxrConcept = Context.getConceptService().getConcept(600);
+		gxpConcept = Context.getConceptService().getConcept(500);
+		cxrConcept = Context.getConceptService().getConcept(600);
 		
-		geneXpert = new LabTestType(1);
+		harryGxpOrder = Context.getOrderService().getOrder(100);
+		harryCxrOrder = Context.getOrderService().getOrder(200);
+		hermioneGxpOrder = Context.getOrderService().getOrder(300);
+		
+		unknownTest = new LabTestType(1);
+		unknownTest.setName("Unknown Test Type");
+		unknownTest.setShortName("UNKNOWN");
+		unknownTest.setTestGroup(LabTestGroup.OTHER);
+		unknownTest.setRequiresSpecimen(Boolean.FALSE);
+		unknownTest.setUuid(LabTestType.UNKNOWN_TEST_UUID);
+		
+		geneXpert = new LabTestType(2);
 		geneXpert.setName("GeneXpert Test");
 		geneXpert.setShortName("GXP");
 		geneXpert.setTestGroup(LabTestGroup.BACTERIOLOGY);
@@ -126,7 +149,7 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		geneXpert.setReferenceConcept(gxpConcept);
 		geneXpert.setUuid("4bf46c09-46e9-11e8-943c-40b034c3cfee");
 		
-		chestXRay = new LabTestType(2);
+		chestXRay = new LabTestType(3);
 		chestXRay.setName("Chest X-ray Test");
 		chestXRay.setShortName("CXR");
 		chestXRay.setTestGroup(LabTestGroup.RADIOLOGY);
@@ -281,10 +304,6 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		hermioneMtbResult.setAttributeType(mtbResult);
 		hermioneMtbResult.setValueReferenceInternal("NOT DETECTED");
 		hermioneMtbResult.setUuid("acbf3ff5-51f0-11e8-b60d-080027ea421d");
-		
-		Order harryGxpOrder = Context.getOrderService().getOrder(100);
-		Order harryCxrOrder = Context.getOrderService().getOrder(200);
-		Order hermioneGxpOrder = Context.getOrderService().getOrder(300);
 		
 		harryGxp = new LabTest(harryGxpOrder);
 		harryGxp.setLabTestType(geneXpert);

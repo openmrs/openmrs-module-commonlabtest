@@ -20,8 +20,10 @@
   		    http://www.springframework.org/schema/util
   		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
+  
+
   	<!-- Annotation based controllers -->
 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
-
 	<context:component-scan base-package="org.openmrs.module.commonlabtest.web.controller" />
+
 </beans>

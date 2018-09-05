@@ -54,5 +54,6 @@
 
     <properties>
         <openmrsPlatformVersion>2.1.2</openmrsPlatformVersion>
+		<wsrestVersion>2.17</wsrestVersion>
     </properties>
 </project>

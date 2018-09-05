@@ -13,21 +13,18 @@
  */
 package org.openmrs.module.commonlabtest.web.controller;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.web.controller.PortletController;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author owais.hussain@ihsinformatics.com
  */
-@Controller
-@RequestMapping("**/patientLabTests.portlet")
+//@Controller
+//@RequestMapping("**/patientLabTests.portlet")
 public class CommonLabTestPortletController extends PortletController {
 	
 	private static final Log log = LogFactory.getLog(CommonLabTestPortletController.class);

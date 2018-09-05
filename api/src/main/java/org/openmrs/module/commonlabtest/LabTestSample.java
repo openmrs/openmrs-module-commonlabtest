@@ -74,7 +74,7 @@ public class LabTestSample extends BaseOpenmrsData {
 	@JoinColumn(name = "specimen_site")
 	private Concept specimenSite;
 	
-	@Temporal(TemporalType.DATE)
+	//@Temporal(TemporalType.DATE)
 	@Column(name = "collection_date")
 	private Date collectionDate;
 	
@@ -90,15 +90,13 @@ public class LabTestSample extends BaseOpenmrsData {
 	@Column(name = "units")
 	private String units;
 	
-	@Column(name = "is_expirable", nullable = false)
-	@Field
-	private Boolean expirable = Boolean.FALSE;
+	private transient Boolean expirable = Boolean.FALSE;
 	
-	@Temporal(TemporalType.DATE)
+	// @Temporal(TemporalType.DATE)
 	@Column(name = "expiry_date")
 	private Date expiryDate;
 	
-	@Temporal(TemporalType.DATE)
+	// @Temporal(TemporalType.DATE)
 	@Column(name = "processed_date")
 	private Date processedDate;
 	
@@ -231,7 +229,7 @@ public class LabTestSample extends BaseOpenmrsData {
 	/**
 	 * @param expirable the expirable to set
 	 */
-	public void setExpirable(Boolean expirable) {
+	private void setExpirable(Boolean expirable) {
 		this.expirable = expirable;
 	}
 	
@@ -249,6 +247,7 @@ public class LabTestSample extends BaseOpenmrsData {
 	 */
 	public void setExpiryDate(Date expiryDate) {
 		this.expiryDate = expiryDate;
+		setExpirable(getExpiryDate() != null);
 	}
 	
 	/**
@@ -345,5 +344,13 @@ public class LabTestSample extends BaseOpenmrsData {
 	 */
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+	
+	public Integer getLabTestSampleId() {
+		return labTestSampleId;
+	}
+	
+	public void setLabTestSampleId(Integer id) {
+		this.labTestSampleId = id;
 	}
 }

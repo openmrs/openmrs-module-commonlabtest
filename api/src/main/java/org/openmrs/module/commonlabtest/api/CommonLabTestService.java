@@ -9,6 +9,7 @@ import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.api.APIException;
+import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
@@ -16,8 +17,10 @@ import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
+import org.springframework.transaction.annotation.Transactional;
 
-public interface CommonLabTestService {
+@Transactional
+public interface CommonLabTestService extends OpenmrsService {
 	
 	/**
 	 * Returns list of all LabTestAttributeType objects
@@ -83,6 +86,11 @@ public interface CommonLabTestService {
 	 * @throws APIException
 	 */
 	LabTestAttribute getLabTestAttributeByUuid(String uuid) throws APIException;
+	
+	/**
+	 * @see List<LabTestAttribute> getLabTestAttributes(java.lang.Integer)
+	 */
+	List<LabTestAttribute> getLabTestAttributes(Integer testOrderId) throws APIException;
 	
 	/**
 	 * Get a list of LabTestAttribute objects using various parameters available. This is similar to
@@ -590,7 +598,18 @@ public interface CommonLabTestService {
 	 * @param labTestType
 	 * @param cascade
 	 * @throws APIException
+	 * @Deprecated because deleting dependent objects is risk-full. Use the alternate method
 	 */
+	@Deprecated
 	void deleteLabTestType(LabTestType labTestType, boolean cascade) throws APIException;
 	
+	/**
+	 * Deletes a LabTestType object and sets {@link LabTestType} of dependent objects to second
+	 * parameter
+	 * 
+	 * @param labTestType
+	 * @param newObjectForCascade is the {@link LabTestType} set to cascaded dependent objects
+	 * @throws APIException
+	 */
+	void deleteLabTestType(LabTestType labTestType, LabTestType newObjectForCascade) throws APIException;
 }

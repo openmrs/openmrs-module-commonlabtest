@@ -18,6 +18,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.openmrs.attribute.Attribute;
@@ -43,11 +45,13 @@ public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTes
 	/* These three objects are only to map base class attributes for hibernate (this approach avoids adding hibernate mapping XML file). 
 	Base class is not annotated, neither is defined in API's mapped files.
 	*/
-	@Column(name = "test_order_id")
-	private Integer testOrderId;
+	@ManyToOne
+	@JoinColumn(name = "test_order_id")
+	private LabTest testOrderId;
 	
-	@Column(name = "attribute_type_id")
-	private Integer attributeTypeId;
+	@ManyToOne
+	@JoinColumn(name = "attribute_type_id")
+	private LabTestAttributeType attributeTypeId;
 	
 	@Column(name = "value_reference")
 	private String valueReference;
@@ -79,7 +83,7 @@ public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTes
 	 * @return the testOrderId
 	 */
 	public Integer getTestOrderId() {
-		return getLabTest().getId();
+		return testOrderId.getId();
 	}
 	
 	/**
@@ -102,6 +106,7 @@ public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTes
 	 * @param labTest the object to set
 	 */
 	public void setLabTest(LabTest labTest) {
+		this.testOrderId = labTest;
 		setOwner(labTest);
 	}
 	
@@ -109,18 +114,22 @@ public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTes
 	 * @return the attributeTypeId
 	 */
 	public Integer getAttributeTypeId() {
-		return attributeTypeId;
+		return attributeTypeId.getId();
+	}
+	
+	public void setAttributeTypeId(LabTestAttributeType attributeTypeId) {
+		this.attributeTypeId = attributeTypeId;
 	}
 	
 	/**
 	 * @param attributeTypeId the attributeTypeId to set
 	 * @deprecated use <code>setAttributeType</code> instead
 	 */
-	@Deprecated
+	/*@Deprecated
 	public void setAttributeTypeId(Integer attributeTypeId) {
 		getAttributeType().setId(attributeTypeId);
 	}
-	
+	*/
 	/**
 	 * @return the valueReference
 	 */
@@ -135,5 +144,13 @@ public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTes
 	public void setValueReference(String valueReference) {
 		this.valueReference = valueReference;
 		super.setValueReferenceInternal(getValueReference());
+	}
+	
+	public Integer getLabTestAttributeId() {
+		return labTestAttributeId;
+	}
+	
+	public void setLabTestAttributeId(Integer id) {
+		this.labTestAttributeId = id;
 	}
 }

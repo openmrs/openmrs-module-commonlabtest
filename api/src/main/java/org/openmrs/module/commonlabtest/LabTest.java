@@ -20,6 +20,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -66,6 +68,15 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	@Column(name = "lab_reference_number", length = 255)
 	private String labReferenceNumber;
 	
+	@Column(name = "instructions", length = 255)
+	private String labInstructions;
+	
+	@Column(name = "report_file_path")
+	private String filePath;
+	
+	@Column(name = "result_comments")
+	private String resultComments;
+	
 	@ContainedIn
 	private transient Set<LabTestSample> labTestSamples = new HashSet<LabTestSample>(0);
 	
@@ -100,6 +111,22 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	public void setId(Integer id) {
 		setTestOrderId(id);
 		order.setId(getTestOrderId());
+	}
+	
+	public String getResultComments() {
+		return resultComments;
+	}
+	
+	public void setResultComments(String resultComments) {
+		this.resultComments = resultComments;
+	}
+	
+	public String getFilePath() {
+		return filePath;
+	}
+	
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 	
 	/**
@@ -280,6 +307,14 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 		}
 	}
 	
+	public String getLabInstructions() {
+		return labInstructions;
+	}
+	
+	public void setLabInstructions(String labInstructions) {
+		this.labInstructions = labInstructions;
+	}
+	
 	/**
 	 * Remove labTestAttribute object from the existing set
 	 * 
@@ -305,4 +340,5 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 		}
 		return null;
 	}
+	
 }

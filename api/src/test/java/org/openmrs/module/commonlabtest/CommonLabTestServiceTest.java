@@ -38,6 +38,7 @@ import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.db.hibernate.HibernateOrderDAO;
 import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl;
@@ -54,6 +55,9 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	
 	@Mock
 	CommonLabTestDaoImpl dao;
+	
+	@Mock
+	HibernateOrderDAO orderDao;
 	
 	@Before
 	public void initMockito() throws Exception {
@@ -177,15 +181,15 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	 */
 	@Test
 	public final void testGetLabTestAttributeTypesByTestType() {
-		when(dao.getLabTestAttributeTypes(any(LabTestType.class), any(Boolean.class)))
-		        .thenReturn(Arrays.asList(cartridgeId, mtbResult, rifResult));
+		when(dao.getLabTestAttributeTypes(any(LabTestType.class), any(Boolean.class))).thenReturn(
+		    Arrays.asList(cartridgeId, mtbResult, rifResult));
 		List<LabTestAttributeType> list = service.getLabTestAttributeTypes(geneXpert, Boolean.FALSE);
 		assertThat(list, Matchers.hasItems(cartridgeId, mtbResult, rifResult));
 		verify(dao, times(1)).getLabTestAttributeTypes(any(LabTestType.class), any(Boolean.class));
 		// Check order of items
 		for (int i = 1; i < list.size(); i++) {
-			assertTrue("List of objects is not sorted by sort weight.",
-			    list.get(i - 1).getSortWeight() <= list.get(i).getSortWeight());
+			assertTrue("List of objects is not sorted by sort weight.", list.get(i - 1).getSortWeight() <= list.get(i)
+			        .getSortWeight());
 		}
 	}
 	
@@ -201,6 +205,20 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		List<LabTestAttribute> list = service.getLabTestAttributes(mtbResult, false);
 		assertThat(list, Matchers.hasItems(harryMtbResult, hermioneMtbResult));
 		verify(dao, times(1)).getLabTestAttributes(mtbResult, null, null, null, null, null, false);
+	}
+	
+	/**
+	 * Test method for
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributes(java.lang.Integer)}
+	 * .
+	 */
+	@Test
+	public final void testGetLabTestAttributesByTestOrder() {
+		when(dao.getLabTestAttributes(any(Integer.class))).thenReturn(
+		    Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
+		List<LabTestAttribute> list = service.getLabTestAttributes(harryGxp.getTestOrderId());
+		assertThat(list, Matchers.hasItems(harryCartridgeId, harryMtbResult, harryRifResult));
+		verify(dao, times(1)).getLabTestAttributes(any(Integer.class));
 	}
 	
 	/**
@@ -409,7 +427,6 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	public final void testSaveLabTest() {
 		when(dao.saveLabTest(any(LabTest.class))).thenReturn(harryGxp);
 		when(dao.saveLabTestSample(any(LabTestSample.class))).thenReturn(harrySample);
-		//when(orderDao.saveOrder(any(Order.class), any(OrderContext.class))).thenReturn(harryGxp.getOrder());
 		for (LabTestAttribute labTestAttribute : harryGxpResults) {
 			when(dao.saveLabTestAttribute(labTestAttribute)).thenReturn(labTestAttribute);
 		}

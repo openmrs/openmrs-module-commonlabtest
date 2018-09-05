@@ -79,6 +79,14 @@ public interface CommonLabTestDao {
 	LabTestAttribute getLabTestAttributeByUuid(String uuid);
 	
 	/**
+	 * Returns list of {@link LabTestAttribute} objects by {@link Order} Id
+	 * 
+	 * @param testOrderId
+	 * @return
+	 */
+	List<LabTestAttribute> getLabTestAttributes(Integer testOrderId);
+	
+	/**
 	 * Returns list of {@link LabTestAttribute} objects by matching given non-null parameters
 	 * 
 	 * @param labTestId
@@ -275,7 +283,8 @@ public interface CommonLabTestDao {
 	void purgeLabTestType(LabTestType labTestType);
 	
 	/**
-	 * Persists {@link LabTest} in database
+	 * Persists {@link LabTest} in database. This method also persists {@link Order} entity, because
+	 * unlike {@link Order}, the {@link LabTest} is not hierarchical
 	 * 
 	 * @param labTest
 	 * @return

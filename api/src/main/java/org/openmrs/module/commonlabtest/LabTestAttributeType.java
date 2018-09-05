@@ -83,4 +83,12 @@ public class LabTestAttributeType extends BaseAttributeType<LabTest> implements 
 	public void setSortWeight(Double sortWeight) {
 		this.sortWeight = sortWeight;
 	}
+	
+	public Integer getLabTestAttributeTypeId() {
+		return this.labTestAttributeTypeId;
+	}
+	
+	public void setLabTestAttributeTypeId(Integer id) {
+		this.labTestAttributeTypeId = id;
+	}
 }

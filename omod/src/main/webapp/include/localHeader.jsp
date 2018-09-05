@@ -11,17 +11,17 @@
   --%>
 
 <spring:htmlEscape defaultHtmlEscape="true" />
-<ul id="menu">
+<ul id="menu" >
 	<li class="first"><a
 		href="${pageContext.request.contextPath}/admin"><spring:message
 				code="admin.title.short" /></a></li>
-	<li
+	<%-- <li
 		<c:if test='<%=request.getRequestURI().contains("/commonlabtest")%>'>class="active"</c:if>>
 		<a
 		href="${pageContext.request.contextPath}/module/commonlabtest/commonlabtest.form"><spring:message
 				code="commonlabtest.general.about" /></a>
-	</li>
-
+	</li> --%>
+   
 	<li
 		<c:if test='<%=request.getRequestURI().contains("/manageLabTestTypes")%>'>class="active"</c:if>>
 		<a
@@ -30,11 +30,10 @@
 	</li>
 	<li
 		<c:if test='<%=request.getRequestURI().contains("/manageLabTestAttributeTypes")%>'>class="active"</c:if>>
-		<a
-		href="${pageContext.request.contextPath}/module/commonlabtest/manageTestAttributeTypes.form"><spring:message
-				code="commonlabtest.labtestattributetype.manage" /></a>
+		<a href="${pageContext.request.contextPath}/module/commonlabtest/manageLabTestAttributeTypes.form">
+		<spring:message code="commonlabtest.labtestattributetype.manage" /></a>
 	</li>
-	<li
+	<%-- <li
 		<c:if test='<%=request.getRequestURI().contains("/manageLabTestSamples")%>'>class="active"</c:if>>
 		<a
 		href="${pageContext.request.contextPath}/module/commonlabtest/manageLabTestSamples.form"><spring:message
@@ -45,6 +44,6 @@
 		<a
 		href="${pageContext.request.contextPath}/module/commonlabtest/manageLabTests.form"><spring:message
 				code="commonlabtest.labtest.manage" /></a>
-	</li>
+	</li> --%>
 
 </ul>

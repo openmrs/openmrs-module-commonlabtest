@@ -18,12 +18,10 @@ import java.util.Set;
 
 import org.openmrs.Concept;
 import org.openmrs.Order;
-import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
-import org.openmrs.api.OrderContext;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.commonlabtest.CommonLabTestConfig;
@@ -37,12 +35,14 @@ import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.commonlabtest.api.dao.CommonLabTestDao;
 import org.openmrs.util.DateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommonLabTestServiceImpl extends BaseOpenmrsService implements CommonLabTestService {
 	
+	@Autowired
 	CommonLabTestDao dao;
 	
 	/**
@@ -153,6 +153,17 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	public List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, boolean includeVoided)
 	        throws APIException {
 		return getLabTestAttributes(labTestAttributeType, null, null, null, null, includeVoided);
+	}
+	
+	/**
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType,
+	 *      boolean)
+	 */
+	@Override
+	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
+	@Transactional(readOnly = true)
+	public List<LabTestAttribute> getLabTestAttributes(Integer testOrderId) throws APIException {
+		return dao.getLabTestAttributes(testOrderId);
 	}
 	
 	/**
@@ -509,10 +520,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		if (labTest.getOrder().getOrderer() == null) {
 			throw new APIException("org.openmrs.Orderer", (Object[]) null);
 		}
-		Order order = labTest.getOrder();
-		order.setOrderType(Context.getOrderService().getOrderTypeByUuid(OrderType.TEST_ORDER_TYPE_UUID));
-		Order saveOrder = Context.getOrderService().saveOrder(order, new OrderContext());
-		labTest.setOrder(saveOrder);
+		// Order object is saved via DAO object
 		// Save Order
 		LabTest savedLabTest = dao.saveLabTest(labTest);
 		// Save sample if present
@@ -649,10 +657,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public void voidLabTest(LabTest labTest, String voidReason) throws APIException {
-		for (LabTestSample sample : labTest.getLabTestSamples()) {
+		for (LabTestSample sample : dao.getLabTestSamples(labTest, Boolean.FALSE)) {
 			voidLabTestSample(sample, voidReason);
 		}
-		for (LabTestAttribute attribute : labTest.getAttributes()) {
+		for (LabTestAttribute attribute : dao.getLabTestAttributes(labTest.getId())) {
 			voidLabTestAttribute(attribute, voidReason);
 		}
 		labTest.setVoided(true);
@@ -672,6 +680,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		labTestAttribute.setVoided(true);
 		labTestAttribute.setVoidedBy(Context.getAuthenticatedUser());
 		labTestAttribute.setVoidReason(voidReason);
+		labTestAttribute.setDateVoided(new Date());
 		dao.saveLabTestAttribute(labTestAttribute);
 	}
 	
@@ -685,6 +694,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		labTestSample.setVoided(true);
 		labTestSample.setVoidedBy(Context.getAuthenticatedUser());
 		labTestSample.setVoidReason(voidReason);
+		labTestSample.setDateVoided(new Date());
 		dao.saveLabTestSample(labTestSample);
 	}
 	
@@ -829,4 +839,61 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 			throw new APIException("Cannot delete LabTestType because of Foreign Key Violation.");
 		}
 	}
+	
+	/**
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestType(org.openmrs.module.commonlabtest.LabTestType,
+	 *      org.openmrs.module.commonlabtest.LabTestType)
+	 */
+	@Override
+	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
+	@Transactional
+	public void deleteLabTestType(LabTestType labTestType, LabTestType newObjectForCascade) throws APIException {
+		// Replace with Unknown Test Type object if null
+		if (newObjectForCascade == null) {
+			newObjectForCascade = getLabTestTypeByUuid(LabTestType.UNKNOWN_TEST_UUID);
+		}
+		StringBuilder message = new StringBuilder();
+		message.append("Associated LabTestType: ");
+		message.append(labTestType.getName());
+		message.append("(");
+		message.append(labTestType.getUuid());
+		message.append(") was deleted on ");
+		message.append(Context.getDateFormat().format(new Date()));
+		// Replace LabTestType in dependencies
+		handleLabTestTypeDependencies(labTestType, newObjectForCascade, message.toString());
+		dao.purgeLabTestType(labTestType);
+	}
+	
+	/**
+	 * This method changes the {@link LabTestType} object in respective {@link LabTest} and
+	 * {@link LabTestAttributeType} dependencies, and voides/retires them afterwards with given
+	 * message
+	 * 
+	 * @param labTestType
+	 * @param newObjectForCascade
+	 * @param voidMessage
+	 */
+	private void handleLabTestTypeDependencies(LabTestType labTestType, LabTestType newObjectForCascade, String voidMessage) {
+		List<LabTest> labTests = getLabTests(labTestType, true);
+		if (labTests != null) {
+			for (LabTest labTest : labTests) {
+				// Set new LabTestType
+				labTest.setLabTestType(newObjectForCascade);
+				saveLabTest(labTest);
+				// Void with reason
+				voidLabTest(labTest, voidMessage);
+			}
+		}
+		List<LabTestAttributeType> testAttributeTypes = getLabTestAttributeTypes(labTestType, true);
+		if (testAttributeTypes != null) {
+			for (LabTestAttributeType attributeType : testAttributeTypes) {
+				// Set new LabTestType
+				attributeType.setLabTestType(newObjectForCascade);
+				saveLabTestAttributeType(attributeType);
+				// Retired with reason
+				retireLabTestAttributeType(attributeType, voidMessage);
+			}
+		}
+	}
+	
 }

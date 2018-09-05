@@ -20,13 +20,17 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
+import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
+import org.openmrs.api.context.Context;
+import org.openmrs.api.db.hibernate.HibernateOrderDAO;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
@@ -50,6 +54,9 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@Autowired
+	private HibernateOrderDAO orderDao;
 	
 	/**
 	 * Get session factory
@@ -100,8 +107,8 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup, 
-			Concept referenceConcept, boolean includeRetired) {
+	public List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup,
+	        Concept referenceConcept, boolean includeRetired) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestType.class);
 		if (name != null) {
 			criteria.add(Restrictions.ilike("name", name, MatchMode.START));
@@ -159,6 +166,17 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	}
 	
 	/**
+	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDao#getLabTestAttributes(java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<LabTestAttribute> getLabTestAttributes(Integer testOrderId) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttribute.class);
+		criteria.add(Restrictions.eq("testOrderId.testOrderId", testOrderId));
+		return criteria.list();
+	}
+	
+	/**
 	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDao#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType,
 	 *      org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, java.lang.String,
 	 *      java.util.Date, java.util.Date, boolean)
@@ -167,12 +185,38 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	@SuppressWarnings("unchecked")
 	public List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, LabTest labTest,
 	        Patient patient, String valueReference, Date from, Date to, boolean includeVoided) {
+		//		// Terrible, terrible way
+		//		StringBuffer query = new StringBuffer();
+		//		query.append("SELECT * FROM commonlab_test_attribute as lta ");
+		//		query.append("INNER JOIN commonlab_test as lt on lt.lab_test_id = lta.test_order_id ");
+		//		query.append("INNER JOIN orders as o on o.order_id = lta.test_order_id ");
+		//		query.append("INNER JOIN patient as p on p.patient_id = o.patient_id ");
+		//		query.append("WHERE 1 = 1 ");
+		//		if (labTestAttributeType != null) {
+		//			query.append("AND lta.attribute_type_id = " + labTestAttributeType.getId());
+		//		}
+		//		if (labTest != null) {
+		//			query.append("AND lt.test_order_id = " + labTest.getId());
+		//		}
+		//		if (patient != null) {
+		//			query.append("AND p.patient_id = " + patient.getPatientId());
+		//		}
+		//		if (valueReference != null) {
+		//			query.append("AND lta.value_reference like '%" + valueReference + "%'");
+		//		}
+		//		if (from != null && to != null) {
+		//			// TODO:
+		//		}
+		//		if (!includeVoided) {
+		//			query.append("AND lta.voided = 0");
+		//		}
+		//		return sessionFactory.getCurrentSession().createSQLQuery(query.toString()).list();
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttribute.class);
 		if (labTestAttributeType != null) {
-			criteria.add(Restrictions.eqOrIsNull("attributeTypeId", labTestAttributeType.getId()));
+			criteria.add(Restrictions.eqOrIsNull("attributeTypeId.labTestAttributeTypeId", labTestAttributeType.getId()));
 		}
 		if (labTest != null) {
-			criteria.add(Restrictions.eqOrIsNull("owner.labTestType", labTestAttributeType));
+			// TODO: criteria.add(Restrictions.eqOrIsNull("labTest", labTest));
 		}
 		if (patient != null) {
 			criteria.add(Restrictions.eqOrIsNull("owner.order.patient.patientId", patient.getId()));
@@ -186,7 +230,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 		if (!includeVoided) {
 			criteria.add(Restrictions.eq("voided", false));
 		}
-		criteria.addOrder(Order.asc("testOrderId")).addOrder(Order.asc("voided")).list();
+		criteria.addOrder(Order.asc("testOrderId.testOrderId")).addOrder(Order.asc("voided")).list();
 		return criteria.list();
 	}
 	
@@ -271,7 +315,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 			criteria.add(Restrictions.eq("labTestType", labTestType));
 		}
 		if (patient != null) {
-			criteria.add(Restrictions.eq("o.patient.patientId", patient.getPatientId()));
+			criteria.add(Restrictions.eq("o.patient.id", patient.getPatientId()));
 		}
 		if (orderNumber != null) {
 			criteria.add(Restrictions.ilike("o.orderReference", orderNumber, MatchMode.START));
@@ -502,11 +546,40 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	}
 	
 	/**
+	 * Detects whether it's a new order or existing one. In case the order already exits, it is NOT
+	 * overridden because Order objects are immutable
+	 * 
+	 * @param order
+	 * @return
+	 */
+	public org.openmrs.Order saveLabTestOrder(org.openmrs.Order order) {
+		OrderType expectedOrderType = order.getOrderType();
+		// Set the right order type
+		expectedOrderType.setJavaClassName(order.getClass().getName());
+		order.setOrderType(expectedOrderType);
+		boolean createNew = order.getId() == null;
+		if (!createNew) {
+			// See if the given ID actually exists or not
+			createNew = Context.getOrderService().getOrder(order.getId()) == null;
+		}
+		if (createNew) {
+			order.setId(null);
+			return Context.getOrderService().saveOrder(order, null);
+		}
+		// Do nothing
+		return order;
+	}
+	
+	/**
 	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDao#saveLabTest(org.openmrs.module.commonlabtest.LabTest)
 	 */
 	@Override
 	public LabTest saveLabTest(LabTest labTest) {
-		sessionFactory.getCurrentSession().saveOrUpdate(labTest);
+		org.openmrs.Order savedOrder = saveLabTestOrder(labTest.getOrder());
+		labTest.setOrder(savedOrder);
+		labTest.setTestOrderId(savedOrder.getOrderId());
+		Session session = sessionFactory.getCurrentSession();
+		session.saveOrUpdate(labTest);
 		return labTest;
 	}
 	

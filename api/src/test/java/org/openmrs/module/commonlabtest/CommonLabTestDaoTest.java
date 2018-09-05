@@ -14,14 +14,19 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.Concept;
+import org.openmrs.Encounter;
 import org.openmrs.Order;
+import org.openmrs.Order.Action;
+import org.openmrs.Order.Urgency;
+import org.openmrs.TestOrder;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 import org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl;
@@ -100,7 +105,9 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	 */
 	@Test
 	public final void testGetLabTestById() {
-		// TODO
+		Context.clearSession();
+		LabTest labTest = dao.getLabTest(100);
+		assertEquals(labTest, harryGxp);
 	}
 	
 	/**
@@ -110,7 +117,9 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	 */
 	@Test
 	public final void testGetLabTestAttribute() {
-		// TODO
+		Context.clearSession();
+		LabTestAttribute labTestAttribute = dao.getLabTestAttribute(1);
+		assertEquals(labTestAttribute, harryCartridgeId);
 	}
 	
 	/**
@@ -120,7 +129,9 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	 */
 	@Test
 	public final void testGetLabTestAttributeByUuid() {
-		// TODO
+		Context.clearSession();
+		LabTestAttribute labTestAttribute = dao.getLabTestAttributeByUuid("2c9737d9-47c2-11e8-943c-40b034c3cfee");
+		assertEquals(labTestAttribute, harryCartridgeId);
 	}
 	
 	/**
@@ -129,8 +140,48 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	 * .
 	 */
 	@Test
-	public final void testGetLabTestAttributes() {
-		// TODO
+	public final void testGetLabTestAttributesByType() {
+		Context.clearSession();
+		List<LabTestAttribute> list = dao.getLabTestAttributes(mtbResult, null, null, null, null, null, true);
+		assertThat(list, Matchers.hasItem(harryMtbResult));
+	}
+	
+	/**
+	 * Test method for
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType, org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, java.lang.String, java.util.Date, java.util.Date, boolean)}
+	 * .
+	 */
+	@Test
+	public final void testGetLabTestAttributesByTestOrderId() {
+		Context.clearSession();
+		List<LabTestAttribute> list = dao.getLabTestAttributes(harryGxp.getTestOrderId());
+		assertThat(list, Matchers.hasItems(harryCartridgeId, harryMtbResult, harryRifResult));
+	}
+	
+	/**
+	 * Test method for
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType, org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, java.lang.String, java.util.Date, java.util.Date, boolean)}
+	 * .
+	 */
+	@Test
+	@Ignore
+	public final void testGetLabTestAttributesByLabTest() {
+		Context.clearSession();
+		List<LabTestAttribute> list = dao.getLabTestAttributes(null, harryGxp, null, null, null, null, false);
+		assertThat(list, Matchers.hasItem(harryCartridgeId));
+	}
+	
+	/**
+	 * Test method for
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType, org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, java.lang.String, java.util.Date, java.util.Date, boolean)}
+	 * .
+	 */
+	@Test
+	@Ignore
+	public final void testGetLabTestAttributesByPatient() {
+		Context.clearSession();
+		List<LabTestAttribute> list = dao.getLabTestAttributes(null, null, harry, null, null, null, false);
+		assertThat(list, Matchers.containsInAnyOrder(harryCartridgeId, harryMtbResult, harryRifResult, harryCxrResult));
 	}
 	
 	/**
@@ -320,7 +371,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	 */
 	@Test
 	public final void testPurgeLabTestType() {
-		LabTestType testType = dao.getLabTestType(3);
+		LabTestType testType = dao.getLabTestType(4);
 		// Purge object
 		dao.purgeLabTestType(testType);
 		// Clear cache
@@ -339,6 +390,74 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	@Test
 	public final void testSaveLabTest() {
 		// TODO
+	}
+	
+	/**
+	 * Test method for
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#saveLabTestOrder(org.openmrs.Order)}
+	 * .
+	 */
+	@Test
+	public final void testSaveLabTestOrder_Create() {
+		// Create CXR order for Hermione
+		Order testOrder = new TestOrder();
+		testOrder.setOrderId(Integer.MAX_VALUE);
+		testOrder.setOrderType(Context.getOrderService().getOrderType(3));
+		testOrder.setConcept(Context.getConceptService().getConcept(600));
+		testOrder.setOrderer(Context.getProviderService().getProvider(300));
+		Encounter encounter = Context.getEncounterService().getEncounter(1000);
+		encounter.setPatient(hermione);
+		testOrder.setEncounter(encounter);
+		testOrder.setInstructions("PERFORM CXR");
+		testOrder.setDateActivated(new Date());
+		testOrder.setAction(Action.NEW);
+		testOrder.setOrderReasonNonCoded("Testing");
+		testOrder.setPatient(hermione);
+		testOrder.setUrgency(Urgency.ROUTINE);
+		testOrder.setCareSetting(Context.getOrderService().getCareSetting(1));
+		Order savedOrder = dao.saveLabTestOrder(testOrder);
+		assertThat(savedOrder, Matchers.hasProperty("orderId", org.hamcrest.Matchers.notNullValue()));
+	}
+	
+	/**
+	 * Test method for
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#saveLabTestOrder(org.openmrs.Order)}
+	 * .
+	 */
+	@Test
+	public final void testSaveLabTestOrder_CreateWhenNotFound() {
+		// Create CXR order for Hermione
+		Order testOrder = new TestOrder();
+		testOrder.setOrderId(Integer.MAX_VALUE);
+		testOrder.setOrderType(Context.getOrderService().getOrderType(3));
+		testOrder.setConcept(Context.getConceptService().getConcept(600));
+		testOrder.setOrderer(Context.getProviderService().getProvider(300));
+		Encounter encounter = Context.getEncounterService().getEncounter(1000);
+		encounter.setPatient(hermione);
+		testOrder.setEncounter(encounter);
+		testOrder.setInstructions("PERFORM CXR");
+		testOrder.setDateActivated(new Date());
+		testOrder.setAction(Action.NEW);
+		testOrder.setOrderReasonNonCoded("Testing");
+		testOrder.setPatient(hermione);
+		testOrder.setUrgency(Urgency.ROUTINE);
+		testOrder.setCareSetting(Context.getOrderService().getCareSetting(1));
+		Order savedOrder = dao.saveLabTestOrder(testOrder);
+		assertThat(savedOrder, Matchers.hasProperty("orderId", org.hamcrest.Matchers.notNullValue()));
+	}
+	
+	/**
+	 * Test method for
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#saveLabTestOrder(org.openmrs.Order)}
+	 * .
+	 */
+	@Test
+	public final void testSaveLabTestOrder_Update() {
+		Order order = Context.getOrderService().getOrder(100);
+		order.setUrgency(Urgency.STAT);
+		Order savedOrder = dao.saveLabTestOrder(order);
+		assertThat(savedOrder, Matchers.hasProperty("orderId", org.hamcrest.Matchers.is(100)));
+		assertThat(savedOrder, Matchers.hasProperty("urgency", org.hamcrest.Matchers.is(Urgency.STAT)));
 	}
 	
 	/**
@@ -368,7 +487,11 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	 */
 	@Test
 	public final void testSaveLabTestSample() {
-		// TODO
+		LabTestSample testSample = new LabTestSample();
+		testSample.setLabTest(hermioneGxp);
+		testSample.setSampleIdentifier("TEST-ID-1234");
+		testSample.setCollectionDate(new Date());
+		testSample.setCollector(owais);
 	}
 	
 	/**
@@ -378,21 +501,20 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	 */
 	@Test
 	public final void testSaveLabTestType() {
-		LabTestType testType = new LabTestType(999);
+		LabTestType testType = new LabTestType();
 		testType.setName("AFB Smear Microscopy");
 		testType.setShortName("AFB");
 		testType.setTestGroup(LabTestGroup.BACTERIOLOGY);
 		testType.setRequiresSpecimen(Boolean.TRUE);
 		Concept concept = Context.getConceptService().getConcept(500);
 		testType.setReferenceConcept(concept);
-		testType.setUuid(UUID.randomUUID().toString());
 		// Save object
 		testType = dao.saveLabTestType(testType);
 		// Clear cache
-		Context.flushSession();
+		//Context.flushSession();
 		Context.clearSession();
 		// Read again
-		LabTestType savedTestType = dao.getLabTestTypeByUuid(testType.getUuid());
+		LabTestType savedTestType = dao.getLabTestType(testType.getId());
 		assertThat(savedTestType, Matchers.hasProperty("uuid", org.hamcrest.Matchers.is(testType.getUuid())));
 		assertThat(savedTestType, Matchers.hasProperty("creator", org.hamcrest.Matchers.is(testType.getCreator())));
 	}
