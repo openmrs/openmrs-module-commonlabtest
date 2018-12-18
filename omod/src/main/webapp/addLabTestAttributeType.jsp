@@ -1,16 +1,9 @@
-<%-- <%@ page import="org.openmrs.web.WebConstants" %>
-<%
-pageContext.setAttribute("redirect", session.getAttribute(WebConstants.OPENMRS_LOGIN_REDIRECT_HTTPSESSION_ATTR));
-session.removeAttribute(WebConstants.OPENMRS_LOGIN_REDIRECT_HTTPSESSION_ATTR); 
-%> --%>
-
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include
 	file="/WEB-INF/view/module/commonlabtest/include/localHeader.jsp"%>
-
-<openmrs:require privilege="View labTestAttributeType" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestAttributeType.form" />
-
+<!-- <openmrs:require anyPrivilege ="Add CommonLabTest Metadata , Edit CommonLabTest Metadata" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestAttributeType.form" />
+ -->
 
 <link type="text/css" rel="stylesheet"
 	href="/openmrs/moduleResources/commonlabtest/css/commonlabtest.css" />
@@ -75,17 +68,13 @@ legend.scheduler-border {
  margin-bottom:15px;
  
  }
+.modal-body{
+		height: 500px;
+		overflow-y:scroll;
+}
  
-/* #testTypeName
-{
-    overflow: hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-    width:150px;
-    display:inline-block;
-} */
 </style>
-
+  
 <body>
 	
 
@@ -100,9 +89,11 @@ legend.scheduler-border {
 	<c:set var="testAttributeType" scope="session" value="${attributeType}" />
 	<fieldset  class="scheduler-border">
 	   <c:if test="${empty testAttributeType.name}">
+	    <openmrs:require privilege="Add CommonLabTest Metadata" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestAttributeType.form" />
 		 <legend  class="scheduler-border"><spring:message code="commonlabtest.labtestattributetype.add" /></legend>
 	   </c:if>
 	   <c:if test="${not empty testAttributeType.name}">
+	    <openmrs:require privilege="Edit CommonLabTest Metadata" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestAttributeType.form" />
 		 <legend  class="scheduler-border">	<spring:message code="commonlabtest.labtestattributetype.edit" /></legend>
 	   </c:if>
  	   <form:form commandName="attributeType" onsubmit='return validate(this);'>
@@ -139,7 +130,26 @@ legend.scheduler-border {
 								<form:textarea class="form-control" maxlength="255"  path="description" id="description" ></form:textarea>
 							    <span id="atrdescription" class="text-danger "> </span>
 						   	</div>
-					  </div>
+					  </div>	
+					 	  <div class="row">
+						   <div class="col-md-2">
+								<form:label path="multisetName" class="control-label"><spring:message code="commonlabtest.labtestattributetype.multisetName" /></form:label>
+							</div>
+						   <div class="col-md-6">
+								<form:input class="form-control"  maxlength="255" path="multisetName" id="multisetName" ></form:input></td>
+							    <span id="multisetname" class="text-danger "> </span>
+						   	</div>
+					 	 </div>
+					 	 <!-- Group Name-->
+					    <div class="row">
+						   <div class="col-md-2">
+								<form:label path="groupName" class="control-label"><spring:message code="commonlabtest.labtestattributetype.groupName" /></form:label>
+							</div>
+						   <div class="col-md-6">
+								<form:input class="form-control" maxlength="255"  path="groupName" id="group_name" ></form:input></td>
+							    <span id="groupname" class="text-danger "> </span>
+						   	</div>
+					 	 </div>
 					  <!-- Min Ocurance -->
 					    <div class="row">
 						   <div class="col-md-2">
@@ -181,6 +191,7 @@ legend.scheduler-border {
 									<form:label path="datatypeClassname" class="control-label"><spring:message code="general.dataType" /></form:label>							
 							   </div> 
 							   <div class="col-md-6">
+							  
 							      <c:if test = "${available != true}">
 							   
 								         		<form:select class="form-control" path="datatypeClassname" id="data_type_name">
@@ -203,20 +214,49 @@ legend.scheduler-border {
 							   		<font color="#D0D0D0"><span id="datatypeDescription"></span></font>
 							   	</div>
 					 	   </div>
+					 	   <div class ="row" id ="radioOptions">
+					 	     <div class="col-md-2"></div>
+					 	     <div class="col-sm-6 col-md-6 col-lg-6">
+					 	      <c:if test = "${available != true}">
+							      <label class="radio-inline"><input type="radio" name="optradio" onclick="showOptions()" id = "regex">Regex</label>
+							      <label class="radio-inline"><input type="radio" name="optradio" onclick="showOptions()" id = "length">Length</label>
+							      <label class="radio-inline"><input type="radio" name="optradio" onclick="showOptions()" id = "range">Range</label>
+					 	      </c:if>
+					 	      <c:if test = "${available == true}">
+					 	         <label class="radio-inline"><input disabled type="radio" name="optradio" onclick="showOptions()" id = "regex">Regex</label>
+							      <label class="radio-inline"><input disabled type="radio" name="optradio" onclick="showOptions()" id = "length">Length</label>
+							      <label class="radio-inline"><input disabled type="radio" name="optradio" onclick="showOptions()" id = "range">Range</label>
+					 	      </c:if>
+					 	      
+					 	     </div>
+					 	   </div>
 					 	   <!-- datatypeConfig -->
 							<div class="row">
-							   <div class="col-md-2">
+							   <div class="col-sm-2 col-md-2 col-lg-2">
 					 	  		   <form:label path="datatypeConfig" class="control-label"><spring:message code="general.datatypeConfiguration" /></form:label>
 								</div>
-							   <div class="col-md-6">
+							   <div class="col-sm-6 col-md-6 col-lg-6">
 								         <c:if test = "${available != true}">
 								         	<form:textarea class="form-control" path="datatypeConfig" id="datatypeConfig" ></form:textarea>
+								            <span id="datatypeconfig" class="text-danger "> </span>
 								         </c:if>
 								        <c:if test = "${available == true}">
 								          	<form:textarea class="form-control" disabled="true" path="datatypeConfig" id="datatypeConfig" ></form:textarea>
+								          	  <span id="datatypeconfig" class="text-danger "> </span>
 								        </c:if>   
 							   	</div>
 					 	   </div>
+					 	   <!--Regex Hints -->
+					 	   <div class="row" id ="hint_field">
+							   <div class="col-md-2">
+					 	  		   <form:label path="hint" class="control-label"><spring:message code="general.hint" /></form:label>
+								</div>
+							   <div class="col-md-6">
+						         	<form:input class="form-control" path="hint" id="hint" maxlength ="50" ></form:input>
+						            <span id="hints" class="text-danger "> </span>
+							   	</div>
+					 	   </div>
+					 	   
 					 	     <!-- preferredHandlerClassname -->
 					 	    <div class="row">
 							   <div class="col-md-2">
@@ -271,10 +311,10 @@ legend.scheduler-border {
 									<input type="button" onclick="location.href = '${pageContext.request.contextPath}/module/commonlabtest/manageLabTestAttributeTypes.form';"  value="Cancel"></input>
 								</div>
 							 </div>	
- 	   
 		 </form:form>
     </fieldset>
 	<br>
+	<openmrs:hasPrivilege privilege="Delete CommonLabTest Metadata">
 	<c:if test="${not empty testAttributeType.name}">
 		 <fieldset  class="scheduler-border">
       	   <legend  class="scheduler-border"><spring:message code="general.test.retire" /></legend>
@@ -297,55 +337,11 @@ legend.scheduler-border {
 						 		 <input type="submit" value="<spring:message code="general.test.retire" />"></input>
 						   </div>
 						 </div>
-					<%-- 	<table>
-							 <div class="form-group">
-								<tr>
-									<input value="${testAttributeType.uuid}" hidden="true"  id="uuid" name="uuid"></input>
-									<td><label class="control-label" value="retireReason"><spring:message code="general.retireReason" /><span class="required">*</span></label></td>
-									<td><input class="form-control" value="${testAttributeType.retireReason}" id="retireReason" name="retireReason" required="required"></input></td>
-								</tr>
-							</div>
-							<tr>
-								<td>
-									<div id="retireButton" style="margin-top: 15px">
-										<input type="submit" value="<spring:message code="general.test.retire" />"></input>
-									</div>
-								</td>
-							</tr>
-						</table> --%>
 				</form>
         </fieldset>
 	</c:if>
-
-	<%-- <br>
-    <c:if test="${not empty testAttributeType.name}">
-		 <fieldset  class="scheduler-border">
-      	   <legend  class="scheduler-border"><spring:message code="general.foreverDelete" /></legend>
-				<form  method="post" action ="${pageContext.request.contextPath}/module/commonlabtest/deletelabtestattributetype.form" onsubmit="return confirmDelete()">
-					 <!-- Delete -->
-					 <div class="row">
-					   <div class="col-md-2" >
-					  		 <input value="${testAttributeType.uuid}" hidden="true"  id="uuid" name="uuid"></input>
-					 		 <input type="submit" value="<spring:message code="general.foreverDelete" />" />
-					   </div>
-					 </div>	
-					
-					<table>
-					<tr>
-						<td>
-							<input value="${testAttributeType.uuid}" hidden="true"  id="uuid" name="uuid"></input>
-							<div id="delete" style="margin-top: 15px">
-								<input type="submit" value="<spring:message code="general.foreverDelete" />" />
-							</div>
-						</td>
-					</tr>
-					</table>
-				</form>
-      </fieldset>
-	</c:if> --%>
+	</openmrs:hasPrivilege>
  </div>
- 
- 
 	<div class="modal fade right modal-scrolling" id="sortWeightModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false" style="display: none;" aria-hidden="true">
 	    <div class="modal-dialog modal-side modal-top-right modal-notify modal-info" role="document">
 		      <div class="modal-content">
@@ -374,16 +370,15 @@ legend.scheduler-border {
 <script
 	src="${pageContext.request.contextPath}/moduleResources/commonlabtest/js/jquery-ui.min.js"></script>
 
-
 <script>
-	var local_source;
+	var localSource;
 
 	jQuery(document).ready(function() {
-		 
-		local_source = new Array();
+	
+		localSource = new Array();
 	        <c:if test="${not empty listTestType}">
 		        <c:forEach var="testType" items="${listTestType}" varStatus="status">
-		        	local_source.push({name:"${testType.name}",id:"${testType.labTestTypeId}"});
+		        localSource.push({name:"${testType.name}",id:"${testType.labTestTypeId}"});
 		        </c:forEach>
 	        </c:if>     
 	      
@@ -393,14 +388,13 @@ legend.scheduler-border {
 				jQuery("#testTypeOptions option").remove();
 			}
 			
-			if(local_source.length > 0) {
+			if(localSource.length > 0) {
 				testTypeObject = {};
-				jQuery(local_source).each(function() {
+				jQuery(localSource).each(function() {
 					var testTypeName = toTitleCase(this.name.toLowerCase());
 			            testTypeOption = "<option value=\"" + this.id + "\">" +testTypeName+ "</option>";
 			            jQuery('#testTypeOptions').append(testTypeOption);
 			            testTypeId = this.id; 
-			            //testTypeObject = {testTypeId,name: testTypeName};
 			            testTypeObject[testTypeId] = testTypeName;
 				});
 			}
@@ -417,12 +411,64 @@ legend.scheduler-border {
 					document.getElementById('testTypeName').innerHTML = testTypeObject[val]; 
 	
 				}
-			});   
-	        
-	        
-   
+			});  
+			
+      let available = '${available}';
+      if(!available){   	  
+    	  let dataType = document.getElementById('data_type_name');
+          if(dataType.childElementCount != 0){
+   		  	 let dataTypeName =   dataType.options[dataType.selectedIndex].text;
+         		 if( dataTypeName == "org.openmrs.customdatatype.datatype.LongFreeTextDatatype.name" 
+   			     || dataTypeName == "org.openmrs.customdatatype.datatype.FreeTextDatatype.name"){
+   	  		        document.getElementById("range").disabled=true;
+   	         }else{
+   	        	   document.getElementById("range").disabled=false; 
+   	         } 
+          } 
+      }
+      
+	   if(hint()){
+			$("#hint_field").show();
+			$("#radioOptions").show();
+		}else{
+			$("#hint_field").hide();
+			$("#radioOptions").hide();
+		}		
 	        
 	});
+	
+	function showOptions(){
+		 	console.log("showOps");
+		    let regex = document.getElementById("regex");
+	        let range = document.getElementById("range");
+	        let length = document.getElementById("length");	
+	       // $('datatypeConfig').val('');
+	    if(regex.checked){
+	    	document.getElementById('datatypeConfig').value  = '';
+			}else if(range.checked){
+				document.getElementById('datatypeConfig').value  = '';
+			}
+			else if(length.checked){
+				document.getElementById('datatypeConfig').value  = '';
+			} 
+	}
+	
+	function hint(){	
+		console.log("HInt called ");
+	  let dataTypeName = document.getElementById('data_type_name').value;	
+	   if(dataTypeName != "" && dataTypeName != null){
+		   if(dataTypeName == "org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype" ||
+				   dataTypeName == "org.openmrs.customdatatype.datatype.FreeTextDatatype" ||
+				   dataTypeName == "org.openmrs.customdatatype.datatype.FloatDatatype" ||
+				   dataTypeName == "org.openmrs.customdatatype.datatype.LongFreeTextDatatype"){
+			   return true;
+			   console.log("HInt called  true");
+		   }else{
+			   return false;
+				console.log("HInt called  false");
+		   }
+	   }
+	}
 	
 	function isNumber(evt) {
 	    evt = (evt) ? evt : window.event;
@@ -439,29 +485,41 @@ legend.scheduler-border {
 	        return match.toUpperCase();
 	    });
 	}
-	
-	/* /*autocomplete ...  */
-	/* $(function() {
-		 $("#lab_test_type").autocomplete({
-			 source : function(request, response) {
-				response($.map(local_source, function(item) {
-					return {
-						value : item.value,
-						id:item.id
-					}
-				}))
-			},
-			select : function(event, ui) {
-				$(this).val(ui.item.value);
-				$("#labTestType").val(ui.item.id);
-			},
-			minLength : 0,
-			autoFocus : true
-		});	     
-	 }); */
-	
-	
-	
+	//when dataType change 
+	jQuery('#data_type_name').on('input', function(){
+		  let dataType = document.getElementById('data_type_name');
+		  if(dataType.childElementCount != 0){
+			  	 let dataTypeName =   dataType.options[dataType.selectedIndex].text;
+			  	 console.log("dataTypeName : "+ dataTypeName);
+		  		$('input:radio[name=optradio]').each(function () { $(this).prop('checked', false); });
+		  		 document.getElementById('datatypeConfig').value  = '';	
+			  	 if(dataTypeName == "org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype.name"
+			  			 || dataTypeName == "org.openmrs.customdatatype.datatype.FloatDatatype.name" 
+			  			 || dataTypeName == "org.openmrs.customdatatype.datatype.LongFreeTextDatatype.name" 
+			  			 || dataTypeName == "org.openmrs.customdatatype.datatype.FreeTextDatatype.name"){
+			  		if(!$('#radioOptions').is(':visible'))
+			  		{  
+			  			 $("#radioOptions").show();
+			  		}
+			  	 }else{
+			  		     $("#radioOptions").hide();
+			  	 }
+			  	 //range show and hide 
+			  	 if( dataTypeName == "org.openmrs.customdatatype.datatype.LongFreeTextDatatype.name" 
+		  			 || dataTypeName == "org.openmrs.customdatatype.datatype.FreeTextDatatype.name"){
+			  		    document.getElementById("range").disabled=true;
+		  	         }else{
+		  	        	 document.getElementById("range").disabled=false; 
+		  	         }
+
+			     if(hint()){
+			    	 $("#hint_field").show();
+			     }else{
+			    	 $("#hint_field").hide();
+			     }
+		  }
+	});
+
 	/*Confirmation  Dialog Box  */
 	function confirmRetire() {
 		//onsubmit="return confirmRetire()"
@@ -506,7 +564,12 @@ legend.scheduler-border {
 		var minOccurs = document.getElementById('min_occurs').value;
 		var maxOccurs = document.getElementById('max_occurs').value;
 		var sortWeight = document.getElementById('sortWeight').value;
-		var  reText = new RegExp("^[A-Za-z][ A-Za-z0-9_().%\\-]*$");
+		var hintVal = document.getElementById('hint').value;
+		var datatypeConfigVal = document.getElementById('datatypeConfig').value;
+		var dataType = document.getElementById('data_type_name');
+		
+		///error message and regex
+		var  reText = new RegExp("^[A-Za-z][ A-Za-z0-9_()?/µ.%\\-]*$");
 		var regInt =new RegExp("^[0-9]+$");
         var regErrorMesssage ="Text contains Invalid characters.Test Attribute name only accepts alphabets with _ -().% special characters";
 		var numericErrorMessage ="Only interger values are allowed";
@@ -514,7 +577,9 @@ legend.scheduler-border {
 		var numericNotErrorMessage ="Numeric input are not allowed";
 		var integerErrorMessage ="Only interger values are allowed";
 		var emptyErrorMessage ="This field cannot be empty";
+		var regexFormat = "/[^$]/";
         var isValidate =true; 
+        
 		
 		if(labTestType == ""){
 			document.getElementById("labtesttypeid").style.display= 'block';	
@@ -530,7 +595,7 @@ legend.scheduler-border {
 			document.getElementById("labtesttypeid").style.display= 'none';	
 		} 
 		
-		 if(testAttributeName == ""){
+		if(testAttributeName == ""){
 			    document.getElementById("testatrname").style.display= 'block';
 				document.getElementById('testatrname').innerHTML =emptyErrorMessage;
 				isValidate = false;
@@ -623,25 +688,209 @@ legend.scheduler-border {
 				isValidate = false;
 
 			}
-			 else if (!regInt.test(sortWeight)){
-				 	document.getElementById("sortweight").style.display= 'block';	
-					document.getElementById('sortweight').innerHTML = integerErrorMessage;
-					isValidate = false;
-			 }
 			 else {
 					document.getElementById("sortweight").style.display= 'none';	
-				} 
-			
-		if(isValidate ==true){
-			document.getElementById("data_type_name").disabled = false;
-			document.getElementById("datatypeConfig").disabled = false;
-		}
+				}
+		
+			 var dataTypeOp = dataType.options[dataType.selectedIndex].value;
+			 
+			 if(dataTypeOp != ""){
+				 var dataTypeConfig = document.getElementById('datatypeConfig').value;
+				     if(dataTypeOp == "org.openmrs.customdatatype.datatype.ConceptDatatype"){
+				    	 if(dataTypeConfig != "" && dataTypeConfig != null ){
+				        		if(checkConceptExistent(dataTypeConfig)){
+				        			 document.getElementById("datatypeconfig").style.display= 'none';
+				        		 }else{	        			 
+				        			  document.getElementById("datatypeconfig").style.display= 'block';	
+				      				  document.getElementById('datatypeconfig').innerHTML = "Concept Id  does not exist in concept dictionary";
+				      				  isValidate = false;
+				        		 }
+				          }
+				     }else if(dataTypeOp == "org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype"){
+						 console.log("dataTypeConfig : "+dataTypeConfig);
+				    	 if(dataTypeConfig != "" && dataTypeConfig != null ){
+				    		  document.getElementById("datatypeconfig").style.display= 'none';
+				    		
+				    	 }else{
+				    		  document.getElementById("datatypeconfig").style.display= 'block';	
+		      				  document.getElementById('datatypeconfig').innerHTML = "Please enter your regex for this attribute type.";
+		      				  isValidate = false; 
+				    	 }
+				     }
+			 }else{
+        	     document.getElementById("datatypeconfig").style.display= 'none';
+	          }
+			 console.log("datatype : "+isValidate);
+			 if(hint()){
+				   if(!checkOptions()){
+					   isValidate = false;  
+				   } //this check the 
+			      console.log(" config Values : "+getConfigVal(datatypeConfigVal)); 
+			 	  if(getConfigVal(datatypeConfigVal) != "" && getConfigVal(datatypeConfigVal) != null){ ///user type anthing the hint is mandatory 
 	
+					  if(hintVal == "" || hintVal == null){
+		    			  document.getElementById("hints").style.display= 'block';	
+	     				  document.getElementById('hints').innerHTML = emptyErrorMessage;
+	     				  isValidate = false; 
+		    		 }else{
+	   		    	     document.getElementById("hints").style.display= 'none';
+		    		 } 
+				 }	   
+			 }
+			 
+			 console.log("hint : "+isValidate);
+			 
+			  if(isValidate ==true){
+				document.getElementById("data_type_name").disabled = false;
+				document.getElementById("datatypeConfig").disabled = false;
+				 document.getElementById("range").disabled=false;
+			}
+
+		console.log("isValidate : "+isValidate);	  
 		return isValidate;
 	}
 	
-	//Retire Validate 
+	function checkOptionAlreadyAppend(value,parentType){
+			   var resultConfig = [];
+			   let index = value.indexOf("=");  //Split the type (Length ,Regex and range)and value
+			   let type = value.substr(0, index); // Type 
+			   console.log("Confi Append : "+ type);
+			   if(parentType === type){
+				   return true;
+			   }else if(type != "" && type != null ){
+				    if(type != parentType){
+	     				 document.getElementById("datatypeconfig").style.display= 'block';	
+	     				 document.getElementById('datatypeconfig').innerHTML = "The first part of string should be equal to '"+parentType+"='";
+	     				return false; 
+	     		  }else{
+	     				document.getElementById('datatypeConfig').value = parentType+'='+value;
+	     				document.getElementById("datatypeconfig").style.display= 'none';
+	     				return true;
+	     		  } 
+			   }else{
+					document.getElementById('datatypeConfig').value = parentType+'='+value;
+     				document.getElementById("datatypeconfig").style.display= 'none';
+     				return true;
+			   } 
+	}
 	
+	function checkOptions(){
+
+	    let regex = document.getElementById("regex");
+        let range = document.getElementById("range");
+        let length = document.getElementById("length");	
+        let dataTypeConfig = document.getElementById('datatypeConfig').value;
+    	let integerErrorMessage ="Length should be in interger";
+    	let regInt =new RegExp("^[0-9]+$");
+    	let regRange =new RegExp("^[\\d.]+-[\\d.]+$");
+    
+        let isValidate =true;
+        if(regex.checked){
+        	if(dataTypeConfig !="" && dataTypeConfig != null){
+        		if(getConfigVal(dataTypeConfig) == "" || getConfigVal(dataTypeConfig) == null ){
+        			  document.getElementById("datatypeconfig").style.display= 'block';	
+     				  document.getElementById('datatypeconfig').innerHTML = "Regex expression required.";
+     				  isValidate = false; 
+        		}else{	
+        			if(!checkOptionAlreadyAppend(dataTypeConfig,'Regex')){
+        				 isValidate = false; 
+        			 }else{
+         				document.getElementById("datatypeconfig").style.display= 'none';
+        			 }
+        		}
+			}else{
+				  document.getElementById("datatypeconfig").style.display= 'block';	
+ 				  document.getElementById('datatypeconfig').innerHTML = "Regex expression required.";
+ 				  isValidate = false;  
+			}
+		}else if(range.checked){
+			if(dataTypeConfig !="" && dataTypeConfig != null){
+					
+					 if(getConfigVal(dataTypeConfig) == "" || getConfigVal(dataTypeConfig) == null ){
+		      			  document.getElementById("datatypeconfig").style.display= 'block';	
+		   				  document.getElementById('datatypeconfig').innerHTML = "Range required.";
+		   				  isValidate = false; 
+						}
+		      		 else{
+			      			 //check the given range in proper formate or not 
+			      			let rangVal =  getConfigVal(dataTypeConfig).trim();
+			      			let index = rangVal.indexOf("-");
+			  			    let startPoint = rangVal.substr(0, index); 
+			  			    let endPoint = rangVal.substr(index + 1);
+			  			      console.log("rangVal : "+regRange.test(rangVal));
+			  			    if(!checkOptionAlreadyAppend(dataTypeConfig ,'Range')){
+			  			    	isValidate = false; 
+							} 
+				  			 if(!regRange.test(rangVal)){
+			      				  document.getElementById("datatypeconfig").style.display= 'block';	
+			      				  document.getElementById('datatypeconfig').innerHTML = "Invalide range pattern (startDigit - endDigit)";
+			      				  isValidate = false; 
+			      			 } else if(parseInt(startPoint, 10) > parseInt(endPoint, 10)){
+			      				  document.getElementById("datatypeconfig").style.display= 'block';	
+			    				  document.getElementById('datatypeconfig').innerHTML = "In range startNumber should be greater then endNumber";
+			    				  isValidate = false;  
+			      			 }else{
+			       				document.getElementById("datatypeconfig").style.display= 'none';
+			      			 }
+	      	    	}	 
+				}else{
+					  document.getElementById("datatypeconfig").style.display= 'block';	
+	  				  document.getElementById('datatypeconfig').innerHTML = "Range required.";
+	  				  isValidate = false; 
+				}
+		}
+		else if(length.checked){
+			if(dataTypeConfig !="" && dataTypeConfig != null){
+					if(getConfigVal(dataTypeConfig) == "" || getConfigVal(dataTypeConfig) == null ){
+		      			  document.getElementById("datatypeconfig").style.display= 'block';	
+		   				  document.getElementById('datatypeconfig').innerHTML = "Length required.";
+		   				  isValidate = false; 
+		      		}
+					else if (!regInt.test(getConfigVal(dataTypeConfig))){
+					 	document.getElementById("datatypeconfig").style.display= 'block';	
+						document.getElementById('datatypeconfig').innerHTML = integerErrorMessage;
+						isValidate = false;
+				   }else{
+					    if(!checkOptionAlreadyAppend(dataTypeConfig ,'Length')){
+					    	isValidate = false;
+						   }else{
+		     				document.getElementById("datatypeconfig").style.display= 'none'; 
+		     			 }
+			
+				   }
+			}else{
+				  document.getElementById("datatypeconfig").style.display= 'block';	
+  				  document.getElementById('datatypeconfig').innerHTML = "Length required.";
+  				  isValidate = false; 
+			}
+        }
+        return isValidate;
+     }
+	
+	function getConfigVal(dataTypeConfig){		
+		 let index = dataTypeConfig.indexOf("=");  //Split the type blc we need to 
+		  let valueConfig = dataTypeConfig.substr(index + 1); 
+		 return valueConfig;
+	}
+	function getConfigType(dataTypeConfig){		
+		 let index = dataTypeConfig.indexOf("=");  //Split the type blc we need to 
+		 let type = dataTypeConfig.substr(0,index); 
+		 return type;
+	}
+	
+	
+	function checkConceptExistent(concepId){
+		console.log("Concept ID : "+concepId);
+		console.log("integer : "+isInt(concepId));
+		if(isInt(concepId)){
+		return	getCheckExist(concepId);
+		}
+		else {
+			return false;
+		}
+	}
+	
+	//Retire Validate
 	function retireValidate(){
 		var retireReason = document.getElementById('retireReason').value;
 		var isValidate= true;
@@ -653,8 +902,6 @@ legend.scheduler-border {
 			document.getElementById('retirereason').innerHTML = numericErrorMessage;
 			isValidate = false;
 		}
-
-	
 		return isValidate;
 	}
 	//check for integer..
@@ -673,7 +920,6 @@ legend.scheduler-border {
 					 window.location.href = "${pageContext.request.contextPath}/module/commonlabtest/addLabTestAttributeType.form?uuid="+uuid; 
 				 }
 			}
-
 		 jQuery("body").keydown(function(e){
 
 		 if(e.which==116){
@@ -689,15 +935,11 @@ legend.scheduler-border {
 	 });
 	
 	///Sort Weight Modal 
-	
 	function showSortWeightList(sortweight){
 		var testTypeId = document.getElementById("testTypeSuggestBox").value;
-		 if(testTypeId != ""){
+		 if(testTypeId != "" && isInt(testTypeId)){
 			    getTestAttributeType(testTypeId);
 		  }
-		 else{
-			 
-		 }
 	}
 	
 	function getTestAttributeType(testTypeId){
@@ -725,14 +967,18 @@ legend.scheduler-border {
 		  var resultsItems = "";
 					resultsItems = resultsItems.concat('<table  class="table table-striped table-responsive-md btn-table table-hover mb-0" id="tb-test-type">');
 					resultsItems = resultsItems.concat('<thead><tr>');
-						resultsItems = resultsItems.concat('<th><a>Test Order</a></th>');
+						resultsItems = resultsItems.concat('<th><a>Test Type</a></th>');
 						resultsItems = resultsItems.concat('<th><a>Attribute Type Name</a></th>');
 						resultsItems = resultsItems.concat('<th><a>Sort Weight</a></th>');
+						resultsItems = resultsItems.concat('<th><a>Multiset Name</a></th>');
+						resultsItems = resultsItems.concat('<th><a>Group Name</a></th>');
 						jQuery(array).each(function() {
 							resultsItems = resultsItems.concat('<tbody><tr>'); 
-							resultsItems = resultsItems.concat('<td>'+this.testOrderId+'</td>');
+							resultsItems = resultsItems.concat('<td>'+this.testTypeId+'</td>');
 							resultsItems = resultsItems.concat('<td>'+this.attributeTypeName+'</td>');
 							resultsItems = resultsItems.concat('<td>'+this.sortWeight+'</td>');
+							resultsItems = resultsItems.concat('<td>'+this.multisetName+'</td>');
+							resultsItems = resultsItems.concat('<td>'+this.groupName+'</td>');
 							resultsItems = resultsItems.concat('</tr></tbody>'); 
 						 });
 					resultsItems = resultsItems.concat('</tr></thead>');
@@ -741,6 +987,32 @@ legend.scheduler-border {
 			   document.getElementById("sortweightList").innerHTML = resultsItems;
 		   //show the module
 		   $('#sortWeightModal').modal('show'); 
+	}
+	
+	//CHECK THE CONCEPT EXIST
+	function getCheckExist(conceptId){
+		console.log("Type : "+conceptId);
+		var isExist =false;
+		 $.ajax({
+				type : "GET",
+				contentType : "application/json",
+				url : '${pageContext.request.contextPath}/module/commonlabtest/getConceptExist.form?conceptId='+conceptId,
+				async:false,
+				dataType : "json",
+				success : function(data) {
+				   console.log("success  : " + data);	
+				   isExist = data;
+				},
+				error : function(data) {
+					  console.log("fail  : " + data);
+					  isExist =false;
+				},
+				done : function(e) {
+					console.log("DONE");
+					isExist = false;
+				}
+		});
+	  return isExist;	
 	}
 
  

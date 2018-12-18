@@ -15,12 +15,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
-import groovy.json.JsonOutput;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -37,17 +33,8 @@ public class LabTestTypeController {
 	
 	private final String SUCCESS_ADD_FORM_VIEW = "/module/commonlabtest/addLabTestType";
 	
-	/*@Autowired
-	@Qualifier("labTestTypeValidator")
-	private Validator validator;
-	*/
 	@Autowired
 	CommonLabTestService commonLabTestService;
-	
-	/*@InitBinder
-	private void initBinder(WebDataBinder binder) {
-		binder.setValidator(validator);
-	}*/
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestType.form")
 	public String showForm(ModelMap model, @RequestParam(value = "uuid", required = false) String uuid,
@@ -87,6 +74,9 @@ public class LabTestTypeController {
 	        @ModelAttribute("anyRequestObject") Object anyRequestObject, HttpServletRequest request,
 	        @ModelAttribute("labTestType") LabTestType labTestType, BindingResult result) {
 		String status = "";
+		if (Context.getAuthenticatedUser() == null) {
+			return "redirect:../../login.htm";
+		}
 		if (result.hasErrors()) {
 			status = "Invalid Reference concept Id entered";
 			model.addAttribute("error", status);
@@ -105,7 +95,7 @@ public class LabTestTypeController {
 				status = sb.toString();
 			}
 			catch (Exception e) {
-				status = "Error! could not save Lab Test Type.";
+				status = "could not save Lab Test Type.";
 				e.printStackTrace();
 				model.addAttribute("error", status);
 				if (labTestType.getLabTestTypeId() == null) {
@@ -124,7 +114,11 @@ public class LabTestTypeController {
 	public String onRetire(ModelMap model, HttpSession httpSession, HttpServletRequest request,
 	        @RequestParam("uuid") String uuid, @RequestParam("retireReason") String retireReason) {
 		LabTestType labTestType = commonLabTestService.getLabTestTypeByUuid(uuid);
+		
 		String status;
+		if (Context.getAuthenticatedUser() == null) {
+			return "redirect:../../login.htm";
+		}
 		try {
 			commonLabTestService.retireLabTestType(labTestType, retireReason);
 			StringBuilder sb = new StringBuilder();
@@ -134,7 +128,7 @@ public class LabTestTypeController {
 			status = sb.toString();
 		}
 		catch (Exception exception) {
-			status = "Error! could not save Lab Test Type.";
+			status = "could not retire Lab Test Type.";
 			exception.printStackTrace();
 			model.addAttribute("error", status);
 			if (labTestType.getLabTestTypeId() == null) {
@@ -152,7 +146,7 @@ public class LabTestTypeController {
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/deletelabtesttype.form")
 	public String onDelete(ModelMap model, HttpSession httpSession, HttpServletRequest request,
 	        @RequestParam("uuid") String uuid) {
-		LabTestType labTestType = commonLabTestService.getLabTestTypeByUuid(uuid);
+		LabTestType labTestType = Context.getService(CommonLabTestService.class).getLabTestTypeByUuid(uuid);
 		String status;
 		try {
 			commonLabTestService.deleteLabTestType(labTestType, true);
@@ -163,7 +157,7 @@ public class LabTestTypeController {
 			status = sb.toString();
 		}
 		catch (Exception exception) {
-			status = "Error! could not save Lab Test Type.";
+			status = "could not delete Lab Test Type.";
 			exception.printStackTrace();
 			model.addAttribute("error", status);
 			if (labTestType.getLabTestTypeId() == null) {

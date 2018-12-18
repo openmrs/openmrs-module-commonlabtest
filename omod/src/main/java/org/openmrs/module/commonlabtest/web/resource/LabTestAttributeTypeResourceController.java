@@ -51,9 +51,14 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 	
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
+		DelegatingResourceDescription description = new DelegatingResourceDescription();
+		description.addProperty("uuid");
+		
+		description.addSelfLink();
+		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
+		description.addProperty("display");
 		if (representation instanceof DefaultRepresentation) {
-			DelegatingResourceDescription description = new DelegatingResourceDescription();
-			description.addProperty("uuid");
+			
 			description.addProperty("labTestType");
 			description.addProperty("labTestAttributeTypeId");
 			description.addProperty("sortWeight");
@@ -63,11 +68,9 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 			description.addProperty("preferredHandlerClassname");
 			description.addProperty("handlerConfig");
 			
-			description.addSelfLink();
-			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
 		} else if (representation instanceof FullRepresentation) {
-			DelegatingResourceDescription description = new DelegatingResourceDescription();
+			
 			description.addProperty("uuid");
 			description.addProperty("labTestType");
 			description.addProperty("labTestAttributeTypeId");
@@ -90,6 +93,6 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 			description.addProperty("retireReason");
 			return description;
 		}
-		return null;
+		return description;
 	}
 }

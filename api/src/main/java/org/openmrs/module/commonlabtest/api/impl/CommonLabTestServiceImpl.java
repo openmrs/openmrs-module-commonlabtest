@@ -1,5 +1,5 @@
 /**
-w * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
@@ -22,6 +22,7 @@ import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
+import org.openmrs.api.UnchangeablePropertyException;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.commonlabtest.CommonLabTestConfig;
@@ -590,7 +591,21 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
 	public LabTestType saveLabTestType(LabTestType labTestType) throws APIException {
+		handleUnknownTestTypeOperation(labTestType);
 		return dao.saveLabTestType(labTestType);
+	}
+	
+	/**
+	 * This method disallows any modification in Unknown {@link LabTestType}. This method must be
+	 * called in before DML operations in any {@link LabTestType} object
+	 * 
+	 * @param labTestType
+	 */
+	private void handleUnknownTestTypeOperation(LabTestType labTestType) {
+		if (labTestType.getUuid().equals(LabTestType.UNKNOWN_TEST_UUID)) {
+			throw new UnchangeablePropertyException("The LabTestType: UNKNOWN " + LabTestType.UNKNOWN_TEST_UUID
+			        + " is mandatory, and cannot be altered.");
+		}
 	}
 	
 	/**
@@ -600,6 +615,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
 	public void retireLabTestType(LabTestType labTestType, String retireReason) throws APIException {
+		handleUnknownTestTypeOperation(labTestType);
 		if (labTestType.getRetired()) {
 			throw new APIException("Object has alread been retired.");
 		}
@@ -635,6 +651,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	public void unretireLabTestType(LabTestType labTestType) throws APIException {
 		labTestType.setRetired(Boolean.FALSE);
 		labTestType.setRetireReason("Previously retired for reason: " + labTestType.getRetireReason());
+		handleUnknownTestTypeOperation(labTestType);
 		dao.saveLabTestType(labTestType);
 	}
 	
@@ -657,11 +674,17 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public void voidLabTest(LabTest labTest, String voidReason) throws APIException {
-		for (LabTestSample sample : dao.getLabTestSamples(labTest, Boolean.FALSE)) {
-			voidLabTestSample(sample, voidReason);
+		List<LabTestSample> labTestSamples = dao.getLabTestSamples(labTest, Boolean.FALSE);
+		if (labTestSamples != null) {
+			for (LabTestSample sample : labTestSamples) {
+				voidLabTestSample(sample, voidReason);
+			}
 		}
-		for (LabTestAttribute attribute : dao.getLabTestAttributes(labTest.getId())) {
-			voidLabTestAttribute(attribute, voidReason);
+		List<LabTestAttribute> labTestAttributes = dao.getLabTestAttributes(labTest.getId());
+		if (labTestAttributes != null) {
+			for (LabTestAttribute attribute : labTestAttributes) {
+				voidLabTestAttribute(attribute, voidReason);
+			}
 		}
 		labTest.setVoided(true);
 		labTest.setVoidedBy(Context.getAuthenticatedUser());
@@ -682,6 +705,34 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		labTestAttribute.setVoidReason(voidReason);
 		labTestAttribute.setDateVoided(new Date());
 		dao.saveLabTestAttribute(labTestAttribute);
+	}
+	
+	/**
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#voidLabTestAttributes(org.openmrs.module.commonlabtest.LabTest,
+	 *      java.lang.String)
+	 */
+	@Override
+	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
+	@Transactional
+	public void voidLabTestAttributes(LabTest labTest, String voidReason) throws APIException {
+		// Set the status of PROCESSED LabTestSample objects back to COLLECTED
+		List<LabTestSample> labTestSamples = getLabTestSamples(labTest, true);
+		for (LabTestSample labTestSample : labTestSamples) {
+			if (labTestSample.getStatus() == LabTestSampleStatus.PROCESSED) {
+				labTestSample.setStatus(LabTestSampleStatus.COLLECTED);
+				labTestSample = dao.saveLabTestSample(labTestSample);
+			}
+		}
+		// Void all attributes in the list
+		List<LabTestAttribute> labTestAttributes = getLabTestAttributes(labTest.getTestOrderId());
+		if (labTestAttributes != null) {
+			for (LabTestAttribute labTestAttribute : labTestAttributes) {
+				if (labTestAttribute.getVoided()) {
+					continue;
+				}
+				voidLabTestAttribute(labTestAttribute, voidReason);
+			}
+		}
 	}
 	
 	/**
@@ -816,7 +867,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
 	public void deleteLabTestType(LabTestType labTestType) throws APIException {
-		deleteLabTestType(labTestType, false);
+		deleteLabTestType(labTestType, null);
 	}
 	
 	/**
@@ -826,6 +877,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
+	@Deprecated
 	public void deleteLabTestType(LabTestType labTestType, boolean cascade) throws APIException {
 		List<LabTest> labTests = getLabTests(labTestType, true);
 		if (labTests == null) {
@@ -895,5 +947,4 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 			}
 		}
 	}
-	
 }

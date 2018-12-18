@@ -3,10 +3,12 @@ package org.openmrs.module.commonlabtest.web.resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
@@ -56,8 +58,14 @@ public class LabTestSampleResourceController extends DataDelegatingCrudResource<
 	
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
+		DelegatingResourceDescription description = new DelegatingResourceDescription();
+		description.addProperty("uuid");
+		
+		description.addSelfLink();
+		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
+		description.addProperty("display");
 		if (representation instanceof DefaultRepresentation) {
-			DelegatingResourceDescription description = new DelegatingResourceDescription();
+			
 			description.addProperty("uuid");
 			description.addProperty("labTestSampleId");
 			description.addProperty("labTest");
@@ -74,11 +82,8 @@ public class LabTestSampleResourceController extends DataDelegatingCrudResource<
 			description.addProperty("sampleIdentifier");
 			description.addProperty("comments");
 			
-			description.addSelfLink();
-			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
 		} else if (representation instanceof FullRepresentation) {
-			DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
 			description.addProperty("labTestSampleId");
 			description.addProperty("labTest");
@@ -107,6 +112,18 @@ public class LabTestSampleResourceController extends DataDelegatingCrudResource<
 			description.addProperty("voidReason");
 			return description;
 		}
-		return null;
+		return description;
+	}
+	
+	/**
+	 * @param LabTestSample
+	 * @return getSampleIdentifier as Display
+	 */
+	@PropertyGetter("display")
+	public String getDisplayString(LabTestSample sample) {
+		if (sample == null)
+			return "";
+		
+		return sample.getSampleIdentifier();
 	}
 }

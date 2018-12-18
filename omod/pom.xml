@@ -55,6 +55,16 @@
 			<version>${wsrestVersion}</version>
 			<type>test-jar</type>
 			<scope>test</scope>
+			
+		</dependency>
+		
+		
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>webservices.rest-omod-common</artifactId>
+			<version>${wsrestVersion}</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
@@ -70,6 +80,26 @@
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
+			<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>4.1.4.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+		      <groupId>org.apache.tomcat</groupId>
+		      <artifactId>jasper</artifactId>
+		      <version>6.0.18</version>
+		      <scope>provided</scope>
+	     </dependency>
 	</dependencies>
 
 	<build>
@@ -83,6 +113,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+				<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

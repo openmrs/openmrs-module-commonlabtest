@@ -51,6 +51,18 @@ public class LabTestAttributeType extends BaseAttributeType<LabTest> implements 
 	@Column(name = "sort_weight")
 	private Double sortWeight;
 	
+	@Field
+	@Column(name = "hint")
+	private String hint;
+	
+	@Field
+	@Column(name = "multiset_name")
+	private String multisetName;
+	
+	@Field
+	@Column(name = "group_name")
+	private String groupName;
+	
 	public LabTestAttributeType() {
 	}
 	
@@ -91,4 +103,29 @@ public class LabTestAttributeType extends BaseAttributeType<LabTest> implements 
 	public void setLabTestAttributeTypeId(Integer id) {
 		this.labTestAttributeTypeId = id;
 	}
+	
+	public String getHint() {
+		return hint;
+	}
+	
+	public void setHint(String hint) {
+		this.hint = hint;
+	}
+	
+	public String getGroupName() {
+		return groupName;
+	}
+	
+	public String getMultisetName() {
+		return multisetName;
+	}
+	
+	public void setMultisetName(String multisetName) {
+		this.multisetName = multisetName;
+	}
+	
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+	
 }

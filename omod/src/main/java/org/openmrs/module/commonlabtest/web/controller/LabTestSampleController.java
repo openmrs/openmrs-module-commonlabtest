@@ -41,7 +41,7 @@ public class LabTestSampleController {
 	@Autowired
 	CommonLabTestService commonLabTestService;
 	
-	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-mm-dd");
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -51,7 +51,7 @@ public class LabTestSampleController {
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestSample.form")
 	public String showForm(HttpServletRequest request, ModelMap model, @RequestParam(required = true) Integer patientId,
 	        @RequestParam(required = false) Integer testSampleId, @RequestParam(required = false) Integer orderId,
-	        @RequestParam(value = "error", required = false) String error) {
+	        @RequestParam(required = false) String error) {
 		
 		String orderDate = "";
 		if (orderId != null) {
@@ -63,15 +63,14 @@ public class LabTestSampleController {
 				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "Test Order is voided");
 				return "redirect:../../patientDashboard.form?patientId=" + patientId;
 			}
-			orderDate = simpleDateFormat.format(labTest.getOrder().getEncounter().getDateCreated());
+			orderDate = simpleDateFormat.format(labTest.getOrder().getEncounter().getEncounterDatetime());
 		}
 		
-		LabTestSample test;
+		LabTestSample labTestSample;
 		if (testSampleId == null) {
-			test = new LabTestSample();
+			labTestSample = new LabTestSample();
 		} else {
-			
-			test = commonLabTestService.getLabTestSample(testSampleId);
+			labTestSample = commonLabTestService.getLabTestSample(testSampleId);
 		}
 		
 		//get Specimen Type .
@@ -111,7 +110,7 @@ public class LabTestSampleController {
 			model.put("testUnits", testUnitsConceptlist);
 		}
 		
-		model.addAttribute("testSample", test);
+		model.addAttribute("testSample", labTestSample);
 		model.addAttribute("patientId", patientId);
 		model.addAttribute("orderEncDate", orderDate);
 		model.addAttribute("orderId", orderId);
@@ -128,16 +127,21 @@ public class LabTestSampleController {
 	        @ModelAttribute("testSample") LabTestSample labTestSample, BindingResult result) {
 		
 		String status = "";
+		if (Context.getAuthenticatedUser() == null) {
+			return "redirect:../../login.htm";
+		}
 		try {
 			if (result.hasErrors()) {
 				///If we get any exception while binding it should be redirected to same page with binding error		
 				if (labTestSample.getLabTestSampleId() == null) {
 					return "redirect:addLabTestSample.form?patientId="
-					        + labTestSample.getLabTest().getOrder().getPatient().getPatientId();
+					        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&orderId="
+					        + labTestSample.getLabTest().getOrder().getId();
 				} else {
 					return "redirect:addLabTestSample.form?patientId="
 					        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&testSampleId="
-					        + labTestSample.getLabTest().getTestOrderId();
+					        + labTestSample.getLabTest().getTestOrderId() + "&orderId="
+					        + labTestSample.getLabTest().getOrder().getId();
 				}
 			} else {
 				//   labTest.set
@@ -157,11 +161,13 @@ public class LabTestSampleController {
 			model.addAttribute("error", status);
 			if (labTestSample.getLabTestSampleId() == null) {
 				return "redirect:addLabTestSample.form?patientId="
-				        + labTestSample.getLabTest().getOrder().getPatient().getPatientId();
+				        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&orderId="
+				        + labTestSample.getLabTest().getOrder().getId();
 			} else {
 				return "redirect:addLabTestSample.form?patientId="
 				        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&testSampleId="
-				        + labTestSample.getLabTest().getTestOrderId();
+				        + labTestSample.getLabTest().getTestOrderId() + "&orderId="
+				        + labTestSample.getLabTest().getOrder().getId();
 			}
 		}
 		model.addAttribute("save", status);
@@ -175,6 +181,9 @@ public class LabTestSampleController {
 	        @RequestParam("uuid") String uuid, @RequestParam("voidReason") String voidReason) {
 		LabTestSample labTestSample = commonLabTestService.getLabTestSampleByUuid(uuid);
 		String status;
+		if (Context.getAuthenticatedUser() == null) {
+			return "redirect:../../login.htm";
+		}
 		try {
 			commonLabTestService.voidLabTestSample(labTestSample, voidReason);
 			StringBuilder sb = new StringBuilder();
@@ -184,7 +193,7 @@ public class LabTestSampleController {
 			status = sb.toString();
 		}
 		catch (Exception e) {
-			status = "Error! could not save Lab Test Sample";
+			status = "could not void Lab Test Sample";
 			e.printStackTrace();
 			model.addAttribute("error", status);
 			if (labTestSample.getLabTestSampleId() == null) {

@@ -34,7 +34,6 @@ public class ManageLabTestSampleController {
 	public String showLabTestSample(HttpServletRequest request, @RequestParam(required = true) Integer patientId,
 	        @RequestParam(required = false) Integer testOrderId, @RequestParam(required = false) String save, ModelMap model) {
 		
-		//CommonLabTestService commonLabTestService = (CommonLabTestService) Context.getService(CommonLabTestService.class);
 		List<LabTestSample> testSample;
 		if (testOrderId == null) {
 			testSample = new ArrayList<LabTestSample>();
@@ -50,6 +49,14 @@ public class ManageLabTestSampleController {
 			testSample = commonLabTestService.getLabTestSamples(labTest, Boolean.FALSE);//need to check this get sample method...
 		}
 		
+		for (LabTestSample labTestSample : testSample) {
+			if (labTestSample.getStatus().equals(LabTestSampleStatus.PROCESSED)) {
+				model.addAttribute("sampleProcessed", Boolean.TRUE);
+				break;
+			} else {
+				model.addAttribute("sampleProcessed", Boolean.FALSE);
+			}
+		}
 		model.addAttribute("labSampleTest", testSample);
 		model.addAttribute("orderId", testOrderId);
 		model.addAttribute("patientId", patientId);

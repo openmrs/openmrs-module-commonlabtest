@@ -41,6 +41,10 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 	
 	public static final String UPLOAD_FILE_DIRECTORY = "commonlabtest.fileDirectory";
 	
+	public static final String UPLOAD_FILE_EXTENSIONS = "commonlabtest.fileExtensions";
+	
+	public static final String FILE_EXTENSIONS_NAMES = ".bmp ,.jpg ,.jpeg,.jfif,.GIF,.png,.bat,.BPG,.FLV,.AVI,.MOV,.M4P,.MPG,.WMV,.3gp,.RM,.SWF,.3GP,.ACT,.AIFF,.MP3,.WAV,.OGG,.FLAC,.AU,.RAW,.docx,.docm,.dotx,.docb,.dotm,.pdf";
+	
 	ConceptService conceptService;
 	
 	File dir = OpenmrsUtil.getDirectoryInApplicationDataDirectory(Context.getAdministrationService().getGlobalProperty(
@@ -68,6 +72,7 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 		setGlobalProperty(administrationService, SPECIMEN_TYPE_CONCEPT_UUID, "162476AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		setGlobalProperty(administrationService, SPECIMEN_SITE_CONCEPT_UUID, "159959AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		setGlobalProperty(administrationService, TEST_UNITS_CONCEPT_UUID, "5db4f53e-6218-4ae0-ae4e-5e0343b5d301");
+		setGlobalProperty(administrationService, UPLOAD_FILE_EXTENSIONS, FILE_EXTENSIONS_NAMES);
 		
 	}
 	
@@ -90,7 +95,6 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 	
 	public void contextRefreshed() {
 		log.info("========================== Common Lab Test Lab contextRefreshed called ======");
-		
 		conceptService = Context.getConceptService();
 		
 		if (!Files.exists(path)) {
@@ -106,6 +110,7 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 		setGlobalProperty(administrationService, SPECIMEN_TYPE_CONCEPT_UUID, "162476AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		setGlobalProperty(administrationService, SPECIMEN_SITE_CONCEPT_UUID, "159959AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		setGlobalProperty(administrationService, TEST_UNITS_CONCEPT_UUID, "5db4f53e-6218-4ae0-ae4e-5e0343b5d301");
+		setGlobalProperty(administrationService, UPLOAD_FILE_EXTENSIONS, FILE_EXTENSIONS_NAMES);
 	}
 	
 }

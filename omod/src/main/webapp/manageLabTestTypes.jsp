@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="/WEB-INF/view/module/commonlabtest/include/localHeader.jsp"%>
-<openmrs:require privilege="View labTestType" otherwise="/login.htm" redirect="/module/commonlabtest/manageLabTestTypes.form" />
+<openmrs:require privilege="View CommonLabTest Metadata" redirect="/module/commonlabtest/manageLabTestTypes.form" otherwise="/login.htm" />
 
 <link type="text/css" rel="stylesheet" href="/openmrs/moduleResources/commonlabtest/css/commonlabtest.css" />
 <link   href="/openmrs/moduleResources/commonlabtest/font-awesome/css/font-awesome.min.css" rel="stylesheet" /> 
@@ -51,8 +51,12 @@ legend.scheduler-border {
  margin-bottom:15px;
  
  }
+ .modal-body{
+ 	    height: 500px;
+		overflow-y:scroll;
+}
  
-;table.display tbody tr:nth-child(even):hover td{
+table.display tbody tr:nth-child(even):hover td{
     background-color: #1aac9b !important;
 }
 
@@ -72,7 +76,9 @@ legend.scheduler-border {
 		</div>
 	</c:if>
 	<div>
-	 <a style="text-decoration:none" href="addLabTestType.form" class="hvr-icon-grow" ><i class="fa fa-plus hvr-icon"></i> <spring:message code="commonlabtest.labtesttype.add" /> </a>
+	<openmrs:hasPrivilege privilege="Add CommonLabTest Metadata">
+	   <a style="text-decoration:none" href="addLabTestType.form" class="hvr-icon-grow" ><i class="fa fa-plus hvr-icon"></i> <spring:message code="commonlabtest.labtesttype.add" /> </a>
+	</openmrs:hasPrivilege>
 	</div>
 	<br>
 	<div class="boxHeader" style="background-color: #1aac9b">
@@ -84,7 +90,9 @@ legend.scheduler-border {
 	            <tr>
 	            	<th hidden="true"></th>
 	            	<th hidden="true"></th>
-					<th>Name</th>
+	            	<openmrs:hasPrivilege privilege="Edit CommonLabTest Metadata">
+					  <th>Name</th>
+					</openmrs:hasPrivilege>
 					<th>Short Name</th>
 					<th>Test Group</th>
 					<th>Reference Concept</th>
@@ -96,42 +104,19 @@ legend.scheduler-border {
 						<tr>
 							<td hidden="true" class="uuid">${tt.uuid}</td>
 							<td hidden="true" class="testTypeId">${tt.labTestTypeId}</td>
-							<td><a style="text-decoration:none" href="${pageContext.request.contextPath}/module/commonlabtest/addLabTestType.form?uuid=${tt.uuid}" class="hvr-icon-grow"><span><i class="fa fa-edit hvr-icon"></i></span> ${tt.name}</a></td>
+							<openmrs:hasPrivilege privilege="Edit CommonLabTest Metadata">
+							   <td><a style="text-decoration:none" href="${pageContext.request.contextPath}/module/commonlabtest/addLabTestType.form?uuid=${tt.uuid}" class="hvr-icon-grow"><span><i class="fa fa-edit hvr-icon"></i></span> ${tt.name}</a></td>
+							</openmrs:hasPrivilege>
 							<td>${tt.shortName}</td>
 							<td>${tt.testGroup}</td>
 							<td>${tt.referenceConcept.name}</td>
 						    <td> <span class="table-edit hvr-icon-grow" onclick="editTestOrder(this)"><i class="fa fa-eye fa-2x hvr-icon"></i></span></td>
-							
 						</tr>
 					</c:forEach>
 	        </tbody>
 	    </table>
 	 </div>
-		
-	<%-- 
-		
-			<table  class="table table-striped table-responsive-md btn-table table-hover mb-0" id="tb-test-type">
-				<thead>
-					<tr>
-						 <th class="th-lg"><a> Name <i class="fa fa-sort ml-1"></i></a></th>
-						 <th class="th-lg"><a> Short Name <i class="fa fa-sort ml-1"></i></a></th>
-						 <th class="th-lg"><a> Test Group <i class="fa fa-sort ml-1"></i></a></th>
-						 <th class="th-lg"><a> Reference Concept <i class="fa fa-sort ml-1"></i></a></th> 	 
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach var="tt" items="${labTestTypes}">
-						<tr>
-							<td><a href="${pageContext.request.contextPath}/module/commonlabtest/addLabTestType.form?uuid=${tt.uuid}">${tt.name}</a></td>
-							<td>${tt.shortName}</td>
-							<td>${tt.testGroup}</td>
-							<td>${tt.referenceConcept.name}</td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table> --%>
 		<!-- Full Height Modal Right -->
-		
 	<div class="modal fade left modal-scrolling" id="sortWeightModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-side modal-top-left modal-notify modal-info" role="document">
 	      <div class="modal-content">
@@ -165,17 +150,8 @@ legend.scheduler-border {
 	src="${pageContext.request.contextPath}/moduleResources/commonlabtest/js/jquery.dataTables.min.js"></script>
 <script
 	src="${pageContext.request.contextPath}/moduleResources/commonlabtest/js/dataTables.bootstrap4.min.js"></script>
-<%-- <script
-	src="${pageContext.request.contextPath}/moduleResources/commonlabtest/js/mdb.js"></script>
-<script
-	src="${pageContext.request.contextPath}/moduleResources/commonlabtest/js/mdb.min.js"></script> --%>
 
 <script>
-function relocate_home()
-{
-     location.href = "addLabTestType.form";
-} 
-
 	function editTestOrder(ele){
 		 var testTypeId = $(ele).closest("tr")  
 							         .find(".testTypeId")   
@@ -189,7 +165,6 @@ function relocate_home()
 	}
 
 $(document).ready(function() {
-
 	//status auto closs..		
 	   $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
             $("#success-alert").slideUp(500);
@@ -228,14 +203,18 @@ function renderSortWeight(array){
 	  var resultsItems = "";
 				resultsItems = resultsItems.concat('<table  class="table table-striped table-responsive-md btn-table table-hover mb-0" id="tb-test-type">');
 				resultsItems = resultsItems.concat('<thead><tr>');
-					resultsItems = resultsItems.concat('<th><a>Test Order</a></th>');
+					resultsItems = resultsItems.concat('<th><a>Test Type</a></th>');
 					resultsItems = resultsItems.concat('<th><a>Attribute Type Name</a></th>');
 					resultsItems = resultsItems.concat('<th><a>Sort Weight</a></th>');
+					resultsItems = resultsItems.concat('<th><a>Group Id</a></th>');
+					resultsItems = resultsItems.concat('<th><a>Group Name</a></th>');
 					jQuery(array).each(function() {
 						resultsItems = resultsItems.concat('<tbody><tr>'); 
-						resultsItems = resultsItems.concat('<td>'+this.testOrderId+'</td>');
+						resultsItems = resultsItems.concat('<td>'+this.testTypeId+'</td>');
 						resultsItems = resultsItems.concat('<td>'+this.attributeTypeName+'</td>');
 						resultsItems = resultsItems.concat('<td>'+this.sortWeight+'</td>');
+						resultsItems = resultsItems.concat('<td>'+this.groupId+'</td>');
+						resultsItems = resultsItems.concat('<td>'+this.groupName+'</td>');
 						resultsItems = resultsItems.concat('</tr></tbody>'); 
 					 });
 				resultsItems = resultsItems.concat('</tr></thead>');

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Concept;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
@@ -35,38 +37,66 @@ public class LabTestResultViewController {
 		LabTest labTest = commonLabTestService.getLabTest(testOrderId);
 		List<LabTestSample> testSample;
 		List<LabTestAttribute> testAttributes = commonLabTestService.getLabTestAttributes(testOrderId);
+		JsonObject testResultList = new JsonObject();
+		JsonArray testSampleArray = new JsonArray();
+		JsonArray testResultArray = new JsonArray();
 		
-		for (LabTestAttributeType attribut : commonLabTestService.getLabTestAttributeTypes(labTest.getLabTestType(), false)) {
-			for (int i = 0; i < testAttributes.size(); i++) {
-				if (testAttributes.get(i).getAttributeTypeId() == attribut.getLabTestAttributeTypeId()) {
-					testAttributes.get(i).setAttributeType(attribut);
+		try {
+			for (LabTestAttributeType attribut : commonLabTestService.getLabTestAttributeTypes(labTest.getLabTestType(),
+			    Boolean.TRUE)) {
+				for (int i = 0; i < testAttributes.size(); i++) {
+					if (!testAttributes.get(i).getVoided()) {
+						if (testAttributes.get(i).getAttributeTypeId() == attribut.getLabTestAttributeTypeId()) {
+							testAttributes.get(i).setAttributeType(attribut);
+						}
+					}
+				}
+			}
+			
+			testSample = commonLabTestService.getLabTestSamples(labTest, Boolean.FALSE);
+			
+			for (LabTestSample labTestSample : testSample) {
+				JsonObject objTestSample = new JsonObject();
+				objTestSample.addProperty("testOrderId", testOrderId);
+				objTestSample.addProperty("specimenType", labTestSample.getSpecimenType().getName().getName());
+				objTestSample.addProperty("specimenSite", labTestSample.getSpecimenSite().getName().getName());
+				objTestSample.addProperty("status", labTestSample.getStatus().name());
+				testSampleArray.add(objTestSample);
+			}
+			for (LabTestAttribute labTestResult : testAttributes) {
+				JsonObject objTestResult = new JsonObject();
+				if (labTestResult.getAttributeType() != null) {
+					if (labTestResult.getAttributeType().getDatatypeClassname()
+					        .equals("org.openmrs.customdatatype.datatype.ConceptDatatype")) {
+						objTestResult.addProperty("question", labTestResult.getAttributeType().getName());
+						boolean isTrue = isInteger(labTestResult.getAttributeType().getDatatypeConfig());
+						if (isTrue) {
+							Concept conceptConfig = Context.getConceptService().getConcept(
+							    Integer.parseInt(labTestResult.getAttributeType().getDatatypeConfig()));
+							if (conceptConfig != null) {
+								if (conceptConfig.getDatatype().getName().equals("Coded")) {
+									Concept concept = Context.getConceptService().getConcept(
+									    Integer.parseInt(labTestResult.getValueReference()));
+									objTestResult.addProperty("valuesReference", concept.getName().getName());
+								} else {
+									objTestResult.addProperty("valuesReference", labTestResult.getValueReference());
+								}
+							}
+						}
+					} else {
+						objTestResult.addProperty("question", labTestResult.getAttributeType().getName());
+						objTestResult.addProperty("valuesReference", labTestResult.getValueReference());
+					}
+					objTestResult.addProperty("void", labTestResult.getVoided());
+					testResultArray.add(objTestResult);
 				}
 			}
 		}
 		
-		testSample = commonLabTestService.getLabTestSamples(labTest, Boolean.FALSE);
-		JsonObject testResultList = new JsonObject();
-		
-		JsonArray testSampleArray = new JsonArray();
-		for (LabTestSample labTestSample : testSample) {
-			JsonObject objTestSample = new JsonObject();
-			objTestSample.addProperty("testOrderId", testOrderId);
-			objTestSample.addProperty("specimenType", labTestSample.getSpecimenType().getName().getName());
-			objTestSample.addProperty("specimenSite", labTestSample.getSpecimenSite().getName().getName());
-			objTestSample.addProperty("status", labTestSample.getStatus().name());
-			testSampleArray.add(objTestSample);
+		catch (Exception e) {
+			testResultList.add("sample", testSampleArray);
+			testResultList.add("result", testResultArray);
 		}
-		JsonArray testResultArray = new JsonArray();
-		for (LabTestAttribute labTestResult : testAttributes) {
-			JsonObject objTestResult = new JsonObject();
-			if (labTestResult.getAttributeType() != null) {
-				objTestResult.addProperty("question", labTestResult.getAttributeType().getName());
-				objTestResult.addProperty("valuesReference", labTestResult.getValueReference());
-				testResultArray.add(objTestResult);
-			}
-			
-		}
-		
 		testResultList.add("sample", testSampleArray);
 		testResultList.add("result", testResultArray);
 		
@@ -120,13 +150,49 @@ public class LabTestResultViewController {
 		JsonArray testAttributeArray = new JsonArray();
 		for (LabTestAttributeType labTestAttributeTypeObj : labTestAttributeType) {
 			JsonObject objTestSample = new JsonObject();
-			objTestSample.addProperty("testOrderId", testTypeId);
+			objTestSample.addProperty("testTypeId", testTypeId);
 			objTestSample.addProperty("attributeTypeName", labTestAttributeTypeObj.getName());
 			objTestSample.addProperty("sortWeight", labTestAttributeTypeObj.getSortWeight());
+			objTestSample.addProperty("multisetName", labTestAttributeTypeObj.getMultisetName());
+			objTestSample.addProperty("groupName", labTestAttributeTypeObj.getGroupName());
 			testAttributeArray.add(objTestSample);
 		}
 		testAttributeList.add("sortweightlist", testAttributeArray);
 		return testAttributeList.toString();
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/getConceptExist.form")
+	@ResponseBody
+	public Boolean concetExist(@RequestParam Integer conceptId) {
+		boolean isExist = false;
+		try {
+			if (conceptId != null) {
+				Concept concept = Context.getConceptService().getConcept(conceptId);
+				if (concept != null && !concept.getUuid().equals("")) {
+					isExist = true;
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return isExist;
+		}
+		
+		return isExist;
+	}
+	
+	public static boolean isInteger(String s) {
+		try {
+			Integer.parseInt(s);
+		}
+		catch (NumberFormatException e) {
+			return false;
+		}
+		catch (NullPointerException e) {
+			return false;
+		}
+		// only got here if we didn't return false
+		return true;
 	}
 	
 }
