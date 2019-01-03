@@ -5,19 +5,11 @@
 
 <hibernate-configuration>
 	<session-factory>
-		 <mapping resource="CommonLabTestAttribute.hbm.xml"/> 
-		 
-		<!-- <mapping resource="FacilityDataFormSchema.hbm.xml"/> 
-			<mapping resource="FacilityDataFormSection.hbm.xml"/> <mapping resource="FacilityDataQuestion.hbm.xml"/> 
-			<mapping resource="FacilityDataValue.hbm.xml"/> -->
-
-			<mapping class="org.openmrs.module.commonlabtest.LabTest" />
-			<mapping class="org.openmrs.module.commonlabtest.LabTestAttributeType" />
-			<mapping class="org.openmrs.module.commonlabtest.LabTestSample" />
-			<mapping class="org.openmrs.module.commonlabtest.LabTestType" />
-		
-	
+		<mapping resource="CommonLabTestAttribute.hbm.xml" />
+		<mapping class="org.openmrs.module.commonlabtest.LabTest" />
+		<mapping class="org.openmrs.module.commonlabtest.LabTestAttributeType" />
+		<mapping class="org.openmrs.module.commonlabtest.LabTestSample" />
+		<mapping class="org.openmrs.module.commonlabtest.LabTestType" />
 	</session-factory>
 </hibernate-configuration>
 
- 
