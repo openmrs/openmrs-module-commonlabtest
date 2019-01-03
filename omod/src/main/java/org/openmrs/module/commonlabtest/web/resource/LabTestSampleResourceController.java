@@ -26,9 +26,6 @@ public class LabTestSampleResourceController extends DataDelegatingCrudResource<
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	/*	@Autowired
-		CommonLabTestService commonLabTestService;*/
-	
 	private CommonLabTestService commonLabTestService = Context.getService(CommonLabTestService.class);
 	
 	@Override
@@ -112,6 +109,27 @@ public class LabTestSampleResourceController extends DataDelegatingCrudResource<
 			description.addProperty("voidReason");
 			return description;
 		}
+		return description;
+	}
+	
+	@Override
+	public DelegatingResourceDescription getCreatableProperties() throws ResourceDoesNotSupportOperationException {
+		DelegatingResourceDescription description = new DelegatingResourceDescription();
+		
+		description.addProperty("labTest");
+		description.addProperty("specimenType");
+		description.addProperty("specimenSite");
+		description.addProperty("collectionDate");
+		description.addProperty("collector");
+		description.addProperty("quantity");
+		description.addProperty("units");
+		description.addProperty("expirable");
+		description.addProperty("expiryDate");
+		description.addProperty("processedDate");
+		description.addProperty("status");
+		description.addProperty("sampleIdentifier");
+		description.addProperty("comments");
+		
 		return description;
 	}
 	

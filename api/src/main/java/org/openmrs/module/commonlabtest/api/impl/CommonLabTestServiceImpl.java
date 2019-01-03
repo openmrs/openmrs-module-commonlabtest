@@ -134,14 +134,14 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	
 	/**
 	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType,
-	 *      org.openmrs.Patient, java.lang.String, java.util.Date, java.util.Date, boolean)
+	 *      java.lang.String, java.util.Date, java.util.Date, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
-	public List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, Patient patient,
-	        String valueReference, Date from, Date to, boolean includeVoided) throws APIException {
-		return dao.getLabTestAttributes(labTestAttributeType, null, patient, valueReference, from, to, includeVoided);
+	public List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, String valueReference,
+	        Date from, Date to, boolean includeVoided) throws APIException {
+		return dao.getLabTestAttributes(labTestAttributeType, valueReference, from, to, includeVoided);
 	}
 	
 	/**
@@ -153,7 +153,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Transactional(readOnly = true)
 	public List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, boolean includeVoided)
 	        throws APIException {
-		return getLabTestAttributes(labTestAttributeType, null, null, null, null, includeVoided);
+		return getLabTestAttributes(labTestAttributeType, null, null, null, includeVoided);
 	}
 	
 	/**
@@ -175,7 +175,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestAttribute> getLabTestAttributes(Patient patient, boolean includeVoided) throws APIException {
-		return getLabTestAttributes(null, patient, null, null, null, includeVoided);
+		return dao.getLabTestAttributes(patient, null, includeVoided);
 	}
 	
 	/**
@@ -187,7 +187,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Transactional(readOnly = true)
 	public List<LabTestAttribute> getLabTestAttributes(Patient patient, LabTestAttributeType labTestAttributeType,
 	        boolean includeVoided) throws APIException {
-		return getLabTestAttributes(labTestAttributeType, patient, null, null, null, includeVoided);
+		return dao.getLabTestAttributes(patient, labTestAttributeType, includeVoided);
 	}
 	
 	/**

@@ -20,17 +20,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.hamcrest.Matchers.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import org.hamcrest.Matchers;
-import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -204,11 +200,11 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	 */
 	@Test
 	public final void testGetLabTestAttributesByLabTestAttributeType() {
-		when(dao.getLabTestAttributes(mtbResult, null, null, null, null, null, false)).thenReturn(
+		when(dao.getLabTestAttributes(mtbResult, null, null, null, false)).thenReturn(
 		    Arrays.asList(harryMtbResult, hermioneMtbResult));
 		List<LabTestAttribute> list = service.getLabTestAttributes(mtbResult, false);
 		assertThat(list, Matchers.hasItems(harryMtbResult, hermioneMtbResult));
-		verify(dao, times(1)).getLabTestAttributes(mtbResult, null, null, null, null, null, false);
+		verify(dao, times(1)).getLabTestAttributes(mtbResult, null, null, null, false);
 	}
 	
 	/**
@@ -232,12 +228,12 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	 */
 	@Test
 	public final void testGetLabTestAttributesByPatient() {
-		when(dao.getLabTestAttributes(null, null, harry, null, null, null, false)).thenReturn(
+		when(dao.getLabTestAttributes(harry, null, false)).thenReturn(
 		    Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
 		List<LabTestAttribute> list = service.getLabTestAttributes(harry, false);
 		
 		assertThat(list, Matchers.hasItems(harryCartridgeId, harryMtbResult, harryRifResult));
-		verify(dao, times(1)).getLabTestAttributes(null, null, harry, null, null, null, false);
+		verify(dao, times(1)).getLabTestAttributes(harry, null, false);
 	}
 	
 	/**
@@ -251,13 +247,13 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		expected.addAll(harryGxpResults);
 		expected.addAll(harryCxrResults);
 		when(
-		    dao.getLabTestAttributes(isNull(LabTestAttributeType.class), isNull(LabTest.class), isNull(Patient.class),
-		        isNull(String.class), any(Date.class), any(Date.class), any(Boolean.class))).thenReturn(expected);
-		List<LabTestAttribute> list = service.getLabTestAttributes(null, null, null, new Date(), new Date(), false);
+		    dao.getLabTestAttributes(isNull(LabTestAttributeType.class), isNull(String.class), any(Date.class),
+		        any(Date.class), any(Boolean.class))).thenReturn(expected);
+		List<LabTestAttribute> list = service.getLabTestAttributes(null, null, new Date(), new Date(), false);
 		assertThat(list,
 		    Matchers.hasItems(harryCartridgeId, harryMtbResult, harryRifResult, harryCxrResult, harryRadiologistRemarks));
-		verify(dao, times(1)).getLabTestAttributes(isNull(LabTestAttributeType.class), isNull(LabTest.class),
-		    isNull(Patient.class), isNull(String.class), any(Date.class), any(Date.class), any(Boolean.class));
+		verify(dao, times(1)).getLabTestAttributes(isNull(LabTestAttributeType.class), isNull(String.class),
+		    any(Date.class), any(Date.class), any(Boolean.class));
 	}
 	
 	/**
@@ -604,14 +600,13 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	@Test
 	public final void testDeleteLabTestAttributeType() {
 		when(
-		    dao.getLabTestAttributes(any(LabTestAttributeType.class), isNull(LabTest.class), isNull(Patient.class),
-		        isNull(String.class), isNull(Date.class), isNull(Date.class), any(Boolean.class))).thenReturn(
-		    Arrays.asList(harryCartridgeId, hermioneCartridgeId));
+		    dao.getLabTestAttributes(any(LabTestAttributeType.class), isNull(String.class), isNull(Date.class),
+		        isNull(Date.class), any(Boolean.class))).thenReturn(Arrays.asList(harryCartridgeId, hermioneCartridgeId));
 		doNothing().when(dao).purgeLabTestAttributeType(any(LabTestAttributeType.class));
 		doNothing().when(dao).purgeLabTestAttribute(any(LabTestAttribute.class));
 		service.deleteLabTestAttributeType(cartridgeId, true);
-		verify(dao, times(1)).getLabTestAttributes(any(LabTestAttributeType.class), isNull(LabTest.class),
-		    isNull(Patient.class), isNull(String.class), isNull(Date.class), isNull(Date.class), any(Boolean.class));
+		verify(dao, times(1)).getLabTestAttributes(any(LabTestAttributeType.class), isNull(String.class),
+		    isNull(Date.class), isNull(Date.class), any(Boolean.class));
 		verify(dao, times(1)).purgeLabTestAttributeType(any(LabTestAttributeType.class));
 		verify(dao, times(2)).purgeLabTestAttribute(any(LabTestAttribute.class));
 		verifyNoMoreInteractions(dao);
@@ -635,6 +630,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTestType(org.openmrs.module.commonlabtest.LabTestType)}
 	 * .
 	 */
+	@SuppressWarnings("deprecation")
 	@Test(expected = APIException.class)
 	public final void shouldNotDeleteLabTestType() {
 		service.deleteLabTestType(chestXRay, false);

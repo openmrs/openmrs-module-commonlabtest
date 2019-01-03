@@ -28,7 +28,6 @@ import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
-import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -587,13 +586,9 @@ public class CommonLabTestController {
 	        @RequestParam(value = "from") Date from, @RequestParam(value = "to") Date to,
 	        @RequestParam(value = "voided") Boolean includeVoided) throws Exception {
 		LabTestAttributeType labTestAttributeType = null;
-		Patient patient = null;
 		if (labTestAttributeTypeId != null) {
 			labTestAttributeType = Context.getService(CommonLabTestServiceImpl.class).getLabTestAttributeType(
 			    labTestAttributeTypeId);
-		}
-		if (patientId != null) {
-			patient = Context.getPatientService().getPatient(patientId);
 		}
 		if (from != null || to != null) {
 			if (from == null || to == null || labTestAttributeTypeId == null) {
@@ -607,7 +602,18 @@ public class CommonLabTestController {
 				to = tmp;
 			}
 		}
-		return Context.getService(CommonLabTestServiceImpl.class).getLabTestAttributes(labTestAttributeType, patient, value,
+		List<LabTestAttribute> list = Context.getService(CommonLabTestServiceImpl.class).getLabTestAttributes(labTestAttributeType, value, from, to, includeVoided);
+		if (patientId != null) {
+			// TODO: Terribly inefficient approach, make us of getLabTestAttributes(patient, labTestAttributeType, includeVoided) method rather than filtering out patients post retrieval
+			List<LabTestAttribute> finalList = new ArrayList<LabTestAttribute>();
+			for (LabTestAttribute attribute : list) {
+				if (attribute.getLabTest().getOrder().getPatient().getPatientId().equals(patientId)) {
+					finalList.add(attribute);
+				}
+			}
+			return finalList;
+		}
+		return Context.getService(CommonLabTestServiceImpl.class).getLabTestAttributes(labTestAttributeType, value,
 		    from, to, includeVoided);
 	}
 	

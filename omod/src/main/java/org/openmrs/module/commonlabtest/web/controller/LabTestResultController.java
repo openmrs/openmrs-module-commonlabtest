@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -67,10 +68,12 @@ public class LabTestResultController {
 		Collections.sort(attributeTypeList, new Comparator<LabTestAttributeType>() {
 			
 			@Override
-			public int compare(LabTestAttributeType o1, LabTestAttributeType o2) {
-				return o1.getSortWeight().compareTo(o2.getSortWeight());
+			public int compare(LabTestAttributeType labTestAttributeTypeFirst,
+			        LabTestAttributeType labTestAttributeTypeSecond) {
+				return labTestAttributeTypeFirst.getSortWeight().compareTo(labTestAttributeTypeSecond.getSortWeight());
 			}
 		});
+		
 		List<LabTestAttribute> labTestAttributes = commonLabTestService.getLabTestAttributes(testOrderId);
 		JsonArray resultantAttributeTypeList = getAttributeTypeList(attributeTypeList, testOrderId, labTestAttributes);
 		
@@ -82,16 +85,19 @@ public class LabTestResultController {
 					break;
 				}
 			}
+			model.addAttribute("testTypeName", "" + attributeTypeList.get(0).getLabTestType().getName());
 			if (updateMode) {
 				model.addAttribute("update", Boolean.TRUE);
 				model.addAttribute("filepath", labTest.getFilePath());
 			} else {
 				model.addAttribute("update", Boolean.FALSE);
 				model.addAttribute("filepath", "");
+				model.addAttribute("testTypeName", "");
 			}
 		} else {
 			model.addAttribute("update", Boolean.FALSE);
 			model.addAttribute("filepath", "");
+			model.addAttribute("testTypeName", "");
 		}
 		String fileExtensions = Context.getAdministrationService().getGlobalProperty("commonlabtest.fileExtensions");
 		
@@ -136,31 +142,31 @@ public class LabTestResultController {
 					testAttribute = commonLabTestService.getLabTestAttribute(Integer.parseInt(testAtrrId));
 				} else {
 					testAttribute.setLabTest(labTest);
-					testAttribute.setAttributeTypeId(labTestAttributeType);
+					testAttribute.setAttributeType(labTestAttributeType);
 				}
-				//set the value reference 
+				// set the value reference
 				if (conceptValue != null && !conceptValue.equals("") && !conceptValue.isEmpty()) {
-					testAttribute.setValueReference(conceptValue);
+					testAttribute.setValueReferenceInternal(conceptValue);
 					labTestAttributes.add(testAttribute);
 				} else if (textValue != null && !textValue.equals("") && !textValue.isEmpty()) {
-					testAttribute.setValueReference(textValue);
+					testAttribute.setValueReferenceInternal(textValue);
 					labTestAttributes.add(testAttribute);
 				} else if (floatValue != null && !floatValue.equals("") && !floatValue.isEmpty()) {
-					testAttribute.setValueReference(floatValue);
+					testAttribute.setValueReferenceInternal(floatValue);
 					labTestAttributes.add(testAttribute);
 				} else if (dateValue != null && !dateValue.equals("") && !dateValue.isEmpty()) {
-					testAttribute.setValueReference(dateValue);
+					testAttribute.setValueReferenceInternal(dateValue);
 					labTestAttributes.add(testAttribute);
 				} else if (regexValue != null && !regexValue.equals("") && !regexValue.isEmpty()) {
-					testAttribute.setValueReference(regexValue);
+					testAttribute.setValueReferenceInternal(regexValue);
 					labTestAttributes.add(testAttribute);
 				} else if (boolValue != null && !boolValue.equals("") && !boolValue.isEmpty()) {
-					testAttribute.setValueReference(boolValue);
+					testAttribute.setValueReferenceInternal(boolValue);
 					labTestAttributes.add(testAttribute);
 				}
 				
 			}
-			//save the file
+			// save the file
 			if (documentTypeFile.isEmpty()) {} else {
 				
 				try {
@@ -171,13 +177,13 @@ public class LabTestResultController {
 					        + documentTypeFile.getOriginalFilename().replace(" ", "-")));
 					String name = documentTypeFile.getOriginalFilename().replace(" ", "-");
 					labTest.setFilePath(fileDirectory + "/" + name);
-					Context.getService(CommonLabTestService.class).saveLabTest(labTest); //need to review this lines
+					Context.getService(CommonLabTestService.class).saveLabTest(labTest); // need to review this lines
 				}
 				catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-			//change the sample status ... 
+			// change the sample status ...
 			List<LabTestSample> labTestSampleList = commonLabTestService.getLabTestSamples(labTest, Boolean.FALSE);
 			for (LabTestSample labTestSample : labTestSampleList) {
 				if (labTestSample.getStatus().equals(LabTestSampleStatus.ACCEPTED)) {
@@ -265,7 +271,8 @@ public class LabTestResultController {
 		if (testAttributes.size() > 0) {
 			for (LabTestAttribute labTestAttribute : testAttributes) {
 				if (!labTestAttribute.getVoided()) {
-					if (labTestAttribute.getAttributeTypeId() == labTestAttributeType.getLabTestAttributeTypeId()) {
+					if (labTestAttribute.getAttributeType().getLabTestAttributeTypeId() == labTestAttributeType
+					        .getLabTestAttributeTypeId()) {
 						objAttrType.addProperty("value", labTestAttribute.getValueReference());
 						objAttrType.addProperty("testAttributeId", labTestAttribute.getId());
 					}
@@ -315,7 +322,7 @@ public class LabTestResultController {
 			labTestGroupObj = new JsonObject();
 			JsonArray jsonChildArray = new JsonArray();
 			String groupName = labTestAttributeType.getGroupName();
-			if (!labTestAttributeType.getGroupName().isEmpty()) {
+			if (groupName != null && !groupName.isEmpty()) {
 				if (holderGroupIdList.contains(groupName)) {
 					continue;
 				}
@@ -328,9 +335,9 @@ public class LabTestResultController {
 				for (LabTestAttributeType labTestAttributeTypechld : childLabTestATList) {
 					labTestSubGroupObj = new JsonObject();
 					JsonArray jsonSubGroupArray = new JsonArray();
-					if (labTestAttributeTypechld.getMultisetName() != null
-					        && !labTestAttributeTypechld.getMultisetName().isEmpty()) {
-						String subGroupName = labTestAttributeTypechld.getMultisetName(); //groupName should be change with multisetName
+					String subGroupName = labTestAttributeTypechld.getMultisetName();
+					if (subGroupName != null && !subGroupName.isEmpty()) {
+						//String subGroupName = labTestAttributeTypechld.getMultisetName(); // groupName should be                                                         // change with multisetName
 						if (holderSubGroupIdList.contains(subGroupName)) {
 							continue;
 						}
@@ -363,9 +370,13 @@ public class LabTestResultController {
 		
 		if (!listLabTestAttributeType.isEmpty()) {
 			for (LabTestAttributeType filterLabTestAttributeType : listLabTestAttributeType) {
-				if (filterLabTestAttributeType.getGroupName().equals(labTestAttributeType.getGroupName())) {
-					filterLabTestAttributeTypes.add(filterLabTestAttributeType);
+				String groupName = filterLabTestAttributeType.getGroupName();
+				if (groupName != null && !groupName.isEmpty()) {
+					if (groupName.equals(labTestAttributeType.getGroupName())) {
+						filterLabTestAttributeTypes.add(filterLabTestAttributeType);
+					}
 				}
+				
 			}
 			
 		}
@@ -379,8 +390,11 @@ public class LabTestResultController {
 		
 		if (!listLabTestAttributeType.isEmpty()) {
 			for (LabTestAttributeType filterLabTestAttributeType : listLabTestAttributeType) {
-				if (filterLabTestAttributeType.getMultisetName().equals(multisetName)) {
-					filterLabTestAttributeTypes.add(filterLabTestAttributeType);
+				String multisetNames = filterLabTestAttributeType.getMultisetName();
+				if (multisetNames != null && !multisetNames.isEmpty()) {
+					if (multisetNames.equals(multisetName)) {
+						filterLabTestAttributeTypes.add(filterLabTestAttributeType);
+					}
 				}
 			}
 		}

@@ -28,6 +28,7 @@
 body {
     font-size: 12px;
 }
+
 hr.style-three {
     height: 30px;
     border-style: solid;
@@ -120,72 +121,11 @@ legend.scheduler-border {
     color: white;
     margin-top: -10px;
 }
-/* The container */
-.container-box {
-    display: block;
-    position: relative;
-    margin-bottom: 12px;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+
+/*Checkbox css  */
+input[type=checkbox] {
+    zoom: 1.3;
 }
-
-/* Hide the browser's default checkbox */
-.container-box input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-}
-
-/* Create a custom checkbox */
-.checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 25px;
-    width: 25px;
-    background-color: #eee;
-}
-
-/* On mouse-over, add a grey background color */
-.container-box:hover input ~ .checkmark {
-    background-color: #ccc;
-}
-
-/* When the checkbox is checked, add a #1aac9b background */
-.container-box input:checked ~ .checkmark {
-    background-color: #1aac9b;
-}
-
-/* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
-    content: "";
-    position: absolute;
-    display: none;
-}
-
-/* Show the checkmark when checked */
-.container-box input:checked ~ .checkmark:after {
-    display: block;
-}
-
-/* Style the checkmark/indicator */
-.container-box .checkmark:after {
-    left: 9px;
-    top: 5px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-}	
-
 </style>
 
 <body>
@@ -307,6 +247,7 @@ $(document).ready(function () {
     localTestGroups = getTestGrouptList();
     testOrder = ${ testOrderId };
     testTypeName = '${testTypeName}';
+    console.log("Test Type Name : "+testTypeName);
     filePath = '${filepath}';
     resultComments = '${resultComments}';
     update = '${update}';
@@ -879,23 +820,27 @@ function numericTags(value, question, id, hint) {
 
 function booleanTags(value, question, id, checkRequired) {
     let booleanTagItems = "";
+    
+    //booleanTagItems = booleanTagItems.concat('<label class="container-box">');
+    booleanTagItems = booleanTagItems.concat('<div class="row"><div class="col-sm-3 col-md-3 col-lg-3">');
+    booleanTagItems = booleanTagItems.concat('<span>' + question + '</span>');
+    booleanTagItems = booleanTagItems.concat('</div><div class ="col-sm-4 col-md-4 col-lg-4 centered">');
+    if (this.value == 'undefined') {
+        booleanTagItems = booleanTagItems.concat('<input type="checkbox" value="false"  id="bool.' + id + '" name="bool.' + id + '" onchange="handleChange(this);">');
+    } else {
+        if (value == "true") {
+            booleanTagItems = booleanTagItems.concat('<input type="checkbox" value="true"   id="bool.' + id + '" name="bool.' + id + '" checked="checked" onchange="handleChange(this);">');
+        } else {
+            booleanTagItems = booleanTagItems.concat('<input type="checkbox" value="false"  id="bool.' + id + '" name="bool.' + id + '" onchange="handleChange(this);">');
+        }
+    }
+    booleanTagItems = booleanTagItems.concat('</div></div>');
+  // booleanTagItems = booleanTagItems.concat('</div></div></label>');
+    
+  /*      booleanTagItems = booleanTagItems.concat('<span class="checkmark"></span>');
     // we handle Checkbox and Dropdown for the boolean values.
     if (checkRequired) {
-        booleanTagItems = booleanTagItems.concat('<label class="container-box">');
-        booleanTagItems = booleanTagItems.concat('<div class="row"><div class="col-sm-3 col-md-3 col-lg-3">');
-        booleanTagItems = booleanTagItems.concat('<span>' + question + '</span>');
-        booleanTagItems = booleanTagItems.concat('</div><div class="col-sm-1 col-md-1 col-lg-1"></div><div class ="col-sm-4 col-md-4 col-lg-4 centered">');
-        if (this.value == 'undefined') {
-            booleanTagItems = booleanTagItems.concat('<input type="checkbox" value="false"  id="bool.' + id + '" name="bool.' + id + '" onchange="handleChange(this);">');
-        } else {
-            if (value == "true") {
-                booleanTagItems = booleanTagItems.concat('<input type="checkbox" value="true"   id="bool.' + id + '" name="bool.' + id + '" checked="checked" onchange="handleChange(this);">');
-            } else {
-                booleanTagItems = booleanTagItems.concat('<input type="checkbox" value="false"  id="bool.' + id + '" name="bool.' + id + '" onchange="handleChange(this);">');
-            }
-        }
-        booleanTagItems = booleanTagItems.concat('<span class="checkmark"></span>');
-        booleanTagItems = booleanTagItems.concat('</div></div></label>');
+   
     } else {
         booleanTagItems = booleanTagItems.concat('<div class="row"><div class="col-sm-3 col-md-3 col-lg-3">');
         booleanTagItems = booleanTagItems.concat('<label class="control-label container-checkbox">' + question + '</label>');
@@ -915,7 +860,8 @@ function booleanTags(value, question, id, checkRequired) {
             }
         }
         booleanTagItems = booleanTagItems.concat('</select></div></div>');
-    }
+    } */
+    
     return booleanTagItems;
 }
 function handleChange(checkbox) {

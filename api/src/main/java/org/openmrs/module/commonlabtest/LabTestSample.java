@@ -26,8 +26,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.search.annotations.Field;
 import org.openmrs.BaseOpenmrsData;
@@ -352,5 +350,10 @@ public class LabTestSample extends BaseOpenmrsData {
 	
 	public void setLabTestSampleId(Integer id) {
 		this.labTestSampleId = id;
+	}
+	
+	@Override
+	public String toString() {
+		return labTestSampleId + ", " + labTest + ", " + specimenType + ", " + status + ", " + sampleIdentifier;
 	}
 }

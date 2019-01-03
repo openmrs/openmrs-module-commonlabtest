@@ -15,7 +15,6 @@ public class LabTestAttributeTypeResourceControllerTest extends BaseDelegatingRe
 	
 	@Override
 	public String getDisplayProperty() {
-		// TODO Auto-generated method stub
 		return "Cartridge ID";
 	}
 	
@@ -27,7 +26,6 @@ public class LabTestAttributeTypeResourceControllerTest extends BaseDelegatingRe
 	
 	@Override
 	public LabTestAttributeType newObject() {
-		// TODO Auto-generated method stub
 		return Context.getService(CommonLabTestService.class).getLabTestAttributeTypeByUuid(getUuidProperty());
 	}
 	

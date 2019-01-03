@@ -89,11 +89,26 @@ public interface CommonLabTestDao {
 	/**
 	 * Returns list of {@link LabTestAttribute} objects by matching given non-null parameters
 	 * 
-	 * @param labTestId
+	 * @param labTestAttributeType
+	 * @param valueReference
+	 * @param from
+	 * @param to
+	 * @param includeVoided
 	 * @return
 	 */
-	List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, LabTest labTest, Patient patient,
-	        String valueReference, Date from, Date to, boolean includeVoided);
+	List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, String valueReference, Date from,
+	        Date to, boolean includeVoided);
+	
+	/**
+	 * Returns list of {@link LabTestAttribute} objects by matching given non-null parameters
+	 * 
+	 * @param patient
+	 * @param labTestAttributeType
+	 * @param includeVoided
+	 * @return
+	 */
+	List<LabTestAttribute> getLabTestAttributes(Patient patient, LabTestAttributeType labTestAttributeType,
+	        boolean includeVoided);
 	
 	/**
 	 * Returns {@link LabTestAttributeType} object by generated Id

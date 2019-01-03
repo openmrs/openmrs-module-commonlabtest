@@ -126,4 +126,11 @@ public class LabTestType extends BaseOpenmrsMetadata {
 	public void setReferenceConcept(Concept referenceConcept) {
 		this.referenceConcept = referenceConcept;
 	}
+	
+	@Override
+	public String toString() {
+		return labTestTypeId + ", " + shortName + ", " + testGroup + ", " + referenceConcept + ", " + getName() + ", "
+		        + getUuid();
+	}
+	
 }

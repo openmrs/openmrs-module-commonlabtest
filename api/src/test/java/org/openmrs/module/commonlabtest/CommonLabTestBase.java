@@ -263,43 +263,43 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		hermioneSample.setUnits("ml");
 		hermioneSample.setUuid("f40420f8-5346-11e8-9c7c-40b034c3cfee");
 		
-		harryCartridgeId = new LabTestAttribute(1);
+		harryCartridgeId = new LabTestAttribute();
 		harryCartridgeId.setLabTest(harryGxp);
 		harryCartridgeId.setAttributeType(cartridgeId);
 		harryCartridgeId.setValueReferenceInternal("201805071211");
 		harryCartridgeId.setUuid("2c9737d9-47c2-11e8-943c-40b034c3cfee");
 		
-		harryMtbResult = new LabTestAttribute(2);
+		harryMtbResult = new LabTestAttribute();
 		harryMtbResult.setLabTest(harryGxp);
 		harryMtbResult.setAttributeType(mtbResult);
 		harryMtbResult.setValueReferenceInternal("MTB DETECTED");
 		harryMtbResult.setUuid("2d9cc0d3-47c2-11e8-943c-40b034c3cfee");
 		
-		harryRifResult = new LabTestAttribute(3);
+		harryRifResult = new LabTestAttribute();
 		harryRifResult.setLabTest(harryGxp);
 		harryRifResult.setAttributeType(rifResult);
 		harryRifResult.setValueReferenceInternal("DETECTED");
 		harryRifResult.setUuid("2e45af47-47c2-11e8-943c-40b034c3cfee");
 		
-		harryCxrResult = new LabTestAttribute(4);
+		harryCxrResult = new LabTestAttribute();
 		harryCxrResult.setLabTest(harryCxr);
 		harryCxrResult.setAttributeType(cxrResult);
 		harryCxrResult.setValueReferenceInternal("ABNORMAL");
 		harryCxrResult.setUuid("2efe1af7-47c2-11e8-943c-40b034c3cfee");
 		
-		harryRadiologistRemarks = new LabTestAttribute(5);
+		harryRadiologistRemarks = new LabTestAttribute();
 		harryRadiologistRemarks.setLabTest(harryCxr);
 		harryRadiologistRemarks.setAttributeType(radiologistRemarks);
 		harryRadiologistRemarks.setValueReferenceInternal("Not just abnormal, but paranormal");
 		harryRadiologistRemarks.setUuid("2f9066fb-47c2-11e8-943c-40b034c3cfee");
 		
-		hermioneCartridgeId = new LabTestAttribute(6);
+		hermioneCartridgeId = new LabTestAttribute();
 		hermioneCartridgeId.setLabTest(hermioneGxp);
 		hermioneCartridgeId.setAttributeType(cartridgeId);
 		hermioneCartridgeId.setValueReferenceInternal("201805071325");
 		hermioneCartridgeId.setUuid("b46ad728-51f0-11e8-b60d-080027ea421d");
 		
-		hermioneMtbResult = new LabTestAttribute(7);
+		hermioneMtbResult = new LabTestAttribute();
 		hermioneMtbResult.setLabTest(hermioneGxp);
 		hermioneMtbResult.setAttributeType(mtbResult);
 		hermioneMtbResult.setValueReferenceInternal("NOT DETECTED");

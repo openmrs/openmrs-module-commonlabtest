@@ -1,5 +1,6 @@
 package org.openmrs.module.commonlabtest.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -46,7 +47,8 @@ public class LabTestResultViewController {
 			    Boolean.TRUE)) {
 				for (int i = 0; i < testAttributes.size(); i++) {
 					if (!testAttributes.get(i).getVoided()) {
-						if (testAttributes.get(i).getAttributeTypeId() == attribut.getLabTestAttributeTypeId()) {
+						if (testAttributes.get(i).getAttributeType().getLabTestAttributeTypeId() == attribut
+						        .getLabTestAttributeTypeId()) {
 							testAttributes.get(i).setAttributeType(attribut);
 						}
 					}
@@ -63,33 +65,12 @@ public class LabTestResultViewController {
 				objTestSample.addProperty("status", labTestSample.getStatus().name());
 				testSampleArray.add(objTestSample);
 			}
-			for (LabTestAttribute labTestResult : testAttributes) {
-				JsonObject objTestResult = new JsonObject();
-				if (labTestResult.getAttributeType() != null) {
-					if (labTestResult.getAttributeType().getDatatypeClassname()
-					        .equals("org.openmrs.customdatatype.datatype.ConceptDatatype")) {
-						objTestResult.addProperty("question", labTestResult.getAttributeType().getName());
-						boolean isTrue = isInteger(labTestResult.getAttributeType().getDatatypeConfig());
-						if (isTrue) {
-							Concept conceptConfig = Context.getConceptService().getConcept(
-							    Integer.parseInt(labTestResult.getAttributeType().getDatatypeConfig()));
-							if (conceptConfig != null) {
-								if (conceptConfig.getDatatype().getName().equals("Coded")) {
-									Concept concept = Context.getConceptService().getConcept(
-									    Integer.parseInt(labTestResult.getValueReference()));
-									objTestResult.addProperty("valuesReference", concept.getName().getName());
-								} else {
-									objTestResult.addProperty("valuesReference", labTestResult.getValueReference());
-								}
-							}
-						}
-					} else {
-						objTestResult.addProperty("question", labTestResult.getAttributeType().getName());
-						objTestResult.addProperty("valuesReference", labTestResult.getValueReference());
-					}
-					objTestResult.addProperty("void", labTestResult.getVoided());
-					testResultArray.add(objTestResult);
-				}
+			
+			if (testAttributes != null && !testAttributes.isEmpty()) {
+				LabTestAttributeType labTestAttributeType = testAttributes.get(0).getAttributeType();
+				List<LabTestAttributeType> labTestAttributeTypes = commonLabTestService.getLabTestAttributeTypes(
+				    labTestAttributeType.getLabTestType(), Boolean.FALSE);
+				testResultArray = getAttributeTypeList(labTestAttributeTypes, testOrderId, testAttributes);
 			}
 		}
 		
@@ -163,7 +144,7 @@ public class LabTestResultViewController {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/getConceptExist.form")
 	@ResponseBody
-	public Boolean concetExist(@RequestParam Integer conceptId) {
+	public Boolean conceptExist(@RequestParam Integer conceptId) {
 		boolean isExist = false;
 		try {
 			if (conceptId != null) {
@@ -195,4 +176,104 @@ public class LabTestResultViewController {
 		return true;
 	}
 	
+	public JsonArray getAttributeTypeList(List<LabTestAttributeType> labTestAttributeTypeList, int testOrderId,
+	        List<LabTestAttribute> labTestAttributes) {
+		
+		List<String> holderGroupIdList = new ArrayList<String>();
+		JsonArray parentJsonArray = new JsonArray();
+		JsonObject labTestGroupObj;
+		for (LabTestAttributeType labTestAttributeType : labTestAttributeTypeList) {
+			labTestGroupObj = new JsonObject();
+			JsonArray jsonGroupArray = new JsonArray();
+			String groupName = labTestAttributeType.getGroupName();
+			if (groupName != null && !groupName.isEmpty()) {
+				if (holderGroupIdList.contains(groupName)) {
+					continue;
+				}
+				holderGroupIdList.add(labTestAttributeType.getGroupName());
+				labTestGroupObj.addProperty("groupName", labTestAttributeType.getGroupName());
+				List<LabTestAttributeType> groupLabTestATList = getFilterAttributeTypes(labTestAttributeType,
+				    labTestAttributeTypeList);
+				for (LabTestAttributeType labTestAttributeTypeResults : groupLabTestATList) {
+					LabTestAttribute labTestAttributeResult = getFilterAttribute(labTestAttributeTypeResults,
+					    labTestAttributes);
+					jsonGroupArray.add(getLabTestAttributeObj(labTestAttributeResult));
+				}
+				labTestGroupObj.add("groups", jsonGroupArray);
+				parentJsonArray.add(labTestGroupObj);
+				
+			} else {
+				LabTestAttribute labTestAttributeResult = getFilterAttribute(labTestAttributeType, labTestAttributes);
+				parentJsonArray.add(getLabTestAttributeObj(labTestAttributeResult));
+			}
+		}
+		return parentJsonArray;
+	}
+	
+	private LabTestAttribute getFilterAttribute(LabTestAttributeType labTestAttributeType,
+	        List<LabTestAttribute> LabTestAttribute) {
+		
+		LabTestAttribute labTestAttributeResult = new LabTestAttribute();
+		if (!LabTestAttribute.isEmpty()) {
+			for (LabTestAttribute filterLabTestAttribute : LabTestAttribute) {
+				if (labTestAttributeType.getLabTestAttributeTypeId() == filterLabTestAttribute.getAttributeType()
+				        .getLabTestAttributeTypeId()) {
+					labTestAttributeResult = filterLabTestAttribute;
+					break;
+				}
+			}
+		}
+		
+		return labTestAttributeResult;
+	}
+	
+	private List<LabTestAttributeType> getFilterAttributeTypes(LabTestAttributeType labTestAttributeType,
+	        List<LabTestAttributeType> listLabTestAttributeType) {
+		List<LabTestAttributeType> filterLabTestAttributeTypes = new ArrayList<LabTestAttributeType>();
+		
+		if (!listLabTestAttributeType.isEmpty()) {
+			for (LabTestAttributeType filterLabTestAttributeType : listLabTestAttributeType) {
+				String groupName = filterLabTestAttributeType.getGroupName();
+				if (groupName != null && !groupName.isEmpty()) {
+					if (groupName.equals(labTestAttributeType.getGroupName())) {
+						filterLabTestAttributeTypes.add(filterLabTestAttributeType);
+					}
+				}
+				
+			}
+			
+		}
+		
+		return filterLabTestAttributeTypes;
+	}
+	
+	private JsonObject getLabTestAttributeObj(LabTestAttribute labTestAttribute) {
+		
+		JsonObject objTestResult = new JsonObject();
+		if (labTestAttribute != null) {
+			if (labTestAttribute.getAttributeType().getDatatypeClassname()
+			        .equals("org.openmrs.customdatatype.datatype.ConceptDatatype")) {
+				objTestResult.addProperty("question", labTestAttribute.getAttributeType().getName());
+				boolean isTrue = isInteger(labTestAttribute.getAttributeType().getDatatypeConfig());
+				if (isTrue) {
+					Concept conceptConfig = Context.getConceptService().getConcept(
+					    Integer.parseInt(labTestAttribute.getAttributeType().getDatatypeConfig()));
+					if (conceptConfig != null) {
+						if (conceptConfig.getDatatype().getName().equals("Coded")) {
+							Concept concept = Context.getConceptService().getConcept(
+							    Integer.parseInt(labTestAttribute.getValueReference()));
+							objTestResult.addProperty("valuesReference", concept.getName().getName());
+						} else {
+							objTestResult.addProperty("valuesReference", labTestAttribute.getValueReference());
+						}
+					}
+				}
+			} else {
+				objTestResult.addProperty("question", labTestAttribute.getAttributeType().getName());
+				objTestResult.addProperty("valuesReference", labTestAttribute.getValueReference());
+			}
+		}
+		objTestResult.addProperty("void", labTestAttribute.getVoided());
+		return objTestResult;
+	}
 }

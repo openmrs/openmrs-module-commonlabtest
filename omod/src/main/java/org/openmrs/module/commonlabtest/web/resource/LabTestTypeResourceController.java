@@ -1,12 +1,10 @@
 package org.openmrs.module.commonlabtest.web.resource;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -19,7 +17,6 @@ import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
-import org.openmrs.module.webservices.rest.web.response.ConversionException;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
@@ -30,9 +27,6 @@ public class LabTestTypeResourceController extends MetadataDelegatingCrudResourc
 	 * Logger for this class
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
-	
-	/*	@Autowired
-		CommonLabTestService commonLabTestService;*/
 	
 	private CommonLabTestService commonLabTestService = Context.getService(CommonLabTestService.class);
 	

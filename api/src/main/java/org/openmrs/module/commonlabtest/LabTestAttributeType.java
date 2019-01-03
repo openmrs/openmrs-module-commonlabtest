@@ -128,4 +128,8 @@ public class LabTestAttributeType extends BaseAttributeType<LabTest> implements 
 		this.groupName = groupName;
 	}
 	
+	@Override
+	public String toString() {
+		return labTestAttributeTypeId + ", " + labTestType + ", " + groupName + ", " + getName();
+	}
 }

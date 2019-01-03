@@ -558,7 +558,7 @@ legend.scheduler-border {
    
 	/* Validation */
 	function validate(form){
-		var testAttributeName = document.getElementById('name').value;
+		var testAttributeName = document.getElementById('name').value.trim();
 		var labTestType = document.getElementById('testTypeSuggestBox').value;
 		var description = document.getElementById('description').value;
 		var minOccurs = document.getElementById('min_occurs').value;
@@ -571,7 +571,7 @@ legend.scheduler-border {
 		///error message and regex
 		var  reText = new RegExp("^[A-Za-z][ A-Za-z0-9_()?/µ.%\\-]*$");
 		var regInt =new RegExp("^[0-9]+$");
-        var regErrorMesssage ="Text contains Invalid characters.Test Attribute name only accepts alphabets with _ -().% special characters";
+        var regErrorMesssage ="Text contains Invalid characters. Test Attribute name only accepts Alpha-Numeric value with _ -().% special characters. Please remove if there are any white spaces at the start of name";
 		var numericErrorMessage ="Only interger values are allowed";
         var alphabetsCharacter ="Numeric values and special characters are not allowed";
 		var numericNotErrorMessage ="Numeric input are not allowed";

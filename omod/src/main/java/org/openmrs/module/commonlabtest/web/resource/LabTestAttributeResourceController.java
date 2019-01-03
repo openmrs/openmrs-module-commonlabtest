@@ -4,12 +4,9 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
-import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
@@ -32,15 +29,12 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	/*	@Autowired
-		CommonLabTestService commonLabTestService;*/
-	
 	private CommonLabTestService commonLabTestService = Context.getService(CommonLabTestService.class);
 	
 	@Override
-	public LabTestAttribute getByUniqueId(String s) {
+	public LabTestAttribute getByUniqueId(String uuid) {
 		
-		return commonLabTestService.getLabTestAttributeByUuid(s);
+		return commonLabTestService.getLabTestAttributeByUuid(uuid);
 	}
 	
 	@Override
@@ -60,8 +54,14 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 	}
 	
 	@Override
-	public Object create(SimpleObject propertiesToCreate, RequestContext context) throws ResponseException {
-		return super.create(propertiesToCreate, context);
+	public DelegatingResourceDescription getCreatableProperties() {
+		DelegatingResourceDescription description = new DelegatingResourceDescription();
+		
+		description.addProperty("labTest");
+		description.addProperty("attributeType");
+		description.addProperty("valueReference");
+		
+		return description;
 	}
 	
 	@Override
@@ -80,16 +80,16 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 		if (representation instanceof DefaultRepresentation) {
 			description.addProperty("uuid");
 			description.addProperty("labTestAttributeId");
-			description.addProperty("testOrderId");
-			description.addProperty("attributeTypeId");
+			description.addProperty("labTest");
+			description.addProperty("attributeType");
 			description.addProperty("valueReference");
 			
 			return description;
 		} else if (representation instanceof FullRepresentation) {
 			description.addProperty("uuid");
 			description.addProperty("labTestAttributeId");
-			description.addProperty("testOrderId");
-			description.addProperty("attributeTypeId");
+			description.addProperty("labTest");
+			description.addProperty("attributeType");
 			description.addProperty("valueReference");
 			
 			description.addProperty("creator");

@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.commonlabtest.api.dao.impl;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -33,7 +33,6 @@ import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.api.context.Context;
-import org.openmrs.api.db.hibernate.HibernateOrderDAO;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
@@ -57,9 +56,6 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
-	
-	@Autowired
-	private HibernateOrderDAO orderDao;
 	
 	/**
 	 * Get session factory
@@ -175,26 +171,21 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	@Override
 	public List<LabTestAttribute> getLabTestAttributes(Integer testOrderId) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttribute.class);
-		criteria.add(Restrictions.eq("testOrderId.testOrderId", testOrderId));
+		criteria.add(Restrictions.eq("labTest.testOrderId", testOrderId));
 		return criteria.list();
 	}
 	
 	/**
 	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDao#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType,
-	 *      org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, java.lang.String,
-	 *      java.util.Date, java.util.Date, boolean)
+	 *      java.lang.String, java.util.Date, java.util.Date, boolean)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, LabTest labTest,
-	        Patient patient, String valueReference, Date from, Date to, boolean includeVoided) {
+	public List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, String valueReference,
+	        Date from, Date to, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttribute.class);
 		if (labTestAttributeType != null) {
-			criteria.add(Restrictions.eqOrIsNull("attributeTypeId.labTestAttributeTypeId", labTestAttributeType.getId()));
-		}
-		if (labTest != null) {}
-		if (patient != null) {
-			criteria.add(Restrictions.eqOrIsNull("owner.order.patient.patientId", patient.getId()));
+			criteria.add(Restrictions.eqOrIsNull("attributeType.labTestAttributeTypeId", labTestAttributeType.getId()));
 		}
 		if (valueReference != null) {
 			criteria.add(Restrictions.ilike("valueReference", valueReference, MatchMode.START));
@@ -205,8 +196,32 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 		if (!includeVoided) {
 			criteria.add(Restrictions.eq("voided", false));
 		}
-		criteria.addOrder(Order.asc("testOrderId.testOrderId")).addOrder(Order.asc("voided")).list();
-		return criteria.list();
+		return criteria.addOrder(Order.asc("labTestAttributeId")).addOrder(Order.asc("voided")).list();
+	}
+	
+	/**
+	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDao#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType,
+	 *      org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, java.lang.String,
+	 *      java.util.Date, java.util.Date, boolean)
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<LabTestAttribute> getLabTestAttributes(Patient patient, LabTestAttributeType labTestAttributeType,
+	        boolean includeVoided) {
+		StringBuilder queryString = new StringBuilder();
+		queryString.append("from LabTestAttribute lta where lta.labTest.order.patient.patientId = :patientId");
+		queryString.append(labTestAttributeType == null ? ""
+		        : " and lta.labTestAttributeType.labTestAttributeTypeId = :labTestAttributeType");
+		queryString.append(includeVoided ? "" : " and lta.voided = :voided");
+		Query query = sessionFactory.getCurrentSession().createQuery(queryString.toString());
+		query.setInteger("patientId", patient.getPatientId());
+		if (labTestAttributeType != null) {
+			query.setInteger("labTestAttributeTypeId", labTestAttributeType.getId());
+		}
+		if (!includeVoided) {
+			query.setBoolean("voided", false);
+		}
+		return query.list();
 	}
 	
 	/**
@@ -577,6 +592,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	public LabTestAttribute saveLabTestAttribute(LabTestAttribute labTestAttribute) {
+		
 		sessionFactory.getCurrentSession().saveOrUpdate(labTestAttribute);
 		return labTestAttribute;
 	}

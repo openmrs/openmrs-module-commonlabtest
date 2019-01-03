@@ -109,6 +109,9 @@
 		<file>messages.properties</file>
 	</messages>
 	<!-- /Internationalization -->
+	<mappingFiles>
+		CommonLabTestAttribute.hbm.xml
+	</mappingFiles>
 	
 </module>
 

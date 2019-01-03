@@ -12,7 +12,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestSample;
-import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -37,9 +36,6 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	/*	@Autowired
-		CommonLabTestService commonLabTestService;*/
-	
 	private CommonLabTestService commonLabTestService = Context.getService(CommonLabTestService.class);
 	
 	@Override
@@ -47,9 +43,6 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 		
 		String pId = context.getRequest().getParameter("patientId");
 		Patient patient = Context.getPatientService().getPatient(Integer.parseInt(pId));
-		//PageableResult pr=PageableResult;
-		
-		System.out.println("Patient Id " + pId);
 		return new NeedsPaging<LabTest>(commonLabTestService.getLabTests(patient, false), context);//super.doSearch(context);
 	}
 	

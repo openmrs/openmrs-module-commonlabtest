@@ -21,7 +21,6 @@
 <style>
 
 
-
 body {
 	font-size: 12px;
 }
@@ -62,12 +61,18 @@ legend.scheduler-border {
 }
 #tb-test-type td { word-wrap: break-word; }
 
+tbody.collapse.in {
+  display: table-row-group;
+}
 </style>
 <!--<i class="fa fa-plus hvr-icon"></i>  -->
+
+
 <body>
 	<br>
-	<c:set var="testOrder" scope="session" value="${model.testOrder}" />
-	<div class="row">
+<%-- 	<c:set var="testOrder" scope="session" value="${model.testOrder}" />
+ --%>	
+   <div class="row">
 	<openmrs:hasPrivilege privilege="Add CommonLabTest Orders">
 		  <div class="col-sm-4 col-md-2">
 		 	 <a style="text-decoration:none" href="${pageContext.request.contextPath}/module/commonlabtest/addLabTestOrder.form?patientId=${model.patient.patientId}" class="hvr-icon-grow"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/plus.png"> <span> </span> <spring:message code="commonlabtest.order.add" /> </a>
@@ -100,31 +105,12 @@ legend.scheduler-border {
 					</openmrs:hasPrivilege>
 					 <openmrs:hasPrivilege privilege="View CommonLabTest results">
 					 <th>Test Result</th>
+					 <th>Result Date</th>
 					</openmrs:hasPrivilege>
 					
 				</tr>
 	        </thead>
-	        <tbody>
-		        <c:forEach var="order" items="${model.testOrder}">
-		       	 <c:if test="${! empty model.testOrder}">
-							<tr id = "mainRow">
-							     <td hidden ="true" class ="orderId">${order.testOrderId}</td>
-							     <td hidden ="true" class ="rspecimen">${order.labTestType.requiresSpecimen}</td>
-								 <td>${order.labTestType.name}</td>
-								 <td>${order.labReferenceNumber}</td>
-								 <td> <span class="table-view hvr-icon-grow" onclick="viewTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/view.png"></span></td>
-								 <openmrs:hasPrivilege privilege="Edit CommonLabTest Orders">
-								   <td> <span class="table-edit hvr-icon-grow" onclick="editTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/edit.png"></span></td>
-					             </openmrs:hasPrivilege>
-					             <openmrs:hasPrivilege privilege="View CommonLabTest Samples">
-					               <td> <span class="table-sample hvr-icon-grow" onclick="samplesTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/testSample.png"></img></span></span></td>
-					             </openmrs:hasPrivilege>
-					              <openmrs:hasPrivilege privilege="View CommonLabTest results">
-					                 <td> <span class="table-result hvr-icon-grow" onclick="resultsTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/testResult.png"></img></span></span></td>
-					             </openmrs:hasPrivilege>
-							</tr>
-					</c:if>		
-				 </c:forEach>
+	        <tbody id="orderContainer">
 	        </tbody>
 	    </table>
 	 </div>
@@ -143,7 +129,7 @@ legend.scheduler-border {
             
                <fieldset  class="scheduler-border">
       	 		  <legend  class="scheduler-border"><spring:message code="commonlabtest.order.detail" /></legend>
-	     			 <div id="orderContainer" style="overflow: auto">
+	     			 <div id="orderContainerView" style="overflow: auto">
 	     			 
 	     			 </div>
 	            </fieldset>    
@@ -185,20 +171,21 @@ legend.scheduler-border {
 <script
 	src="${pageContext.request.contextPath}/moduleResources/commonlabtest/js/dataTables.bootstrap4.min.js"></script>
 
-
 <script type="text/javascript">	
  var testOrderArray ;
  var isStatusAccepted = false;
 jQuery(document).ready(function () {
-	console.log('');
-	
+	  testOrderArray = ${model.testOrder};
+	 // console.log("Array: "+ JSON.stringify(testOrderArray));
+	   generateOrderTable(testOrderArray);
+	   
 	jQuery('#testOrderTable').dataTable({
 		 "bPaginate": true
 	  });
 	  jQuery('.dataTables_length').addClass('bs-select');
-	  
-	  fillTestOrder();
-	  console.log("Array: "+ testOrderArray);
+	
+	 // fillTestOrder();
+	
 	  
 });
 	function showalert(message,alerttype) {
@@ -206,21 +193,49 @@ jQuery(document).ready(function () {
 	    jQuery('#alert_placeholder').append('<div id="alertdiv" class="alert ' +  alerttype + '"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>')
 	     autoHide();
 	  } 
-
- function fillTestOrder(){
-	 testOrderArray = new Array();
-     <c:if test="${not empty model.testOrder}">
-	        <c:forEach var="testOrder" items="${model.testOrder}" varStatus="status">
-	       			 testOrderArray.push({requiresSpecimen:"${testOrder.labTestType.requiresSpecimen}",id:"${testOrder.testOrderId}", name :"${testOrder.labTestType.name}" ,testGroup:"${testOrder.labTestType.testGroup}",labReferenceNumber:"${testOrder.labReferenceNumber}",dateCreated:"${testOrder.labTestType.dateCreated}",createdBy:"${testOrder.creator.username}",dateCreated:"${testOrder.dateCreated}",encounterType:"${testOrder.getOrder().getEncounter().getEncounterType().getName()}",changedBy:"${testOrder.changedBy}",uuid:"${testOrder.uuid}"});
-	        </c:forEach>
-     </c:if>   
-	 console.log("Order Array new add : "+JSON.stringify(testOrderArray));
-	 return testOrderArray;
- }
-function getTestOrderList(){
-   	return JSON.parse(JSON.stringify('${model.testOrder}'));
-   }
-
+	function getTestOrderList(){
+	   	return JSON.parse(JSON.stringify('${model.testOrder}'));
+	   }
+	function generateOrderTable(localSource){
+		  var resultsItems = "";
+		  jQuery(localSource).each(function () {
+		   /*  if(this.resultFilled){
+			    	  resultsItems = resultsItems.concat('<tr id = "mainRow" style="background-color:#1aac9b;">');
+			    }else{
+			    	  resultsItems = resultsItems.concat('<tr id = "mainRow">');
+			    } */
+			    console.log("rspecimen :: "+this.requiredSpecimen);
+			    console.log("orderId :: "+this.id);
+			    resultsItems = resultsItems.concat('<tr id = "mainRow">');
+		        resultsItems = resultsItems.concat('<td hidden ="true" class ="orderId">'+this.id+'</td>');
+		        resultsItems = resultsItems.concat('<td hidden ="true" class ="rspecimen">'+this.requiredSpecimen+'</td>');
+		        resultsItems = resultsItems.concat('<td>'+this.testTypeName+'</td>');
+		        resultsItems = resultsItems.concat(' <td>'+this.labReferenceNumber+'</td>');
+		        resultsItems = resultsItems.concat('<td> <span class="table-view hvr-icon-grow" onclick="viewTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/view.png"></span></td>');
+		        resultsItems = resultsItems.concat('<openmrs:hasPrivilege privilege="Edit CommonLabTest Orders">');
+		        resultsItems = resultsItems.concat('<td> <span class="table-edit hvr-icon-grow" onclick="editTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/edit.png"></span></td>');
+		        resultsItems = resultsItems.concat('</openmrs:hasPrivilege>');
+		        resultsItems = resultsItems.concat('<openmrs:hasPrivilege privilege="View CommonLabTest Samples">');
+		        resultsItems = resultsItems.concat('<td> <span class="table-sample hvr-icon-grow" onclick="samplesTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/testSample.png"></img></span></span></td>');
+		        resultsItems = resultsItems.concat('</openmrs:hasPrivilege>');
+		        resultsItems = resultsItems.concat('<openmrs:hasPrivilege privilege="View CommonLabTest results">');
+		        if(this.resultFilled){
+		          resultsItems = resultsItems.concat('<td> <span class="table-result hvr-icon-grow" onclick="resultsTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/testResult.png"></img></span></span><span style="margin-left: 35px">  </span><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/greenchecked.png"></img></td>');
+		        }else{
+			    resultsItems = resultsItems.concat('<td> <span class="table-result hvr-icon-grow" onclick="resultsTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/testResult.png"></img></span></span></td>');
+		        }
+			    resultsItems = resultsItems.concat('<td>'+this.resultDate+'</td>');
+		        resultsItems = resultsItems.concat('</openmrs:hasPrivilege>');
+		        resultsItems = resultsItems.concat('</tr>');
+		  	});    
+		   // console.log("Resultan String : " + resultsItems);
+		    document.getElementById("orderContainer").innerHTML = resultsItems;
+		   // $("#orderContainer").append(resultsItems);
+	}	
+	
+	//old
+	
+	
 function autoHide(){
 	   jQuery("#alertdiv").fadeTo(5000, 500).slideUp(500, function(){
 	           jQuery("#alertdiv").slideUp(500);
@@ -276,11 +291,11 @@ function autoHide(){
 		 var requiresSpecimen = jQuery(resultEl).closest("tr")  
 									         .find(".rspecimen")   
 									         .text();
-		 
+		 console.log("requiresSpecimen :: "+requiresSpecimen);
 		 checkTestSampleStatus(testOrderId);
 		if(testOrderId == "" || testOrderId == null ){}
 		else if(requiresSpecimen == 'true'){
-			console.log("Called");
+			//console.log("Called");
 		    if(isStatusAccepted == true){
 				window.location = "${pageContext.request.contextPath}/module/commonlabtest/addLabTestResult.form?patientId="+${model.patient.patientId}+"&testOrderId="+testOrderId;  
 			}
@@ -289,7 +304,7 @@ function autoHide(){
 			}
 		}
 		else {
-			window.location = "${pageContext.request.contextPath}/module/commonlabtest/addLabTestResult.form?patientId="+${model.patient.patientId}+"&testOrderId="+testOrderId;
+			    window.location = "${pageContext.request.contextPath}/module/commonlabtest/addLabTestResult.form?patientId="+${model.patient.patientId}+"&testOrderId="+testOrderId;
 		}
 		
 	}
@@ -319,7 +334,7 @@ function autoHide(){
 	function populateTestOrder(testOrderArr){
 	
 	     var resultsItems = "";
-	     console.log("resultsItems : "+resultsItems);
+	    // console.log("resultsItems : "+resultsItems);
 	     resultsItems = resultsItems.concat(' <form id="form">');
 		     resultsItems = resultsItems.concat('<div class="row"><div class="col-md-3">');
 			 resultsItems = resultsItems.concat('<label ><font color="#17202A"><sub><spring:message code="commonlabtest.order.id" /></sub></font></label>');
@@ -334,7 +349,7 @@ function autoHide(){
 			 resultsItems = resultsItems.concat('<div class="row"><div class="col-md-3">');
 			 resultsItems = resultsItems.concat('<label ><font color="#17202A"><sub><spring:message code="general.testType" /></sub></font></label>');
 			 resultsItems = resultsItems.concat('</div><div class ="col-md-4">');
-			 resultsItems = resultsItems.concat('<label ><font color="#5D6D7E"><sub>'+testOrderArr.name+'</sub></font></label>');
+			 resultsItems = resultsItems.concat('<label ><font color="#5D6D7E"><sub>'+testOrderArr.testTypeName+'</sub></font></label>');
 			 resultsItems = resultsItems.concat('</div></div>');
 			 resultsItems = resultsItems.concat('<div class="row"><div class="col-md-3">');
 			 resultsItems = resultsItems.concat('<label ><font color="#17202A"><sub><spring:message code="general.encounterType" /></sub></font></label>');
@@ -349,7 +364,7 @@ function autoHide(){
 			 resultsItems = resultsItems.concat('<div class="row"><div class="col-md-3">');
 			 resultsItems = resultsItems.concat('<label ><font color="#17202A"><sub><spring:message code="general.requiresSpecimen" /></sub></font></label>');
 			 resultsItems = resultsItems.concat('</div><div class ="col-md-4">');
-			 resultsItems = resultsItems.concat('<label ><font color="#5D6D7E"><sub>'+testOrderArr.requiresSpecimen+'</sub></font></label>');
+			 resultsItems = resultsItems.concat('<label ><font color="#5D6D7E"><sub>'+testOrderArr.requiredSpecimen+'</sub></font></label>');
 			 resultsItems = resultsItems.concat('</div></div>');
 			 resultsItems = resultsItems.concat('<div class="row"><div class="col-md-3">');
 			 resultsItems = resultsItems.concat('<label ><font color="#17202A"><sub><spring:message code="general.createdBy" /></sub></font></label>');
@@ -359,7 +374,7 @@ function autoHide(){
 			 resultsItems = resultsItems.concat('<div class="row"><div class="col-md-3">');
 			 resultsItems = resultsItems.concat('<label ><font color="#17202A"><sub><spring:message code="general.changedBy" /></sub></font></label>');
 			 resultsItems = resultsItems.concat('</div><div class ="col-md-4">');
-			 resultsItems = resultsItems.concat('<label ><font color="#5D6D7E"><sub>'+testOrderArr.createdBy+'</sub></font></label>');
+			 resultsItems = resultsItems.concat('<label ><font color="#5D6D7E"><sub>'+testOrderArr.changedBy+'</sub></font></label>');
 			 resultsItems = resultsItems.concat('</div></div>');
 			 resultsItems = resultsItems.concat('<div class="row"><div class="col-md-3">');
 			 resultsItems = resultsItems.concat('<label ><font color="#17202A"><sub><spring:message code="general.dateCreated" /></sub></font></label>');
@@ -374,7 +389,7 @@ function autoHide(){
 		
 	     resultsItems = resultsItems.concat('</form>');
 	     
-		 document.getElementById("orderContainer").innerHTML = resultsItems;
+		 document.getElementById("orderContainerView").innerHTML = resultsItems;
 	   }
 	
 	function populateTest(testOrderId){
@@ -403,7 +418,8 @@ function autoHide(){
 			  		renderTestSample(parseData['sample']);
 			  </openmrs:hasPrivilege>
 			<openmrs:hasPrivilege privilege="View CommonLabTest results">
-		        renderTestResult(parseData['result'])
+		       // renderTestResult(parseData['result'])
+		        renderResult(parseData['result']);
 		    </openmrs:hasPrivilege>
 		  jQuery('#viewModal').modal('show'); 
 	}
@@ -418,8 +434,7 @@ function autoHide(){
 					resultsItems = resultsItems.concat('<th><a>Specimen Site</a></th>');
 					resultsItems = resultsItems.concat('<th><a>Status</a></th>');
 					jQuery(sampleArray).each(function() {
-						console.log("testOrderId : "+this.testOrderId);
-					   	
+						//console.log("testOrderId : "+this.testOrderId);
 						resultsItems = resultsItems.concat('<tbody><tr>'); 
 						resultsItems = resultsItems.concat('<td><label>'+this.testOrderId+'</label></td>');
 						resultsItems = resultsItems.concat('<td><label>'+this.specimenType+'</label></td>');
@@ -431,38 +446,64 @@ function autoHide(){
 				resultsItems = resultsItems.concat('</tr></thead>');
 				resultsItems = resultsItems.concat('</table>');
 		   
-		   console.log("Sample Container : "+ resultsItems);
+		   //console.log("Sample Container : "+ resultsItems);
 		   document.getElementById("sampleDetailContainer").innerHTML = resultsItems;
 	}
-	
-	function renderTestResult(resultArray){
-		console.log("result Array :: "+resultArray);
+
+	function renderResult(resultArray){
+		//console.log("result Array :: "+ JSON.stringify(resultArray));
 	      var resultsItems = "";
 			resultsItems = resultsItems.concat('<table  class="table table-striped table-responsive-md table-hover mb-0" id="tb-test-type">');
 			resultsItems = resultsItems.concat('<thead><tr>');
+			    resultsItems = resultsItems.concat('<th><a>Group Name</a></th>');
 				resultsItems = resultsItems.concat('<th><a>Question</a></th>');
 				resultsItems = resultsItems.concat('<th><a>Value</a></th>');
+				resultsItems = resultsItems.concat('</tr></thead>');
 				jQuery(resultArray).each(function() {
-					console.log("testOrderId : "+this.testOrderId);
-					 if(this.void === true){
-							resultsItems = resultsItems.concat('<tbody><tr>'); 
-							resultsItems = resultsItems.concat('<td><font color="#FF0000"><label>'+this.question+'</label></font></td>');
-							resultsItems = resultsItems.concat('<td><font color="#FF0000"><label>'+this.valuesReference+'</label></font></td>');
-							resultsItems = resultsItems.concat('</tr></tbody>'); 
-					 }else {
-							resultsItems = resultsItems.concat('<tbody><tr>'); 
-							resultsItems = resultsItems.concat('<td><label>'+this.question+'</label></td>');
-							resultsItems = resultsItems.concat('<td><label>'+this.valuesReference+'</label></td>');
-							resultsItems = resultsItems.concat('</tr></tbody>'); 
-					 }
-				
-				 });
-			resultsItems = resultsItems.concat('</tr></thead>');
-			resultsItems = resultsItems.concat('</table>');
-	   
-	   console.log("result Container : "+ resultsItems);
-	   document.getElementById("resultDetailContainer").innerHTML = resultsItems;
+					
+				     if(this.groups != undefined && this.groups.length > 0){
+					 	    let groupIden = this.groupName.split(" ").join("");
+						    let groupIdentity =groupIden.replace(/[&\/\\#,+()$~%.:*?<>{}]/g, '');
+					    		resultsItems = resultsItems.concat('<tbody><tr class="clickable" data-toggle="collapse" data-target="#group-of-rows-'+groupIdentity+'" aria-expanded="false" aria-controls="group-of-rows-'+groupIdentity+'">'); 
+								resultsItems = resultsItems.concat('<td style="color: #1aac9b"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/add.png"><label style="margin-left: 20px">'+this.groupName+'</label></td>');
+					    		resultsItems = resultsItems.concat('<td></td>');
+								resultsItems = resultsItems.concat('<td><label></label></td>');
+								resultsItems = resultsItems.concat('</tr></tbody>'); 
+			        	    resultsItems = resultsItems.concat(generateTestGroup(this.groups ,groupIdentity)); //generate all the groups 
+			        }else{
+			        	 if(this.void === true){
+								resultsItems = resultsItems.concat('<tbody><tr>'); 
+								resultsItems = resultsItems.concat('<td><label></label></td>');
+								resultsItems = resultsItems.concat('<td><font color="#FF0000"><label>'+this.question+'</label></font></td>');
+								resultsItems = resultsItems.concat('<td><font color="#FF0000"><label>'+this.valuesReference+'</label></font></td>');
+								resultsItems = resultsItems.concat('</tr></tbody>'); 
+						 }else {
+								resultsItems = resultsItems.concat('<tbody><tr>'); 
+								resultsItems = resultsItems.concat('<td><label></label></td>');
+								resultsItems = resultsItems.concat('<td><label>'+this.question+'</label></td>');
+								resultsItems = resultsItems.concat('<td><label>'+this.valuesReference+'</label></td>');
+								resultsItems = resultsItems.concat('</tr></tbody>'); 
+						 } 	
+			        }
+				});
+				resultsItems = resultsItems.concat('</table>');
+		   
+		    // console.log("result Container : "+ resultsItems);
+		   document.getElementById("resultDetailContainer").innerHTML = resultsItems;				
 	}
-
+	/*Generate Group List  */
+	function generateTestGroup(localTestGroups,groupName) {
+	    var resultsItems = "";
+	    resultsItems = resultsItems.concat('<tbody id="group-of-rows-'+groupName+'" class="collapse">');
+	        jQuery(localTestGroups).each(function () {
+	        	resultsItems = resultsItems.concat('<tr>'); 
+	        	resultsItems = resultsItems.concat('<td><label></label></td>');
+				resultsItems = resultsItems.concat('<td><label>'+this.question+'</label></td>');
+				resultsItems = resultsItems.concat('<td><label>'+this.valuesReference+'</label></td>');
+				resultsItems = resultsItems.concat('</tr>'); 
+	        });
+	   resultsItems = resultsItems.concat('</tbody>');    
+	  return resultsItems;
+	}
 
 </script>

@@ -95,4 +95,21 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 		}
 		return description;
 	}
+	
+	@Override
+	public DelegatingResourceDescription getCreatableProperties() {
+		DelegatingResourceDescription description = new DelegatingResourceDescription();
+		
+		description.addProperty("labTestType");
+		description.addProperty("sortWeight");
+		description.addProperty("maxOccurs");
+		description.addProperty("datatypeClassname");
+		description.addProperty("datatypeConfig");
+		description.addProperty("preferredHandlerClassname");
+		description.addProperty("handlerConfig");
+		description.addProperty("groupName");
+		description.addProperty("multisetName");
+		description.addProperty("hint");
+		return description;
+	}
 }

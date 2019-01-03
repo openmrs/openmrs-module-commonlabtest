@@ -14,14 +14,14 @@
 		date_created="2016-12-28 11:54:56" voided="false" uuid="ee11bea3-3aad-4266-a5d7-bc6f3a6aaee5" />
 
 	<!-- Users -->
-	<users user_id="300" system_id="300-3" username="owais.hussain"
-		password="f3a0cf032428181af9d50e6ece7e9c65399004663bfc6cff4f37c1447de9ee707d27277e4224e3baf3ebe152df07e11010eca59b3c16f729e3e73e1e79705164"
-		salt="645851f3712442fded408114c853447040faba88c98209f62b8fe6811c165f5e037e6cc7f61214ae154aa1fb05ccedecd091f8016128ec44ae45b64abd482d96"
+	<users user_id="300" system_id="300-3" username=""
+		password=""
+		salt=""
 		secret_question="" creator="1" date_created="2016-08-22 13:56:44" changed_by="1" date_changed="2017-02-02 11:21:25"
 		person_id="500" retired="false" uuid="36b071d8-d5ea-4703-8e56-5b066420b569" />
-	<users user_id="400" system_id="400-3" username="tahira.niazi"
-		password="67a4dfb774e97b159d71c512aa72e080bcfec014b1079a6453636b732f6dc2d6db4f8566e262f14b3411ea7176332f5265c4bbc77581ecb70fa99785e4fd7cc6"
-		salt="5bcdb0d4ccb8f3d34ae6ec7dc4e38b8d86eef5f8fcde70e794ab0404e07b0be187f009f748d3eed184e05a3c253b1f05c6bd2fea75016f18763972cd06bcfb3e"
+	<users user_id="400" system_id="400-3" username=""
+		password=""
+		salt=""
 		secret_question="" creator="1" date_created="2016-12-28 11:54:56" changed_by="1" date_changed="2018-02-22 11:27:15"
 		person_id="600" retired="false" uuid="e4ef4d4d-5cf2-47ff-af6b-bb9abdabdd60" />
 

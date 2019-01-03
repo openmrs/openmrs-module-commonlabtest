@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
 import org.openmrs.Order;
+import org.openmrs.Provider;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.CommonLabTestConfig;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -70,9 +72,14 @@ public class LabTestOrderController {
 		model.addAttribute("patientId", patientId);
 		model.addAttribute("testTypes", labTestTypeHavingAttributes);
 		model.addAttribute("error", error);
-		model.addAttribute("provider",
-		    Context.getProviderService().getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator()
-		            .next());
+		Collection<Provider> providers = Context.getProviderService().getProvidersByPerson(
+		    Context.getAuthenticatedUser().getPerson(), false);
+		if (providers == null || providers.isEmpty()) {} else {
+			model.addAttribute("provider",
+			    Context.getProviderService().getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false)
+			            .iterator().next());
+		}
+		
 		//show only first 10 encounters 
 		if (encounterList.size() > 10) {
 			model.addAttribute("encounters", encounterList.subList(0, encounterList.size() - 1));

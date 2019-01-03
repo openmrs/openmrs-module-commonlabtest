@@ -111,7 +111,6 @@ public interface CommonLabTestService extends OpenmrsService {
 	 * properties are passed as parameters
 	 * 
 	 * @param labTestAttributeType
-	 * @param patient
 	 * @param valueReference
 	 * @param from
 	 * @param to
@@ -119,8 +118,8 @@ public interface CommonLabTestService extends OpenmrsService {
 	 * @return
 	 * @throws APIException
 	 */
-	List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, Patient patient,
-	        String valueReference, Date from, Date to, boolean includeVoided) throws APIException;
+	List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, String valueReference, Date from,
+	        Date to, boolean includeVoided) throws APIException;
 	
 	/**
 	 * @see List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType, Patient, String, Date,

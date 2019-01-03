@@ -1,0 +1,41 @@
+@CHARSET "ISO-8859-1";
+
+body {
+	font-size: 12px;
+}
+
+
+input[type=submit] {
+	background-color: #1aac9b;
+	color: white;
+	padding: 8px 22px;
+	border: none;
+	border-radius: 2px;
+	cursor: pointer;
+	
+}
+fieldset.scheduler-border {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow:  0px 0px 0px 0px #1aac9b;
+            box-shadow:  0px 0px 0px 0px #1aac9b;
+}
+
+legend.scheduler-border {
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        width:auto;
+        padding:0 10px;
+        border-bottom:none;
+    }
+.row{
+ margin-bottom:15px;
+ 
+ }
+ /*Patient Lab Tests  */
+#tb-test-type {
+  table-layout: fixed;
+}
+#tb-test-type td { word-wrap: break-word; }
