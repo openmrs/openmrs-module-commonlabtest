@@ -7,7 +7,6 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.customdatatype.NotYetPersistedException;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
-import org.openmrs.module.commonlabtest.LabTestAttributeType;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -49,20 +48,13 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 		if (representation instanceof DefaultRepresentation || representation instanceof RefRepresentation) {
 			description.addProperty("labTest", Representation.REF);
 			description.addProperty("attributeType", Representation.REF);
-			description.addProperty("value");
+			description.addProperty("valueReference");
 			return description;
 		} else if (representation instanceof FullRepresentation) {
 			description.addProperty("labTest");
 			description.addProperty("attributeType");
-			description.addProperty("value");
-			description.addProperty("creator");
-			description.addProperty("dateCreated");
-			description.addProperty("changedBy");
-			description.addProperty("dateChanged");
-			description.addProperty("voided");
-			description.addProperty("dateVoided");
-			description.addProperty("voidedBy");
-			description.addProperty("voidReason");
+			description.addProperty("valueReference");
+			description.addProperty("auditInfo");
 			return description;
 		}
 		return description;
@@ -74,9 +66,9 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
-		description.addProperty("labTest");
-		description.addProperty("attributeType");
-		description.addProperty("value");
+		description.addRequiredProperty("labTest");
+		description.addRequiredProperty("attributeType");
+		description.addRequiredProperty("valueReference");
 		return description;
 	}
 	
@@ -133,24 +125,14 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 		return attribute.getValueReference();
 	}
 	
-	@PropertyGetter("attributeType")
-	public LabTestAttributeType getAttributeType(LabTestAttribute attribute) {
-		return attribute.getAttributeType();
-	}
-	
-	@PropertySetter("attributeType")
-	public static void setAttributeType(LabTestAttribute instance, Object attributeType) {
-		instance.setAttributeType((LabTestAttributeType) attributeType);
-	}
-	
 	/**
 	 * @param attribute
 	 * @return
 	 */
-	@PropertyGetter("value")
-	public Object getValue(LabTestAttribute attribute) {
+	@PropertyGetter("valueReference")
+	public String getValueReference(LabTestAttribute attribute) {
 		try {
-			return attribute.getValue();
+			return attribute.getValueReference();
 		}
 		catch (NotYetPersistedException ex) {
 			return null;
@@ -161,9 +143,8 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 	 * @param instance
 	 * @param value
 	 */
-	@PropertySetter("value")
-	public static void setValue(LabTestAttribute instance, Object value) {
-		instance.setValue(value);
+	@PropertySetter("valueReference")
+	public static void setValueReference(LabTestAttribute instance, String valueReference) {
+		instance.setValueReferenceInternal(valueReference);
 	}
-	
 }

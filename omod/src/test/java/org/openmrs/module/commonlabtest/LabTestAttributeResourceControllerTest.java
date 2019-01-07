@@ -2,7 +2,6 @@ package org.openmrs.module.commonlabtest;
 
 import static org.junit.Assert.fail;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,20 +39,6 @@ public class LabTestAttributeResourceControllerTest extends MainResourceControll
 		return "2c9737d9-47c2-11e8-943c-40b034c3cfee";
 	}
 	
-	@Test
-	public void shouldSave() throws Exception {
-		String uri = getURI();
-		SimpleObject labTestAttributeObj = new SimpleObject();
-		labTestAttributeObj.add("labTest", "4bf46c09-46e9-11e8-943c-40b034c3cfee");
-		labTestAttributeObj.add("attributeType", "ecf166e5-478e-11e8-943c-40b034c3cfee");
-		labTestAttributeObj.add("value", "12345");
-		
-		MockHttpServletRequest newPostRequest = newPostRequest(uri, labTestAttributeObj);
-		MockHttpServletResponse handle = handle(newPostRequest);
-		SimpleObject objectCreated = deserialize(handle);
-		Assert.assertNotNull(objectCreated);
-	}
-	
 	@Override
 	@Test(expected = ResourceDoesNotSupportOperationException.class)
 	public void shouldGetAll() throws Exception {
@@ -61,14 +46,18 @@ public class LabTestAttributeResourceControllerTest extends MainResourceControll
 		fail();
 	}
 	
-	@Override
 	@Test
-	public void shouldGetFullByUuid() throws Exception {
-		MockHttpServletRequest request = request(RequestMethod.GET, getURI() + "/" + getUuid());
-		request.addParameter("v", "full");
-		SimpleObject result = null;
-		result = deserialize(handle(request));
-		Assert.assertNotNull(result);
-		Assert.assertEquals(getUuid(), PropertyUtils.getProperty(result, "uuid"));
+	public void shouldSave() throws Exception {
+		String uri = getURI();
+		SimpleObject labTestAttributeObj = new SimpleObject();
+		labTestAttributeObj.add("labTest", "d175e92e-dc93-11e8-d298-40b034c3cfee");
+		// CAD4TB Score
+		labTestAttributeObj.add("attributeType", "ed8b4caf-478e-11e8-943c-40b034c3cfee");
+		labTestAttributeObj.add("valueReference", "100.0");
+		
+		MockHttpServletRequest newPostRequest = newPostRequest(uri, labTestAttributeObj);
+		MockHttpServletResponse handle = handle(newPostRequest);
+		SimpleObject objectCreated = deserialize(handle);
+		Assert.assertNotNull(objectCreated);
 	}
 }
