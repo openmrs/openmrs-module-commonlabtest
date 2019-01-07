@@ -12,6 +12,7 @@ import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
@@ -32,7 +33,6 @@ public class LabTestTypeResourceController extends MetadataDelegatingCrudResourc
 	
 	@Override
 	public LabTestType getByUniqueId(String s) {
-		
 		return commonLabTestService.getLabTestTypeByUuid(s);
 	}
 	
@@ -59,61 +59,49 @@ public class LabTestTypeResourceController extends MetadataDelegatingCrudResourc
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		description.addProperty("display");
 		if (representation instanceof DefaultRepresentation) {
-			//	DelegatingResourceDescription description = new DelegatingResourceDescription();
-			
 			description.addProperty("testGroup");
-			description.addProperty("labTestTypeId");
 			description.addProperty("shortName");
 			description.addProperty("requiresSpecimen");
-			description.addProperty("referenceConcept");
+			description.addProperty("referenceConcept", Representation.REF);
 			description.addProperty("name");
 			description.addProperty("description");
-			
-			description.addSelfLink();
-			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
 		} else if (representation instanceof FullRepresentation) {
-			
 			description.addProperty("testGroup");
-			description.addProperty("labTestTypeId");
 			description.addProperty("shortName");
 			description.addProperty("requiresSpecimen");
 			description.addProperty("referenceConcept");
 			description.addProperty("name");
 			description.addProperty("description");
 			description.addProperty("auditInfo");
-			description.addSelfLink();
-			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_DEFAULT);
-			//description.
+			return description;
+		} else if (representation instanceof RefRepresentation) {
+			description.addProperty("testGroup");
+			description.addProperty("shortName");
+			description.addProperty("referenceConcept");
 			return description;
 		}
-		
 		return description;
 	}
 	
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription delegatingResourceDescription = new DelegatingResourceDescription();
-		//delegatingResourceDescription.addProperty();
-		
+		delegatingResourceDescription.addProperty("name");
 		delegatingResourceDescription.addProperty("testGroup");
 		delegatingResourceDescription.addProperty("labTestTypeId");
 		delegatingResourceDescription.addProperty("shortName");
 		delegatingResourceDescription.addProperty("requiresSpecimen");
 		delegatingResourceDescription.addProperty("referenceConcept");
-		delegatingResourceDescription.addProperty("name");
-		delegatingResourceDescription.addProperty("description");
 		delegatingResourceDescription.addProperty("labTestSamples");
 		delegatingResourceDescription.addProperty("order");
-		
+		delegatingResourceDescription.addProperty("description");
 		return delegatingResourceDescription;
 	}
 	
 	@Override
 	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
 		List<LabTestType> list = commonLabTestService.getAllLabTestTypes(false);
-		
 		return new NeedsPaging<LabTestType>(list, context);
 	}
-	
 }

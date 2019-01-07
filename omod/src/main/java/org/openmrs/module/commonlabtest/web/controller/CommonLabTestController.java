@@ -602,7 +602,8 @@ public class CommonLabTestController {
 				to = tmp;
 			}
 		}
-		List<LabTestAttribute> list = Context.getService(CommonLabTestServiceImpl.class).getLabTestAttributes(labTestAttributeType, value, from, to, includeVoided);
+		List<LabTestAttribute> list = Context.getService(CommonLabTestServiceImpl.class).getLabTestAttributes(
+		    labTestAttributeType, value, from, to, includeVoided);
 		if (patientId != null) {
 			// TODO: Terribly inefficient approach, make us of getLabTestAttributes(patient, labTestAttributeType, includeVoided) method rather than filtering out patients post retrieval
 			List<LabTestAttribute> finalList = new ArrayList<LabTestAttribute>();
@@ -613,8 +614,8 @@ public class CommonLabTestController {
 			}
 			return finalList;
 		}
-		return Context.getService(CommonLabTestServiceImpl.class).getLabTestAttributes(labTestAttributeType, value,
-		    from, to, includeVoided);
+		return Context.getService(CommonLabTestServiceImpl.class).getLabTestAttributes(labTestAttributeType, value, from,
+		    to, includeVoided);
 	}
 	
 	/**

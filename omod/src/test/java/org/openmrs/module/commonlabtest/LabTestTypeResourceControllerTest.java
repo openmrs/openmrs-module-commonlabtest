@@ -56,6 +56,27 @@ public class LabTestTypeResourceControllerTest extends MainResourceControllerTes
 	
 	@Override
 	@Test
+	public void shouldGetDefaultByUuid() throws Exception {
+		MockHttpServletRequest request = request(RequestMethod.GET, getURI() + "/" + getUuid());
+		SimpleObject result = null;
+		result = deserialize(handle(request));
+		Assert.assertNotNull(result);
+		Assert.assertEquals(getUuid(), PropertyUtils.getProperty(result, "uuid"));
+	}
+	
+	@Override
+	@Test
+	public void shouldGetRefByUuid() throws Exception {
+		MockHttpServletRequest request = request(RequestMethod.GET, getURI() + "/" + getUuid());
+		request.addParameter("v", "ref");
+		SimpleObject result = null;
+		result = deserialize(handle(request));
+		Assert.assertNotNull(result);
+		Assert.assertEquals(getUuid(), PropertyUtils.getProperty(result, "uuid"));
+	}
+	
+	@Override
+	@Test
 	public void shouldGetFullByUuid() throws Exception {
 		MockHttpServletRequest request = request(RequestMethod.GET, getURI() + "/" + getUuid());
 		request.addParameter("v", "full");

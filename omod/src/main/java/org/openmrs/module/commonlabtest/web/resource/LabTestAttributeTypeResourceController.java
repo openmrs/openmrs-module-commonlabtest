@@ -53,12 +53,10 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("uuid");
-		
 		description.addSelfLink();
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		description.addProperty("display");
 		if (representation instanceof DefaultRepresentation) {
-			
 			description.addProperty("labTestType");
 			description.addProperty("labTestAttributeTypeId");
 			description.addProperty("sortWeight");
@@ -67,10 +65,8 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 			description.addProperty("datatypeConfig");
 			description.addProperty("preferredHandlerClassname");
 			description.addProperty("handlerConfig");
-			
 			return description;
 		} else if (representation instanceof FullRepresentation) {
-			
 			description.addProperty("uuid");
 			description.addProperty("labTestType");
 			description.addProperty("labTestAttributeTypeId");
@@ -80,13 +76,10 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 			description.addProperty("datatypeConfig");
 			description.addProperty("preferredHandlerClassname");
 			description.addProperty("handlerConfig");
-			
 			description.addProperty("creator");
 			description.addProperty("dateCreated");
-			
 			description.addProperty("changedBy");
 			description.addProperty("dateChanged");
-			
 			description.addProperty("retired");
 			description.addProperty("dateRetired");
 			description.addProperty("retiredBy");
@@ -99,11 +92,10 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
-		
-		description.addProperty("labTestType");
+		description.addRequiredProperty("labTestType");
+		description.addRequiredProperty("datatypeClassname");
 		description.addProperty("sortWeight");
 		description.addProperty("maxOccurs");
-		description.addProperty("datatypeClassname");
 		description.addProperty("datatypeConfig");
 		description.addProperty("preferredHandlerClassname");
 		description.addProperty("handlerConfig");

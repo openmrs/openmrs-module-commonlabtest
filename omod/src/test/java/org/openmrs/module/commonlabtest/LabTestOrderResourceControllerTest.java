@@ -25,7 +25,7 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 	
 	@Override
 	public long getAllCount() {
-		return 0;
+		return 8;
 	}
 	
 	@Override
@@ -35,7 +35,6 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 	
 	@Override
 	public String getUuid() {
-		//Lf:GXP-IRS12345
 		return "d175e92e-47bf-11e8-943c-40b034c3cfee";
 	}
 	
@@ -48,7 +47,6 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 		result = deserialize(handle(request));
 		Assert.assertNotNull(result);
 		Assert.assertEquals(getUuid(), PropertyUtils.getProperty(result, "uuid"));
-		
 	}
 	
 	@Override
@@ -86,29 +84,6 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 		labTestOrder.add("resultComments", "test Comments");
 		labTestOrder.add("labTestType", "a277edf4-46ea-11e8-943c-40b034c3cfee");
 		labTestOrder.add("order", "863c6448-51e8-11e8-b60d-080027ea421d");
-		
-		MockHttpServletRequest newPostRequest = newPostRequest(getURI(), labTestOrder);
-		MockHttpServletResponse handle = handle(newPostRequest);
-		SimpleObject objectCreated = deserialize(handle);
-		Assert.assertNotNull(objectCreated);
-	}
-	
-	@Test
-	public void shouldSaveWithOrder() throws Exception {
-		SimpleObject orderObject = new SimpleObject();
-		orderObject.add("orderType", "52a447d3-a64a-11e3-9aeb-50e549534c5e");
-		orderObject.add("patient", "1f6959e5-d15a-4025-bb48-340ee9e2c58d");
-		orderObject.add("concept", "a8102d6d-c528-477a-80bd-acc38ebc6252");
-		orderObject.add("instructions", "Perform test");
-		orderObject.add("encounter", "84aa0e76-52c0-11e8-b60d-080027ea421d");
-		orderObject.add("orderer", "e90a12be-85f7-4821-9360-2f5a2816279e");
-		
-		SimpleObject labTestOrder = new SimpleObject();
-		labTestOrder.add("labReferenceNumber", "123");
-		labTestOrder.add("labInstructions", "test data");
-		labTestOrder.add("resultComments", "test Comments");
-		labTestOrder.add("labTestType", "a277edf4-46ea-11e8-943c-40b034c3cfee");
-		labTestOrder.add("order", orderObject);
 		
 		MockHttpServletRequest newPostRequest = newPostRequest(getURI(), labTestOrder);
 		MockHttpServletResponse handle = handle(newPostRequest);
