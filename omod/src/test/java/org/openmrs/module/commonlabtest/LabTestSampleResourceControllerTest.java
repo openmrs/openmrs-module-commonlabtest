@@ -15,7 +15,6 @@ package org.openmrs.module.commonlabtest;
 
 import static org.junit.Assert.fail;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,37 +79,5 @@ public class LabTestSampleResourceControllerTest extends MainResourceControllerT
 		MockHttpServletResponse handle = handle(newPostRequest);
 		SimpleObject objectCreated = deserialize(handle);
 		Assert.assertNotNull(objectCreated);
-	}
-	
-	@Override
-	@Test
-	public void shouldGetDefaultByUuid() throws Exception {
-		MockHttpServletRequest request = request(RequestMethod.GET, getURI() + "/" + getUuid());
-		SimpleObject result = null;
-		result = deserialize(handle(request));
-		Assert.assertNotNull(result);
-		Assert.assertEquals(getUuid(), PropertyUtils.getProperty(result, "uuid"));
-	}
-	
-	@Override
-	@Test
-	public void shouldGetRefByUuid() throws Exception {
-		MockHttpServletRequest request = request(RequestMethod.GET, getURI() + "/" + getUuid());
-		request.addParameter("v", "ref");
-		SimpleObject result = null;
-		result = deserialize(handle(request));
-		Assert.assertNotNull(result);
-		Assert.assertEquals(getUuid(), PropertyUtils.getProperty(result, "uuid"));
-	}
-	
-	@Override
-	@Test
-	public void shouldGetFullByUuid() throws Exception {
-		MockHttpServletRequest request = request(RequestMethod.GET, getURI() + "/" + getUuid());
-		request.addParameter("v", "full");
-		SimpleObject result = null;
-		result = deserialize(handle(request));
-		Assert.assertNotNull(result);
-		Assert.assertEquals(getUuid(), PropertyUtils.getProperty(result, "uuid"));
 	}
 }

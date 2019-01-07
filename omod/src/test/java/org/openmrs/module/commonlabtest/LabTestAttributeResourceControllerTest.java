@@ -1,12 +1,14 @@
 package org.openmrs.module.commonlabtest;
 
+import static org.junit.Assert.fail;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.webservices.rest.SimpleObject;
+import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -25,7 +27,7 @@ public class LabTestAttributeResourceControllerTest extends MainResourceControll
 	
 	@Override
 	public long getAllCount() {
-		return commonLabTestService.getAllLabTestTypes(true).size();
+		return 3;
 	}
 	
 	@Override
@@ -53,9 +55,10 @@ public class LabTestAttributeResourceControllerTest extends MainResourceControll
 	}
 	
 	@Override
-	@Ignore
-	@Test
+	@Test(expected = ResourceDoesNotSupportOperationException.class)
 	public void shouldGetAll() throws Exception {
+		deserialize(handle(request(RequestMethod.GET, getURI())));
+		fail();
 	}
 	
 	@Override

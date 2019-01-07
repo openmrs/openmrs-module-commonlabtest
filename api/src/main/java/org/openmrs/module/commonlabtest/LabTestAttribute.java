@@ -16,7 +16,6 @@ package org.openmrs.module.commonlabtest;
 
 import org.openmrs.attribute.Attribute;
 import org.openmrs.attribute.BaseAttribute;
-import org.openmrs.customdatatype.InvalidCustomValueException;
 
 /**
  * This class represents attribtues of a LabTest object; it extends BaseAttribute class and
@@ -42,16 +41,6 @@ public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTes
 	
 	public void setLabTestAttributeId(Integer labTestAttributeId) {
 		this.labTestAttributeId = labTestAttributeId;
-	}
-	
-	@Override
-	public Object getValue() {
-		return super.getValue();
-	}
-	
-	@Override
-	public <T> void setValue(T typedValue) throws InvalidCustomValueException {
-		super.setValue(typedValue);
 	}
 	
 	/**

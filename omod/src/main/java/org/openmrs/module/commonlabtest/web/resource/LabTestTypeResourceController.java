@@ -9,6 +9,7 @@ import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
@@ -62,7 +63,6 @@ public class LabTestTypeResourceController extends MetadataDelegatingCrudResourc
 			description.addProperty("testGroup");
 			description.addProperty("shortName");
 			description.addProperty("requiresSpecimen");
-			description.addProperty("referenceConcept", Representation.REF);
 			description.addProperty("name");
 			description.addProperty("description");
 			return description;
@@ -76,9 +76,8 @@ public class LabTestTypeResourceController extends MetadataDelegatingCrudResourc
 			description.addProperty("auditInfo");
 			return description;
 		} else if (representation instanceof RefRepresentation) {
+			description.addProperty("name");
 			description.addProperty("testGroup");
-			description.addProperty("shortName");
-			description.addProperty("referenceConcept");
 			return description;
 		}
 		return description;
@@ -103,5 +102,17 @@ public class LabTestTypeResourceController extends MetadataDelegatingCrudResourc
 	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
 		List<LabTestType> list = commonLabTestService.getAllLabTestTypes(false);
 		return new NeedsPaging<LabTestType>(list, context);
+	}
+	
+	/**
+	 * @param LabTestType
+	 * @return description as Display
+	 */
+	@Override
+	@PropertyGetter("display")
+	public String getDisplayString(LabTestType labTestType) {
+		if (labTestType == null)
+			return "";
+		return labTestType.getDescription();
 	}
 }

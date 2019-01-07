@@ -1,8 +1,7 @@
 package org.openmrs.module.commonlabtest.web.resource;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,13 +38,6 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 	private CommonLabTestService commonLabTestService = Context.getService(CommonLabTestService.class);
 	
 	@Override
-	protected PageableResult doSearch(RequestContext context) {
-		String pId = context.getRequest().getParameter("patientId");
-		Patient patient = Context.getPatientService().getPatient(Integer.parseInt(pId));
-		return new NeedsPaging<LabTest>(commonLabTestService.getLabTests(patient, false), context);
-	}
-	
-	@Override
 	public LabTest getByUniqueId(String s) {
 		return commonLabTestService.getLabTestByUuid(s);
 	}
@@ -70,10 +62,12 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 					break;
 				}
 			}
-			Set<LabTestAttribute> attributes = labTest.getAttributes();
 			List<LabTestAttribute> labTestAttributes = null;
-			if (attributes.size() > 0) {
-				labTestAttributes = Arrays.asList(attributes.toArray(new LabTestAttribute[] {}));
+			if (!labTest.getAttributes().isEmpty()) {
+				labTestAttributes = new ArrayList<LabTestAttribute>();
+				for (LabTestAttribute attribute : labTest.getAttributes()) {
+					labTestAttributes.add(attribute);
+				}
 			}
 			// See if the order already exists
 			Order existing = Context.getOrderService().getOrderByUuid(labTest.getOrder().getUuid());
@@ -103,34 +97,20 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		description.addProperty("display");
 		if (representation instanceof DefaultRepresentation) {
-			description.addProperty("uuid");
-			description.addProperty("testOrderId");
 			description.addProperty("order");
-			description.addProperty("labTestType");
+			description.addProperty("labTestType", Representation.REF);
 			description.addProperty("labReferenceNumber");
 			return description;
 		} else if (representation instanceof FullRepresentation) {
-			description.addProperty("uuid");
-			description.addProperty("testOrderId");
 			description.addProperty("order");
 			description.addProperty("labTestType");
 			description.addProperty("labReferenceNumber");
 			description.addProperty("labTestSamples");
 			description.addProperty("attributes");
-			description.addProperty("creator");
-			description.addProperty("dateCreated");
-			description.addProperty("changedBy");
-			description.addProperty("dateChanged");
-			description.addProperty("voided");
-			description.addProperty("dateVoided");
-			description.addProperty("voidedBy");
-			description.addProperty("voidReason");
+			description.addProperty("auditInfo");
 			return description;
 		} else if (representation instanceof RefRepresentation) {
-			description.addProperty("uuid");
-			description.addProperty("testOrderId");
 			description.addProperty("order");
-			description.addProperty("labTestType");
 			description.addProperty("labReferenceNumber");
 			return description;
 		}
@@ -138,23 +118,14 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 	}
 	
 	@Override
-	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
-		List<LabTest> list = commonLabTestService.getLabTests(
-		    Context.getPatientService().getPatient(Integer.parseInt(context.getRequest().getParameter("patientId"))), true);
-		return new NeedsPaging<LabTest>(list, context);
-	}
-	
-	@Override
 	public DelegatingResourceDescription getCreatableProperties() throws ResourceDoesNotSupportOperationException {
 		DelegatingResourceDescription delegatingResourceDescription = new DelegatingResourceDescription();
-		delegatingResourceDescription.addProperty("labReferenceNumber");
+		delegatingResourceDescription.addRequiredProperty("order");
+		delegatingResourceDescription.addRequiredProperty("labTestType");
+		delegatingResourceDescription.addRequiredProperty("labReferenceNumber");
 		delegatingResourceDescription.addProperty("labInstructions");
 		delegatingResourceDescription.addProperty("resultComments");
-		delegatingResourceDescription.addProperty("labTestType");
 		delegatingResourceDescription.addProperty("labTestSamples");
-		delegatingResourceDescription.addProperty("order");
-		delegatingResourceDescription.addProperty("patient");
-		delegatingResourceDescription.addProperty("attributes");
 		return delegatingResourceDescription;
 	}
 	
@@ -167,5 +138,17 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 		if (labTest == null)
 			return "";
 		return labTest.getLabReferenceNumber();
+	}
+	
+	@Override
+	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
+		throw new ResourceDoesNotSupportOperationException();
+	}
+	
+	@Override
+	protected PageableResult doSearch(RequestContext context) {
+		String uuid = context.getRequest().getParameter("patient");
+		Patient patient = Context.getPatientService().getPatientByUuid(uuid);
+		return new NeedsPaging<LabTest>(commonLabTestService.getLabTests(patient, false), context);
 	}
 }

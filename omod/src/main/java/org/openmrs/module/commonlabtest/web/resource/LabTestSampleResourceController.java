@@ -89,14 +89,7 @@ public class LabTestSampleResourceController extends DataDelegatingCrudResource<
 			description.addProperty("status");
 			description.addProperty("sampleIdentifier");
 			description.addProperty("comments");
-			description.addProperty("creator");
-			description.addProperty("dateCreated");
-			description.addProperty("changedBy");
-			description.addProperty("dateChanged");
-			description.addProperty("voided");
-			description.addProperty("dateVoided");
-			description.addProperty("voidedBy");
-			description.addProperty("voidReason");
+			description.addProperty("auditInfo");
 			return description;
 		} else if (representation instanceof RefRepresentation) {
 			description.addProperty("labTest", Representation.REF);
