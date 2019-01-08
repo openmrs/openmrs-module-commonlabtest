@@ -603,8 +603,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	 */
 	private void handleUnknownTestTypeOperation(LabTestType labTestType) {
 		if (labTestType.getUuid().equals(LabTestType.UNKNOWN_TEST_UUID)) {
-			throw new UnchangeablePropertyException("The LabTestType: UNKNOWN " + LabTestType.UNKNOWN_TEST_UUID
-			        + " is mandatory, and cannot be altered.");
+			throw new UnchangeablePropertyException(
+			        "The LabTestType: UNKNOWN " + LabTestType.UNKNOWN_TEST_UUID + " is mandatory, and cannot be altered.");
 		}
 	}
 	
@@ -765,7 +765,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		}
 		for (LabTestAttribute attribute : labTest.getAttributes()) {
 			boolean reasonMatched = attribute.getVoidReason().equals(labTest.getVoidReason());
-			boolean dateMatched = DateUtil.truncateToSeconds(labTest.getDateVoided()).compareTo(attribute.getDateVoided()) == 0;
+			boolean dateMatched = DateUtil.truncateToSeconds(labTest.getDateVoided())
+			        .compareTo(attribute.getDateVoided()) == 0;
 			if (reasonMatched && dateMatched) {
 				unvoidLabTestAttribute(attribute);
 			}
@@ -925,7 +926,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	 * @param newObjectForCascade
 	 * @param voidMessage
 	 */
-	private void handleLabTestTypeDependencies(LabTestType labTestType, LabTestType newObjectForCascade, String voidMessage) {
+	private void handleLabTestTypeDependencies(LabTestType labTestType, LabTestType newObjectForCascade,
+	        String voidMessage) {
 		List<LabTest> labTests = getLabTests(labTestType, true);
 		if (labTests != null) {
 			for (LabTest labTest : labTests) {

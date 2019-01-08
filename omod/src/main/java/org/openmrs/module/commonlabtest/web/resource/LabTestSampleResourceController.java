@@ -18,7 +18,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
-@Resource(name = RestConstants.VERSION_1 + "/commonlab/labtestsample", supportedClass = LabTestSample.class, supportedOpenmrsVersions = { "2.0.*,2.1.*" })
+@Resource(name = RestConstants.VERSION_1
+        + "/commonlab/labtestsample", supportedClass = LabTestSample.class, supportedOpenmrsVersions = { "2.0.*,2.1.*" })
 public class LabTestSampleResourceController extends DataDelegatingCrudResource<LabTestSample> {
 	
 	/**

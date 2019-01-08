@@ -47,8 +47,8 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 	
 	ConceptService conceptService;
 	
-	File dir = OpenmrsUtil.getDirectoryInApplicationDataDirectory(Context.getAdministrationService().getGlobalProperty(
-	    OpenmrsConstants.GLOBAL_PROPERTY_COMPLEX_OBS_DIR));
+	File dir = OpenmrsUtil.getDirectoryInApplicationDataDirectory(
+	    Context.getAdministrationService().getGlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_COMPLEX_OBS_DIR));
 	
 	Path path = Paths.get(dir.getPath() + "/commonLabTestFiles");
 	

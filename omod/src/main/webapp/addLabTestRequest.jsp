@@ -1,71 +1,75 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
-<openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${patientId}"/>  
-<openmrs:require privilege="Add CommonLabTest Orders" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestRequest.form" />
-  
+<openmrs:portlet url="patientHeader" id="patientDashboardHeader"
+	patientId="${patientId}" />
+<openmrs:require privilege="Add CommonLabTest Orders"
+	otherwise="/login.htm"
+	redirect="/module/commonlabtest/addLabTestRequest.form" />
+
 <html>
 <head>
-		<link type="text/css" rel="stylesheet"
-			href="/openmrs/moduleResources/commonlabtest/css/commonlabtest.css" />
-		<link
-			href="/openmrs/moduleResources/commonlabtest/font-awesome/css/font-awesome.min.css"
-			rel="stylesheet" />
-		<link
-			href="/openmrs/moduleResources/commonlabtest/css/bootstrap.min.css"
-			rel="stylesheet" />
-		<link
-			href="/openmrs/moduleResources/commonlabtest/css/style.css"
-			rel="stylesheet" />	
-		<link href="/openmrs/moduleResources/commonlabtest/css/dataTables.bootstrap4.min.css"
-	         rel="stylesheet" />	
+<link type="text/css" rel="stylesheet"
+	href="/openmrs/moduleResources/commonlabtest/css/commonlabtest.css" />
+<link
+	href="/openmrs/moduleResources/commonlabtest/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet" />
+<link
+	href="/openmrs/moduleResources/commonlabtest/css/bootstrap.min.css"
+	rel="stylesheet" />
+<link href="/openmrs/moduleResources/commonlabtest/css/style.css"
+	rel="stylesheet" />
+<link
+	href="/openmrs/moduleResources/commonlabtest/css/dataTables.bootstrap4.min.css"
+	rel="stylesheet" />
 
 </head>
 <style>
 body {
-    font-size: 12px;
-    font-family: Verdana;
+	font-size: 12px;
+	font-family: Verdana;
 }
 
 input[type=submit] {
-    background-color: #1aac9b;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-
+	background-color: #1aac9b;
+	color: white;
+	padding: 12px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
 }
+
 input[type=button] {
-    background-color: #1aac9b;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+	background-color: #1aac9b;
+	color: white;
+	padding: 12px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
 
-}
 #saveUpdateButton {
-    text-align: center;
+	text-align: center;
 }
+
 fieldset.scheduler-border {
-    border: 1px groove #ddd !important;
-    padding: 0 1.4em 1.4em 1.4em !important;
-    margin: 0 0 1.5em 0 !important;
-    -webkit-box-shadow:  0px 0px 0px 0px #1aac9b;
-    box-shadow:  0px 0px 0px 0px #1aac9b;
+	border: 1px groove #ddd !important;
+	padding: 0 1.4em 1.4em 1.4em !important;
+	margin: 0 0 1.5em 0 !important;
+	-webkit-box-shadow: 0px 0px 0px 0px #1aac9b;
+	box-shadow: 0px 0px 0px 0px #1aac9b;
 }
 
 legend.scheduler-border {
-    font-size: 1.2em !important;
-    font-weight: bold !important;
-    text-align: left !important;
-    width:auto;
-    padding:0 10px;
-    border-bottom:none;
+	font-size: 1.2em !important;
+	font-weight: bold !important;
+	text-align: left !important;
+	width: auto;
+	padding: 0 10px;
+	border-bottom: none;
 }
-.row{
-    margin-bottom:15px;
 
+.row {
+	margin-bottom: 15px;
 }
 /* #testRequestTable {
 table-layout: fixed;
@@ -74,99 +78,101 @@ table-layout: fixed;
 
 /*Collapse  */
 /* FANCY COLLAPSE PANEL STYLES */
-.fancy-collapse-panel .panel-default > .panel-heading {
-    padding: 0;
-    size: 12px;
-
+.fancy-collapse-panel .panel-default>.panel-heading {
+	padding: 0;
+	size: 12px;
 }
+
 .fancy-collapse-panel .panel-heading a {
-    padding: 10px 35px 10px 15px;
-    display: inline-block;
-    width: 100%;
-    background-color: #1aac9b;
-    color: white !important;
-    position: relative;
-    text-decoration: none;
-    font-size: 16px;
+	padding: 10px 35px 10px 15px;
+	display: inline-block;
+	width: 100%;
+	background-color: #1aac9b;
+	color: white !important;
+	position: relative;
+	text-decoration: none;
+	font-size: 16px;
 }
 
 .fancy-collapse-panel .panel-heading a:hover {
-    color: white !important;
+	color: white !important;
 }
+
 .fancy-collapse-panel .panel-heading a:after {
-    font-family: "FontAwesome";
-    content: "\f147";
-    position: absolute;
-    right: 20px;
-    font-size: 20px;
-    font-weight: 400;
-    top: 50%;
-    line-height: 1;
-    color: white;
-    margin-top: -10px;
+	font-family: "FontAwesome";
+	content: "\f147";
+	position: absolute;
+	right: 20px;
+	font-size: 20px;
+	font-weight: 400;
+	top: 50%;
+	line-height: 1;
+	color: white;
+	margin-top: -10px;
 }
 </style>
 <body>
-    <br>
-    <!-- Error message -->
-     <c:if test="${not empty error}">
-        <div class="alert alert-danger">
-            <a href="#" class="close" data-dismiss="alert">&times;</a>
-            <strong>Error!</strong>
-            <c:out value="${error}" />
-        </div>
-    </c:if>
-    <div id="alert_placeholder"></div>
-    <br>
-    <fieldset class="scheduler-border" style="margin-top:320px;">
-        <legend class="scheduler-border">
-            <spring:message code="commonlabtest.request.add" />
-        </legend>
-        <br>
-        <!--     <form id="labTestForm" method="post" onsubmit="return submitAndValidate()"> -->
-        <div class="row">
-            <div class="col-md-2">
-                <label class="control-label" path="encounter">
-                    <spring:message code="general.encounter" /><span class=" text-danger required">*</span></label>
-            </div>
-            <div class="col-md-4">
-                <select class="form-control" id="encounter_id">
-                    <c:if test="${not empty encounters}">
-                        <c:forEach var="encounter" items="${encounters}">
-                            <option value="${encounter.encounterId}">${encounter.getEncounterType().getName()}</option>
-                        </c:forEach>
-                    </c:if>
-                </select>
-                <span id="encounters" class="text-danger "></span>
-            </div>
-        </div>
-        <br>
-        <div>
-            <div class="row">
-                <div class="col-md-12 col-md-offset-12 col-sm-12col-sm-offset-12">
-                    <div class="fancy-collapse-panel">
-                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+	<br>
+	<!-- Error message -->
+	<c:if test="${not empty error}">
+		<div class="alert alert-danger">
+			<a href="#" class="close" data-dismiss="alert">&times;</a> <strong>Error!</strong>
+			<c:out value="${error}" />
+		</div>
+	</c:if>
+	<div id="alert_placeholder"></div>
+	<br>
+	<fieldset class="scheduler-border" style="margin-top: 320px;">
+		<legend class="scheduler-border">
+			<spring:message code="commonlabtest.request.add" />
+		</legend>
+		<br>
+		<!--     <form id="labTestForm" method="post" onsubmit="return submitAndValidate()"> -->
+		<div class="row">
+			<div class="col-md-2">
+				<label class="control-label" path="encounter"> <spring:message
+						code="general.encounter" /><span class=" text-danger required">*</span></label>
+			</div>
+			<div class="col-md-4">
+				<select class="form-control" id="encounter_id">
+					<c:if test="${not empty encounters}">
+						<c:forEach var="encounter" items="${encounters}">
+							<option value="${encounter.encounterId}">${encounter.getEncounterType().getName()}</option>
+						</c:forEach>
+					</c:if>
+				</select> <span id="encounters" class="text-danger "></span>
+			</div>
+		</div>
+		<br>
+		<div>
+			<div class="row">
+				<div class="col-md-12 col-md-offset-12 col-sm-12col-sm-offset-12">
+					<div class="fancy-collapse-panel">
+						<div class="panel-group" id="accordion" role="tablist"
+							aria-multiselectable="true">
 
-                            <div id="panel-container"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Submit ,Edit CommonLabTest Orders -->
-        <div class="row">
-            <div class="col-md-2">
-                <openmrs:hasPrivilege privilege="Add CommonLabTest Orders">
-                    <input type="submit" onclick="return submitAndValidate()" value="Save Test Request"></input>
-                </openmrs:hasPrivilege>
-            </div>
-            <div class="col-md-2">
-                <input type="button" onclick="location.href = '${pageContext.request.contextPath}/patientDashboard.form?patientId=${patientId}';"
-                    value="Cancel"></input>
-            </div>
-        </div>
-        <!-- </form> -->
-    </fieldset>
+							<div id="panel-container"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Submit ,Edit CommonLabTest Orders -->
+		<div class="row">
+			<div class="col-md-2">
+				<openmrs:hasPrivilege privilege="Add CommonLabTest Orders">
+					<input type="submit" onclick="return submitAndValidate()"
+						value="Save Test Request"></input>
+				</openmrs:hasPrivilege>
+			</div>
+			<div class="col-md-2">
+				<input type="button"
+					onclick="location.href = '${pageContext.request.contextPath}/patientDashboard.form?patientId=${patientId}';"
+					value="Cancel"></input>
+			</div>
+		</div>
+		<!-- </form> -->
+	</fieldset>
 </body>
 
 <!--JAVA SCRIPT  -->

@@ -112,8 +112,8 @@ public class LabTestAttributeTypeController {
 	public String onRetire(ModelMap model, HttpSession httpSession, HttpServletRequest request,
 	        @RequestParam("uuid") String uuid, @RequestParam("retireReason") String retireReason) {
 		
-		LabTestAttributeType attributeType = Context.getService(CommonLabTestService.class).getLabTestAttributeTypeByUuid(
-		    uuid);
+		LabTestAttributeType attributeType = Context.getService(CommonLabTestService.class)
+		        .getLabTestAttributeTypeByUuid(uuid);
 		String status = "";
 		if (Context.getAuthenticatedUser() == null) {
 			return "redirect:../../login.htm";
@@ -147,8 +147,8 @@ public class LabTestAttributeTypeController {
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/deletelabtestattributetype.form")
 	public String onDelete(ModelMap model, HttpSession httpSession, HttpServletRequest request,
 	        @RequestParam("uuid") String uuid) {
-		LabTestAttributeType attributeType = Context.getService(CommonLabTestService.class).getLabTestAttributeTypeByUuid(
-		    uuid);
+		LabTestAttributeType attributeType = Context.getService(CommonLabTestService.class)
+		        .getLabTestAttributeTypeByUuid(uuid);
 		String status;
 		if (Context.getAuthenticatedUser() == null) {
 			return "redirect:../../login.htm";

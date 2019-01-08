@@ -41,13 +41,13 @@ public class CommonLabTestConfig {
 	
 	public static final String DELETE_LAB_TEST_PRIVILEGE = "Delete CommonLabTest Orders";
 	
-	public static final String ADD_LAB_RESULT_PRIVILEGE = "Add CommonLabTest results";
+	public static final String ADD_LAB_RESULT_PRIVILEGE = "Add CommonLabTest Results";
 	
-	public static final String EDIT_LAB_RESULT_PRIVILEGE = "Edit CommonLabTest results";
+	public static final String EDIT_LAB_RESULT_PRIVILEGE = "Edit CommonLabTest Results";
 	
-	public static final String VIEW_LAB_RESULT_PRIVILEGE = "View CommonLabTest results";
+	public static final String VIEW_LAB_RESULT_PRIVILEGE = "View CommonLabTest Results";
 	
-	public static final String DELETE_LAB_RESULT_PRIVILEGE = "Delete CommonLabTest results";
+	public static final String DELETE_LAB_RESULT_PRIVILEGE = "Delete CommonLabTest Results";
 	
 	public static final Boolean AUTO_VOID_REJECTED_SAMPLES = Boolean.TRUE;
 }

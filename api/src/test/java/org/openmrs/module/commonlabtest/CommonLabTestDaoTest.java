@@ -603,7 +603,8 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 		
 		LabTestAttributeType savedAttributeType = dao.getLabTestAttributeTypeByUuid(attributeType.getUuid());
 		assertThat(savedAttributeType, Matchers.hasProperty("uuid", org.hamcrest.Matchers.is(attributeType.getUuid())));
-		assertThat(savedAttributeType, Matchers.hasProperty("creator", org.hamcrest.Matchers.is(attributeType.getCreator())));
+		assertThat(savedAttributeType,
+		    Matchers.hasProperty("creator", org.hamcrest.Matchers.is(attributeType.getCreator())));
 	}
 	
 	/**

@@ -74,16 +74,16 @@ public class LabTestSampleController {
 		}
 		
 		//get Specimen Type .
-		String specimenTypeUuid = Context.getAdministrationService().getGlobalProperty(
-		    "commonlabtest.specimenTypeConceptUuid");
+		String specimenTypeUuid = Context.getAdministrationService()
+		        .getGlobalProperty("commonlabtest.specimenTypeConceptUuid");
 		Concept specimenType = Context.getConceptService().getConceptByUuid(specimenTypeUuid);
 		if (specimenType != null && specimenType.getSetMembers().size() > 0) {
 			List<Concept> specimenTypeConcepts = specimenType.getSetMembers();
 			model.put("specimenType", specimenTypeConcepts);
 		}
 		//get Specimen Site 
-		String specimenSiteUuid = Context.getAdministrationService().getGlobalProperty(
-		    "commonlabtest.specimenSiteConceptUuid");
+		String specimenSiteUuid = Context.getAdministrationService()
+		        .getGlobalProperty("commonlabtest.specimenSiteConceptUuid");
 		Concept specimenSiteSet = Context.getConceptService().getConceptByUuid(specimenSiteUuid);
 		if (specimenSiteSet != null && specimenSiteSet.getAnswers().size() > 0) {
 			Collection<ConceptAnswer> specimenSiteConcepts = specimenSiteSet.getAnswers();
@@ -115,9 +115,8 @@ public class LabTestSampleController {
 		model.addAttribute("orderEncDate", orderDate);
 		model.addAttribute("orderId", orderId);
 		model.addAttribute("error", error);
-		model.addAttribute("provider",
-		    Context.getProviderService().getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator()
-		            .next());
+		model.addAttribute("provider", Context.getProviderService()
+		        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
 		return SUCCESS_ADD_FORM_VIEW;
 	}
 	

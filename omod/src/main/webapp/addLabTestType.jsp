@@ -1,6 +1,7 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
-<%@ include file="/WEB-INF/view/module/commonlabtest/include/localHeader.jsp"%>
+<%@ include
+	file="/WEB-INF/view/module/commonlabtest/include/localHeader.jsp"%>
 <!-- <openmrs:require anyPrivilege="Add CommonLabTest Metadata, Edit CommonLabTest Metadata" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestType.form" />
  -->
 <link type="text/css" rel="stylesheet"
@@ -13,229 +14,249 @@
 	rel="stylesheet" />
 
 <style>
-
 body {
-    font-size: 12px;
+	font-size: 12px;
 }
 
 input[type=submit] {
-    background-color: #1aac9b;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-
+	background-color: #1aac9b;
+	color: white;
+	padding: 12px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
 }
+
 input[type=button] {
-    background-color: #1aac9b;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+	background-color: #1aac9b;
+	color: white;
+	padding: 12px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
 
-}
 #saveUpdateButton {
-    text-align: center;
+	text-align: center;
 }
+
 fieldset.scheduler-border {
-    border: 1px groove #ddd !important;
-    padding: 0 1.4em 1.4em 1.4em !important;
-    margin: 0 0 1.5em 0 !important;
-    -webkit-box-shadow:  0px 0px 0px 0px #1aac9b;
-    box-shadow: 0px 0px 14px 0px #1aac9b61;
+	border: 1px groove #ddd !important;
+	padding: 0 1.4em 1.4em 1.4em !important;
+	margin: 0 0 1.5em 0 !important;
+	-webkit-box-shadow: 0px 0px 0px 0px #1aac9b;
+	box-shadow: 0px 0px 14px 0px #1aac9b61;
 }
 
 legend.scheduler-border {
-    font-size: 1.2em !important;
-    font-weight: bold !important;
-    text-align: left !important;
-    width:auto;
-    padding:0 10px;
-    border-bottom:none;
+	font-size: 1.2em !important;
+	font-weight: bold !important;
+	text-align: left !important;
+	width: auto;
+	padding: 0 10px;
+	border-bottom: none;
 }
-.row{
-    margin-bottom:15px;
 
+.row {
+	margin-bottom: 15px;
 }
 </style>
 <body>
-    <div class="container">
-        <c:if test="${not empty error}">
-            <div class="alert alert-danger">
-                <a href="#" class="close" data-dismiss="alert">&times;</a>
-                <strong>Error!</strong>
-                <c:out value="${error}" />
-            </div>
-        </c:if>
-        <c:set var="testType" scope="session" value="${labTestType}" />
+	<div class="container">
+		<c:if test="${not empty error}">
+			<div class="alert alert-danger">
+				<a href="#" class="close" data-dismiss="alert">&times;</a> <strong>Error!</strong>
+				<c:out value="${error}" />
+			</div>
+		</c:if>
+		<c:set var="testType" scope="session" value="${labTestType}" />
 
-        <fieldset class="scheduler-border">
-            <c:if test="${empty testType.referenceConcept.conceptId}">
-                 <openmrs:require privilege="Add CommonLabTest Metadata" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestType.form" />
-                <legend class="scheduler-border">
-                    <spring:message code="commonlabtest.labtesttype.add" />
-                </legend>
-            </c:if>
-            <c:if test="${not empty testType.referenceConcept.conceptId}">
-               <openmrs:require privilege="Edit CommonLabTest Metadata" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestType.form" />
-                <legend class="scheduler-border">
-                    <spring:message code="commonlabtest.labtesttype.edit" />
-                </legend>
-            </c:if>
-            <form:form commandName="labTestType" id="testTypeForm" onsubmit='return validate(this);'>
-                <!-- Concept Reference -->
-                <div class="row">
-                    <div class="col-md-2">
-                        <form:input path="labTestTypeId" hidden="true" id="labTestTypeId"></form:input>
-                        <form:label class="control-label" path="referenceConcept">
-                            <spring:message code="general.referenceConcept" /><span class="text-danger font-weight-bold">*</span></form:label>
-                    </div>
-                    <div class="col-md-6">
-                        <form:input id="conceptSuggestBox" path="referenceConcept" class="form-control" list="conceptOptions"
-                            placeholder="Search Concept..."></form:input>
-                        <datalist class="lowercase" id="conceptOptions"></datalist>
-                        <span id="referenceconcept" class="text-danger "> </span>
-                    </div>
-                </div>
-                <!-- Test Name -->
-                <div class="row">
-                    <div class="col-md-2">
-                        <form:label class="control-label" path="name">
-                            <spring:message code="general.testName" /><span class="text-danger font-weight-bold">*</span></form:label>
-                    </div>
-                    <div class="col-md-6">
-                        <form:input class="form-control" maxlength="50" path="name" id="name" name="name"></form:input>
-                        <span id="testname" class="text-danger"> </span>
-                    </div>
-                </div>
-                <!-- Short Name -->
-                <div class="row">
-                    <div class="col-md-2">
-                        <form:label class="control-label" path="shortName">
-                            <spring:message code="general.shortName" />
-                        </form:label>
-                    </div>
-                    <div class="col-md-6">
-                        <form:input class="form-control" maxlength="20" path="shortName" id="short_name"></form:input>
-                        <span id="shortname" class="text-danger"> </span>
+		<fieldset class="scheduler-border">
+			<c:if test="${empty testType.referenceConcept.conceptId}">
+				<openmrs:require privilege="Add CommonLabTest Metadata"
+					otherwise="/login.htm"
+					redirect="/module/commonlabtest/addLabTestType.form" />
+				<legend class="scheduler-border">
+					<spring:message code="commonlabtest.labtesttype.add" />
+				</legend>
+			</c:if>
+			<c:if test="${not empty testType.referenceConcept.conceptId}">
+				<openmrs:require privilege="Edit CommonLabTest Metadata"
+					otherwise="/login.htm"
+					redirect="/module/commonlabtest/addLabTestType.form" />
+				<legend class="scheduler-border">
+					<spring:message code="commonlabtest.labtesttype.edit" />
+				</legend>
+			</c:if>
+			<form:form commandName="labTestType" id="testTypeForm"
+				onsubmit='return validate(this);'>
+				<!-- Concept Reference -->
+				<div class="row">
+					<div class="col-md-2">
+						<form:input path="labTestTypeId" hidden="true" id="labTestTypeId"></form:input>
+						<form:label class="control-label" path="referenceConcept">
+							<spring:message code="general.referenceConcept" />
+							<span class="text-danger font-weight-bold">*</span>
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:input id="conceptSuggestBox" path="referenceConcept"
+							class="form-control" list="conceptOptions"
+							placeholder="Search Concept..."></form:input>
+						<datalist class="lowercase" id="conceptOptions"></datalist>
+						<span id="referenceconcept" class="text-danger "> </span>
+					</div>
+				</div>
+				<!-- Test Name -->
+				<div class="row">
+					<div class="col-md-2">
+						<form:label class="control-label" path="name">
+							<spring:message code="general.testName" />
+							<span class="text-danger font-weight-bold">*</span>
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:input class="form-control" maxlength="50" path="name"
+							id="name" name="name"></form:input>
+						<span id="testname" class="text-danger"> </span>
+					</div>
+				</div>
+				<!-- Short Name -->
+				<div class="row">
+					<div class="col-md-2">
+						<form:label class="control-label" path="shortName">
+							<spring:message code="general.shortName" />
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:input class="form-control" maxlength="20" path="shortName"
+							id="short_name"></form:input>
+						<span id="shortname" class="text-danger"> </span>
 
-                    </div>
-                </div>
-                <!-- Description -->
-                <div class="row">
-                    <div class="col-md-2">
-                        <form:label class="control-label" path="description">
-                            <spring:message code="general.description" />
-                        </form:label>
-                    </div>
-                    <div class="col-md-6">
-                        <form:textarea class="form-control" maxlength="255" path="description" id="description" rows="5"></form:textarea>
-                    </div>
-                </div>
-                <!-- Test Group -->
-                <div class="row">
-                    <div class="col-md-2">
-                        <form:label class="control-label" path="testGroup">
-                            <spring:message code="general.testGroup" />
-                        </form:label>
-                    </div>
-                    <div class="col-md-6">
-                        <form:select class="form-control" path="testGroup" id="testGroup">
-                            <form:options items="${LabTestGroup}" />
-                            <c:forEach items="${LabTestGroup}">
-                                <option value="${LabTestGroup}">${LabTestGroup}</option>
-                            </c:forEach>
-                        </form:select>
-                    </div>
-                </div>
-                <!-- Specimen -->
-                <div class="row">
-                    <div class="col-md-2">
-                        <form:label class="form-check-label" path="requiresSpecimen">
-                            <spring:message code="general.requiresSpecimen" />
-                        </form:label>
-                    </div>
-                    <div class="col-md-6">
-                        <span style="margin-right: 25px"></span>
-                        <form:radiobutton class="form-check-input" path="requiresSpecimen" value="true" />Yes
-                        <span style="margin-right: 25px"></span>
-                        <form:radiobutton class="form-check-input" path="requiresSpecimen" value="false" />No
-                    </div>
-                </div>
-                <c:if test="${not empty testType.referenceConcept.conceptId}">
-                    <!-- Date Create -->
-                    <div class="row">
-                        <div class="col-md-2">
-                            <form:label class="control-label" path="creator">
-                                <spring:message code="general.createdBy" />
-                            </form:label>
-                        </div>
-                        <div class="col-md-6">
-                            <c:out value="${testType.creator.personName}" /> -
-                            <c:out value="${testType.dateCreated}" />
-                        </div>
-                    </div>
-                    <!-- UUID -->
-                    <div class="row">
-                        <div class="col-md-2">
-                            <font color="#D0D0D0"><sub>
-                                    <spring:message code="general.uuid" /></sub></font>
-                        </div>
-                        <div class="col-md-6">
-                            <font color="#D0D0D0"><sub>
-                                    <c:out value="${testType.uuid}" /></sub></font>
-                        </div>
-                    </div>
-                </c:if>
-                <!-- Save -->
-                <div class="row">
-                    <div class="col-md-2">
-                        <input type="submit" value="Save Test Type"></input>
-                    </div>
-                    <div class="col-md-2">
-                        <input type="button" onclick="location.href = '${pageContext.request.contextPath}/module/commonlabtest/manageLabTestTypes.form';"
-                            value="Cancel"></input>
-                    </div>
-                </div>
-            </form:form>
+					</div>
+				</div>
+				<!-- Description -->
+				<div class="row">
+					<div class="col-md-2">
+						<form:label class="control-label" path="description">
+							<spring:message code="general.description" />
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:textarea class="form-control" maxlength="255"
+							path="description" id="description" rows="5"></form:textarea>
+					</div>
+				</div>
+				<!-- Test Group -->
+				<div class="row">
+					<div class="col-md-2">
+						<form:label class="control-label" path="testGroup">
+							<spring:message code="general.testGroup" />
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:select class="form-control" path="testGroup" id="testGroup">
+							<form:options items="${LabTestGroup}" />
+							<c:forEach items="${LabTestGroup}">
+								<option value="${LabTestGroup}">${LabTestGroup}</option>
+							</c:forEach>
+						</form:select>
+					</div>
+				</div>
+				<!-- Specimen -->
+				<div class="row">
+					<div class="col-md-2">
+						<form:label class="form-check-label" path="requiresSpecimen">
+							<spring:message code="general.requiresSpecimen" />
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<span style="margin-right: 25px"></span>
+						<form:radiobutton class="form-check-input" path="requiresSpecimen"
+							value="true" />
+						Yes <span style="margin-right: 25px"></span>
+						<form:radiobutton class="form-check-input" path="requiresSpecimen"
+							value="false" />
+						No
+					</div>
+				</div>
+				<c:if test="${not empty testType.referenceConcept.conceptId}">
+					<!-- Date Create -->
+					<div class="row">
+						<div class="col-md-2">
+							<form:label class="control-label" path="creator">
+								<spring:message code="general.createdBy" />
+							</form:label>
+						</div>
+						<div class="col-md-6">
+							<c:out value="${testType.creator.personName}" />
+							-
+							<c:out value="${testType.dateCreated}" />
+						</div>
+					</div>
+					<!-- UUID -->
+					<div class="row">
+						<div class="col-md-2">
+							<font color="#D0D0D0"><sub> <spring:message
+										code="general.uuid" /></sub></font>
+						</div>
+						<div class="col-md-6">
+							<font color="#D0D0D0"><sub> <c:out
+										value="${testType.uuid}" /></sub></font>
+						</div>
+					</div>
+				</c:if>
+				<!-- Save -->
+				<div class="row">
+					<div class="col-md-2">
+						<input type="submit" value="Save Test Type"></input>
+					</div>
+					<div class="col-md-2">
+						<input type="button"
+							onclick="location.href = '${pageContext.request.contextPath}/module/commonlabtest/manageLabTestTypes.form';"
+							value="Cancel"></input>
+					</div>
+				</div>
+			</form:form>
 
-        </fieldset>
-        <br>
-        <openmrs:hasPrivilege privilege="Delete CommonLabTest Metadata">
-            <c:if test="${not empty testType.referenceConcept.conceptId}">
+		</fieldset>
+		<br>
+		<openmrs:hasPrivilege privilege="Delete CommonLabTest Metadata">
+			<c:if test="${not empty testType.referenceConcept.conceptId}">
 
-                <fieldset class="scheduler-border">
-                    <legend class="scheduler-border">
-                        <spring:message code="general.test.retire" />
-                    </legend>
-                    <form method="post" action="${pageContext.request.contextPath}/module/commonlabtest/retirelabtesttype.form"
-                        onsubmit="return retireValidate()">
-                        <!-- UUID -->
-                        <div class="row">
-                            <div class="col-md-2">
-                                <input value="${labTestType.uuid}" hidden="true" id="uuid" name="uuid"></input>
-                                <label class="control-label" path="retireReason">
-                                    <spring:message code="general.retireReason" /><span class="required">*</span></label>
-                            </div>
-                            <div class="col-md-6">
-                                <input class="form-control" value="${labTestType.retireReason}" id="retireReason" name="retireReason">
-                                <span id="retirereason" class="text-danger "> </span>
+				<fieldset class="scheduler-border">
+					<legend class="scheduler-border">
+						<spring:message code="general.test.retire" />
+					</legend>
+					<form method="post"
+						action="${pageContext.request.contextPath}/module/commonlabtest/retirelabtesttype.form"
+						onsubmit="return retireValidate()">
+						<!-- UUID -->
+						<div class="row">
+							<div class="col-md-2">
+								<input value="${labTestType.uuid}" hidden="true" id="uuid"
+									name="uuid"></input> <label class="control-label"
+									path="retireReason"> <spring:message
+										code="general.retireReason" /><span class="required">*</span></label>
+							</div>
+							<div class="col-md-6">
+								<input class="form-control" value="${labTestType.retireReason}"
+									id="retireReason" name="retireReason"> <span
+									id="retirereason" class="text-danger "> </span>
 
-                            </div>
-                        </div>
-                        <!-- Retire -->
-                        <div class="row">
-                            <div class="col-md-2">
-                                <input type="submit" value="Retire Test Type"></input>
-                            </div>
-                        </div>
-                    </form>
-                </fieldset>
-            </c:if>
-        </openmrs:hasPrivilege>
-    </div>
+							</div>
+						</div>
+						<!-- Retire -->
+						<div class="row">
+							<div class="col-md-2">
+								<input type="submit" value="Retire Test Type"></input>
+							</div>
+						</div>
+					</form>
+				</fieldset>
+			</c:if>
+		</openmrs:hasPrivilege>
+	</div>
 
 </body>
 

@@ -32,7 +32,8 @@ public class ManageLabTestSampleController {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/manageLabTestSamples.form")
 	public String showLabTestSample(HttpServletRequest request, @RequestParam(required = true) Integer patientId,
-	        @RequestParam(required = false) Integer testOrderId, @RequestParam(required = false) String save, ModelMap model) {
+	        @RequestParam(required = false) Integer testOrderId, @RequestParam(required = false) String save,
+	        ModelMap model) {
 		
 		List<LabTestSample> testSample;
 		if (testOrderId == null) {

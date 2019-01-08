@@ -13,7 +13,7 @@
 <link
 	href="/openmrs/moduleResources/commonlabtest/css/bootstrap.min.css"
 	rel="stylesheet" />
-	
+
 <link type="text/css" rel="stylesheet"
 	href="/openmrs/moduleResources/commonlabtest/css/hover.css" />
 <link type="text/css" rel="stylesheet"
@@ -21,12 +21,12 @@
 <link type="text/css" rel="stylesheet"
 	href="/openmrs/moduleResources/commonlabtest/css/mdb.css" />
 <link type="text/css" rel="stylesheet"
-	href="/openmrs/moduleResources/commonlabtest/css/mdb.min.css" />	
+	href="/openmrs/moduleResources/commonlabtest/css/mdb.min.css" />
 <style>
-
 body {
 	font-size: 10px;
 }
+
 input[type=submit] {
 	background-color: #1aac9b;
 	color: white;
@@ -34,8 +34,8 @@ input[type=submit] {
 	border: none;
 	border-radius: 4px;
 	cursor: pointer;
-	
 }
+
 input[type=button] {
 	background-color: #1aac9b;
 	color: white;
@@ -43,321 +43,421 @@ input[type=button] {
 	border: none;
 	border-radius: 4px;
 	cursor: pointer;
-	
 }
+
 #saveUpdateButton {
-    text-align: center;
+	text-align: center;
 }
+
 fieldset.scheduler-border {
-    border: 1px groove #ddd !important;
-    padding: 0 1.4em 1.4em 1.4em !important;
-    margin: 0 0 1.5em 0 !important;
-    -webkit-box-shadow:  0px 0px 0px 0px #1aac9b;
-             box-shadow: 0px 0px 14px 0px #1aac9b61;
+	border: 1px groove #ddd !important;
+	padding: 0 1.4em 1.4em 1.4em !important;
+	margin: 0 0 1.5em 0 !important;
+	-webkit-box-shadow: 0px 0px 0px 0px #1aac9b;
+	box-shadow: 0px 0px 14px 0px #1aac9b61;
 }
 
 legend.scheduler-border {
-        font-size: 1.2em !important;
-        font-weight: bold !important;
-        text-align: left !important;
-        width:auto;
-        padding:0 10px;
-        border-bottom:none;
-    }
-  .row{
- margin-bottom:15px;
- 
- }
-.modal-body{
-		height: 500px;
-		overflow-y:scroll;
+	font-size: 1.2em !important;
+	font-weight: bold !important;
+	text-align: left !important;
+	width: auto;
+	padding: 0 10px;
+	border-bottom: none;
 }
- 
-</style>
-  
-<body>
-	
 
- <div class="container">
- 
-     <c:if test="${not empty error}">
-		<div class="alert alert-danger">
-			 <a href="#" class="close" data-dismiss="alert">&times;</a>
-	 		<strong>Error!</strong> <c:out value="${error}" />
+.row {
+	margin-bottom: 15px;
+}
+
+.modal-body {
+	height: 500px;
+	overflow-y: scroll;
+}
+</style>
+
+<body>
+
+
+	<div class="container">
+
+		<c:if test="${not empty error}">
+			<div class="alert alert-danger">
+				<a href="#" class="close" data-dismiss="alert">&times;</a> <strong>Error!</strong>
+				<c:out value="${error}" />
+			</div>
+		</c:if>
+		<c:set var="testAttributeType" scope="session"
+			value="${attributeType}" />
+		<fieldset class="scheduler-border">
+			<c:if test="${empty testAttributeType.name}">
+				<openmrs:require privilege="Add CommonLabTest Metadata"
+					otherwise="/login.htm"
+					redirect="/module/commonlabtest/addLabTestAttributeType.form" />
+				<legend class="scheduler-border">
+					<spring:message code="commonlabtest.labtestattributetype.add" />
+				</legend>
+			</c:if>
+			<c:if test="${not empty testAttributeType.name}">
+				<openmrs:require privilege="Edit CommonLabTest Metadata"
+					otherwise="/login.htm"
+					redirect="/module/commonlabtest/addLabTestAttributeType.form" />
+				<legend class="scheduler-border">
+					<spring:message code="commonlabtest.labtestattributetype.edit" />
+				</legend>
+			</c:if>
+			<form:form commandName="attributeType"
+				onsubmit='return validate(this);'>
+				<div class="row">
+					<div class="col-md-2">
+						<form:input path="labTestAttributeTypeId" hidden="true"
+							id="labTestAttributeTypeId"></form:input>
+						<form:label path="labTestType.labTestTypeId" class="control-label">
+							<spring:message code="general.labTestType" />
+							<span class="text-danger required">*</span>
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:input class="form-control" id="testTypeSuggestBox"
+							path="labTestType.labTestTypeId" list="testTypeOptions"
+							placeholder="Search Test Type..."></form:input>
+						<datalist class="lowercase" id="testTypeOptions"></datalist>
+						<span id="labtesttypeid" class="text-danger "> </span>
+					</div>
+					<div class="col-md-4">
+						<font color="#D0D0D0"><span id="testTypeName"></span></font>
+					</div>
+				</div>
+				<!--Test Attribute Type Name  -->
+				<div class="row">
+					<div class="col-md-2">
+						<form:label path="name" class="control-label">
+							<spring:message code="general.name" />
+							<span class="text-danger required">*</span>
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:input class="form-control" maxlength="50" path="name"
+							id="name"></form:input>
+						<span id="testatrname" class="text-danger "> </span>
+					</div>
+				</div>
+				<!-- Description -->
+				<div class="row">
+					<div class="col-md-2">
+						<form:label path="description" class="control-label">
+							<spring:message code="general.description" />
+							<span class="text-danger required">*</span>
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:textarea class="form-control" maxlength="255"
+							path="description" id="description"></form:textarea>
+						<span id="atrdescription" class="text-danger "> </span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2">
+						<form:label path="multisetName" class="control-label">
+							<spring:message
+								code="commonlabtest.labtestattributetype.multisetName" />
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:input class="form-control" maxlength="255"
+							path="multisetName" id="multisetName"></form:input>
+						</td> <span id="multisetname" class="text-danger "> </span>
+					</div>
+				</div>
+				<!-- Group Name-->
+				<div class="row">
+					<div class="col-md-2">
+						<form:label path="groupName" class="control-label">
+							<spring:message
+								code="commonlabtest.labtestattributetype.groupName" />
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:input class="form-control" maxlength="255" path="groupName"
+							id="group_name"></form:input>
+						</td> <span id="groupname" class="text-danger "> </span>
+					</div>
+				</div>
+				<!-- Min Ocurance -->
+				<div class="row">
+					<div class="col-md-2">
+						<form:label path="minOccurs" class="control-label">
+							<spring:message code="general.minOccurs" />
+							<span class="text-danger required">*</span>
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:input class="form-control" maxlength="2" path="minOccurs"
+							id="min_occurs" onkeypress="return isNumber(event)"></form:input>
+						</td> <span id="minoccurs" class="text-danger "> </span>
+					</div>
+				</div>
+				<!-- max occurs -->
+				<div class="row">
+					<div class="col-md-2">
+						<form:label path="maxOccurs" class="control-label">
+							<spring:message code="general.maxOccurs" />
+							<span class="text-danger required">*</span>
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:input class="form-control" maxlength="2" path="maxOccurs"
+							id="max_occurs" onkeypress="return isNumber(event)"></form:input>
+						<span id="maxoccurs" class="text-danger "> </span>
+					</div>
+				</div>
+				<!-- sort Weight -->
+				<div class="row">
+					<div class="col-md-2">
+						<form:label path="sortWeight" class="control-label">
+							<spring:message code="general.sortWeight" />
+							<span class="text-danger required">*</span>
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:input class="form-control" maxlength="2" path="sortWeight"
+							id="sortWeight" onkeypress="return isNumber(event)"></form:input>
+						<span id="sortweight" class="text-danger "> </span>
+					</div class="col-md-4">
+					<a style="text-decoration: none"
+						onclick="showSortWeightList(this);" id="addTestSamples"
+						class="hvr-icon-grow"><i class="fa fa-eye hvr-icon"></i> Sort
+						Weight hierarchy</a>
+					<div></div>
+				</div>
+
+				<!-- datatypeClassname -->
+				<div class="row">
+					<div class="col-md-2">
+						<form:label path="datatypeClassname" class="control-label">
+							<spring:message code="general.dataType" />
+						</form:label>
+					</div>
+					<div class="col-md-6">
+
+						<c:if test="${available != true}">
+
+							<form:select class="form-control" path="datatypeClassname"
+								id="data_type_name">
+								<form:options />
+								<c:forEach items="${datatypes}" var="datatype">
+									<form:option item="${datatype}" value="${datatype}">
+										<c:out value="${datatype}.name" />
+									</form:option>
+								</c:forEach>
+							</form:select>
+						</c:if>
+						<c:if test="${available == true}">
+							<form:select class="form-control" disabled="true"
+								path="datatypeClassname" id="data_type_name">
+								<form:options />
+								<c:forEach items="${datatypes}" var="datatype">
+									<form:option item="${datatype}" value="${datatype}">
+										<c:out value="${datatype}.name" />
+									</form:option>
+								</c:forEach>
+							</form:select>
+						</c:if>
+					</div>
+					<div class="col-md-4">
+						<font color="#D0D0D0"><span id="datatypeDescription"></span></font>
+					</div>
+				</div>
+				<div class="row" id="radioOptions">
+					<div class="col-md-2"></div>
+					<div class="col-sm-6 col-md-6 col-lg-6">
+						<c:if test="${available != true}">
+							<label class="radio-inline"><input type="radio"
+								name="optradio" onclick="showOptions()" id="regex">Regex</label>
+							<label class="radio-inline"><input type="radio"
+								name="optradio" onclick="showOptions()" id="length">Length</label>
+							<label class="radio-inline"><input type="radio"
+								name="optradio" onclick="showOptions()" id="range">Range</label>
+						</c:if>
+						<c:if test="${available == true}">
+							<label class="radio-inline"><input disabled type="radio"
+								name="optradio" onclick="showOptions()" id="regex">Regex</label>
+							<label class="radio-inline"><input disabled type="radio"
+								name="optradio" onclick="showOptions()" id="length">Length</label>
+							<label class="radio-inline"><input disabled type="radio"
+								name="optradio" onclick="showOptions()" id="range">Range</label>
+						</c:if>
+
+					</div>
+				</div>
+				<!-- datatypeConfig -->
+				<div class="row">
+					<div class="col-sm-2 col-md-2 col-lg-2">
+						<form:label path="datatypeConfig" class="control-label">
+							<spring:message code="general.datatypeConfiguration" />
+						</form:label>
+					</div>
+					<div class="col-sm-6 col-md-6 col-lg-6">
+						<c:if test="${available != true}">
+							<form:textarea class="form-control" path="datatypeConfig"
+								id="datatypeConfig"></form:textarea>
+							<span id="datatypeconfig" class="text-danger "> </span>
+						</c:if>
+						<c:if test="${available == true}">
+							<form:textarea class="form-control" disabled="true"
+								path="datatypeConfig" id="datatypeConfig"></form:textarea>
+							<span id="datatypeconfig" class="text-danger "> </span>
+						</c:if>
+					</div>
+				</div>
+				<!--Regex Hints -->
+				<div class="row" id="hint_field">
+					<div class="col-md-2">
+						<form:label path="hint" class="control-label">
+							<spring:message code="general.hint" />
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:input class="form-control" path="hint" id="hint"
+							maxlength="50"></form:input>
+						<span id="hints" class="text-danger "> </span>
+					</div>
+				</div>
+
+				<!-- preferredHandlerClassname -->
+				<div class="row">
+					<div class="col-md-2">
+						<form:label path="preferredHandlerClassname" class="control-label">
+							<spring:message code="general.preferredHandler" />
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:select class="form-control" path="preferredHandlerClassname"
+							id="preferred_handler_name">
+							<option value=""><openmrs:message code="general.default" /></option>
+							<c:forEach items="${handlers}" var="handler">
+								<%-- 											<option value="${handler}" <c:if test="${handler == status.value}">selected</c:if>><spring:message code="${handler}.name"/></option>
+ --%>
+								<form:option item="${handler}" value="${handler}">
+									<c:out value="${handler}.name" />
+								</form:option>
+							</c:forEach>
+						</form:select>
+					</div>
+					<div class="col-md-4">
+						<font color="#D0D0D0"><span id="handlerDescription"></span></font>
+					</div>
+				</div>
+				<!-- handlerConfig-->
+				<div class="row">
+					<div class="col-md-2">
+						<form:label class="control-label" path="handlerConfig">
+							<spring:message code="general.handlerConfiguration" />
+						</form:label>
+					</div>
+					<div class="col-md-6">
+						<form:textarea class="form-control" path="handlerConfig"
+							id="handlerConfig"></form:textarea>
+					</div>
+				</div>
+				<c:if test="${not empty testAttributeType.name}">
+					<div class="row">
+						<div class="col-md-2">
+							<form:label path="creator">
+								<spring:message code="general.createdBy" />
+							</form:label>
+						</div>
+						<div class="col-md-6">
+							<c:out value="${testAttributeType.creator.personName}" />
+							-
+							<c:out value="${testAttributeType.dateCreated}" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<font color="#D0D0D0"><sub><spring:message
+										code="general.uuid" /></sub></font>
+						</div>
+						<div class="col-md-6">
+							<font color="#D0D0D0"><sub><c:out
+										value="${testAttributeType.uuid}" /></sub></font>
+						</div>
+					</div>
+				</c:if>
+				<!-- Save -->
+				<div class="row">
+					<div class="col-md-3">
+						<input type="submit"
+							value="<spring:message code="commonlabtest.labtestattributetype.save" />"></input>
+					</div>
+					<div class="col-md-2">
+						<input type="button"
+							onclick="location.href = '${pageContext.request.contextPath}/module/commonlabtest/manageLabTestAttributeTypes.form';"
+							value="Cancel"></input>
+					</div>
+				</div>
+			</form:form>
+		</fieldset>
+		<br>
+		<openmrs:hasPrivilege privilege="Delete CommonLabTest Metadata">
+			<c:if test="${not empty testAttributeType.name}">
+				<fieldset class="scheduler-border">
+					<legend class="scheduler-border">
+						<spring:message code="general.test.retire" />
+					</legend>
+					<form class="form-horizontal" method="post"
+						action="${pageContext.request.contextPath}/module/commonlabtest/retirelabtestattributetype.form"
+						onsubmit="return retireValidate()">
+						<!-- UUID -->
+						<div class="row">
+							<div class="col-md-2">
+								<input value="${testAttributeType.uuid}" hidden="true" id="uuid"
+									name="uuid"></input> <label class="control-label"
+									path="retireReason"><spring:message
+										code="general.retireReason" /><span
+									class="text-danger required">*</span></label>
+							</div>
+							<div class="col-md-6">
+								<input class="form-control"
+									value="${testAttributeType.retireReason}" id="retireReason"
+									name="retireReason"> <span id="retirereason"
+									class="text-danger "> </span>
+
+							</div>
+						</div>
+						<!-- Retire -->
+						<div class="row">
+							<div class="col-md-2">
+								<input type="submit"
+									value="<spring:message code="general.test.retire" />"></input>
+							</div>
+						</div>
+					</form>
+				</fieldset>
+			</c:if>
+		</openmrs:hasPrivilege>
+	</div>
+	<div class="modal fade right modal-scrolling" id="sortWeightModal"
+		tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		data-backdrop="false" style="display: none;" aria-hidden="true">
+		<div
+			class="modal-dialog modal-side modal-top-right modal-notify modal-info"
+			role="document">
+			<div class="modal-content">
+				<div class="modal-header" style="background-color: #1aac9b">
+					<p class="heading lead white-text">Sort Weight Order</p>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true" class="white-text">×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div id="sortweightList"></div>
+				</div>
+			</div>
 		</div>
-	</c:if>	 
-	<c:set var="testAttributeType" scope="session" value="${attributeType}" />
-	<fieldset  class="scheduler-border">
-	   <c:if test="${empty testAttributeType.name}">
-	    <openmrs:require privilege="Add CommonLabTest Metadata" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestAttributeType.form" />
-		 <legend  class="scheduler-border"><spring:message code="commonlabtest.labtestattributetype.add" /></legend>
-	   </c:if>
-	   <c:if test="${not empty testAttributeType.name}">
-	    <openmrs:require privilege="Edit CommonLabTest Metadata" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestAttributeType.form" />
-		 <legend  class="scheduler-border">	<spring:message code="commonlabtest.labtestattributetype.edit" /></legend>
-	   </c:if>
- 	   <form:form commandName="attributeType" onsubmit='return validate(this);'>
- 	        		 <div class="row">
-						   <div class="col-md-2">
-						   		<form:input path="labTestAttributeTypeId"  hidden="true" id="labTestAttributeTypeId"></form:input>
-								<form:label path="labTestType.labTestTypeId" class="control-label"><spring:message code="general.labTestType" /><span class="text-danger required">*</span></form:label>
-							</div>
-						   <div class="col-md-6">	
-						   		<form:input class="form-control"  id="testTypeSuggestBox" path="labTestType.labTestTypeId" list="testTypeOptions" placeholder="Search Test Type..." ></form:input>
-								<datalist class="lowercase" id="testTypeOptions"></datalist>
-							    <span id="labtesttypeid" class="text-danger "> </span>
-						   </div>
-						   <div class="col-md-4">  
-						      <font color="#D0D0D0"><span id="testTypeName"></span></font>
-						   </div>
-					  </div>
-					  <!--Test Attribute Type Name  -->
-					  <div class="row">
-						   <div class="col-md-2">
-						   		<form:label path="name" class="control-label"><spring:message code="general.name" /><span class="text-danger required">*</span></form:label>
-						   	</div>
-						   <div class="col-md-6">
-						   		<form:input class="form-control" maxlength="50" path="name" id="name" ></form:input>
-							    <span id="testatrname" class="text-danger "> </span>
-						   	</div>
-					  </div>
-					  <!-- Description -->
-					   <div class="row">
-						   <div class="col-md-2">
-					  			<form:label path="description" class="control-label"><spring:message code="general.description" /><span class="text-danger required">*</span></form:label>
-						   	</div>
-						   <div class="col-md-6">
-								<form:textarea class="form-control" maxlength="255"  path="description" id="description" ></form:textarea>
-							    <span id="atrdescription" class="text-danger "> </span>
-						   	</div>
-					  </div>	
-					 	  <div class="row">
-						   <div class="col-md-2">
-								<form:label path="multisetName" class="control-label"><spring:message code="commonlabtest.labtestattributetype.multisetName" /></form:label>
-							</div>
-						   <div class="col-md-6">
-								<form:input class="form-control"  maxlength="255" path="multisetName" id="multisetName" ></form:input></td>
-							    <span id="multisetname" class="text-danger "> </span>
-						   	</div>
-					 	 </div>
-					 	 <!-- Group Name-->
-					    <div class="row">
-						   <div class="col-md-2">
-								<form:label path="groupName" class="control-label"><spring:message code="commonlabtest.labtestattributetype.groupName" /></form:label>
-							</div>
-						   <div class="col-md-6">
-								<form:input class="form-control" maxlength="255"  path="groupName" id="group_name" ></form:input></td>
-							    <span id="groupname" class="text-danger "> </span>
-						   	</div>
-					 	 </div>
-					  <!-- Min Ocurance -->
-					    <div class="row">
-						   <div class="col-md-2">
-								<form:label path="minOccurs" class="control-label"><spring:message code="general.minOccurs" /><span class="text-danger required">*</span></form:label>
-							</div>
-						   <div class="col-md-6">
-								<form:input class="form-control" maxlength="2"   path="minOccurs" id="min_occurs" onkeypress="return isNumber(event)"></form:input></td>
-							    <span id="minoccurs" class="text-danger "> </span>
-						   	</div>
-					 	 </div>
-					 	 <!-- max occurs -->
-					 	  <div class="row">
-							   <div class="col-md-2">
-									<form:label path="maxOccurs" class="control-label"><spring:message code="general.maxOccurs" /><span class="text-danger required">*</span></form:label>
-								</div>
-							   <div class="col-md-6">
-									<form:input class="form-control" maxlength="2"   path="maxOccurs" id="max_occurs" onkeypress="return isNumber(event)"></form:input>
-								    <span id="maxoccurs" class="text-danger "> </span>
-							   	</div>
-					 	 </div>
-					 	 <!-- sort Weight -->
-					 	  <div class="row">
-							   <div class="col-md-2">
-					 	 			<form:label path="sortWeight" class="control-label"><spring:message code="general.sortWeight" /><span class="text-danger required">*</span></form:label>
-								</div>
-							   <div class="col-md-6">
-									<form:input class="form-control" maxlength="2"  path="sortWeight" id="sortWeight"  onkeypress="return isNumber(event)"></form:input>
-								    <span id="sortweight" class="text-danger "> </span>
-							   	</div class="col-md-4">
-							   		 <a style="text-decoration:none" onclick="showSortWeightList(this);" id="addTestSamples" class="hvr-icon-grow"><i class="fa fa-eye hvr-icon"></i> Sort Weight hierarchy</a>
-							   	<div>
-							   	
-							   	</div>
-					 	   </div>
-					 	   
-					 	   <!-- datatypeClassname -->
-					 	    <div class="row">
-							   <div class="col-md-2">
-									<form:label path="datatypeClassname" class="control-label"><spring:message code="general.dataType" /></form:label>							
-							   </div> 
-							   <div class="col-md-6">
-							  
-							      <c:if test = "${available != true}">
-							   
-								         		<form:select class="form-control" path="datatypeClassname" id="data_type_name">
-													 <form:options  />
-													<c:forEach items="${datatypes}"  var="datatype">
-													    <form:option item ="${datatype}" value="${datatype}" ><c:out value="${datatype}.name" /></form:option>
-													</c:forEach>
-												</form:select>
-								         </c:if>
-								         <c:if test = "${available == true}">
-												<form:select class="form-control" disabled="true" path="datatypeClassname" id="data_type_name">
-													 <form:options  />
-													<c:forEach items="${datatypes}"  var="datatype">
-													    <form:option item ="${datatype}" value="${datatype}" ><c:out value="${datatype}.name" /></form:option>
-													</c:forEach>
-												</form:select>								        
-										 </c:if>
-							   	</div>
-							   	<div class ="col-md-4">
-							   		<font color="#D0D0D0"><span id="datatypeDescription"></span></font>
-							   	</div>
-					 	   </div>
-					 	   <div class ="row" id ="radioOptions">
-					 	     <div class="col-md-2"></div>
-					 	     <div class="col-sm-6 col-md-6 col-lg-6">
-					 	      <c:if test = "${available != true}">
-							      <label class="radio-inline"><input type="radio" name="optradio" onclick="showOptions()" id = "regex">Regex</label>
-							      <label class="radio-inline"><input type="radio" name="optradio" onclick="showOptions()" id = "length">Length</label>
-							      <label class="radio-inline"><input type="radio" name="optradio" onclick="showOptions()" id = "range">Range</label>
-					 	      </c:if>
-					 	      <c:if test = "${available == true}">
-					 	         <label class="radio-inline"><input disabled type="radio" name="optradio" onclick="showOptions()" id = "regex">Regex</label>
-							      <label class="radio-inline"><input disabled type="radio" name="optradio" onclick="showOptions()" id = "length">Length</label>
-							      <label class="radio-inline"><input disabled type="radio" name="optradio" onclick="showOptions()" id = "range">Range</label>
-					 	      </c:if>
-					 	      
-					 	     </div>
-					 	   </div>
-					 	   <!-- datatypeConfig -->
-							<div class="row">
-							   <div class="col-sm-2 col-md-2 col-lg-2">
-					 	  		   <form:label path="datatypeConfig" class="control-label"><spring:message code="general.datatypeConfiguration" /></form:label>
-								</div>
-							   <div class="col-sm-6 col-md-6 col-lg-6">
-								         <c:if test = "${available != true}">
-								         	<form:textarea class="form-control" path="datatypeConfig" id="datatypeConfig" ></form:textarea>
-								            <span id="datatypeconfig" class="text-danger "> </span>
-								         </c:if>
-								        <c:if test = "${available == true}">
-								          	<form:textarea class="form-control" disabled="true" path="datatypeConfig" id="datatypeConfig" ></form:textarea>
-								          	  <span id="datatypeconfig" class="text-danger "> </span>
-								        </c:if>   
-							   	</div>
-					 	   </div>
-					 	   <!--Regex Hints -->
-					 	   <div class="row" id ="hint_field">
-							   <div class="col-md-2">
-					 	  		   <form:label path="hint" class="control-label"><spring:message code="general.hint" /></form:label>
-								</div>
-							   <div class="col-md-6">
-						         	<form:input class="form-control" path="hint" id="hint" maxlength ="50" ></form:input>
-						            <span id="hints" class="text-danger "> </span>
-							   	</div>
-					 	   </div>
-					 	   
-					 	     <!-- preferredHandlerClassname -->
-					 	    <div class="row">
-							   <div class="col-md-2">
-									<form:label path="preferredHandlerClassname" class="control-label"><spring:message code="general.preferredHandler" /></form:label>								   </div> 
-							   <div class="col-md-6">
-									<form:select class="form-control" path="preferredHandlerClassname" id="preferred_handler_name">
-										<option value=""><openmrs:message code="general.default"/></option>
-										<c:forEach items="${handlers}"  var="handler">
-<%-- 											<option value="${handler}" <c:if test="${handler == status.value}">selected</c:if>><spring:message code="${handler}.name"/></option>
- --%>									 
- 											  <form:option item ="${handler}" value="${handler}" ><c:out value="${handler}.name" /></form:option>	
- 										</c:forEach>
-									</form:select>
-							   	</div>
-							   	<div class ="col-md-4">
-							   		<font color="#D0D0D0"><span id="handlerDescription"></span></font>
-							   	</div>
-					 	   </div>
-							<!-- handlerConfig-->
- 	   						<div class="row">
-							   <div class="col-md-2">
- 	 				    			<form:label class="control-label" path="handlerConfig"><spring:message code="general.handlerConfiguration" /></form:label>
-								</div>
-							   <div class="col-md-6">
-									<form:textarea class="form-control" path="handlerConfig" id="handlerConfig" ></form:textarea>
-							   	</div>
-					 	   </div>	
- 	   						<c:if test="${not empty testAttributeType.name}">
-								<div class="row">
-									   <div class="col-md-2">
-											<form:label path="creator"><spring:message code="general.createdBy" /></form:label>					
-										</div>
-									   <div class="col-md-6">
-										    <c:out value="${testAttributeType.creator.personName}" /> - <c:out value="${testAttributeType.dateCreated}" />	
-								       </div>
-							    </div>	
-							    <div class="row">
-									   <div class="col-md-2">
-											<font color="#D0D0D0"><sub><spring:message code="general.uuid" /></sub></font>		
-										</div>
-									   <div class="col-md-6">
-											<font color="#D0D0D0"><sub><c:out value="${testAttributeType.uuid}" /></sub></font>	
-										</div>
-							    </div>	
-							</c:if>
-							  <!-- Save -->
-							 <div class="row">
-							   <div class="col-md-3">
-									<input type="submit" value="<spring:message code="commonlabtest.labtestattributetype.save" />"  ></input>
-							   </div>
-							    <div class="col-md-2" >
-									<input type="button" onclick="location.href = '${pageContext.request.contextPath}/module/commonlabtest/manageLabTestAttributeTypes.form';"  value="Cancel"></input>
-								</div>
-							 </div>	
-		 </form:form>
-    </fieldset>
-	<br>
-	<openmrs:hasPrivilege privilege="Delete CommonLabTest Metadata">
-	<c:if test="${not empty testAttributeType.name}">
-		 <fieldset  class="scheduler-border">
-      	   <legend  class="scheduler-border"><spring:message code="general.test.retire" /></legend>
-      	 		<form class="form-horizontal" method="post" action="${pageContext.request.contextPath}/module/commonlabtest/retirelabtestattributetype.form" onsubmit="return retireValidate()" >
-						 <!-- UUID -->
-						 <div class="row">
-						   <div class="col-md-2">
-								<input value="${testAttributeType.uuid}" hidden="true"  id="uuid" name="uuid"></input>
-								<label  class="control-label" path="retireReason"><spring:message code="general.retireReason" /><span class="text-danger required">*</span></label>
-						   </div>
-						   <div class="col-md-6">
-						   		<input class="form-control" value="${testAttributeType.retireReason}" id="retireReason" name="retireReason" >
-						 		 <span id="retirereason" class="text-danger "> </span>
-						 
-						   </div>
-						 </div>
-						 <!-- Retire -->
-						 <div class="row">
-						   <div class="col-md-2" >
-						 		 <input type="submit" value="<spring:message code="general.test.retire" />"></input>
-						   </div>
-						 </div>
-				</form>
-        </fieldset>
-	</c:if>
-	</openmrs:hasPrivilege>
- </div>
-	<div class="modal fade right modal-scrolling" id="sortWeightModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false" style="display: none;" aria-hidden="true">
-	    <div class="modal-dialog modal-side modal-top-right modal-notify modal-info" role="document">
-		      <div class="modal-content">
-		        <div class="modal-header" style="background-color:#1aac9b">
-		          <p class="heading lead white-text">Sort Weight Order</p>
-			          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		            <span aria-hidden="true" class="white-text">×</span>
-		          </button>
-	       		</div>
-		        <div class="modal-body" >
-		          <div id="sortweightList"></div>
-		        </div>
-		      </div>
-		    </div>
-	  </div>
- 
+	</div>
+
 </body>
 
 <!--Java Script  -->

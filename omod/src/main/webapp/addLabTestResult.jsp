@@ -1,8 +1,10 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
-<openmrs:require privilege="View labTestResult" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestResult.form" />
+<openmrs:require privilege="View labTestResult" otherwise="/login.htm"
+	redirect="/module/commonlabtest/addLabTestResult.form" />
 
-<openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${patientId}"/>
+<openmrs:portlet url="patientHeader" id="patientDashboardHeader"
+	patientId="${patientId}" />
 
 <link type="text/css" rel="stylesheet"
 	href="/openmrs/moduleResources/commonlabtest/css/commonlabtest.css" />
@@ -19,174 +21,183 @@
 	href="/openmrs/moduleResources/commonlabtest/css/hover.css" />
 <link type="text/css" rel="stylesheet"
 	href="/openmrs/moduleResources/commonlabtest/css/hover-min.css" />
-<link 
-	href="/openmrs/moduleResources/commonlabtest/css/style.css"
-		rel="stylesheet" />	
-	
+<link href="/openmrs/moduleResources/commonlabtest/css/style.css"
+	rel="stylesheet" />
+
 
 <style>
 body {
-    font-size: 12px;
+	font-size: 12px;
 }
 
 hr.style-three {
-    height: 30px;
-    border-style: solid;
-    border-color: black;
-    border-width: 1px 0 0 0;
-    border-radius: 20px;
+	height: 30px;
+	border-style: solid;
+	border-color: black;
+	border-width: 1px 0 0 0;
+	border-radius: 20px;
 }
+
 hr.style-three:before {
-    display: block;
-    content: "";
-    height: 30px;
-    margin-top: -31px;
-    border-style: solid;
-    border-color: black;
-    border-width: 0 0 1px 0;
-    border-radius: 20px;
+	display: block;
+	content: "";
+	height: 30px;
+	margin-top: -31px;
+	border-style: solid;
+	border-color: black;
+	border-width: 0 0 1px 0;
+	border-radius: 20px;
 }
+
 input[type=submit] {
-    background-color: #1aac9b;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-
+	background-color: #1aac9b;
+	color: white;
+	padding: 12px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
 }
-input[type=button] {
-    background-color: #1aac9b;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
 
+input[type=button] {
+	background-color: #1aac9b;
+	color: white;
+	padding: 12px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
 }
 
 #saveUpdateButton {
-    text-align: center;
+	text-align: center;
 }
+
 fieldset.scheduler-border {
-    border: 1px groove #ddd !important;
-    padding: 0 1.4em 1.4em 1.4em !important;
-    margin: 0 0 1.5em 0 !important;
-    -webkit-box-shadow:  0px 0px 0px 0px #1aac9b;
-    box-shadow: 0px 0px 14px 0px #1aac9b61;
+	border: 1px groove #ddd !important;
+	padding: 0 1.4em 1.4em 1.4em !important;
+	margin: 0 0 1.5em 0 !important;
+	-webkit-box-shadow: 0px 0px 0px 0px #1aac9b;
+	box-shadow: 0px 0px 14px 0px #1aac9b61;
 }
 
 legend.scheduler-border {
-    font-size: 1.2em !important;
-    font-weight: bold !important;
-    text-align: left !important;
-    width:auto;
-    padding:0 10px;
-    border-bottom:none;
+	font-size: 1.2em !important;
+	font-weight: bold !important;
+	text-align: left !important;
+	width: auto;
+	padding: 0 10px;
+	border-bottom: none;
 }
-.row{
-    margin-bottom:15px;
 
+.row {
+	margin-bottom: 15px;
 }
 /*Collapse  */
 /* FANCY COLLAPSE PANEL STYLES */
-.fancy-collapse-panel .panel-default > .panel-heading {
-    padding: 0;
-    size: 12px;
-
+.fancy-collapse-panel .panel-default>.panel-heading {
+	padding: 0;
+	size: 12px;
 }
+
 .fancy-collapse-panel .panel-heading a {
-    padding: 10px 35px 10px 15px;
-    display: inline-block;
-    width: 100%;
-    background-color: #1aac9b;
-    color: white !important;
-    position: relative;
-    text-decoration: none;
-    font-size: 16px;
+	padding: 10px 35px 10px 15px;
+	display: inline-block;
+	width: 100%;
+	background-color: #1aac9b;
+	color: white !important;
+	position: relative;
+	text-decoration: none;
+	font-size: 16px;
 }
 
 .fancy-collapse-panel .panel-heading a:hover {
-    color: white !important;
+	color: white !important;
 }
+
 .fancy-collapse-panel .panel-heading a:after {
-    font-family: "FontAwesome";
-    content: "\f147";
-    position: absolute;
-    right: 20px;
-    font-size: 20px;
-    font-weight: 400;
-    top: 50%;
-    line-height: 1;
-    color: white;
-    margin-top: -10px;
+	font-family: "FontAwesome";
+	content: "\f147";
+	position: absolute;
+	right: 20px;
+	font-size: 20px;
+	font-weight: 400;
+	top: 50%;
+	line-height: 1;
+	color: white;
+	margin-top: -10px;
 }
 
 /*Checkbox css  */
 input[type=checkbox] {
-    zoom: 1.3;
+	zoom: 1.3;
 }
 </style>
 
 <body>
 
-    <div class="container">
+	<div class="container">
 
-        <fieldset class="scheduler-border">
+		<fieldset class="scheduler-border">
 
-            <c:choose>
-                <c:when test="${update == false}">
-                <openmrs:require privilege="Add CommonLabTest results" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestResult.form" />
-                    <legend class="scheduler-border">
-                        <spring:message code="commonlabtest.result.add" />
-                    </legend>
-                </c:when>
-                <c:otherwise>
-                  <openmrs:require privilege="Edit CommonLabTest results" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestResult.form" />
-                    <legend class="scheduler-border">
-                        <spring:message code="commonlabtest.result.edit" />
-                    </legend>
-                </c:otherwise>
-            </c:choose>
-            <div class="row">
-                <div class="col-md-12 col-md-offset-12 col-sm-12col-sm-offset-12">
-                    <div id="resultContainer">
-                    </div>
-                </div>
-            </div>
+			<c:choose>
+				<c:when test="${update == false}">
+					<openmrs:require privilege="Add CommonLabTest results"
+						otherwise="/login.htm"
+						redirect="/module/commonlabtest/addLabTestResult.form" />
+					<legend class="scheduler-border">
+						<spring:message code="commonlabtest.result.add" />
+					</legend>
+				</c:when>
+				<c:otherwise>
+					<openmrs:require privilege="Edit CommonLabTest results"
+						otherwise="/login.htm"
+						redirect="/module/commonlabtest/addLabTestResult.form" />
+					<legend class="scheduler-border">
+						<spring:message code="commonlabtest.result.edit" />
+					</legend>
+				</c:otherwise>
+			</c:choose>
+			<div class="row">
+				<div class="col-md-12 col-md-offset-12 col-sm-12col-sm-offset-12">
+					<div id="resultContainer"></div>
+				</div>
+			</div>
 
-        </fieldset>
-        <br>
-        <c:if test="${update == true}">
-        <openmrs:hasPrivilege privilege="Delete CommonLabTest results">
-            <fieldset class="scheduler-border">
-                <legend class="scheduler-border">
-                    <spring:message code="commonlabtest.result.void" />
-                </legend>
-                <form method="post" action="${pageContext.request.contextPath}/module/commonlabtest/voidlabtestresult.form">
-                    <!-- UUID -->
-                    <div class="row">
-                        <div class="col-md-2">
-                            <input value="${testOrderId}" hidden="true" id="testOrderId" name="testOrderId"></input>
-                            <input value="${patientId}" hidden="true" id="patientId" name="patientId"></input>
-                            <label class="control-label" path="voidReason">
-                                <spring:message code="general.reason" /><span class="required">*</span></label>
-                        </div>
-                        <div class="col-md-6">
-                            <input class="form-control" value="" id="voidReason" name="voidReason" required="required">
-                        </div>
-                    </div>
-                    <!-- Retire -->
-                    <div class="row">
-                        <div class="col-md-2">
-                            <input type="submit" value="<spring:message code="commonlabtest.result.void" />"></input>
-                        </div>
-                    </div>
-                </form>
-            </fieldset>
-          </openmrs:hasPrivilege>
-        </c:if>
-    </div>
+		</fieldset>
+		<br>
+		<c:if test="${update == true}">
+			<openmrs:hasPrivilege privilege="Delete CommonLabTest results">
+				<fieldset class="scheduler-border">
+					<legend class="scheduler-border">
+						<spring:message code="commonlabtest.result.void" />
+					</legend>
+					<form method="post"
+						action="${pageContext.request.contextPath}/module/commonlabtest/voidlabtestresult.form">
+						<!-- UUID -->
+						<div class="row">
+							<div class="col-md-2">
+								<input value="${testOrderId}" hidden="true" id="testOrderId"
+									name="testOrderId"></input> <input value="${patientId}"
+									hidden="true" id="patientId" name="patientId"></input> <label
+									class="control-label" path="voidReason"> <spring:message
+										code="general.reason" /><span class="required">*</span></label>
+							</div>
+							<div class="col-md-6">
+								<input class="form-control" value="" id="voidReason"
+									name="voidReason" required="required">
+							</div>
+						</div>
+						<!-- Retire -->
+						<div class="row">
+							<div class="col-md-2">
+								<input type="submit"
+									value="<spring:message code="commonlabtest.result.void" />"></input>
+							</div>
+						</div>
+					</form>
+				</fieldset>
+			</openmrs:hasPrivilege>
+		</c:if>
+	</div>
 
 </body>
 

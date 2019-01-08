@@ -42,7 +42,8 @@ public class LabTestOrderController {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestOrder.form")
 	public String showForm(@RequestParam(required = true) Integer patientId,
-	        @RequestParam(required = false) Integer testOrderId, @RequestParam(required = false) String error, ModelMap model) {
+	        @RequestParam(required = false) Integer testOrderId, @RequestParam(required = false) String error,
+	        ModelMap model) {
 		
 		LabTest labTest;
 		if (testOrderId == null) {
@@ -72,12 +73,11 @@ public class LabTestOrderController {
 		model.addAttribute("patientId", patientId);
 		model.addAttribute("testTypes", labTestTypeHavingAttributes);
 		model.addAttribute("error", error);
-		Collection<Provider> providers = Context.getProviderService().getProvidersByPerson(
-		    Context.getAuthenticatedUser().getPerson(), false);
+		Collection<Provider> providers = Context.getProviderService()
+		        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false);
 		if (providers == null || providers.isEmpty()) {} else {
-			model.addAttribute("provider",
-			    Context.getProviderService().getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false)
-			            .iterator().next());
+			model.addAttribute("provider", Context.getProviderService()
+			        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
 		}
 		
 		//show only first 10 encounters 

@@ -131,8 +131,8 @@ public class LabTestResultController {
 				
 				conceptValue = request.getParameter("concept." + labTestAttributeType.getId());
 				textValue = request.getParameter("valueText." + labTestAttributeType.getId());
-				boolValue = (request.getParameter("bool." + labTestAttributeType.getId()) == null) ? "false" : request
-				        .getParameter("bool." + labTestAttributeType.getId());
+				boolValue = (request.getParameter("bool." + labTestAttributeType.getId()) == null) ? "false"
+				        : request.getParameter("bool." + labTestAttributeType.getId());
 				floatValue = request.getParameter("float." + labTestAttributeType.getId());
 				dateValue = request.getParameter("date." + labTestAttributeType.getId());
 				regexValue = request.getParameter("regex." + labTestAttributeType.getId());
@@ -170,11 +170,11 @@ public class LabTestResultController {
 			if (documentTypeFile.isEmpty()) {} else {
 				
 				try {
-					String fileDirectory = Context.getAdministrationService().getGlobalProperty(
-					    "commonlabtest.fileDirectory");
+					String fileDirectory = Context.getAdministrationService()
+					        .getGlobalProperty("commonlabtest.fileDirectory");
 					
-					FileCopyUtils.copy(documentTypeFile.getBytes(), new FileOutputStream(fileDirectory + "/"
-					        + documentTypeFile.getOriginalFilename().replace(" ", "-")));
+					FileCopyUtils.copy(documentTypeFile.getBytes(), new FileOutputStream(
+					        fileDirectory + "/" + documentTypeFile.getOriginalFilename().replace(" ", "-")));
 					String name = documentTypeFile.getOriginalFilename().replace(" ", "-");
 					labTest.setFilePath(fileDirectory + "/" + name);
 					Context.getService(CommonLabTestService.class).saveLabTest(labTest); // need to review this lines
@@ -283,12 +283,12 @@ public class LabTestResultController {
 			objAttrType.addProperty("testAttributeId", "");
 		}
 		objAttrType.addProperty("id", labTestAttributeType.getId());
-		if (labTestAttributeType.getDatatypeClassname().equalsIgnoreCase(
-		    "org.openmrs.customdatatype.datatype.ConceptDatatype")) {
+		if (labTestAttributeType.getDatatypeClassname()
+		        .equalsIgnoreCase("org.openmrs.customdatatype.datatype.ConceptDatatype")) {
 			if (labTestAttributeType.getDatatypeConfig() != null && labTestAttributeType.getDatatypeConfig() != ""
 			        && !labTestAttributeType.getDatatypeConfig().isEmpty()) {
-				Concept concept = Context.getConceptService().getConcept(
-				    Integer.parseInt(labTestAttributeType.getDatatypeConfig()));
+				Concept concept = Context.getConceptService()
+				        .getConcept(Integer.parseInt(labTestAttributeType.getDatatypeConfig()));
 				
 				if (concept.getDatatype().getName().equals("Coded")) {
 					JsonArray codedArray = new JsonArray();

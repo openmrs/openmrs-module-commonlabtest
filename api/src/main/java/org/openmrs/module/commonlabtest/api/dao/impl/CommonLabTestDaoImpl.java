@@ -106,8 +106,8 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup,
-	        Concept referenceConcept, boolean includeRetired) {
+	public List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup, Concept referenceConcept,
+	        boolean includeRetired) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestType.class);
 		if (name != null) {
 			criteria.add(Restrictions.ilike("name", name, MatchMode.START));
@@ -249,7 +249,8 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname, boolean includeRetired) {
+	public List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname,
+	        boolean includeRetired) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttributeType.class);
 		if (name != null) {
 			criteria.add(Restrictions.ilike("name", name, MatchMode.START));
@@ -374,8 +375,7 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	public List<LabTestSample> getLabTestSamples(Patient patient, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
 		
-		criteria.createAlias("labTest", "labTest", CriteriaSpecification.INNER_JOIN)
-		        .setFetchMode("labTest", FetchMode.JOIN)
+		criteria.createAlias("labTest", "labTest", CriteriaSpecification.INNER_JOIN).setFetchMode("labTest", FetchMode.JOIN)
 		        //.add(Restrictions.eq("labTest.order.patient.personId", patient.getPatientId()))
 		        .createAlias("labTest.order", "order", CriteriaSpecification.INNER_JOIN)
 		        .setFetchMode("order", FetchMode.JOIN)

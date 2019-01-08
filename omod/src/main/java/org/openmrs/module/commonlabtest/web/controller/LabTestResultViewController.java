@@ -68,8 +68,8 @@ public class LabTestResultViewController {
 			
 			if (testAttributes != null && !testAttributes.isEmpty()) {
 				LabTestAttributeType labTestAttributeType = testAttributes.get(0).getAttributeType();
-				List<LabTestAttributeType> labTestAttributeTypes = commonLabTestService.getLabTestAttributeTypes(
-				    labTestAttributeType.getLabTestType(), Boolean.FALSE);
+				List<LabTestAttributeType> labTestAttributeTypes = commonLabTestService
+				        .getLabTestAttributeTypes(labTestAttributeType.getLabTestType(), Boolean.FALSE);
 				testResultArray = getAttributeTypeList(labTestAttributeTypes, testOrderId, testAttributes);
 			}
 		}
@@ -256,12 +256,12 @@ public class LabTestResultViewController {
 				objTestResult.addProperty("question", labTestAttribute.getAttributeType().getName());
 				boolean isTrue = isInteger(labTestAttribute.getAttributeType().getDatatypeConfig());
 				if (isTrue) {
-					Concept conceptConfig = Context.getConceptService().getConcept(
-					    Integer.parseInt(labTestAttribute.getAttributeType().getDatatypeConfig()));
+					Concept conceptConfig = Context.getConceptService()
+					        .getConcept(Integer.parseInt(labTestAttribute.getAttributeType().getDatatypeConfig()));
 					if (conceptConfig != null) {
 						if (conceptConfig.getDatatype().getName().equals("Coded")) {
-							Concept concept = Context.getConceptService().getConcept(
-							    Integer.parseInt(labTestAttribute.getValueReference()));
+							Concept concept = Context.getConceptService()
+							        .getConcept(Integer.parseInt(labTestAttribute.getValueReference()));
 							objTestResult.addProperty("valuesReference", concept.getName().getName());
 						} else {
 							objTestResult.addProperty("valuesReference", labTestAttribute.getValueReference());

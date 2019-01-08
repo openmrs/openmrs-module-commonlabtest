@@ -1,4 +1,4 @@
-${moduleName}
+Common Lab Module
 ==========================
 
 Description

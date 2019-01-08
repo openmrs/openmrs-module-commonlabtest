@@ -1,8 +1,11 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
- <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<openmrs:require privilege="View CommonLabTest Samples" otherwise="/login.htm" redirect="/module/commonlabtest/manageLabTestSamples.form" />
-<openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${patientId}"/>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<openmrs:require privilege="View CommonLabTest Samples"
+	otherwise="/login.htm"
+	redirect="/module/commonlabtest/manageLabTestSamples.form" />
+<openmrs:portlet url="patientHeader" id="patientDashboardHeader"
+	patientId="${patientId}" />
 
 <link type="text/css" rel="stylesheet"
 	href="/openmrs/moduleResources/commonlabtest/css/commonlabtest.css" />
@@ -22,198 +25,214 @@
 
 <style>
 body {
-    font-size: 12px;
+	font-size: 12px;
 }
 
 input[type=submit] {
-    background-color: #1aac9b;
-    color: white;
-    padding: 8px 22px;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-
+	background-color: #1aac9b;
+	color: white;
+	padding: 8px 22px;
+	border: none;
+	border-radius: 2px;
+	cursor: pointer;
 }
-input[type=button] {
-    background-color: #1aac9b;
-    color: white;
-    padding: 8px 22px;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
 
+input[type=button] {
+	background-color: #1aac9b;
+	color: white;
+	padding: 8px 22px;
+	border: none;
+	border-radius: 2px;
+	cursor: pointer;
 }
 
 fieldset.scheduler-border {
-    border: 1px groove #ddd !important;
-    padding: 0 1.4em 1.4em 1.4em !important;
-    margin: 0 0 1.5em 0 !important;
-    -webkit-box-shadow:  0px 0px 0px 0px #1aac9b;
-    box-shadow:  0px 0px 0px 0px #1aac9b;
+	border: 1px groove #ddd !important;
+	padding: 0 1.4em 1.4em 1.4em !important;
+	margin: 0 0 1.5em 0 !important;
+	-webkit-box-shadow: 0px 0px 0px 0px #1aac9b;
+	box-shadow: 0px 0px 0px 0px #1aac9b;
 }
 
 legend.scheduler-border {
-    font-size: 1.2em !important;
-    font-weight: bold !important;
-    text-align: left !important;
-    width:auto;
-    padding:0 10px;
-    border-bottom:none;
+	font-size: 1.2em !important;
+	font-weight: bold !important;
+	text-align: left !important;
+	width: auto;
+	padding: 0 10px;
+	border-bottom: none;
 }
-.row{
-    margin-bottom:15px;
+
+.row {
+	margin-bottom: 15px;
 }
 </style>
 
 <body>
-    <br>
-    <div class="row">
-        <div class="col-md-3">
-            <a style="text-decoration:none" onclick="navigatedToPatientDashboard();" id="addTestSamples" class="hvr-icon-back"><i
-                    class="fa fa-chevron-circle-left hvr-icon"></i>
-                <spring:message code="general.backToDashboard" /> </a>
-        </div>
-        <div class="col-md-2">
-            <c:choose>
-                <c:when test="${sampleProcessed == 'true'}">
-                    <openmrs:hasPrivilege privilege="Add CommonLabTest Samples">
-                        <a style="text-decoration:none ; pointer-events: none;  cursor: default;" onclick="navigatedToLabTestSample();"
-                            id="addTestSamples" class="hvr-icon-grow"><i class="fa fa-plus hvr-icon"></i>
-                            <spring:message code="commonlabtest.labtestsample.add" /> </a>
-                    </openmrs:hasPrivilege>
-                </c:when>
-                <c:otherwise>
-                <openmrs:hasPrivilege privilege="Add CommonLabTest Samples">
-                  <a style="text-decoration:none" onclick="navigatedToLabTestSample();" id="addTestSamples" class="hvr-icon-grow"><i
-                            class="fa fa-plus hvr-icon"></i>
-                        <spring:message code="commonlabtest.labtestsample.add" /> </a>
-                </openmrs:hasPrivilege>   
-                </c:otherwise>
-            </c:choose>
-        </div>
-    </div>
-    <br>
-    <c:if test="${not empty status}">
-        <div class="alert alert-success" id="success-alert">
-            <a href="#" class="close" data-dismiss="alert">&times;</a>
-            <strong>Success!</strong>
-            <c:out value="${status}" />
-        </div>
-    </c:if>
-    <div id="alert_placeholder"></div>
-    <!--List of Test Order  -->
-    <div class=" boxHeader" style="background-color: #1aac9b">
-        <span></span> <b>
-            <spring:message code="commonlabtest.labtestsample.list" /></b>
-    </div>
-    <div class="box">
-        <table id="testSampleTable" class="table table-striped table-bordered" style="width:100%">
-            <thead>
-                <tr>
-                    <openmrs:hasPrivilege privilege="Edit CommonLabTest Samples">
-                        <th>Sample ID</th>
-                    </openmrs:hasPrivilege>
-                    <th>Specimen Type</th>
-                    <th>Specimen Site</th>
-                    <th>Sample Identifier</th>
-                    <th>Collected On</th>
-                    <th>Status</th>
-                    <th hidden="true"></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="testSample" items="${labSampleTest}">
-                    <c:if test="${! empty labSampleTest}">
-                        <c:choose>
-                            <c:when test="${sampleProcessed == 'true'}">
-                                <tr>
-                                    <openmrs:hasPrivilege privilege="Edit CommonLabTest Samples">
-                                        <td><a style="text-decoration:none;  pointer-events: none;  cursor: default;"
-                                                href="${pageContext.request.contextPath}/module/commonlabtest/addLabTestSample.form?testSampleId=${testSample.labTestSampleId}&patientId=${patientId}&orderId=${orderId}"
-                                                class="hvr-icon-grow"><span><i class="fa fa-edit hvr-icon"></i></span>
-                                                ${testSample.labTestSampleId}</a></td>
-                                    </openmrs:hasPrivilege>
-                                    <td>${testSample.getSpecimenType().getName()}</td>
-                                    <td>${testSample.getSpecimenSite().getName()}</td>
-                                    <td>${testSample.getSampleIdentifier()}</td>
-                                    <td>
-                                        <fmt:formatDate value="${testSample.collectionDate}" pattern="yyyy-mm-dd" />
-                                    </td>
-                                    <td>${testSample.getStatus()}</td>
-                                    <td hidden="true" class="uuid">${testSample.uuid}</td>
-                                     <openmrs:hasPrivilege privilege="Add CommonLabTest Samples, Edit CommonLabTest Samples">
-	                                    <td><button type="button" disabled class="btn  reject">Reject</button> </td>
-	                                    <td><button type="button" disabled class="btn  accept">Accept</button></td>
-                                    </openmrs:hasPrivilege>
-                                </tr>
-                            </c:when>
-                            <c:otherwise>
-                                <tr>
-                                    <openmrs:hasPrivilege privilege="Edit CommonLabTest Samples">
-                                        <td><a style="text-decoration:none" href="${pageContext.request.contextPath}/module/commonlabtest/addLabTestSample.form?testSampleId=${testSample.labTestSampleId}&patientId=${patientId}&orderId=${orderId}"
-                                                class="hvr-icon-grow"><span><i class="fa fa-edit hvr-icon"></i></span>
-                                                ${testSample.labTestSampleId}</a></td>
-                                    </openmrs:hasPrivilege>
-                                    <td>${testSample.getSpecimenType().getName()}</td>
-                                    <td>${testSample.getSpecimenSite().getName()}</td>
-                                    <td>${testSample.getSampleIdentifier()}</td>
-                                    <td>
-                                        <fmt:formatDate value="${testSample.collectionDate}" pattern="yyyy-mm-dd" />
-                                    </td>
-                                    <td>${testSample.getStatus()}</td>
-                                    <td hidden="true" class="uuid">${testSample.uuid}</td>
-                                    <openmrs:hasPrivilege privilege="Add CommonLabTest Samples, Edit CommonLabTest Samples">
-                                        <td><button type="button" onclick="rejection(this)" class="btn  reject">Reject</button>
-                                        </td>
-                                        <td><button type="button" onclick="accept(this)" class="btn  accept">Accept</button></td>
-                                    </openmrs:hasPrivilege>
-                                </tr>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:if>
-                </c:forEach>
-            </tbody>
-        </table>
-    </div>
+	<br>
+	<div class="row">
+		<div class="col-md-3">
+			<a style="text-decoration: none"
+				onclick="navigatedToPatientDashboard();" id="addTestSamples"
+				class="hvr-icon-back"><i
+				class="fa fa-chevron-circle-left hvr-icon"></i> <spring:message
+					code="general.backToDashboard" /> </a>
+		</div>
+		<div class="col-md-2">
+			<c:choose>
+				<c:when test="${sampleProcessed == 'true'}">
+					<openmrs:hasPrivilege privilege="Add CommonLabTest Samples">
+						<a
+							style="text-decoration: none; pointer-events: none; cursor: default;"
+							onclick="navigatedToLabTestSample();" id="addTestSamples"
+							class="hvr-icon-grow"><i class="fa fa-plus hvr-icon"></i> <spring:message
+								code="commonlabtest.labtestsample.add" /> </a>
+					</openmrs:hasPrivilege>
+				</c:when>
+				<c:otherwise>
+					<openmrs:hasPrivilege privilege="Add CommonLabTest Samples">
+						<a style="text-decoration: none"
+							onclick="navigatedToLabTestSample();" id="addTestSamples"
+							class="hvr-icon-grow"><i class="fa fa-plus hvr-icon"></i> <spring:message
+								code="commonlabtest.labtestsample.add" /> </a>
+					</openmrs:hasPrivilege>
+				</c:otherwise>
+			</c:choose>
+		</div>
+	</div>
+	<br>
+	<c:if test="${not empty status}">
+		<div class="alert alert-success" id="success-alert">
+			<a href="#" class="close" data-dismiss="alert">&times;</a> <strong>Success!</strong>
+			<c:out value="${status}" />
+		</div>
+	</c:if>
+	<div id="alert_placeholder"></div>
+	<!--List of Test Order  -->
+	<div class=" boxHeader" style="background-color: #1aac9b">
+		<span></span> <b> <spring:message
+				code="commonlabtest.labtestsample.list" /></b>
+	</div>
+	<div class="box">
+		<table id="testSampleTable" class="table table-striped table-bordered"
+			style="width: 100%">
+			<thead>
+				<tr>
+					<openmrs:hasPrivilege privilege="Edit CommonLabTest Samples">
+						<th>Sample ID</th>
+					</openmrs:hasPrivilege>
+					<th>Specimen Type</th>
+					<th>Specimen Site</th>
+					<th>Sample Identifier</th>
+					<th>Collected On</th>
+					<th>Status</th>
+					<th hidden="true"></th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="testSample" items="${labSampleTest}">
+					<c:if test="${! empty labSampleTest}">
+						<c:choose>
+							<c:when test="${sampleProcessed == 'true'}">
+								<tr>
+									<openmrs:hasPrivilege privilege="Edit CommonLabTest Samples">
+										<td><a
+											style="text-decoration: none; pointer-events: none; cursor: default;"
+											href="${pageContext.request.contextPath}/module/commonlabtest/addLabTestSample.form?testSampleId=${testSample.labTestSampleId}&patientId=${patientId}&orderId=${orderId}"
+											class="hvr-icon-grow"><span><i
+													class="fa fa-edit hvr-icon"></i></span>
+												${testSample.labTestSampleId}</a></td>
+									</openmrs:hasPrivilege>
+									<td>${testSample.getSpecimenType().getName()}</td>
+									<td>${testSample.getSpecimenSite().getName()}</td>
+									<td>${testSample.getSampleIdentifier()}</td>
+									<td><fmt:formatDate value="${testSample.collectionDate}"
+											pattern="yyyy-mm-dd" /></td>
+									<td>${testSample.getStatus()}</td>
+									<td hidden="true" class="uuid">${testSample.uuid}</td>
+									<openmrs:hasPrivilege
+										privilege="Add CommonLabTest Samples, Edit CommonLabTest Samples">
+										<td><button type="button" disabled class="btn  reject">Reject</button>
+										</td>
+										<td><button type="button" disabled class="btn  accept">Accept</button></td>
+									</openmrs:hasPrivilege>
+								</tr>
+							</c:when>
+							<c:otherwise>
+								<tr>
+									<openmrs:hasPrivilege privilege="Edit CommonLabTest Samples">
+										<td><a style="text-decoration: none"
+											href="${pageContext.request.contextPath}/module/commonlabtest/addLabTestSample.form?testSampleId=${testSample.labTestSampleId}&patientId=${patientId}&orderId=${orderId}"
+											class="hvr-icon-grow"><span><i
+													class="fa fa-edit hvr-icon"></i></span>
+												${testSample.labTestSampleId}</a></td>
+									</openmrs:hasPrivilege>
+									<td>${testSample.getSpecimenType().getName()}</td>
+									<td>${testSample.getSpecimenSite().getName()}</td>
+									<td>${testSample.getSampleIdentifier()}</td>
+									<td><fmt:formatDate value="${testSample.collectionDate}"
+											pattern="yyyy-mm-dd" /></td>
+									<td>${testSample.getStatus()}</td>
+									<td hidden="true" class="uuid">${testSample.uuid}</td>
+									<openmrs:hasPrivilege
+										privilege="Add CommonLabTest Samples, Edit CommonLabTest Samples">
+										<td><button type="button" onclick="rejection(this)"
+												class="btn  reject">Reject</button></td>
+										<td><button type="button" onclick="accept(this)"
+												class="btn  accept">Accept</button></td>
+									</openmrs:hasPrivilege>
+								</tr>
+							</c:otherwise>
+						</c:choose>
+					</c:if>
+				</c:forEach>
+			</tbody>
+		</table>
+	</div>
 
-    <!-- Rejected Reason Modal -->
-    <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    <h4 class="modal-title w-100 font-weight-bold">Enter Reject Reason</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="post" action="${pageContext.request.contextPath}/module/commonlabtest/statuslabtestsample.form">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <input value="${patientId}" hidden="true" id="patientId" name="patientId"></input>
-                                <input value="" hidden="true" id="uuidReject" name="uuid"></input>
-                                <input value="0" hidden="true" id="isAccepted" name="isAccepted"></input>
-                                <label class="control-label">Reason<span class="required">*</span></label>
-                            </div>
-                            <div class="col-md-6">
-                                <input class="form-control" value="" name="rejectedReason" id="rejectedReason" required="required">
-                            </div>
-                        </div>
-                        <!-- Retire -->
-                        <div class="row">
-                            <div class="col-md-4">
-                            </div>
-                            <div class="col-md-4">
-                                <input type="submit"></input>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+	<!-- Rejected Reason Modal -->
+	<div class="modal fade" id="rejectModal" tabindex="-1" role="dialog"
+		aria-labelledby="viewModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header text-center">
+					<h4 class="modal-title w-100 font-weight-bold">Enter Reject
+						Reason</h4>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form method="post"
+						action="${pageContext.request.contextPath}/module/commonlabtest/statuslabtestsample.form">
+						<div class="row">
+							<div class="col-md-4">
+								<input value="${patientId}" hidden="true" id="patientId"
+									name="patientId"></input> <input value="" hidden="true"
+									id="uuidReject" name="uuid"></input> <input value="0"
+									hidden="true" id="isAccepted" name="isAccepted"></input> <label
+									class="control-label">Reason<span class="required">*</span></label>
+							</div>
+							<div class="col-md-6">
+								<input class="form-control" value="" name="rejectedReason"
+									id="rejectedReason" required="required">
+							</div>
+						</div>
+						<!-- Retire -->
+						<div class="row">
+							<div class="col-md-4"></div>
+							<div class="col-md-4">
+								<input type="submit"></input>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 
 <!--JAVA SCRIPT  -->
