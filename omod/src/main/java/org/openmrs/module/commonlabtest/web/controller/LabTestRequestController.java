@@ -21,7 +21,6 @@ import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.web.WebConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,15 +42,10 @@ public class LabTestRequestController {
 	
 	CommonLabTestService commonLabTestService;
 	
-	@Autowired
-	public LabTestRequestController(CommonLabTestService commonLabTestService) {
-		this.commonLabTestService = commonLabTestService;
-	}
-	
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestRequest.form")
 	public String showForm(HttpServletRequest request, @RequestParam(required = false) String error,
 	        @RequestParam(required = false) Integer patientId, ModelMap model) {
-		
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		if (Context.getAuthenticatedUser() == null) {
 			return "redirect:../../login.htm";
 		}
@@ -124,7 +118,7 @@ public class LabTestRequestController {
 	@ResponseBody
 	public boolean onSubmit(ModelMap model, HttpSession httpSession, HttpServletRequest request, @RequestBody String json,
 	        @RequestParam(required = false) Integer patientId) {
-		
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status = "";
 		boolean boolStatus = Boolean.TRUE;
 		try {

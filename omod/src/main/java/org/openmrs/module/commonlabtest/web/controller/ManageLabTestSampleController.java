@@ -8,12 +8,12 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.web.WebConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,14 +27,13 @@ public class ManageLabTestSampleController {
 	
 	private final String SUCCESS_ADD_FORM_VIEW = "/module/commonlabtest/manageLabTestSamples";
 	
-	@Autowired
 	CommonLabTestService commonLabTestService;
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/manageLabTestSamples.form")
 	public String showLabTestSample(HttpServletRequest request, @RequestParam(required = true) Integer patientId,
 	        @RequestParam(required = false) Integer testOrderId, @RequestParam(required = false) String save,
 	        ModelMap model) {
-		
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		List<LabTestSample> testSample;
 		if (testOrderId == null) {
 			testSample = new ArrayList<LabTestSample>();
@@ -72,6 +71,7 @@ public class ManageLabTestSampleController {
 	        @RequestParam("uuid") String uuid, @RequestParam("patientId") String patientId,
 	        @RequestParam(value = "rejectedReason", required = false) String rejectedReason,
 	        @RequestParam(value = "isAccepted", required = false) String isAccepted) {
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestSample labTestSample = commonLabTestService.getLabTestSampleByUuid(uuid);
 		String status;
 		try {

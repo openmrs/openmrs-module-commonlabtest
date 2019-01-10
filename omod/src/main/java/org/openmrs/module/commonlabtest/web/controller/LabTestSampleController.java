@@ -19,7 +19,6 @@ import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.web.WebConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -38,7 +37,6 @@ public class LabTestSampleController {
 	
 	private final String SUCCESS_ADD_FORM_VIEW = "/module/commonlabtest/addLabTestSample";
 	
-	@Autowired
 	CommonLabTestService commonLabTestService;
 	
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -52,7 +50,7 @@ public class LabTestSampleController {
 	public String showForm(HttpServletRequest request, ModelMap model, @RequestParam(required = true) Integer patientId,
 	        @RequestParam(required = false) Integer testSampleId, @RequestParam(required = false) Integer orderId,
 	        @RequestParam(required = false) String error) {
-		
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String orderDate = "";
 		if (orderId != null) {
 			LabTest labTest = commonLabTestService.getLabTest(orderId);
@@ -124,7 +122,7 @@ public class LabTestSampleController {
 	public String onSubmit(ModelMap model, HttpSession httpSession,
 	        @ModelAttribute("anyRequestObject") Object anyRequestObject, HttpServletRequest request,
 	        @ModelAttribute("testSample") LabTestSample labTestSample, BindingResult result) {
-		
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status = "";
 		if (Context.getAuthenticatedUser() == null) {
 			return "redirect:../../login.htm";
@@ -179,6 +177,7 @@ public class LabTestSampleController {
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/voidlabtestsample.form")
 	public String onVoid(ModelMap model, HttpSession httpSession, HttpServletRequest request,
 	        @RequestParam("uuid") String uuid, @RequestParam("voidReason") String voidReason) {
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestSample labTestSample = commonLabTestService.getLabTestSampleByUuid(uuid);
 		String status;
 		if (Context.getAuthenticatedUser() == null) {
@@ -204,13 +203,10 @@ public class LabTestSampleController {
 				        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&testSampleId="
 				        + labTestSample.getLabTest().getTestOrderId();
 			}
-			
 		}
 		model.addAttribute("save", status);
 		return "redirect:manageLabTestSamples.form?patientId="
 		        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&testOrderId="
 		        + labTestSample.getLabTest().getTestOrderId();
-		
 	}
-	
 }

@@ -1,5 +1,14 @@
 package org.openmrs.module.commonlabtest.web.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
@@ -12,7 +21,6 @@ import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.web.WebConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -21,15 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 @Controller
 public class LabTestOrderController {
 	
@@ -37,14 +36,13 @@ public class LabTestOrderController {
 	
 	private final String SUCCESS_ADD_FORM_VIEW = "/module/commonlabtest/addLabTestOrder";
 	
-	@Autowired
 	CommonLabTestService commonLabTestService;
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestOrder.form")
 	public String showForm(@RequestParam(required = true) Integer patientId,
 	        @RequestParam(required = false) Integer testOrderId, @RequestParam(required = false) String error,
 	        ModelMap model) {
-		
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTest labTest;
 		if (testOrderId == null) {
 			labTest = new LabTest();
@@ -68,7 +66,6 @@ public class LabTestOrderController {
 				labTestTypeHavingAttributes.add(labTestTypeIt);
 			}
 		}
-		
 		model.addAttribute("labTest", labTest);
 		model.addAttribute("patientId", patientId);
 		model.addAttribute("testTypes", labTestTypeHavingAttributes);
@@ -79,14 +76,12 @@ public class LabTestOrderController {
 			model.addAttribute("provider", Context.getProviderService()
 			        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
 		}
-		
 		// show only first 10 encounters
 		if (encounterList.size() > 10) {
 			model.addAttribute("encounters", encounterList.subList(0, encounterList.size() - 1));
 		} else {
 			model.addAttribute("encounters", encounterList);
 		}
-		
 		return SUCCESS_ADD_FORM_VIEW;
 	}
 	
@@ -95,7 +90,7 @@ public class LabTestOrderController {
 	public String onSubmit(ModelMap model, HttpSession httpSession,
 	        @ModelAttribute("anyRequestObject") Object anyRequestObject, HttpServletRequest request,
 	        @ModelAttribute("labTest") LabTest labTest, BindingResult result) {
-		
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status = "";
 		if (Context.getAuthenticatedUser() == null) {
 			return "redirect:../../login.htm";
@@ -130,7 +125,8 @@ public class LabTestOrderController {
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/voidlabtestorder.form")
 	public String onVoid(ModelMap model, HttpSession httpSession, HttpServletRequest request,
 	        @RequestParam("uuid") String uuid, @RequestParam("voidReason") String voidReason) {
-		LabTest labTest = Context.getService(CommonLabTestService.class).getLabTestByUuid(uuid);
+		commonLabTestService = Context.getService(CommonLabTestService.class);
+		LabTest labTest = commonLabTestService.getLabTestByUuid(uuid);
 		String status = "";
 		// if user not login the redirect to login page...
 		if (Context.getAuthenticatedUser() == null) {

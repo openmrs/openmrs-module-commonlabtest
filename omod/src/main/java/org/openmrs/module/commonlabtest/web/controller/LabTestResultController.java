@@ -25,7 +25,6 @@ import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.web.WebConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
@@ -34,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -47,7 +45,6 @@ public class LabTestResultController {
 	
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
-	@Autowired
 	CommonLabTestService commonLabTestService;
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestResult.form")

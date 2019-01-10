@@ -14,7 +14,6 @@ import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,19 +28,19 @@ public class LabTestResultViewController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	@Autowired
 	CommonLabTestService commonLabTestService;
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/getTestResults.form")
 	@ResponseBody
 	public String getLabTestResult(@RequestParam Integer testOrderId) {
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTest labTest = commonLabTestService.getLabTest(testOrderId);
 		List<LabTestSample> testSample;
 		List<LabTestAttribute> testAttributes = commonLabTestService.getLabTestAttributes(testOrderId);
 		JsonObject testResultList = new JsonObject();
 		JsonArray testSampleArray = new JsonArray();
 		JsonArray testResultArray = new JsonArray();
-		
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		try {
 			for (LabTestAttributeType attribut : commonLabTestService.getLabTestAttributeTypes(labTest.getLabTestType(),
 			    Boolean.TRUE)) {
@@ -54,9 +53,7 @@ public class LabTestResultViewController {
 					}
 				}
 			}
-			
 			testSample = commonLabTestService.getLabTestSamples(labTest, Boolean.FALSE);
-			
 			for (LabTestSample labTestSample : testSample) {
 				JsonObject objTestSample = new JsonObject();
 				objTestSample.addProperty("testOrderId", testOrderId);
@@ -65,7 +62,6 @@ public class LabTestResultViewController {
 				objTestSample.addProperty("status", labTestSample.getStatus().name());
 				testSampleArray.add(objTestSample);
 			}
-			
 			if (testAttributes != null && !testAttributes.isEmpty()) {
 				LabTestAttributeType labTestAttributeType = testAttributes.get(0).getAttributeType();
 				List<LabTestAttributeType> labTestAttributeTypes = commonLabTestService
@@ -73,21 +69,19 @@ public class LabTestResultViewController {
 				testResultArray = getAttributeTypeList(labTestAttributeTypes, testOrderId, testAttributes);
 			}
 		}
-		
 		catch (Exception e) {
 			testResultList.add("sample", testSampleArray);
 			testResultList.add("result", testResultArray);
 		}
 		testResultList.add("sample", testSampleArray);
 		testResultList.add("result", testResultArray);
-		
 		return testResultList.toString();
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/getTestSampleStatus.form")
 	@ResponseBody
 	public Boolean getLabTestSampleStatus(@RequestParam Integer testOrderId) {
-		
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTest labTest = commonLabTestService.getLabTest(testOrderId);
 		List<LabTestSample> testSample;
 		testSample = commonLabTestService.getLabTestSamples(labTest, Boolean.FALSE);
@@ -96,7 +90,6 @@ public class LabTestResultViewController {
 			        || labTestSample.getStatus().equals(LabTestSampleStatus.PROCESSED)) {
 				return Boolean.TRUE;
 			}
-			
 		}
 		return Boolean.FALSE;
 	}
@@ -104,7 +97,7 @@ public class LabTestResultViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/getTestSampleAcceptedStatus.form")
 	@ResponseBody
 	public Boolean getLabTestSampleAcceptedStatus(@RequestParam Integer testOrderId) {
-		
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTest labTest = commonLabTestService.getLabTest(testOrderId);
 		List<LabTestSample> testSample;
 		int count = 1;
@@ -123,6 +116,7 @@ public class LabTestResultViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/getTestAttributeTypeSortWeight.form")
 	@ResponseBody
 	public String getLabTestAttributeType(@RequestParam Integer testTypeId) {
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestType labTestType = commonLabTestService.getLabTestType(testTypeId);
 		List<LabTestAttributeType> labTestAttributeType = commonLabTestService.getLabTestAttributeTypes(labTestType,
 		    Boolean.FALSE);
@@ -178,7 +172,6 @@ public class LabTestResultViewController {
 	
 	public JsonArray getAttributeTypeList(List<LabTestAttributeType> labTestAttributeTypeList, int testOrderId,
 	        List<LabTestAttribute> labTestAttributes) {
-		
 		List<String> holderGroupIdList = new ArrayList<String>();
 		JsonArray parentJsonArray = new JsonArray();
 		JsonObject labTestGroupObj;
@@ -212,7 +205,6 @@ public class LabTestResultViewController {
 	
 	private LabTestAttribute getFilterAttribute(LabTestAttributeType labTestAttributeType,
 	        List<LabTestAttribute> LabTestAttribute) {
-		
 		LabTestAttribute labTestAttributeResult = new LabTestAttribute();
 		if (!LabTestAttribute.isEmpty()) {
 			for (LabTestAttribute filterLabTestAttribute : LabTestAttribute) {
@@ -223,14 +215,12 @@ public class LabTestResultViewController {
 				}
 			}
 		}
-		
 		return labTestAttributeResult;
 	}
 	
 	private List<LabTestAttributeType> getFilterAttributeTypes(LabTestAttributeType labTestAttributeType,
 	        List<LabTestAttributeType> listLabTestAttributeType) {
 		List<LabTestAttributeType> filterLabTestAttributeTypes = new ArrayList<LabTestAttributeType>();
-		
 		if (!listLabTestAttributeType.isEmpty()) {
 			for (LabTestAttributeType filterLabTestAttributeType : listLabTestAttributeType) {
 				String groupName = filterLabTestAttributeType.getGroupName();
@@ -239,16 +229,12 @@ public class LabTestResultViewController {
 						filterLabTestAttributeTypes.add(filterLabTestAttributeType);
 					}
 				}
-				
 			}
-			
 		}
-		
 		return filterLabTestAttributeTypes;
 	}
 	
 	private JsonObject getLabTestAttributeObj(LabTestAttribute labTestAttribute) {
-		
 		JsonObject objTestResult = new JsonObject();
 		if (labTestAttribute != null) {
 			if (labTestAttribute.getAttributeType().getDatatypeClassname()

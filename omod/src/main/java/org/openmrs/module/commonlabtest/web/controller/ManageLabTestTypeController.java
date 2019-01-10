@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,13 +23,10 @@ public class ManageLabTestTypeController {
 	/** Logger for this class */
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	@Autowired
-	CommonLabTestService commonLabTestService;
-	
 	@RequestMapping(method = RequestMethod.GET)
 	public String showLabTestTypes(@RequestParam(required = false) String save, ModelMap model) {
 		
-		List<LabTestType> list = commonLabTestService.getAllLabTestTypes(Boolean.FALSE);
+		List<LabTestType> list = Context.getService(CommonLabTestService.class).getAllLabTestTypes(Boolean.FALSE);
 		
 		model.put("labTestTypes", list);
 		model.addAttribute("status", save);
