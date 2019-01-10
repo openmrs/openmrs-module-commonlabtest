@@ -1,6 +1,28 @@
-# Ignore build files
-*/target/**
 *.class
-*.prefs
-*.project
-*.classpath
+*.iml
+*.idea
+.settings
+.project
+*.sass-cache
+target
+.java-version
+*.releaseBackup
+release.properties
+README.html
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.iml
+
+.settings/*
+api/.classpath
+api/.project
+api/.settings/*
+api/target/*
+omod/.classpath
+omod/.project
+omod/.settings/*
+omod/target/*
+/.settings
