@@ -3,7 +3,7 @@ Common Lab Module
 
 Description
 -----------
-This is a very basic module which can be used as a starting point in creating a new module.
+This is a simple module, which can be used to create and customise forms to manage patients' laboratory test orders, samples and results.
 
 Building from Source
 --------------------
@@ -28,3 +28,7 @@ If uploads are not allowed from the web (changable via a runtime property), you 
 into the ~/.OpenMRS/modules folder.  (Where ~/.OpenMRS is assumed to be the Application 
 Data Directory that the running openmrs is currently using.)  After putting the file in there 
 simply restart OpenMRS/tomcat and the module will be loaded and started.
+
+Wiki
+------------
+Complete documentation can be found on OpenMRS Wiki page for [Common Lab Module](https://wiki.openmrs.org/display/docs/Common+Lab+Module)
