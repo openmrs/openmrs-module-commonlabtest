@@ -376,12 +376,15 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
 		
 		criteria.createAlias("labTest", "labTest", CriteriaSpecification.INNER_JOIN).setFetchMode("labTest", FetchMode.JOIN)
-		        //.add(Restrictions.eq("labTest.order.patient.personId", patient.getPatientId()))
+		        // .add(Restrictions.eq("labTest.order.patient.personId",
+		        // patient.getPatientId()))
 		        .createAlias("labTest.order", "order", CriteriaSpecification.INNER_JOIN)
 		        .setFetchMode("order", FetchMode.JOIN)
 		        .add(Restrictions.eq("order.patient.personId", patient.getPatientId()));
-		//   .createAlias("labTest", "labTest", CriteriaSpecification.INNER_JOIN).setFetchMode("labTest", FetchMode.JOIN);
-		//criteria.add(Restrictions.eq("order.patient.patientId", patient.getPatientId()));
+		// .createAlias("labTest", "labTest",
+		// CriteriaSpecification.INNER_JOIN).setFetchMode("labTest", FetchMode.JOIN);
+		// criteria.add(Restrictions.eq("order.patient.patientId",
+		// patient.getPatientId()));
 		if (!includeVoided) {
 			criteria.add(Restrictions.eq("voided", false));
 		}
@@ -466,8 +469,8 @@ public class CommonLabTestDaoImpl implements CommonLabTestDao {
 	
 	/**
 	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDao#getNLabTestSamples(org.openmrs.Patient,
-	 *      org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus, int, boolean,
-	 *      boolean, boolean)
+	 *      org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus, int, boolean, boolean,
+	 *      boolean)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")

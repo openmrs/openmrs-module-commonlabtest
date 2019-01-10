@@ -48,7 +48,8 @@ public class CommonLabTestController {
 	/** Logger for this class and subclasses */
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	//	CommonLabTestService service = Context.getService(CommonLabTestServiceImpl.class);
+	// CommonLabTestService service =
+	// Context.getService(CommonLabTestServiceImpl.class);
 	
 	/** Success form view name */
 	private static final String VIEW = "/module/${rootArtifactid}/";
@@ -426,8 +427,7 @@ public class CommonLabTestController {
 	
 	/**
 	 * Sets {@link LabTestSampleStatus} to REJECTED and saves the {@link LabTestSample} object. Also
-	 * voids the object if AUTO_VOID_REJECTED_SAMPLES property is true in
-	 * {@link CommonLabTestConfig}
+	 * voids the object if AUTO_VOID_REJECTED_SAMPLES property is true in {@link CommonLabTestConfig}
 	 * 
 	 * @param labTestSample
 	 */
@@ -468,8 +468,8 @@ public class CommonLabTestController {
 	}
 	
 	/**
-	 * Searches for {@link LabTest} objects by given non-null parameters. At least one parameter
-	 * must be defined; parameters <code>status</code> must coexist with <code>from and to</code>
+	 * Searches for {@link LabTest} objects by given non-null parameters. At least one parameter must be
+	 * defined; parameters <code>status</code> must coexist with <code>from and to</code>
 	 * 
 	 * @param labTestTypeId
 	 * @param patientId
@@ -605,7 +605,9 @@ public class CommonLabTestController {
 		List<LabTestAttribute> list = Context.getService(CommonLabTestServiceImpl.class)
 		        .getLabTestAttributes(labTestAttributeType, value, from, to, includeVoided);
 		if (patientId != null) {
-			// TODO: Terribly inefficient approach, make us of getLabTestAttributes(patient, labTestAttributeType, includeVoided) method rather than filtering out patients post retrieval
+			// TODO: Terribly inefficient approach, make us of getLabTestAttributes(patient,
+			// labTestAttributeType, includeVoided) method rather than filtering out
+			// patients post retrieval
 			List<LabTestAttribute> finalList = new ArrayList<LabTestAttribute>();
 			for (LabTestAttribute attribute : list) {
 				if (attribute.getLabTest().getOrder().getPatient().getPatientId().equals(patientId)) {

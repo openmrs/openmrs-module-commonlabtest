@@ -5,8 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.device.manager.devicemanager.model.Devices;
 
-
 @Repository
-public interface  DevicesRepository  extends JpaRepository<Devices, Integer>{
-
+public interface DevicesRepository extends JpaRepository<Devices, Integer> {
+	
 }

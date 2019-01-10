@@ -47,10 +47,11 @@ public class LabTestSample extends BaseOpenmrsData {
 	 * Enumerated type to represent status of sample
 	 */
 	public enum LabTestSampleStatus {
-	COLLECTED, // First state of sample, when received by sample collector
-	ACCEPTED, // When lab accepts the sample for processing
-	REJECTED, // Set when lab does not accept the sample due to any reason (contamination, insufficient quantity, etc.)
-	PROCESSED // After the sample has been processed by lab
+		COLLECTED, // First state of sample, when received by sample collector
+		ACCEPTED, // When lab accepts the sample for processing
+		REJECTED, // Set when lab does not accept the sample due to any reason (contamination,
+	    // insufficient quantity, etc.)
+		PROCESSED // After the sample has been processed by lab
 	}
 	
 	private static final long serialVersionUID = 1169373793251683587L;
@@ -72,7 +73,7 @@ public class LabTestSample extends BaseOpenmrsData {
 	@JoinColumn(name = "specimen_site")
 	private Concept specimenSite;
 	
-	//@Temporal(TemporalType.DATE)
+	// @Temporal(TemporalType.DATE)
 	@Column(name = "collection_date")
 	private Date collectionDate;
 	

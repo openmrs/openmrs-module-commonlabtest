@@ -80,7 +80,7 @@ public class LabTestOrderController {
 			        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
 		}
 		
-		//show only first 10 encounters 
+		// show only first 10 encounters
 		if (encounterList.size() > 10) {
 			model.addAttribute("encounters", encounterList.subList(0, encounterList.size() - 1));
 		} else {
@@ -132,7 +132,7 @@ public class LabTestOrderController {
 	        @RequestParam("uuid") String uuid, @RequestParam("voidReason") String voidReason) {
 		LabTest labTest = Context.getService(CommonLabTestService.class).getLabTestByUuid(uuid);
 		String status = "";
-		//if user not login the redirect to login page...
+		// if user not login the redirect to login page...
 		if (Context.getAuthenticatedUser() == null) {
 			return "redirect:../../login.htm";
 		}

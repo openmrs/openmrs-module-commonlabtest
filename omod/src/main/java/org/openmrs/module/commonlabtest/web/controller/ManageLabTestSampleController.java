@@ -47,7 +47,8 @@ public class ManageLabTestSampleController {
 				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "Test Order is not found");
 				return "redirect:../../patientDashboard.form?patientId=" + patientId;
 			}
-			testSample = commonLabTestService.getLabTestSamples(labTest, Boolean.FALSE);//need to check this get sample method...
+			testSample = commonLabTestService.getLabTestSamples(labTest, Boolean.FALSE);// need to check this get sample
+			                                                                            // method...
 		}
 		
 		for (LabTestSample labTestSample : testSample) {

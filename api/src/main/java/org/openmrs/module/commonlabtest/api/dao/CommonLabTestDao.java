@@ -230,10 +230,10 @@ public interface CommonLabTestDao {
 	LabTestType getLabTestTypeByUuid(String uuid);
 	
 	/**
-	 * Returns a list of 'n' number of {@link LabTest} objects. If firstNObjects is true, then
-	 * earliest 'n' objects are returned; if lastNObjects is true, then latest 'n' objects are
-	 * returned. If both a true, then a union of both results is returned. Maximum number of objects
-	 * to return is limited by MAX_FETCH_LIMIT
+	 * Returns a list of 'n' number of {@link LabTest} objects. If firstNObjects is true, then earliest
+	 * 'n' objects are returned; if lastNObjects is true, then latest 'n' objects are returned. If both
+	 * a true, then a union of both results is returned. Maximum number of objects to return is limited
+	 * by MAX_FETCH_LIMIT
 	 * 
 	 * @param patient
 	 * @param n
@@ -247,9 +247,9 @@ public interface CommonLabTestDao {
 	/**
 	 * Returns a list of 'n' number of {@link LabTestSample} objects by matching {@link Patient} and
 	 * {@link LabTestSampleStatus} (optional, pass null to ignore). If firstNObjects is true, then
-	 * earliest 'n' objects are returned; if lastNObjects is true, then latest 'n' objects are
-	 * returned. If both a true, then a union of both results is returned. Maximum number of objects
-	 * to return is limited by MAX_FETCH_LIMIT
+	 * earliest 'n' objects are returned; if lastNObjects is true, then latest 'n' objects are returned.
+	 * If both a true, then a union of both results is returned. Maximum number of objects to return is
+	 * limited by MAX_FETCH_LIMIT
 	 * 
 	 * @param patient
 	 * @param status

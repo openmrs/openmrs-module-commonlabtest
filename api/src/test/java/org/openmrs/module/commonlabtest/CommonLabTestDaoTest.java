@@ -408,13 +408,13 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	@Test
 	public final void testPurgeLabTestAttributeType() {
 		
-		/*LabTestAttributeType labTestAttributeType = dao.getLabTestAttributeType(2);
-		dao.purgeLabTestAttributeType(labTestAttributeType);
-		// clear cache
-		Context.flushSession();
-		Context.clearSession();
-		LabTestAttributeType exists = dao.getLabTestAttributeTypeByUuid(labTestAttributeType.getUuid());
-		assertNull(exists);*/
+		/*
+		 * LabTestAttributeType labTestAttributeType = dao.getLabTestAttributeType(2);
+		 * dao.purgeLabTestAttributeType(labTestAttributeType); // clear cache
+		 * Context.flushSession(); Context.clearSession(); LabTestAttributeType exists =
+		 * dao.getLabTestAttributeTypeByUuid(labTestAttributeType.getUuid());
+		 * assertNull(exists);
+		 */
 		
 	}
 	

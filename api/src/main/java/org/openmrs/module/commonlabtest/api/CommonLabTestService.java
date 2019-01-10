@@ -91,8 +91,8 @@ public interface CommonLabTestService extends OpenmrsService {
 	LabTestAttribute getLabTestAttribute(Integer labTestAttributeId) throws APIException;
 	
 	/**
-	 * Returns a {@link LabTestAttribute} object by uuid. It can be called by any authenticated
-	 * user. It is fetched in read only transaction.
+	 * Returns a {@link LabTestAttribute} object by uuid. It can be called by any authenticated user. It
+	 * is fetched in read only transaction.
 	 * 
 	 * @param uuid
 	 * @return
@@ -107,8 +107,8 @@ public interface CommonLabTestService extends OpenmrsService {
 	
 	/**
 	 * Get a list of {@link LabTestAttribute} objects using various parameters available. This is
-	 * similar to getByExample(...) methods, except that instead of passing similar object,
-	 * properties are passed as parameters
+	 * similar to getByExample(...) methods, except that instead of passing similar object, properties
+	 * are passed as parameters
 	 * 
 	 * @param labTestAttributeType
 	 * @param valueReference
@@ -161,9 +161,9 @@ public interface CommonLabTestService extends OpenmrsService {
 	LabTestAttributeType getLabTestAttributeTypeByUuid(String uuid) throws APIException;
 	
 	/**
-	 * Get a list of {@link LabTestAttributeType} objects using various parameters available. This
-	 * is similar to getByExample(...) methods, except that instead of passing similar object,
-	 * properties are passed as parameters
+	 * Get a list of {@link LabTestAttributeType} objects using various parameters available. This is
+	 * similar to getByExample(...) methods, except that instead of passing similar object, properties
+	 * are passed as parameters
 	 * 
 	 * @param name
 	 * @param datatypeClassname
@@ -209,8 +209,8 @@ public interface CommonLabTestService extends OpenmrsService {
 	LabTestSample getLabTestSample(Integer labTestSampleId) throws APIException;
 	
 	/**
-	 * Returns a {@link LabTestSample} object by uuid. It can be called by any authenticated user.
-	 * It is fetched in read only transaction.
+	 * Returns a {@link LabTestSample} object by uuid. It can be called by any authenticated user. It is
+	 * fetched in read only transaction.
 	 * 
 	 * @param uuid
 	 * @return
@@ -219,9 +219,9 @@ public interface CommonLabTestService extends OpenmrsService {
 	LabTestSample getLabTestSampleByUuid(String uuid) throws APIException;
 	
 	/**
-	 * Get a list of {@link LabTestSample} objects using various parameters available. This is
-	 * similar to getByExample(...) methods, except that instead of passing similar object,
-	 * properties are passed as parameters
+	 * Get a list of {@link LabTestSample} objects using various parameters available. This is similar
+	 * to getByExample(...) methods, except that instead of passing similar object, properties are
+	 * passed as parameters
 	 * 
 	 * @param labTest
 	 * @param patient
@@ -237,8 +237,8 @@ public interface CommonLabTestService extends OpenmrsService {
 	        String labSampleIdentifier, Provider collector, Date from, Date to, boolean includeVoided) throws APIException;
 	
 	/**
-	 * Returns a list of {@link LabTestSample} objects by matching given identifier and/or order
-	 * number and/or lab reference number
+	 * Returns a list of {@link LabTestSample} objects by matching given identifier and/or order number
+	 * and/or lab reference number
 	 * 
 	 * @param labSampleIdentifier
 	 * @param orderNumber
@@ -251,26 +251,26 @@ public interface CommonLabTestService extends OpenmrsService {
 	        boolean includeVoided) throws APIException;
 	
 	/**
-	 * @see List<LabTestSample> getLabTestSamples(LabTest, Patient, LabTestSampleStatus, String,
-	 *      String, String, String, Provider, Date, Date, boolean)
+	 * @see List<LabTestSample> getLabTestSamples(LabTest, Patient, LabTestSampleStatus, String, String,
+	 *      String, String, Provider, Date, Date, boolean)
 	 */
 	List<LabTestSample> getLabTestSamples(LabTest labTest, boolean includeVoided) throws APIException;
 	
 	/**
-	 * @see List<LabTestSample> getLabTestSamples(LabTest, Patient, LabTestSampleStatus, String,
-	 *      String, String, String, Provider, Date, Date, boolean)
+	 * @see List<LabTestSample> getLabTestSamples(LabTest, Patient, LabTestSampleStatus, String, String,
+	 *      String, String, Provider, Date, Date, boolean)
 	 */
 	List<LabTestSample> getLabTestSamples(Patient patient, boolean includeVoided) throws APIException;
 	
 	/**
-	 * @see List<LabTestSample> getLabTestSamples(LabTest, Patient, LabTestSampleStatus, String,
-	 *      String, String, String, Provider, Date, Date, boolean)
+	 * @see List<LabTestSample> getLabTestSamples(LabTest, Patient, LabTestSampleStatus, String, String,
+	 *      String, String, Provider, Date, Date, boolean)
 	 */
 	List<LabTestSample> getLabTestSamples(Provider collector, boolean includeVoided) throws APIException;
 	
 	/**
-	 * Returns list of {@link LabTestSample} objects by matching status property and date range.
-	 * This can be used to get samples which are yet to be processed
+	 * Returns list of {@link LabTestSample} objects by matching status property and date range. This
+	 * can be used to get samples which are yet to be processed
 	 * 
 	 * @param status
 	 * @param from
@@ -302,9 +302,9 @@ public interface CommonLabTestService extends OpenmrsService {
 	LabTestType getLabTestTypeByUuid(String uuid) throws APIException;
 	
 	/**
-	 * Get a list of {@link LabTestType} objects using various parameters available. This is similar
-	 * to getByExample(...) methods, except that instead of passing similar object, properties are
-	 * passed as parameters
+	 * Get a list of {@link LabTestType} objects using various parameters available. This is similar to
+	 * getByExample(...) methods, except that instead of passing similar object, properties are passed
+	 * as parameters
 	 * 
 	 * @param name
 	 * @param shortName
@@ -320,8 +320,8 @@ public interface CommonLabTestService extends OpenmrsService {
 	
 	/**
 	 * Get a list of {@link LabTest} objects using various parameters available. This is similar to
-	 * getByExample(...) methods, except that instead of passing similar object, properties are
-	 * passed as parameters
+	 * getByExample(...) methods, except that instead of passing similar object, properties are passed
+	 * as parameters
 	 * 
 	 * @param labTestType
 	 * @param patient
@@ -426,8 +426,8 @@ public interface CommonLabTestService extends OpenmrsService {
 	        throws APIException;
 	
 	/**
-	 * Saves a {@link LabTestAttribute} object. Sets the owner to superuser, if it is not set. It
-	 * can be called by users with this module's privilege. It is executed in a transaction.
+	 * Saves a {@link LabTestAttribute} object. Sets the owner to superuser, if it is not set. It can be
+	 * called by users with this module's privilege. It is executed in a transaction.
 	 * 
 	 * @param labTestAttribute
 	 * @return
@@ -436,8 +436,8 @@ public interface CommonLabTestService extends OpenmrsService {
 	LabTestAttribute saveLabTestAttribute(LabTestAttribute labTestAttribute) throws APIException;
 	
 	/**
-	 * Saves a list of {@link LabTestAttribute} objects. Call this when a set of attributes are
-	 * being saved as a group
+	 * Saves a list of {@link LabTestAttribute} objects. Call this when a set of attributes are being
+	 * saved as a group
 	 * 
 	 * @param labTestAttributes
 	 * @return
@@ -446,8 +446,8 @@ public interface CommonLabTestService extends OpenmrsService {
 	List<LabTestAttribute> saveLabTestAttributes(List<LabTestAttribute> labTestAttributes) throws APIException;
 	
 	/**
-	 * Saves a {@link LabTestAttributeType} object. Sets the owner to superuser, if it is not set.
-	 * It can be called by users with this module's privilege. It is executed in a transaction.
+	 * Saves a {@link LabTestAttributeType} object. Sets the owner to superuser, if it is not set. It
+	 * can be called by users with this module's privilege. It is executed in a transaction.
 	 * 
 	 * @param labTestAttributeType
 	 * @return
@@ -510,8 +510,8 @@ public interface CommonLabTestService extends OpenmrsService {
 	void unretireLabTestType(LabTestType labTestType) throws APIException;
 	
 	/**
-	 * Voids a {@link LabTest} object and all {@link LabTestSample} and {@link LabTestAttribute}
-	 * objects associated with it
+	 * Voids a {@link LabTest} object and all {@link LabTestSample} and {@link LabTestAttribute} objects
+	 * associated with it
 	 * 
 	 * @param labTest
 	 * @throws APIException
@@ -546,8 +546,8 @@ public interface CommonLabTestService extends OpenmrsService {
 	
 	/**
 	 * Unvoids a {@link LabTest} object along with all {@link LabTestSample} and
-	 * {@link LabTestAttribute} objects, which were voided with the same reason on same time. This
-	 * way, the dependent objects which were manually void will stay voided.
+	 * {@link LabTestAttribute} objects, which were voided with the same reason on same time. This way,
+	 * the dependent objects which were manually void will stay voided.
 	 * 
 	 * @param labTest
 	 * @throws APIException

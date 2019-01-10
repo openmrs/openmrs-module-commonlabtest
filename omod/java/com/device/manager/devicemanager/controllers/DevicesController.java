@@ -12,36 +12,35 @@ import org.springframework.web.bind.annotation.RestController;
 import com.device.manager.devicemanager.model.Devices;
 import com.device.manager.devicemanager.services.DevicesServices;
 
-
 @RestController
 public class DevicesController {
-
+	
 	@Autowired
 	DevicesServices devicesServices;
 	
 	@RequestMapping("/devices")
-	public List<Devices> getDevices(){
+	public List<Devices> getDevices() {
 		return devicesServices.getAllDevices();
 	}
 	
 	@RequestMapping("/devices/{id}")
-	public Devices getDevices(@PathVariable int id){
+	public Devices getDevices(@PathVariable int id) {
 		return devicesServices.getDevicesById(id);
 	}
 	
-	@RequestMapping(method =RequestMethod.POST,value = "/devices")
-	public void getDevices(@RequestBody Devices devices){
-		 devicesServices.saveDevices(devices);
+	@RequestMapping(method = RequestMethod.POST, value = "/devices")
+	public void getDevices(@RequestBody Devices devices) {
+		devicesServices.saveDevices(devices);
 	}
 	
-	@RequestMapping(method =RequestMethod.DELETE,value ="/devices/{id}")
-	public void deleteDevices(@PathVariable int id){
+	@RequestMapping(method = RequestMethod.DELETE, value = "/devices/{id}")
+	public void deleteDevices(@PathVariable int id) {
 		devicesServices.deleteDevicesById(id);
 	}
 	
-	@RequestMapping(method =RequestMethod.DELETE,value ="/devices")
-	public void deleteDevices(@RequestBody Devices devices){
+	@RequestMapping(method = RequestMethod.DELETE, value = "/devices")
+	public void deleteDevices(@RequestBody Devices devices) {
 		devicesServices.deleteDevices(devices);
 	}
-
+	
 }

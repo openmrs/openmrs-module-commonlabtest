@@ -147,8 +147,8 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	}
 	
 	/**
-	 * Always returns an empty list because returning complete list of all LabTests will be
-	 * burdensome. Also @see org.openmrs.Attributable#getPossibleValues()
+	 * Always returns an empty list because returning complete list of all LabTests will be burdensome.
+	 * Also @see org.openmrs.Attributable#getPossibleValues()
 	 */
 	@Override
 	public List<LabTest> getPossibleValues() {
@@ -175,8 +175,8 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	}
 	
 	/**
-	 * Searches LabTest object by given Id and returns the matching object. If the object is not
-	 * found, a new object is returned.
+	 * Searches LabTest object by given Id and returns the matching object. If the object is not found,
+	 * a new object is returned.
 	 */
 	public LabTest hydrate(Integer labTestId) {
 		try {

@@ -65,8 +65,8 @@ public class LabTestOrderPortletController extends PortletController {
 				}
 				System.out.println("Totatl Resullt SET ::" + orderJsonArray);
 				model.put("testOrder", orderJsonArray);
-				//generalObj.add(testList);
-				//model.put("testOrder", testList);
+				// generalObj.add(testList);
+				// model.put("testOrder", testList);
 			}
 		}
 		

@@ -7,5 +7,5 @@ import com.device.manager.devicemanager.model.Employees;
 
 @Repository
 public interface EmployeesRepository extends JpaRepository<Employees, Integer> {
-
+	
 }

@@ -276,8 +276,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	
 	/**
 	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest,
-	 *      org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSampleStatus,
-	 *      java.lang.String, org.openmrs.Provider, java.util.Date, java.util.Date, boolean)
+	 *      org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSampleStatus, java.lang.String,
+	 *      org.openmrs.Provider, java.util.Date, java.util.Date, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
@@ -390,8 +390,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	/**
 	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTests(org.openmrs.module.commonlabtest.LabTestType,
 	 *      org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSample, java.lang.String,
-	 *      java.lang.String, org.openmrs.Concept, org.openmrs.Provider, java.util.Date,
-	 *      java.util.Date, boolean)
+	 *      java.lang.String, org.openmrs.Concept, org.openmrs.Provider, java.util.Date, java.util.Date,
+	 *      boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -596,8 +596,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	}
 	
 	/**
-	 * This method disallows any modification in Unknown {@link LabTestType}. This method must be
-	 * called in before DML operations in any {@link LabTestType} object
+	 * This method disallows any modification in Unknown {@link LabTestType}. This method must be called
+	 * in before DML operations in any {@link LabTestType} object
 	 * 
 	 * @param labTestType
 	 */
@@ -919,8 +919,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	
 	/**
 	 * This method changes the {@link LabTestType} object in respective {@link LabTest} and
-	 * {@link LabTestAttributeType} dependencies, and voides/retires them afterwards with given
-	 * message
+	 * {@link LabTestAttributeType} dependencies, and voides/retires them afterwards with given message
 	 * 
 	 * @param labTestType
 	 * @param newObjectForCascade

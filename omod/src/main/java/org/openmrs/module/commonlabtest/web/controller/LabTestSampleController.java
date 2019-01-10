@@ -73,7 +73,7 @@ public class LabTestSampleController {
 			labTestSample = commonLabTestService.getLabTestSample(testSampleId);
 		}
 		
-		//get Specimen Type .
+		// get Specimen Type .
 		String specimenTypeUuid = Context.getAdministrationService()
 		        .getGlobalProperty("commonlabtest.specimenTypeConceptUuid");
 		Concept specimenType = Context.getConceptService().getConceptByUuid(specimenTypeUuid);
@@ -81,7 +81,7 @@ public class LabTestSampleController {
 			List<Concept> specimenTypeConcepts = specimenType.getSetMembers();
 			model.put("specimenType", specimenTypeConcepts);
 		}
-		//get Specimen Site 
+		// get Specimen Site
 		String specimenSiteUuid = Context.getAdministrationService()
 		        .getGlobalProperty("commonlabtest.specimenSiteConceptUuid");
 		Concept specimenSiteSet = Context.getConceptService().getConceptByUuid(specimenSiteUuid);
@@ -96,7 +96,7 @@ public class LabTestSampleController {
 			model.put("specimenSite", specimenSiteConceptlist);
 		}
 		
-		//get test units
+		// get test units
 		String testUnitsProperty = Context.getAdministrationService()
 		        .getGlobalProperty("commonlabtest.testunitsConceptUuid");
 		Concept testUnitsUuid = Context.getConceptService().getConceptByUuid(testUnitsProperty);
@@ -131,7 +131,8 @@ public class LabTestSampleController {
 		}
 		try {
 			if (result.hasErrors()) {
-				///If we get any exception while binding it should be redirected to same page with binding error		
+				/// If we get any exception while binding it should be redirected to same page
+				/// with binding error
 				if (labTestSample.getLabTestSampleId() == null) {
 					return "redirect:addLabTestSample.form?patientId="
 					        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&orderId="
@@ -143,7 +144,7 @@ public class LabTestSampleController {
 					        + labTestSample.getLabTest().getOrder().getId();
 				}
 			} else {
-				//   labTest.set
+				// labTest.set
 				if (labTestSample.getId() == null)
 					labTestSample.setStatus(LabTestSampleStatus.COLLECTED);
 				commonLabTestService.saveLabTestSample(labTestSample);

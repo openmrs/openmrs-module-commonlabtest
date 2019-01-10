@@ -337,7 +337,8 @@ public class LabTestResultController {
 					JsonArray jsonSubGroupArray = new JsonArray();
 					String subGroupName = labTestAttributeTypechld.getMultisetName();
 					if (subGroupName != null && !subGroupName.isEmpty()) {
-						//String subGroupName = labTestAttributeTypechld.getMultisetName(); // groupName should be                                                         // change with multisetName
+						// String subGroupName = labTestAttributeTypechld.getMultisetName(); //
+						// groupName should be // change with multisetName
 						if (holderSubGroupIdList.contains(subGroupName)) {
 							continue;
 						}

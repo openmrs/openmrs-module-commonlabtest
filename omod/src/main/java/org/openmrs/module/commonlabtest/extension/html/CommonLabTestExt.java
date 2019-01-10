@@ -11,7 +11,9 @@ import org.openmrs.module.web.extension.PatientDashboardTabExt;
  */
 public class CommonLabTestExt extends PatientDashboardTabExt {
 	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.openmrs.module.web.extension.PatientDashboardTabExt#getTabName()
 	 */
 	@Override
@@ -19,7 +21,9 @@ public class CommonLabTestExt extends PatientDashboardTabExt {
 		return "Lab Tests";
 	}
 	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.openmrs.module.web.extension.PatientDashboardTabExt#getTabId()
 	 */
 	@Override
@@ -27,15 +31,21 @@ public class CommonLabTestExt extends PatientDashboardTabExt {
 		return "commonlabtest";
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.openmrs.module.web.extension.PatientDashboardTabExt#getRequiredPrivilege()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.openmrs.module.web.extension.PatientDashboardTabExt#getRequiredPrivilege(
+	 * )
 	 */
 	@Override
 	public String getRequiredPrivilege() {
 		return CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE;
 	}
 	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.openmrs.module.web.extension.PatientDashboardTabExt#getPortletUrl()
 	 */
 	@Override
