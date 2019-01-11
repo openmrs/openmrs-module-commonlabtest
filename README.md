@@ -3,11 +3,14 @@ Common Lab Module
 
 Description
 -----------
-This is a simple module, which can be used to create and customise forms to manage patients' laboratory test orders, samples and results.
+This is a simple module, which can be used to create and customize forms to manage patients' laboratory test orders, samples and results.
+The module has been 
+
+The module is built and tested on legacy-UI.
 
 Building from Source
 --------------------
-You will need to have Java 1.6+ and Maven 2.x+ installed.  Use the command 'mvn package' to 
+You will need to have Java 1.8+ and Maven 2.1.x+ installed.  Use the command 'mvn package' to 
 compile and package the module.  The .omod file will be in the omod/target folder.
 
 Alternatively you can add the snippet provided in the [Creating Modules](https://wiki.openmrs.org/x/cAEr) page to your 

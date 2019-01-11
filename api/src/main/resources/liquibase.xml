@@ -585,8 +585,5 @@
 			<column name="multiset_name" type="varchar(255)" />
 		</addColumn>
 	</changeSet>
-	<changeSet id="commonlabtest-2018-12-6-10" author="shujaat.ali">
-		<dropColumn tableName="commonlabtest_attribute_type" columnName="group_id" />
-	</changeSet>
 
 </databaseChangeLog>
