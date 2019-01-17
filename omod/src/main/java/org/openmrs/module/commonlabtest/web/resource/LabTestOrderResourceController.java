@@ -1,6 +1,7 @@
 package org.openmrs.module.commonlabtest.web.resource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -15,6 +16,7 @@ import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
+import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
@@ -101,13 +103,14 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 			description.addProperty("order");
 			description.addProperty("labTestType", Representation.REF);
 			description.addProperty("labReferenceNumber");
+			description.addProperty("attributes", Representation.REF);
 			return description;
 		} else if (representation instanceof FullRepresentation) {
 			description.addProperty("order");
 			description.addProperty("labTestType");
 			description.addProperty("labReferenceNumber");
 			description.addProperty("labTestSamples");
-			description.addProperty("attributes");
+			description.addProperty("attributes", Representation.DEFAULT);
 			description.addProperty("auditInfo");
 			return description;
 		} else if (representation instanceof RefRepresentation) {
@@ -127,6 +130,7 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 		delegatingResourceDescription.addProperty("labInstructions");
 		delegatingResourceDescription.addProperty("resultComments");
 		delegatingResourceDescription.addProperty("labTestSamples");
+		delegatingResourceDescription.addProperty("attributes");
 		return delegatingResourceDescription;
 	}
 	
@@ -140,7 +144,22 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 			return "";
 		return labTest.getLabReferenceNumber();
 	}
+
+	@PropertySetter("attributes")
+	public static void setAttributes(LabTest instance, List<LabTestAttribute> attributes) {
+		for (LabTestAttribute attribute : attributes) {
+			instance.addAttribute(attribute);
+		}
+	}
 	
+	/**
+	 * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getPropertiesToExposeAsSubResources()
+	 */
+	@Override
+	public List<String> getPropertiesToExposeAsSubResources() {
+		return Arrays.asList("attributes");
+	}
+
 	@Override
 	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();

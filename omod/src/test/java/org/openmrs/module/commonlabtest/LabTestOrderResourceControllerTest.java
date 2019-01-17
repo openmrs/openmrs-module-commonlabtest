@@ -2,6 +2,9 @@ package org.openmrs.module.commonlabtest;
 
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,6 +67,34 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 		labTestOrder.add("resultComments", "test Comments");
 		labTestOrder.add("labTestType", "a277edf4-46ea-11e8-943c-40b034c3cfee");
 		labTestOrder.add("order", "863c6448-51e8-11e8-b60d-080027ea421d");
+		
+		MockHttpServletRequest newPostRequest = newPostRequest(getURI(), labTestOrder);
+		MockHttpServletResponse handle = handle(newPostRequest);
+		SimpleObject objectCreated = deserialize(handle);
+		Assert.assertNotNull(objectCreated);
+	}
+
+	@Test
+	public void shouldSaveWithAttributes() throws Exception {
+		SimpleObject scoreAttributeObj = new SimpleObject();
+		scoreAttributeObj.add("attributeType", "ed8b4caf-478e-11e8-943c-40b034c3cfee");
+		scoreAttributeObj.add("valueReference", "100.0");
+		
+		SimpleObject resultsAttributeObj = new SimpleObject();
+		resultsAttributeObj.add("attributeType", "efeb9339-538d-11e8-9c7c-40b034c3cfee");
+		resultsAttributeObj.add("valueReference", "NORMAL");
+		
+		List<SimpleObject> attributes = new ArrayList<SimpleObject>();
+		attributes.add(scoreAttributeObj);
+		attributes.add(resultsAttributeObj);
+		
+		SimpleObject labTestOrder = new SimpleObject();
+		labTestOrder.add("labReferenceNumber", "123");
+		labTestOrder.add("labInstructions", "test data");
+		labTestOrder.add("resultComments", "test Comments");
+		labTestOrder.add("labTestType", "a277edf4-46ea-11e8-943c-40b034c3cfee");
+		labTestOrder.add("order", "863c6448-51e8-11e8-b60d-080027ea421d");
+		labTestOrder.add("attributes", attributes);
 		
 		MockHttpServletRequest newPostRequest = newPostRequest(getURI(), labTestOrder);
 		MockHttpServletResponse handle = handle(newPostRequest);
