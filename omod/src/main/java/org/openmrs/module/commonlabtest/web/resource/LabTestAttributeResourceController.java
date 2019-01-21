@@ -26,17 +26,17 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/commonlab/labtestattribute", supportedClass = LabTestAttribute.class, supportedOpenmrsVersions = {
-                "2.0.*,2.1.*" })
+		+ "/commonlab/labtestattribute", supportedClass = LabTestAttribute.class, supportedOpenmrsVersions = {
+				"2.0.*,2.1.*"})
 public class LabTestAttributeResourceController extends DataDelegatingCrudResource<LabTestAttribute> {
-	
+
 	/**
 	 * Logger for this class
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
-	
+
 	private CommonLabTestService commonLabTestService = Context.getService(CommonLabTestService.class);
-	
+
 	/**
 	 * @see DelegatingCrudResource#getRepresentationDescription(Representation)
 	 */
@@ -61,7 +61,7 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 		}
 		return description;
 	}
-	
+
 	/**
 	 * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getCreatableProperties()
 	 */
@@ -73,7 +73,7 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 		description.addRequiredProperty("valueReference");
 		return description;
 	}
-	
+
 	/**
 	 * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getUpdatableProperties()
 	 */
@@ -81,41 +81,41 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 	public DelegatingResourceDescription getUpdatableProperties() throws ResourceDoesNotSupportOperationException {
 		return getCreatableProperties();
 	}
-	
+
 	@Override
 	protected void delete(LabTestAttribute labTestAttribute, String s, RequestContext requestContext)
-	        throws ResponseException {
+			throws ResponseException {
 		commonLabTestService.voidLabTestAttribute(labTestAttribute, s);
 	}
-	
+
 	@Override
 	public LabTestAttribute newDelegate() {
 		return new LabTestAttribute();
 	}
-	
+
 	@Override
 	public LabTestAttribute save(LabTestAttribute labTestAttribute) {
 		return commonLabTestService.saveLabTestAttribute(labTestAttribute);
 	}
-	
+
 	@Override
 	public LabTestAttribute getByUniqueId(String uuid) {
 		LabTestAttribute labTestAttribute = commonLabTestService.getLabTestAttributeByUuid(uuid);
 		return labTestAttribute;
 	}
-	
+
 	@Override
 	public void purge(LabTestAttribute labTestAttribute, RequestContext requestContext) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
-	
+
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		String testId = context.getRequest().getParameter("testOrderId");
 		List<LabTestAttribute> attributes = commonLabTestService.getLabTestAttributes(Integer.parseInt(testId));
 		return new NeedsPaging<LabTestAttribute>(attributes, context);
 	}
-	
+
 	/**
 	 * @param LabTestAttribute
 	 * @return getValueReference as Display
@@ -126,7 +126,7 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 			return "";
 		return attribute.getValueReference();
 	}
-	
+
 	/**
 	 * @param attribute
 	 * @return
@@ -135,12 +135,11 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 	public String getValueReference(LabTestAttribute attribute) {
 		try {
 			return attribute.getValueReference();
-		}
-		catch (NotYetPersistedException ex) {
+		} catch (NotYetPersistedException ex) {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * @param instance
 	 * @param value

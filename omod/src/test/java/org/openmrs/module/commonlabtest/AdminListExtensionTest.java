@@ -23,7 +23,7 @@ import org.openmrs.module.commonlabtest.extension.html.AdminList;
  * This test validates the AdminList extension class
  */
 public class AdminListExtensionTest {
-	
+
 	/**
 	 * Get the links for the extension class
 	 */
@@ -34,7 +34,7 @@ public class AdminListExtensionTest {
 		assertNotNull(links);
 		assertFalse(links.isEmpty());
 	}
-	
+
 	/**
 	 * Check the media type of this extension class
 	 */
@@ -43,5 +43,5 @@ public class AdminListExtensionTest {
 		AdminList ext = new AdminList();
 		assertEquals(ext.getMediaType(), Extension.MEDIA_TYPE.html);
 	}
-	
+
 }

@@ -23,37 +23,38 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/commonlab/labtestattributetype", supportedClass = LabTestAttributeType.class, supportedOpenmrsVersions = {
-                "2.0.*,2.1.*" })
+		+ "/commonlab/labtestattributetype", supportedClass = LabTestAttributeType.class, supportedOpenmrsVersions = {
+				"2.0.*,2.1.*"})
 public class LabTestAttributeTypeResourceController extends MetadataDelegatingCrudResource<LabTestAttributeType> {
-	
+
 	/**
 	 * Logger for this class
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
-	
+
 	private CommonLabTestService commonLabTestService = Context.getService(CommonLabTestService.class);
-	
+
 	@Override
 	public LabTestAttributeType getByUniqueId(String s) {
 		return commonLabTestService.getLabTestAttributeTypeByUuid(s);
 	}
-	
+
 	@Override
 	public LabTestAttributeType newDelegate() {
 		return new LabTestAttributeType();
 	}
-	
+
 	@Override
 	public LabTestAttributeType save(LabTestAttributeType labTestAttributeType) {
 		return commonLabTestService.saveLabTestAttributeType(labTestAttributeType);
 	}
-	
+
 	@Override
-	public void purge(LabTestAttributeType labTestAttributeType, RequestContext requestContext) throws ResponseException {
+	public void purge(LabTestAttributeType labTestAttributeType, RequestContext requestContext)
+			throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
-	
+
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
@@ -98,7 +99,7 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 		}
 		return description;
 	}
-	
+
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
@@ -116,13 +117,13 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 		description.addProperty("hint");
 		return description;
 	}
-	
+
 	@Override
 	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
 		List<LabTestAttributeType> list = commonLabTestService.getAllLabTestAttributeTypes(false);
 		return new NeedsPaging<LabTestAttributeType>(list, context);
 	}
-	
+
 	/**
 	 * @param LabTestAttributeType
 	 * @return description as Display

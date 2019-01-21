@@ -19,41 +19,42 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/commonlab/labtestsample", supportedClass = LabTestSample.class, supportedOpenmrsVersions = { "2.0.*,2.1.*" })
+		+ "/commonlab/labtestsample", supportedClass = LabTestSample.class, supportedOpenmrsVersions = {"2.0.*,2.1.*"})
 public class LabTestSampleResourceController extends DataDelegatingCrudResource<LabTestSample> {
-	
+
 	/**
 	 * Logger for this class
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
-	
+
 	private CommonLabTestService commonLabTestService = Context.getService(CommonLabTestService.class);
-	
+
 	@Override
 	public LabTestSample getByUniqueId(String s) {
 		return commonLabTestService.getLabTestSampleByUuid(s);
 	}
-	
+
 	@Override
-	protected void delete(LabTestSample labTestSample, String s, RequestContext requestContext) throws ResponseException {
+	protected void delete(LabTestSample labTestSample, String s, RequestContext requestContext)
+			throws ResponseException {
 		commonLabTestService.voidLabTestSample(labTestSample, s);
 	}
-	
+
 	@Override
 	public LabTestSample newDelegate() {
 		return new LabTestSample();
 	}
-	
+
 	@Override
 	public LabTestSample save(LabTestSample labTestSample) {
 		return commonLabTestService.saveLabTestSample(labTestSample);
 	}
-	
+
 	@Override
 	public void purge(LabTestSample labTestSample, RequestContext requestContext) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
-	
+
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
@@ -100,7 +101,7 @@ public class LabTestSampleResourceController extends DataDelegatingCrudResource<
 		}
 		return description;
 	}
-	
+
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() throws ResourceDoesNotSupportOperationException {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
@@ -119,7 +120,7 @@ public class LabTestSampleResourceController extends DataDelegatingCrudResource<
 		description.addProperty("comments");
 		return description;
 	}
-	
+
 	/**
 	 * @param LabTestSample
 	 * @return getSampleIdentifier as Display
@@ -128,7 +129,7 @@ public class LabTestSampleResourceController extends DataDelegatingCrudResource<
 	public String getDisplayString(LabTestSample sample) {
 		if (sample == null)
 			return "";
-		
+
 		return sample.getSampleIdentifier();
 	}
 }

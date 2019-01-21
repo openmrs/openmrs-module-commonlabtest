@@ -16,12 +16,12 @@ import org.openmrs.module.Extension;
 import org.openmrs.module.web.extension.AdministrationSectionExt;
 
 /**
- * This class defines the links that will appear on the administration page under the
- * "commonlabtest.title" heading. This extension is enabled by defining (uncommenting) it in the
- * config.xml file.
+ * This class defines the links that will appear on the administration page
+ * under the "commonlabtest.title" heading. This extension is enabled by
+ * defining (uncommenting) it in the config.xml file.
  */
 public class AdminList extends AdministrationSectionExt {
-	
+
 	/**
 	 * @see org.openmrs.module.web.extension.AdministrationSectionExt#getMediaType()
 	 */
@@ -29,7 +29,7 @@ public class AdminList extends AdministrationSectionExt {
 	public Extension.MEDIA_TYPE getMediaType() {
 		return Extension.MEDIA_TYPE.html;
 	}
-	
+
 	/**
 	 * @see org.openmrs.module.web.extension.AdministrationSectionExt#getTitle()
 	 */
@@ -37,7 +37,7 @@ public class AdminList extends AdministrationSectionExt {
 	public String getTitle() {
 		return "commonlabtest.title";
 	}
-	
+
 	/**
 	 * @see org.openmrs.module.web.extension.AdministrationSectionExt#getLinks()
 	 */
@@ -48,5 +48,5 @@ public class AdminList extends AdministrationSectionExt {
 		map.put("/module/commonlabtest/manageLabTestAttributeTypes.form", "commonlabtest.labtestattributetype.manage");
 		return map;
 	}
-	
+
 }

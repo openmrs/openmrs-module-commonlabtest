@@ -38,19 +38,19 @@ import com.google.gson.JsonObject;
 
 @Controller
 public class LabTestResultController {
-	
+
 	protected final Log log = LogFactory.getLog(getClass());
-	
+
 	private final String SUCCESS_ADD_FORM_VIEW = "/module/commonlabtest/addLabTestResult";
-	
+
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	
+
 	CommonLabTestService commonLabTestService;
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestResult.form")
 	public String showForm(HttpServletRequest request, @RequestParam(required = false) Integer testOrderId,
-	        @RequestParam(required = false) Integer patientId, ModelMap model) {
-		
+			@RequestParam(required = false) Integer patientId, ModelMap model) {
+
 		LabTest labTest = commonLabTestService.getLabTest(testOrderId);
 		if (labTest == null) {
 			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "Test Order does not exist");
@@ -59,21 +59,21 @@ public class LabTestResultController {
 			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "Test Order is voided");
 			return "redirect:../../patientDashboard.form?patientId=" + patientId;
 		}
-		
+
 		List<LabTestAttributeType> attributeTypeList = new ArrayList<LabTestAttributeType>();
 		attributeTypeList = commonLabTestService.getLabTestAttributeTypes(labTest.getLabTestType(), Boolean.FALSE);
 		Collections.sort(attributeTypeList, new Comparator<LabTestAttributeType>() {
-			
+
 			@Override
 			public int compare(LabTestAttributeType labTestAttributeTypeFirst,
-			        LabTestAttributeType labTestAttributeTypeSecond) {
+					LabTestAttributeType labTestAttributeTypeSecond) {
 				return labTestAttributeTypeFirst.getSortWeight().compareTo(labTestAttributeTypeSecond.getSortWeight());
 			}
 		});
-		
+
 		List<LabTestAttribute> labTestAttributes = commonLabTestService.getLabTestAttributes(testOrderId);
 		JsonArray resultantAttributeTypeList = getAttributeTypeList(attributeTypeList, testOrderId, labTestAttributes);
-		
+
 		if (!labTestAttributes.isEmpty() && !attributeTypeList.isEmpty()) {
 			boolean updateMode = false;
 			for (LabTestAttribute labTestAttribute : labTestAttributes) {
@@ -97,44 +97,46 @@ public class LabTestResultController {
 			model.addAttribute("testTypeName", "");
 		}
 		String fileExtensions = Context.getAdministrationService().getGlobalProperty("commonlabtest.fileExtensions");
-		
+
 		model.addAttribute("attributeTypeList", resultantAttributeTypeList);
 		model.addAttribute("fileExtensions", fileExtensions);
 		model.addAttribute("testOrderId", testOrderId);
 		model.addAttribute("patientId", labTest.getOrder().getPatient().getPatientId());
 		model.addAttribute("encounterdate", simpleDateFormat.format(labTest.getOrder().getDateActivated()));
-		
+
 		return SUCCESS_ADD_FORM_VIEW;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/addLabTestResult.form")
-	public String onSubmit(ModelMap model, HttpServletRequest request, @RequestParam(required = true) Integer testOrderId,
-	        @RequestParam(required = false) Integer testAttributeId,
-	        @RequestParam(required = false) MultipartFile documentTypeFile, @RequestParam(required = false) Boolean update) {
-		
+	public String onSubmit(ModelMap model, HttpServletRequest request,
+			@RequestParam(required = true) Integer testOrderId, @RequestParam(required = false) Integer testAttributeId,
+			@RequestParam(required = false) MultipartFile documentTypeFile,
+			@RequestParam(required = false) Boolean update) {
+
 		if (Context.getAuthenticatedUser() == null) {
 			return "redirect:../../login.htm";
 		}
 		LabTest labTest = commonLabTestService.getLabTest(testOrderId);
 		List<LabTestAttributeType> attributeTypeList = Context.getService(CommonLabTestService.class)
-		        .getLabTestAttributeTypes(labTest.getLabTestType(), false);
+				.getLabTestAttributeTypes(labTest.getLabTestType(), false);
 		String conceptValue = "", textValue = "", boolValue = "", floatValue, testAtrrId, regexValue, dateValue;
 		String status;
 		try {
 			List<LabTestAttribute> labTestAttributes = new ArrayList<LabTestAttribute>();
-			
+
 			for (LabTestAttributeType labTestAttributeType : attributeTypeList) {
 				LabTestAttribute testAttribute = new LabTestAttribute();
-				
+
 				conceptValue = request.getParameter("concept." + labTestAttributeType.getId());
 				textValue = request.getParameter("valueText." + labTestAttributeType.getId());
-				boolValue = (request.getParameter("bool." + labTestAttributeType.getId()) == null) ? "false"
-				        : request.getParameter("bool." + labTestAttributeType.getId());
+				boolValue = (request.getParameter("bool." + labTestAttributeType.getId()) == null)
+						? "false"
+						: request.getParameter("bool." + labTestAttributeType.getId());
 				floatValue = request.getParameter("float." + labTestAttributeType.getId());
 				dateValue = request.getParameter("date." + labTestAttributeType.getId());
 				regexValue = request.getParameter("regex." + labTestAttributeType.getId());
 				testAtrrId = request.getParameter("testAttributeId." + labTestAttributeType.getId());
-				
+
 				if (update && (!testAtrrId.equals("undefined") && !testAtrrId.equals(""))) {
 					testAttribute = commonLabTestService.getLabTestAttribute(Integer.parseInt(testAtrrId));
 				} else {
@@ -161,22 +163,22 @@ public class LabTestResultController {
 					testAttribute.setValueReferenceInternal(boolValue);
 					labTestAttributes.add(testAttribute);
 				}
-				
+
 			}
 			// save the file
-			if (documentTypeFile.isEmpty()) {} else {
-				
+			if (documentTypeFile.isEmpty()) {
+			} else {
+
 				try {
 					String fileDirectory = Context.getAdministrationService()
-					        .getGlobalProperty("commonlabtest.fileDirectory");
-					
+							.getGlobalProperty("commonlabtest.fileDirectory");
+
 					FileCopyUtils.copy(documentTypeFile.getBytes(), new FileOutputStream(
-					        fileDirectory + "/" + documentTypeFile.getOriginalFilename().replace(" ", "-")));
+							fileDirectory + "/" + documentTypeFile.getOriginalFilename().replace(" ", "-")));
 					String name = documentTypeFile.getOriginalFilename().replace(" ", "-");
 					labTest.setFilePath(fileDirectory + "/" + name);
 					Context.getService(CommonLabTestService.class).saveLabTest(labTest); // need to review this lines
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
@@ -189,23 +191,22 @@ public class LabTestResultController {
 					Context.getService(CommonLabTestService.class).saveLabTestSample(labTestSample);
 				}
 			}
-			
+
 			commonLabTestService.saveLabTestAttributes(labTestAttributes);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			status = "Could not save Lab Test Result";
 			e.printStackTrace();
 			model.addAttribute("error", status);
 		}
-		
+
 		request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Test Result saved successfully");
 		return "redirect:../../patientDashboard.form?patientId=" + labTest.getOrder().getPatient().getPatientId();
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/voidlabtestresult.form")
 	public String onVoid(ModelMap model, HttpSession httpSession, HttpServletRequest request,
-	        @RequestParam("testOrderId") Integer testOrderId, @RequestParam("patientId") Integer patientId,
-	        @RequestParam("voidReason") String voidReason) {
+			@RequestParam("testOrderId") Integer testOrderId, @RequestParam("patientId") Integer patientId,
+			@RequestParam("voidReason") String voidReason) {
 		String status;
 		if (Context.getAuthenticatedUser() == null) {
 			return "redirect:../../login.htm";
@@ -217,46 +218,46 @@ public class LabTestResultController {
 			sb.append("Lab Test Result ");
 			sb.append(" is  voided!");
 			status = sb.toString();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			status = "Could not void Lab Test Result";
 			e.printStackTrace();
 			model.addAttribute("error", status);
 		}
 		request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Test Result voided successfully");
 		return "redirect:../../patientDashboard.form?patientId=" + patientId;
-		
+
 	}
-	
+
 	public String getDataType(String dataTypeName) {
-		
-		if (dataTypeName.equals("org.openmrs.customdatatype.datatype.BooleanDatatype") || dataTypeName.equals("Boolean")) {
+
+		if (dataTypeName.equals("org.openmrs.customdatatype.datatype.BooleanDatatype")
+				|| dataTypeName.equals("Boolean")) {
 			return "Boolean";
 		} else if (dataTypeName.equals("org.openmrs.customdatatype.datatype.FreeTextDatatype")
-		        || dataTypeName.equals("Text")) {
+				|| dataTypeName.equals("Text")) {
 			return "Text";
 		} else if (dataTypeName.equals("org.openmrs.customdatatype.datatype.ConceptDatatype")
-		        || dataTypeName.equals("Coded")) {
+				|| dataTypeName.equals("Coded")) {
 			return "Coded";
 		} else if (dataTypeName.equals("org.openmrs.customdatatype.datatype.LocationDatatype")) {
 			return "location";
-		} else if (dataTypeName.endsWith("org.openmrs.customdatatype.datatype.DateDatatype") || dataTypeName.equals("Date")
-		        || dataTypeName.equals("Datetime")) {
+		} else if (dataTypeName.endsWith("org.openmrs.customdatatype.datatype.DateDatatype")
+				|| dataTypeName.equals("Date") || dataTypeName.equals("Datetime")) {
 			return "Date";
 		} else if (dataTypeName.equals("org.openmrs.customdatatype.datatype.FloatDatatype")
-		        || dataTypeName.equals("Numeric")) {
+				|| dataTypeName.equals("Numeric")) {
 			return "Numeric";
 		} else if (dataTypeName.equals("org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype")) {
 			return "Regex";
 		} else if (dataTypeName.equals("org.openmrs.customdatatype.datatype.LongFreeTextDatatype")) {
 			return "TextArea";
 		}
-		
+
 		return "N/A";
 	}
-	
+
 	public JsonObject getAttributeTypeJsonObj(LabTestAttributeType labTestAttributeType,
-	        List<LabTestAttribute> testAttributes) {
+			List<LabTestAttribute> testAttributes) {
 		JsonObject objAttrType = new JsonObject();
 		objAttrType.addProperty("name", labTestAttributeType.getName());
 		objAttrType.addProperty("minOccurs", labTestAttributeType.getMinOccurs());
@@ -264,12 +265,12 @@ public class LabTestResultController {
 		objAttrType.addProperty("sortWeight", labTestAttributeType.getSortWeight());
 		objAttrType.addProperty("config", labTestAttributeType.getDatatypeConfig());
 		objAttrType.addProperty("hint", (labTestAttributeType.getHint() == null) ? "" : labTestAttributeType.getHint());
-		
+
 		if (testAttributes.size() > 0) {
 			for (LabTestAttribute labTestAttribute : testAttributes) {
 				if (!labTestAttribute.getVoided()) {
 					if (labTestAttribute.getAttributeType().getLabTestAttributeTypeId() == labTestAttributeType
-					        .getLabTestAttributeTypeId()) {
+							.getLabTestAttributeTypeId()) {
 						objAttrType.addProperty("value", labTestAttribute.getValueReference());
 						objAttrType.addProperty("testAttributeId", labTestAttribute.getId());
 					}
@@ -281,12 +282,12 @@ public class LabTestResultController {
 		}
 		objAttrType.addProperty("id", labTestAttributeType.getId());
 		if (labTestAttributeType.getDatatypeClassname()
-		        .equalsIgnoreCase("org.openmrs.customdatatype.datatype.ConceptDatatype")) {
+				.equalsIgnoreCase("org.openmrs.customdatatype.datatype.ConceptDatatype")) {
 			if (labTestAttributeType.getDatatypeConfig() != null && labTestAttributeType.getDatatypeConfig() != ""
-			        && !labTestAttributeType.getDatatypeConfig().isEmpty()) {
+					&& !labTestAttributeType.getDatatypeConfig().isEmpty()) {
 				Concept concept = Context.getConceptService()
-				        .getConcept(Integer.parseInt(labTestAttributeType.getDatatypeConfig()));
-				
+						.getConcept(Integer.parseInt(labTestAttributeType.getDatatypeConfig()));
+
 				if (concept.getDatatype().getName().equals("Coded")) {
 					JsonArray codedArray = new JsonArray();
 					Collection<ConceptAnswer> ans = concept.getAnswers();
@@ -298,7 +299,7 @@ public class LabTestResultController {
 					}
 					objAttrType.add("conceptOptions", codedArray);
 					objAttrType.addProperty("dataType", getDataType(labTestAttributeType.getDatatypeClassname()));
-					
+
 				} else {
 					objAttrType.addProperty("dataType", getDataType(concept.getDatatype().getName()));
 				}
@@ -308,10 +309,10 @@ public class LabTestResultController {
 		}
 		return objAttrType;
 	}
-	
+
 	public JsonArray getAttributeTypeList(List<LabTestAttributeType> labTestAttributeTypeList, int testOrderId,
-	        List<LabTestAttribute> labTestAttributes) {
-		
+			List<LabTestAttribute> labTestAttributes) {
+
 		List<String> holderGroupIdList = new ArrayList<String>();
 		JsonArray parentJsonArray = new JsonArray();
 		JsonObject labTestGroupObj;
@@ -326,7 +327,7 @@ public class LabTestResultController {
 				holderGroupIdList.add(labTestAttributeType.getGroupName());
 				labTestGroupObj.addProperty("groupName", labTestAttributeType.getGroupName());
 				List<LabTestAttributeType> childLabTestATList = getFilterAttributeTypes(labTestAttributeType,
-				    labTestAttributeTypeList);
+						labTestAttributeTypeList);
 				JsonObject labTestSubGroupObj;
 				List<String> holderSubGroupIdList = new ArrayList<String>();
 				for (LabTestAttributeType labTestAttributeTypechld : childLabTestATList) {
@@ -342,7 +343,7 @@ public class LabTestResultController {
 						holderSubGroupIdList.add(subGroupName);
 						labTestSubGroupObj.addProperty("subGroupName", subGroupName);
 						List<LabTestAttributeType> subGroupLabTestATList = getFilterSubGroupAttributeTypes(subGroupName,
-						    childLabTestATList);
+								childLabTestATList);
 						for (LabTestAttributeType labTestAttributeTypeSb : subGroupLabTestATList) {
 							jsonSubGroupArray.add(getAttributeTypeJsonObj(labTestAttributeTypeSb, labTestAttributes));
 						}
@@ -354,18 +355,18 @@ public class LabTestResultController {
 				}
 				labTestGroupObj.add("details", jsonChildArray);
 				parentJsonArray.add(labTestGroupObj);
-				
+
 			} else {
 				parentJsonArray.add(getAttributeTypeJsonObj(labTestAttributeType, labTestAttributes));
 			}
 		}
 		return parentJsonArray;
 	}
-	
+
 	private List<LabTestAttributeType> getFilterAttributeTypes(LabTestAttributeType labTestAttributeType,
-	        List<LabTestAttributeType> listLabTestAttributeType) {
+			List<LabTestAttributeType> listLabTestAttributeType) {
 		List<LabTestAttributeType> filterLabTestAttributeTypes = new ArrayList<LabTestAttributeType>();
-		
+
 		if (!listLabTestAttributeType.isEmpty()) {
 			for (LabTestAttributeType filterLabTestAttributeType : listLabTestAttributeType) {
 				String groupName = filterLabTestAttributeType.getGroupName();
@@ -374,18 +375,18 @@ public class LabTestResultController {
 						filterLabTestAttributeTypes.add(filterLabTestAttributeType);
 					}
 				}
-				
+
 			}
-			
+
 		}
-		
+
 		return filterLabTestAttributeTypes;
 	}
-	
+
 	private List<LabTestAttributeType> getFilterSubGroupAttributeTypes(String multisetName,
-	        List<LabTestAttributeType> listLabTestAttributeType) {
+			List<LabTestAttributeType> listLabTestAttributeType) {
 		List<LabTestAttributeType> filterLabTestAttributeTypes = new ArrayList<LabTestAttributeType>();
-		
+
 		if (!listLabTestAttributeType.isEmpty()) {
 			for (LabTestAttributeType filterLabTestAttributeType : listLabTestAttributeType) {
 				String multisetNames = filterLabTestAttributeType.getMultisetName();
@@ -398,5 +399,5 @@ public class LabTestResultController {
 		}
 		return filterLabTestAttributeTypes;
 	}
-	
+
 }

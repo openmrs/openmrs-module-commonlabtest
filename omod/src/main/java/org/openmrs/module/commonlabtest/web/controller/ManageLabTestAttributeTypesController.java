@@ -16,20 +16,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping(value = "/module/commonlabtest/manageLabTestAttributeTypes.form")
 public class ManageLabTestAttributeTypesController {
-	
+
 	/** Success form view name */
 	private final String SUCCESS_FORM_VIEW = "/module/commonlabtest/manageLabTestAttributeTypes";
-	
+
 	/** Logger for this class */
 	protected final Log log = LogFactory.getLog(getClass());
-	
+
 	@RequestMapping(method = RequestMethod.GET)
 	public String showLabTestAttributeTypes(@RequestParam(required = false) String save, ModelMap model) {
 		List<LabTestAttributeType> list = Context.getService(CommonLabTestService.class)
-		        .getAllLabTestAttributeTypes(Boolean.FALSE);
+				.getAllLabTestAttributeTypes(Boolean.FALSE);
 		model.put("labTestAttributeTypes", list);
 		model.addAttribute("status", save);
 		return SUCCESS_FORM_VIEW;
 	}
-	
+
 }

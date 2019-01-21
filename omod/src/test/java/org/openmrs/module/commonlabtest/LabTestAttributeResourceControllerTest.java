@@ -15,37 +15,37 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 public class LabTestAttributeResourceControllerTest extends MainResourceControllerTest {
-	
+
 	@Autowired
 	CommonLabTestService commonLabTestService;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		executeDataSet("CommonLabTestService-initialData.xml");
 	}
-	
+
 	@Override
 	public long getAllCount() {
 		return 3;
 	}
-	
+
 	@Override
 	public String getURI() {
 		return "commonlab/labtestattribute";
 	}
-	
+
 	@Override
 	public String getUuid() {
 		return "2c9737d9-47c2-11e8-943c-40b034c3cfee";
 	}
-	
+
 	@Override
 	@Test(expected = ResourceDoesNotSupportOperationException.class)
 	public void shouldGetAll() throws Exception {
 		deserialize(handle(request(RequestMethod.GET, getURI())));
 		fail();
 	}
-	
+
 	@Test
 	public void shouldSave() throws Exception {
 		String uri = getURI();
@@ -54,7 +54,7 @@ public class LabTestAttributeResourceControllerTest extends MainResourceControll
 		// CAD4TB Score
 		labTestAttributeObj.add("attributeType", "ed8b4caf-478e-11e8-943c-40b034c3cfee");
 		labTestAttributeObj.add("valueReference", "100.0");
-		
+
 		MockHttpServletRequest newPostRequest = newPostRequest(uri, labTestAttributeObj);
 		MockHttpServletResponse handle = handle(newPostRequest);
 		SimpleObject objectCreated = deserialize(handle);

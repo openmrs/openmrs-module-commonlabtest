@@ -19,37 +19,37 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 public class LabTestOrderResourceControllerTest extends MainResourceControllerTest {
-	
+
 	@Autowired
 	CommonLabTestService commonLabTestService;
-	
+
 	@Before
 	public void before() throws Exception {
 		executeDataSet("CommonLabTestService-initialData.xml");
 	}
-	
+
 	@Override
 	public long getAllCount() {
 		return 2;
 	}
-	
+
 	@Override
 	public String getURI() {
 		return "commonlab/labtestorder";
 	}
-	
+
 	@Override
 	public String getUuid() {
 		return "d175e92e-47bf-11e8-943c-40b034c3cfee";
 	}
-	
+
 	@Override
 	@Test(expected = ResourceDoesNotSupportOperationException.class)
 	public void shouldGetAll() throws Exception {
 		handle(request(RequestMethod.GET, getURI()));
 		fail();
 	}
-	
+
 	@Test
 	public void shouldSearchByPatient() throws Exception {
 		MockHttpServletRequest request = request(RequestMethod.GET, getURI());
@@ -58,7 +58,7 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 		Assert.assertNotNull(result);
 		Assert.assertEquals(getAllCount(), Util.getResultsSize(result));
 	}
-	
+
 	@Test
 	public void shouldSave() throws Exception {
 		SimpleObject labTestOrder = new SimpleObject();
@@ -67,7 +67,7 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 		labTestOrder.add("resultComments", "test Comments");
 		labTestOrder.add("labTestType", "a277edf4-46ea-11e8-943c-40b034c3cfee");
 		labTestOrder.add("order", "863c6448-51e8-11e8-b60d-080027ea421d");
-		
+
 		MockHttpServletRequest newPostRequest = newPostRequest(getURI(), labTestOrder);
 		MockHttpServletResponse handle = handle(newPostRequest);
 		SimpleObject objectCreated = deserialize(handle);
@@ -79,15 +79,15 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 		SimpleObject scoreAttributeObj = new SimpleObject();
 		scoreAttributeObj.add("attributeType", "ed8b4caf-478e-11e8-943c-40b034c3cfee");
 		scoreAttributeObj.add("valueReference", "100.0");
-		
+
 		SimpleObject resultsAttributeObj = new SimpleObject();
 		resultsAttributeObj.add("attributeType", "efeb9339-538d-11e8-9c7c-40b034c3cfee");
 		resultsAttributeObj.add("valueReference", "NORMAL");
-		
+
 		List<SimpleObject> attributes = new ArrayList<SimpleObject>();
 		attributes.add(scoreAttributeObj);
 		attributes.add(resultsAttributeObj);
-		
+
 		SimpleObject labTestOrder = new SimpleObject();
 		labTestOrder.add("labReferenceNumber", "123");
 		labTestOrder.add("labInstructions", "test data");
@@ -95,7 +95,7 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 		labTestOrder.add("labTestType", "a277edf4-46ea-11e8-943c-40b034c3cfee");
 		labTestOrder.add("order", "863c6448-51e8-11e8-b60d-080027ea421d");
 		labTestOrder.add("attributes", attributes);
-		
+
 		MockHttpServletRequest newPostRequest = newPostRequest(getURI(), labTestOrder);
 		MockHttpServletResponse handle = handle(newPostRequest);
 		SimpleObject objectCreated = deserialize(handle);

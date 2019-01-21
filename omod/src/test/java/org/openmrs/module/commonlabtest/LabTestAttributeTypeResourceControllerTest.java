@@ -11,30 +11,30 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 public class LabTestAttributeTypeResourceControllerTest extends MainResourceControllerTest {
-	
+
 	@Autowired
 	CommonLabTestService commonLabTestService;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		executeDataSet("CommonLabTestService-initialData.xml");
 	}
-	
+
 	@Override
 	public long getAllCount() {
 		return 5;
 	}
-	
+
 	@Override
 	public String getURI() {
 		return "commonlab/labtestattributetype";
 	}
-	
+
 	@Override
 	public String getUuid() {
 		return "ecf166e5-478e-11e8-943c-40b034c3cfee";
 	}
-	
+
 	@Test
 	public void shouldSave() throws Exception {
 		String uri = getURI();
@@ -45,7 +45,7 @@ public class LabTestAttributeTypeResourceControllerTest extends MainResourceCont
 		labTestAttributeType.add("datatypeClassname", "org.openmrs.customdatatype.datatype.ConceptDatatype");
 		labTestAttributeType.add("sortWeight", "1");
 		labTestAttributeType.add("maxOccurs", "0");
-		
+
 		MockHttpServletRequest newPostRequest = newPostRequest(uri, labTestAttributeType);
 		MockHttpServletResponse handle = handle(newPostRequest);
 		SimpleObject objectCreated = deserialize(handle);

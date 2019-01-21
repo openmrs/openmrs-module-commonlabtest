@@ -32,24 +32,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LabTestSampleController {
-	
+
 	protected final Log log = LogFactory.getLog(getClass());
-	
+
 	private final String SUCCESS_ADD_FORM_VIEW = "/module/commonlabtest/addLabTestSample";
-	
+
 	CommonLabTestService commonLabTestService;
-	
+
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	
+
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(simpleDateFormat, true));
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestSample.form")
 	public String showForm(HttpServletRequest request, ModelMap model, @RequestParam(required = true) Integer patientId,
-	        @RequestParam(required = false) Integer testSampleId, @RequestParam(required = false) Integer orderId,
-	        @RequestParam(required = false) String error) {
+			@RequestParam(required = false) Integer testSampleId, @RequestParam(required = false) Integer orderId,
+			@RequestParam(required = false) String error) {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String orderDate = "";
 		if (orderId != null) {
@@ -63,17 +63,17 @@ public class LabTestSampleController {
 			}
 			orderDate = simpleDateFormat.format(labTest.getOrder().getEncounter().getEncounterDatetime());
 		}
-		
+
 		LabTestSample labTestSample;
 		if (testSampleId == null) {
 			labTestSample = new LabTestSample();
 		} else {
 			labTestSample = commonLabTestService.getLabTestSample(testSampleId);
 		}
-		
+
 		// get Specimen Type .
 		String specimenTypeUuid = Context.getAdministrationService()
-		        .getGlobalProperty("commonlabtest.specimenTypeConceptUuid");
+				.getGlobalProperty("commonlabtest.specimenTypeConceptUuid");
 		Concept specimenType = Context.getConceptService().getConceptByUuid(specimenTypeUuid);
 		if (specimenType != null && specimenType.getSetMembers().size() > 0) {
 			List<Concept> specimenTypeConcepts = specimenType.getSetMembers();
@@ -81,7 +81,7 @@ public class LabTestSampleController {
 		}
 		// get Specimen Site
 		String specimenSiteUuid = Context.getAdministrationService()
-		        .getGlobalProperty("commonlabtest.specimenSiteConceptUuid");
+				.getGlobalProperty("commonlabtest.specimenSiteConceptUuid");
 		Concept specimenSiteSet = Context.getConceptService().getConceptByUuid(specimenSiteUuid);
 		if (specimenSiteSet != null && specimenSiteSet.getAnswers().size() > 0) {
 			Collection<ConceptAnswer> specimenSiteConcepts = specimenSiteSet.getAnswers();
@@ -90,13 +90,13 @@ public class LabTestSampleController {
 				specimenSiteConceptlist = (List) specimenSiteConcepts;
 			else
 				specimenSiteConceptlist = new ArrayList<ConceptAnswer>(specimenSiteConcepts);
-			
+
 			model.put("specimenSite", specimenSiteConceptlist);
 		}
-		
+
 		// get test units
 		String testUnitsProperty = Context.getAdministrationService()
-		        .getGlobalProperty("commonlabtest.testunitsConceptUuid");
+				.getGlobalProperty("commonlabtest.testunitsConceptUuid");
 		Concept testUnitsUuid = Context.getConceptService().getConceptByUuid(testUnitsProperty);
 		if (testUnitsUuid != null && testUnitsUuid.getAnswers().size() > 0) {
 			Collection<ConceptAnswer> testUnitsConcepts = testUnitsUuid.getAnswers();
@@ -107,21 +107,21 @@ public class LabTestSampleController {
 				testUnitsConceptlist = new ArrayList<ConceptAnswer>(testUnitsConcepts);
 			model.put("testUnits", testUnitsConceptlist);
 		}
-		
+
 		model.addAttribute("testSample", labTestSample);
 		model.addAttribute("patientId", patientId);
 		model.addAttribute("orderEncDate", orderDate);
 		model.addAttribute("orderId", orderId);
 		model.addAttribute("error", error);
 		model.addAttribute("provider", Context.getProviderService()
-		        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
+				.getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
 		return SUCCESS_ADD_FORM_VIEW;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/addLabTestSample.form")
 	public String onSubmit(ModelMap model, HttpSession httpSession,
-	        @ModelAttribute("anyRequestObject") Object anyRequestObject, HttpServletRequest request,
-	        @ModelAttribute("testSample") LabTestSample labTestSample, BindingResult result) {
+			@ModelAttribute("anyRequestObject") Object anyRequestObject, HttpServletRequest request,
+			@ModelAttribute("testSample") LabTestSample labTestSample, BindingResult result) {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status = "";
 		if (Context.getAuthenticatedUser() == null) {
@@ -133,13 +133,13 @@ public class LabTestSampleController {
 				/// with binding error
 				if (labTestSample.getLabTestSampleId() == null) {
 					return "redirect:addLabTestSample.form?patientId="
-					        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&orderId="
-					        + labTestSample.getLabTest().getOrder().getId();
+							+ labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&orderId="
+							+ labTestSample.getLabTest().getOrder().getId();
 				} else {
 					return "redirect:addLabTestSample.form?patientId="
-					        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&testSampleId="
-					        + labTestSample.getLabTest().getTestOrderId() + "&orderId="
-					        + labTestSample.getLabTest().getOrder().getId();
+							+ labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&testSampleId="
+							+ labTestSample.getLabTest().getTestOrderId() + "&orderId="
+							+ labTestSample.getLabTest().getOrder().getId();
 				}
 			} else {
 				// labTest.set
@@ -152,31 +152,30 @@ public class LabTestSampleController {
 				sb.append(" is  saved!");
 				status = sb.toString();
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			status = "Error! could not save Lab Test Sample";
 			e.printStackTrace();
 			model.addAttribute("error", status);
 			if (labTestSample.getLabTestSampleId() == null) {
 				return "redirect:addLabTestSample.form?patientId="
-				        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&orderId="
-				        + labTestSample.getLabTest().getOrder().getId();
+						+ labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&orderId="
+						+ labTestSample.getLabTest().getOrder().getId();
 			} else {
 				return "redirect:addLabTestSample.form?patientId="
-				        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&testSampleId="
-				        + labTestSample.getLabTest().getTestOrderId() + "&orderId="
-				        + labTestSample.getLabTest().getOrder().getId();
+						+ labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&testSampleId="
+						+ labTestSample.getLabTest().getTestOrderId() + "&orderId="
+						+ labTestSample.getLabTest().getOrder().getId();
 			}
 		}
 		model.addAttribute("save", status);
 		return "redirect:manageLabTestSamples.form?patientId="
-		        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&testOrderId="
-		        + labTestSample.getLabTest().getTestOrderId();
+				+ labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&testOrderId="
+				+ labTestSample.getLabTest().getTestOrderId();
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/voidlabtestsample.form")
 	public String onVoid(ModelMap model, HttpSession httpSession, HttpServletRequest request,
-	        @RequestParam("uuid") String uuid, @RequestParam("voidReason") String voidReason) {
+			@RequestParam("uuid") String uuid, @RequestParam("voidReason") String voidReason) {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestSample labTestSample = commonLabTestService.getLabTestSampleByUuid(uuid);
 		String status;
@@ -190,23 +189,22 @@ public class LabTestSampleController {
 			sb.append(labTestSample.getUuid());
 			sb.append(" is  voided!");
 			status = sb.toString();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			status = "could not void Lab Test Sample";
 			e.printStackTrace();
 			model.addAttribute("error", status);
 			if (labTestSample.getLabTestSampleId() == null) {
 				return "redirect:addLabTestSample.form?patientId="
-				        + labTestSample.getLabTest().getOrder().getPatient().getPatientId();
+						+ labTestSample.getLabTest().getOrder().getPatient().getPatientId();
 			} else {
 				return "redirect:addLabTestSample.form?patientId="
-				        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&testSampleId="
-				        + labTestSample.getLabTest().getTestOrderId();
+						+ labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&testSampleId="
+						+ labTestSample.getLabTest().getTestOrderId();
 			}
 		}
 		model.addAttribute("save", status);
 		return "redirect:manageLabTestSamples.form?patientId="
-		        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&testOrderId="
-		        + labTestSample.getLabTest().getTestOrderId();
+				+ labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&testOrderId="
+				+ labTestSample.getLabTest().getTestOrderId();
 	}
 }

@@ -23,36 +23,36 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/commonlab/labtesttype", supportedClass = LabTestType.class, supportedOpenmrsVersions = { "2.0.*,2.1.*" })
+		+ "/commonlab/labtesttype", supportedClass = LabTestType.class, supportedOpenmrsVersions = {"2.0.*,2.1.*"})
 public class LabTestTypeResourceController extends MetadataDelegatingCrudResource<LabTestType> {
-	
+
 	/**
 	 * Logger for this class
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
-	
+
 	private CommonLabTestService commonLabTestService = Context.getService(CommonLabTestService.class);
-	
+
 	@Override
 	public LabTestType getByUniqueId(String s) {
 		return commonLabTestService.getLabTestTypeByUuid(s);
 	}
-	
+
 	@Override
 	public LabTestType newDelegate() {
 		return new LabTestType();
 	}
-	
+
 	@Override
 	public LabTestType save(LabTestType labTestType) {
 		return commonLabTestService.saveLabTestType(labTestType);
 	}
-	
+
 	@Override
 	public void purge(LabTestType labTestType, RequestContext requestContext) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
-	
+
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
@@ -83,7 +83,7 @@ public class LabTestTypeResourceController extends MetadataDelegatingCrudResourc
 		}
 		return description;
 	}
-	
+
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription delegatingResourceDescription = new DelegatingResourceDescription();
@@ -98,13 +98,13 @@ public class LabTestTypeResourceController extends MetadataDelegatingCrudResourc
 		delegatingResourceDescription.addProperty("description");
 		return delegatingResourceDescription;
 	}
-	
+
 	@Override
 	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
 		List<LabTestType> list = commonLabTestService.getAllLabTestTypes(false);
 		return new NeedsPaging<LabTestType>(list, context);
 	}
-	
+
 	/**
 	 * @param LabTestType
 	 * @return description as Display

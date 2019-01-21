@@ -31,17 +31,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LabTestOrderController {
-	
+
 	protected final Log log = LogFactory.getLog(getClass());
-	
+
 	private final String SUCCESS_ADD_FORM_VIEW = "/module/commonlabtest/addLabTestOrder";
-	
+
 	CommonLabTestService commonLabTestService;
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestOrder.form")
 	public String showForm(@RequestParam(required = true) Integer patientId,
-	        @RequestParam(required = false) Integer testOrderId, @RequestParam(required = false) String error,
-	        ModelMap model) {
+			@RequestParam(required = false) Integer testOrderId, @RequestParam(required = false) String error,
+			ModelMap model) {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTest labTest;
 		if (testOrderId == null) {
@@ -52,7 +52,7 @@ public class LabTestOrderController {
 		List<Encounter> encounterList = Context.getEncounterService().getEncountersByPatientId(patientId);
 		if (encounterList.size() > 0) {
 			Collections.sort(encounterList, new Comparator<Encounter>() {
-				
+
 				@Override
 				public int compare(Encounter o1, Encounter o2) {
 					return o2.getEncounterDatetime().compareTo(o1.getEncounterDatetime());
@@ -71,10 +71,11 @@ public class LabTestOrderController {
 		model.addAttribute("testTypes", labTestTypeHavingAttributes);
 		model.addAttribute("error", error);
 		Collection<Provider> providers = Context.getProviderService()
-		        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false);
-		if (providers == null || providers.isEmpty()) {} else {
+				.getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false);
+		if (providers == null || providers.isEmpty()) {
+		} else {
 			model.addAttribute("provider", Context.getProviderService()
-			        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
+					.getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
 		}
 		// show only first 10 encounters
 		if (encounterList.size() > 10) {
@@ -84,12 +85,12 @@ public class LabTestOrderController {
 		}
 		return SUCCESS_ADD_FORM_VIEW;
 	}
-	
+
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_PRIVILEGE)
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/addLabTestOrder.form")
 	public String onSubmit(ModelMap model, HttpSession httpSession,
-	        @ModelAttribute("anyRequestObject") Object anyRequestObject, HttpServletRequest request,
-	        @ModelAttribute("labTest") LabTest labTest, BindingResult result) {
+			@ModelAttribute("anyRequestObject") Object anyRequestObject, HttpServletRequest request,
+			@ModelAttribute("labTest") LabTest labTest, BindingResult result) {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status = "";
 		if (Context.getAuthenticatedUser() == null) {
@@ -97,7 +98,7 @@ public class LabTestOrderController {
 		}
 		try {
 			if (result.hasErrors()) {
-				
+
 			} else {
 				if (labTest.getTestOrderId() == null) {
 					Order testParentOrder = labTest.getOrder();
@@ -106,8 +107,7 @@ public class LabTestOrderController {
 				}
 				commonLabTestService.saveLabTest(labTest);
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			status = "could not save Lab Test Order";
 			e.printStackTrace();
 			model.addAttribute("error", status);
@@ -115,16 +115,16 @@ public class LabTestOrderController {
 				return "redirect:addLabTestOrder.form?patientId=" + labTest.getOrder().getPatient().getPatientId();
 			} else {
 				return "redirect:addLabTestOrder.form?patientId=" + labTest.getOrder().getPatient().getPatientId()
-				        + "&testOrderId=" + labTest.getTestOrderId();
+						+ "&testOrderId=" + labTest.getTestOrderId();
 			}
 		}
 		request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Test order saved successfully");
 		return "redirect:../../patientDashboard.form?patientId=" + labTest.getOrder().getPatient().getPatientId();
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/voidlabtestorder.form")
 	public String onVoid(ModelMap model, HttpSession httpSession, HttpServletRequest request,
-	        @RequestParam("uuid") String uuid, @RequestParam("voidReason") String voidReason) {
+			@RequestParam("uuid") String uuid, @RequestParam("voidReason") String voidReason) {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTest labTest = commonLabTestService.getLabTestByUuid(uuid);
 		String status = "";
@@ -134,8 +134,7 @@ public class LabTestOrderController {
 		}
 		try {
 			commonLabTestService.voidLabTest(labTest, voidReason);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			status = "could not void Lab Test Order";
 			e.printStackTrace();
 			model.addAttribute("error", status);
@@ -143,12 +142,12 @@ public class LabTestOrderController {
 				return "redirect:addLabTestOrder.form?patientId=" + labTest.getOrder().getPatient().getPatientId();
 			} else {
 				return "redirect:addLabTestOrder.form?patientId=" + labTest.getOrder().getPatient().getPatientId()
-				        + "&testOrderId=" + labTest.getTestOrderId();
+						+ "&testOrderId=" + labTest.getTestOrderId();
 			}
 		}
 		int patientId = labTest.getOrder().getPatient().getPatientId();
 		request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Test order retire successfully");
 		return "redirect:../../patientDashboard.form?patientId=" + patientId;
 	}
-	
+
 }

@@ -30,31 +30,31 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/commonlab/labtestorder", supportedClass = LabTest.class, supportedOpenmrsVersions = { "2.0.*,2.1.*" })
+		+ "/commonlab/labtestorder", supportedClass = LabTest.class, supportedOpenmrsVersions = {"2.0.*,2.1.*"})
 public class LabTestOrderResourceController extends DataDelegatingCrudResource<LabTest> {
-	
+
 	/**
 	 * Logger for this class
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
-	
+
 	private CommonLabTestService commonLabTestService = Context.getService(CommonLabTestService.class);
-	
+
 	@Override
 	public LabTest getByUniqueId(String s) {
 		return commonLabTestService.getLabTestByUuid(s);
 	}
-	
+
 	@Override
 	protected void delete(LabTest labTest, String s, RequestContext requestContext) throws ResponseException {
 		commonLabTestService.voidLabTest(labTest, s);
 	}
-	
+
 	@Override
 	public LabTest newDelegate() {
 		return new LabTest();
 	}
-	
+
 	@Override
 	public LabTest save(LabTest labTest) {
 		try {
@@ -81,17 +81,16 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 				labTest.setOrder(order);
 			}
 			return commonLabTestService.saveLabTest(labTest, labTestSample, labTestAttributes);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new ResourceDoesNotSupportOperationException("Test Order was not saved", e);
 		}
 	}
-	
+
 	@Override
 	public void purge(LabTest labTest, RequestContext requestContext) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
-	
+
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
@@ -120,7 +119,7 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 		}
 		return description;
 	}
-	
+
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() throws ResourceDoesNotSupportOperationException {
 		DelegatingResourceDescription delegatingResourceDescription = new DelegatingResourceDescription();
@@ -133,7 +132,7 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 		delegatingResourceDescription.addProperty("attributes");
 		return delegatingResourceDescription;
 	}
-	
+
 	/**
 	 * @param LabTest
 	 * @return getLabReferenceNumber as Display
@@ -151,7 +150,7 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 			instance.addAttribute(attribute);
 		}
 	}
-	
+
 	/**
 	 * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getPropertiesToExposeAsSubResources()
 	 */
@@ -164,7 +163,7 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
-	
+
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		String uuid = context.getRequest().getParameter("patient");

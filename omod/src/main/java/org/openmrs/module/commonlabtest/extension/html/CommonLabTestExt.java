@@ -10,7 +10,7 @@ import org.openmrs.module.web.extension.PatientDashboardTabExt;
  * @author owais.hussain@ihsinformatics.com
  */
 public class CommonLabTestExt extends PatientDashboardTabExt {
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -20,7 +20,7 @@ public class CommonLabTestExt extends PatientDashboardTabExt {
 	public String getTabName() {
 		return "Lab Tests";
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -30,7 +30,7 @@ public class CommonLabTestExt extends PatientDashboardTabExt {
 	public String getTabId() {
 		return "commonlabtest";
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -42,7 +42,7 @@ public class CommonLabTestExt extends PatientDashboardTabExt {
 	public String getRequiredPrivilege() {
 		return CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -52,5 +52,5 @@ public class CommonLabTestExt extends PatientDashboardTabExt {
 	public String getPortletUrl() {
 		return "patientLabTests";
 	}
-	
+
 }

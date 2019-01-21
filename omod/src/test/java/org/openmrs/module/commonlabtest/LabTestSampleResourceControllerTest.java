@@ -31,37 +31,37 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *
  */
 public class LabTestSampleResourceControllerTest extends MainResourceControllerTest {
-	
+
 	@Autowired
 	CommonLabTestService commonLabTestService;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		executeDataSet("CommonLabTestService-initialData.xml");
 	}
-	
+
 	@Override
 	public long getAllCount() {
 		return 3;
 	}
-	
+
 	@Override
 	public String getURI() {
 		return "commonlab/labtestsample";
 	}
-	
+
 	@Override
 	public String getUuid() {
 		return "f4bffc2f-5343-11e8-9c7c-40b034c3cfee";
 	}
-	
+
 	@Test(expected = ResourceDoesNotSupportOperationException.class)
 	@Override
 	public void shouldGetAll() throws Exception {
 		handle(request(RequestMethod.GET, getURI()));
 		fail();
 	}
-	
+
 	@Test
 	public void shouldSave() throws Exception {
 		String uri = getURI();
@@ -74,7 +74,7 @@ public class LabTestSampleResourceControllerTest extends MainResourceControllerT
 		labTestSample.add("collector", "1a61a0b5-d271-4b00-a803-5cef8b06ba8f");
 		labTestSample.add("status", "COLLECTED");
 		labTestSample.add("comments", "Only for testing");
-		
+
 		MockHttpServletRequest newPostRequest = newPostRequest(uri, labTestSample);
 		MockHttpServletResponse handle = handle(newPostRequest);
 		SimpleObject objectCreated = deserialize(handle);
