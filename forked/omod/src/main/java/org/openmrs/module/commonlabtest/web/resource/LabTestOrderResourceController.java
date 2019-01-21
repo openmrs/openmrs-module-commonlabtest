@@ -1,0 +1,174 @@
+package org.openmrs.module.commonlabtest.web.resource;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openmrs.Order;
+import org.openmrs.Patient;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.commonlabtest.LabTest;
+import org.openmrs.module.commonlabtest.LabTestAttribute;
+import org.openmrs.module.commonlabtest.LabTestSample;
+import org.openmrs.module.commonlabtest.api.CommonLabTestService;
+import org.openmrs.module.webservices.rest.web.RequestContext;
+import org.openmrs.module.webservices.rest.web.RestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
+import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
+import org.openmrs.module.webservices.rest.web.annotation.Resource;
+import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
+import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudResource;
+import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
+import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
+import org.openmrs.module.webservices.rest.web.response.ResponseException;
+
+@Resource(name = RestConstants.VERSION_1
+        + "/commonlab/labtestorder", supportedClass = LabTest.class, supportedOpenmrsVersions = { "2.0.*,2.1.*" })
+public class LabTestOrderResourceController extends DataDelegatingCrudResource<LabTest> {
+	
+	/**
+	 * Logger for this class
+	 */
+	protected final Log log = LogFactory.getLog(getClass());
+	
+	private CommonLabTestService commonLabTestService = Context.getService(CommonLabTestService.class);
+	
+	@Override
+	public LabTest getByUniqueId(String s) {
+		return commonLabTestService.getLabTestByUuid(s);
+	}
+	
+	@Override
+	protected void delete(LabTest labTest, String s, RequestContext requestContext) throws ResponseException {
+		commonLabTestService.voidLabTest(labTest, s);
+	}
+	
+	@Override
+	public LabTest newDelegate() {
+		return new LabTest();
+	}
+	
+	@Override
+	public LabTest save(LabTest labTest) {
+		try {
+			LabTestSample labTestSample = null;
+			for (LabTestSample sample : labTest.getLabTestSamples()) {
+				if (!sample.getVoided().booleanValue()) {
+					labTestSample = sample;
+					break;
+				}
+			}
+			List<LabTestAttribute> labTestAttributes = null;
+			if (!labTest.getAttributes().isEmpty()) {
+				labTestAttributes = new ArrayList<LabTestAttribute>();
+				for (LabTestAttribute attribute : labTest.getAttributes()) {
+					labTestAttributes.add(attribute);
+				}
+			}
+			// See if the order already exists
+			Order existing = Context.getOrderService().getOrderByUuid(labTest.getOrder().getUuid());
+			if (existing != null) {
+				labTest.setOrder(existing);
+			} else {
+				Order order = Context.getOrderService().saveOrder(labTest.getOrder(), null);
+				labTest.setOrder(order);
+			}
+			return commonLabTestService.saveLabTest(labTest, labTestSample, labTestAttributes);
+		}
+		catch (Exception e) {
+			throw new ResourceDoesNotSupportOperationException("Test Order was not saved", e);
+		}
+	}
+	
+	@Override
+	public void purge(LabTest labTest, RequestContext requestContext) throws ResponseException {
+		throw new ResourceDoesNotSupportOperationException();
+	}
+	
+	@Override
+	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
+		DelegatingResourceDescription description = new DelegatingResourceDescription();
+		description.addProperty("uuid");
+		description.addSelfLink();
+		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
+		description.addProperty("display");
+		if (representation instanceof DefaultRepresentation) {
+			description.addProperty("order");
+			description.addProperty("labTestType", Representation.REF);
+			description.addProperty("labReferenceNumber");
+			description.addProperty("attributes", Representation.REF);
+			return description;
+		} else if (representation instanceof FullRepresentation) {
+			description.addProperty("order");
+			description.addProperty("labTestType");
+			description.addProperty("labReferenceNumber");
+			description.addProperty("labTestSamples");
+			description.addProperty("attributes", Representation.DEFAULT);
+			description.addProperty("auditInfo");
+			return description;
+		} else if (representation instanceof RefRepresentation) {
+			description.addProperty("order");
+			description.addProperty("labReferenceNumber");
+			return description;
+		}
+		return description;
+	}
+	
+	@Override
+	public DelegatingResourceDescription getCreatableProperties() throws ResourceDoesNotSupportOperationException {
+		DelegatingResourceDescription delegatingResourceDescription = new DelegatingResourceDescription();
+		delegatingResourceDescription.addRequiredProperty("order");
+		delegatingResourceDescription.addRequiredProperty("labTestType");
+		delegatingResourceDescription.addRequiredProperty("labReferenceNumber");
+		delegatingResourceDescription.addProperty("labInstructions");
+		delegatingResourceDescription.addProperty("resultComments");
+		delegatingResourceDescription.addProperty("labTestSamples");
+		delegatingResourceDescription.addProperty("attributes");
+		return delegatingResourceDescription;
+	}
+	
+	/**
+	 * @param LabTest
+	 * @return getLabReferenceNumber as Display
+	 */
+	@PropertyGetter("display")
+	public String getDisplayString(LabTest labTest) {
+		if (labTest == null)
+			return "";
+		return labTest.getLabReferenceNumber();
+	}
+
+	@PropertySetter("attributes")
+	public static void setAttributes(LabTest instance, List<LabTestAttribute> attributes) {
+		for (LabTestAttribute attribute : attributes) {
+			instance.addAttribute(attribute);
+		}
+	}
+	
+	/**
+	 * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getPropertiesToExposeAsSubResources()
+	 */
+	@Override
+	public List<String> getPropertiesToExposeAsSubResources() {
+		return Arrays.asList("attributes");
+	}
+
+	@Override
+	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
+		throw new ResourceDoesNotSupportOperationException();
+	}
+	
+	@Override
+	protected PageableResult doSearch(RequestContext context) {
+		String uuid = context.getRequest().getParameter("patient");
+		Patient patient = Context.getPatientService().getPatientByUuid(uuid);
+		return new NeedsPaging<LabTest>(commonLabTestService.getLabTests(patient, false), context);
+	}
+}

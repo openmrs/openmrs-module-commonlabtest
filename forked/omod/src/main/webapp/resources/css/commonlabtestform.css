@@ -1,0 +1,33 @@
+@CHARSET "ISO-8859-1";
+
+input[type=text], select, textarea,radio {
+	width: 100%;
+	padding: 12px;
+	border: 1px solid #003366;
+	border-radius: 4px;
+	box-sizing: border-box;
+	margin-top: 6px;
+	margin-bottom: 16px;
+	resize: vertical;
+}
+
+input[type=submit] {
+	background-color: #1aac9b;
+	color: white;
+	padding: 12px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+input[type=submit]:hover {
+	background-color: #1aac9b;
+}
+
+.custom_container {
+	border-radius: 5px;
+	background-color: #f2f2f2;
+	padding: 20px;
+	width: 50%;
+	border: 1px solid #1aac9b;
+}
