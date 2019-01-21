@@ -45,26 +45,27 @@ import org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl;
 import org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl;
 
 /**
- * This is a unit test, which verifies logic in CommonLabTestService. It doesn't extend
- * BaseModuleContextSensitiveTest, thus it is run without the in-memory DB and Spring context.
+ * This is a unit test, which verifies logic in CommonLabTestService. It doesn't
+ * extend BaseModuleContextSensitiveTest, thus it is run without the in-memory
+ * DB and Spring context.
  */
 public class CommonLabTestServiceTest extends CommonLabTestBase {
-	
+
 	@InjectMocks
 	CommonLabTestServiceImpl service;
-	
+
 	@Mock
 	CommonLabTestDAOImpl dao;
-	
+
 	@Mock
 	HibernateOrderDAO orderDao;
-	
+
 	@Before
 	public void initMockito() throws Exception {
 		super.initTestData();
 		MockitoAnnotations.initMocks(this);
 	}
-	
+
 	/**
 	 * Must set up the service
 	 */
@@ -72,7 +73,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	public void setupCommonLabService() {
 		assertNotNull(Context.getService(CommonLabTestService.class));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getAllLabTestAttributeTypes(boolean)}
@@ -82,10 +83,10 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	public final void testGetAllLabTestAttributeTypes() {
 		when(dao.getAllLabTestAttributeTypes(Boolean.TRUE)).thenReturn(labTestAttributeTypes);
 		List<LabTestAttributeType> list = service.getAllLabTestAttributeTypes(Boolean.TRUE);
-		assertThat(list, Matchers.hasItems(labTestAttributeTypes.toArray(new LabTestAttributeType[] {})));
+		assertThat(list, Matchers.hasItems(labTestAttributeTypes.toArray(new LabTestAttributeType[]{})));
 		verify(dao, times(1)).getAllLabTestAttributeTypes(Boolean.TRUE);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getAllLabTestAttributeTypes(boolean)}
@@ -97,10 +98,10 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		List<LabTestAttributeType> activeList = labTestAttributeTypes.subList(1, labTestAttributeTypes.size() - 1);
 		when(dao.getAllLabTestAttributeTypes(Boolean.FALSE)).thenReturn(activeList);
 		List<LabTestAttributeType> list = service.getAllLabTestAttributeTypes(Boolean.FALSE);
-		assertThat(list, Matchers.hasItems(activeList.toArray(new LabTestAttributeType[] {})));
+		assertThat(list, Matchers.hasItems(activeList.toArray(new LabTestAttributeType[]{})));
 		verify(dao, times(1)).getAllLabTestAttributeTypes(Boolean.FALSE);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getAllLabTestTypes(boolean)}
@@ -110,10 +111,10 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	public final void testGetAllLabTestTypes() {
 		when(dao.getAllLabTestTypes(Boolean.TRUE)).thenReturn(labTestTypes);
 		List<LabTestType> list = service.getAllLabTestTypes(Boolean.TRUE);
-		assertThat(list, Matchers.hasItems(labTestTypes.toArray(new LabTestType[] {})));
+		assertThat(list, Matchers.hasItems(labTestTypes.toArray(new LabTestType[]{})));
 		verify(dao, times(1)).getAllLabTestTypes(Boolean.TRUE);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getAllLabTestTypes(boolean)}
@@ -125,10 +126,10 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		List<LabTestType> activeList = labTestTypes.subList(1, labTestTypes.size() - 1);
 		when(dao.getAllLabTestTypes(Boolean.FALSE)).thenReturn(activeList);
 		List<LabTestType> list = service.getAllLabTestTypes(Boolean.FALSE);
-		assertThat(list, Matchers.hasItems(activeList.toArray(new LabTestType[] {})));
+		assertThat(list, Matchers.hasItems(activeList.toArray(new LabTestType[]{})));
 		verify(dao, times(1)).getAllLabTestTypes(Boolean.FALSE);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getEarliestLabTest(org.openmrs.Patient)}
@@ -137,13 +138,13 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	@Test
 	public final void testGetEarliestLabTest() {
 		when(dao.getNLabTests(any(Patient.class), any(Integer.class), any(Boolean.class), any(Boolean.class),
-		    any(Boolean.class))).thenReturn(Arrays.asList(harryGxp));
+				any(Boolean.class))).thenReturn(Arrays.asList(harryGxp));
 		LabTest labTest = service.getEarliestLabTest(harry);
 		assertThat(labTest, Matchers.is(harryGxp));
-		verify(dao, times(1)).getNLabTests(any(Patient.class), any(Integer.class), any(Boolean.class), any(Boolean.class),
-		    any(Boolean.class));
+		verify(dao, times(1)).getNLabTests(any(Patient.class), any(Integer.class), any(Boolean.class),
+				any(Boolean.class), any(Boolean.class));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getEarliestLabTestSample(org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus)}
@@ -152,13 +153,13 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	@Test
 	public final void testGetEarliestLabTestSample() {
 		when(dao.getNLabTestSamples(any(Patient.class), any(LabTestSampleStatus.class), any(Integer.class),
-		    any(Boolean.class), any(Boolean.class), any(Boolean.class))).thenReturn(Arrays.asList(harrySample));
+				any(Boolean.class), any(Boolean.class), any(Boolean.class))).thenReturn(Arrays.asList(harrySample));
 		LabTestSample labTestSample = service.getEarliestLabTestSample(harry, LabTestSampleStatus.PROCESSED);
 		assertThat(labTestSample, Matchers.is(harrySample));
 		verify(dao, times(1)).getNLabTestSamples(any(Patient.class), any(LabTestSampleStatus.class), any(Integer.class),
-		    any(Boolean.class), any(Boolean.class), any(Boolean.class));
+				any(Boolean.class), any(Boolean.class), any(Boolean.class));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttribute(java.lang.Integer)}
@@ -171,7 +172,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		assertThat(labTestAttribute, Matchers.is(harryMtbResult));
 		verify(dao, times(1)).getLabTestAttribute(any(Integer.class));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributeTypes(org.openmrs.module.commonlabtest.LabTestType, boolean)}
@@ -180,17 +181,17 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	@Test
 	public final void testGetLabTestAttributeTypesByTestType() {
 		when(dao.getLabTestAttributeTypes(any(LabTestType.class), any(Boolean.class)))
-		        .thenReturn(Arrays.asList(cartridgeId, mtbResult, rifResult));
+				.thenReturn(Arrays.asList(cartridgeId, mtbResult, rifResult));
 		List<LabTestAttributeType> list = service.getLabTestAttributeTypes(geneXpert, Boolean.FALSE);
 		assertThat(list, Matchers.hasItems(cartridgeId, mtbResult, rifResult));
 		verify(dao, times(1)).getLabTestAttributeTypes(any(LabTestType.class), any(Boolean.class));
 		// Check order of items
 		for (int i = 1; i < list.size(); i++) {
 			assertTrue("List of objects is not sorted by sort weight.",
-			    list.get(i - 1).getSortWeight() <= list.get(i).getSortWeight());
+					list.get(i - 1).getSortWeight() <= list.get(i).getSortWeight());
 		}
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType, boolean)}
@@ -199,12 +200,12 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	@Test
 	public final void testGetLabTestAttributesByLabTestAttributeType() {
 		when(dao.getLabTestAttributes(mtbResult, null, null, null, false))
-		        .thenReturn(Arrays.asList(harryMtbResult, hermioneMtbResult));
+				.thenReturn(Arrays.asList(harryMtbResult, hermioneMtbResult));
 		List<LabTestAttribute> list = service.getLabTestAttributes(mtbResult, false);
 		assertThat(list, Matchers.hasItems(harryMtbResult, hermioneMtbResult));
 		verify(dao, times(1)).getLabTestAttributes(mtbResult, null, null, null, false);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributes(java.lang.Integer)}
@@ -213,12 +214,12 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	@Test
 	public final void testGetLabTestAttributesByTestOrder() {
 		when(dao.getLabTestAttributes(any(Integer.class)))
-		        .thenReturn(Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
+				.thenReturn(Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
 		List<LabTestAttribute> list = service.getLabTestAttributes(harryGxp.getTestOrderId());
 		assertThat(list, Matchers.hasItems(harryCartridgeId, harryMtbResult, harryRifResult));
 		verify(dao, times(1)).getLabTestAttributes(any(Integer.class));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributes(org.openmrs.Patient, boolean)}
@@ -227,13 +228,13 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	@Test
 	public final void testGetLabTestAttributesByPatient() {
 		when(dao.getLabTestAttributes(harry, null, false))
-		        .thenReturn(Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
+				.thenReturn(Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
 		List<LabTestAttribute> list = service.getLabTestAttributes(harry, false);
-		
+
 		assertThat(list, Matchers.hasItems(harryCartridgeId, harryMtbResult, harryRifResult));
 		verify(dao, times(1)).getLabTestAttributes(harry, null, false);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestAttributes(org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestAttributeType, boolean)}
@@ -245,14 +246,14 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		expected.addAll(harryGxpResults);
 		expected.addAll(harryCxrResults);
 		when(dao.getLabTestAttributes(isNull(LabTestAttributeType.class), isNull(String.class), any(Date.class),
-		    any(Date.class), any(Boolean.class))).thenReturn(expected);
+				any(Date.class), any(Boolean.class))).thenReturn(expected);
 		List<LabTestAttribute> list = service.getLabTestAttributes(null, null, new Date(), new Date(), false);
-		assertThat(list,
-		    Matchers.hasItems(harryCartridgeId, harryMtbResult, harryRifResult, harryCxrResult, harryRadiologistRemarks));
-		verify(dao, times(1)).getLabTestAttributes(isNull(LabTestAttributeType.class), isNull(String.class), any(Date.class),
-		    any(Date.class), any(Boolean.class));
+		assertThat(list, Matchers.hasItems(harryCartridgeId, harryMtbResult, harryRifResult, harryCxrResult,
+				harryRadiologistRemarks));
+		verify(dao, times(1)).getLabTestAttributes(isNull(LabTestAttributeType.class), isNull(String.class),
+				any(Date.class), any(Date.class), any(Boolean.class));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTest(org.openmrs.Encounter)}
@@ -266,7 +267,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		assertEquals(harryCxr, labTest);
 		verify(dao, times(1)).getLabTest(any(Order.class));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(java.lang.String, java.lang.String, java.lang.String, boolean)}
@@ -279,7 +280,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		assertThat(list, Matchers.hasItems(harrySample));
 		verify(dao, times(1)).getLabTestSamples(harryGxp, false);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(org.openmrs.Provider, boolean)}
@@ -292,7 +293,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		assertThat(list, Matchers.hasItems(harrySample));
 		verify(dao, times(1)).getLabTestSamples(owais, false);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestSamples(org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus, java.util.Date, java.util.Date, boolean)}
@@ -305,7 +306,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		assertThat(list, Matchers.hasItems(harrySample));
 		verify(dao, times(1)).getLabTestSamples(harry, false);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTestType(java.lang.Integer)}
@@ -318,7 +319,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		assertThat(labTestType, Matchers.equalTo(geneXpert));
 		verify(dao, times(1)).getLabTestType(any(Integer.class));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.module.commonlabtest.LabTestType, boolean)}
@@ -327,15 +328,15 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	@Test
 	public final void testGetLabTestsByLabTestType() {
 		when(dao.getLabTests(any(LabTestType.class), isNull(Patient.class), isNull(String.class), isNull(String.class),
-		    isNull(Concept.class), isNull(Provider.class), any(Date.class), any(Date.class), any(Boolean.class)))
-		            .thenReturn(Arrays.asList(harryGxp, hermioneGxp));
+				isNull(Concept.class), isNull(Provider.class), any(Date.class), any(Date.class), any(Boolean.class)))
+						.thenReturn(Arrays.asList(harryGxp, hermioneGxp));
 		List<LabTest> list = service.getLabTests(geneXpert, false);
 		assertThat(list, Matchers.hasItems(harryGxp, hermioneGxp));
 		verify(dao, times(1)).getLabTests(any(LabTestType.class), isNull(Patient.class), isNull(String.class),
-		    isNull(String.class), isNull(Concept.class), isNull(Provider.class), any(Date.class), any(Date.class),
-		    any(Boolean.class));
+				isNull(String.class), isNull(Concept.class), isNull(Provider.class), any(Date.class), any(Date.class),
+				any(Boolean.class));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.Concept, boolean)}
@@ -343,15 +344,15 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	 */
 	@Test
 	public final void testGetLabTestsByConcept() {
-		when(dao.getLabTests(isNull(LabTestType.class), isNull(Patient.class), isNull(String.class), isNull(String.class),
-		    any(Concept.class), isNull(Provider.class), isNull(Date.class), isNull(Date.class), any(Boolean.class)))
-		            .thenReturn(Arrays.asList(harryGxp, hermioneGxp));
+		when(dao.getLabTests(isNull(LabTestType.class), isNull(Patient.class), isNull(String.class),
+				isNull(String.class), any(Concept.class), isNull(Provider.class), isNull(Date.class),
+				isNull(Date.class), any(Boolean.class))).thenReturn(Arrays.asList(harryGxp, hermioneGxp));
 		service.getLabTests(null, null, null, null, geneXpert.getReferenceConcept(), null, null, null, false);
 		verify(dao, times(1)).getLabTests(isNull(LabTestType.class), isNull(Patient.class), isNull(String.class),
-		    isNull(String.class), any(Concept.class), isNull(Provider.class), isNull(Date.class), isNull(Date.class),
-		    any(Boolean.class));
+				isNull(String.class), any(Concept.class), isNull(Provider.class), isNull(Date.class),
+				isNull(Date.class), any(Boolean.class));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.Provider, boolean)}
@@ -359,17 +360,17 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	 */
 	@Test
 	public final void testGetLabTestsByProvider() {
-		when(dao.getLabTests(isNull(LabTestType.class), isNull(Patient.class), isNull(String.class), isNull(String.class),
-		    isNull(Concept.class), any(Provider.class), isNull(Date.class), isNull(Date.class), any(Boolean.class)))
-		            .thenReturn(Arrays.asList(harryGxp, hermioneGxp));
-		
+		when(dao.getLabTests(isNull(LabTestType.class), isNull(Patient.class), isNull(String.class),
+				isNull(String.class), isNull(Concept.class), any(Provider.class), isNull(Date.class),
+				isNull(Date.class), any(Boolean.class))).thenReturn(Arrays.asList(harryGxp, hermioneGxp));
+
 		List<LabTest> list = service.getLabTests(owais, false);
 		assertThat(list, Matchers.hasItems(harryGxp, hermioneGxp));
 		verify(dao, times(1)).getLabTests(isNull(LabTestType.class), isNull(Patient.class), isNull(String.class),
-		    isNull(String.class), isNull(Concept.class), any(Provider.class), isNull(Date.class), isNull(Date.class),
-		    any(Boolean.class));
+				isNull(String.class), isNull(Concept.class), any(Provider.class), isNull(Date.class),
+				isNull(Date.class), any(Boolean.class));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(org.openmrs.Patient, boolean)}
@@ -378,16 +379,16 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	@Test
 	public final void testGetLabTestsByPatient() {
 		when(dao.getLabTests(isNull(LabTestType.class), any(Patient.class), isNull(String.class), isNull(String.class),
-		    isNull(Concept.class), isNull(Provider.class), isNull(Date.class), isNull(Date.class), any(Boolean.class)))
-		            .thenReturn(Arrays.asList(harryGxp, harryCxr));
-		
+				isNull(Concept.class), isNull(Provider.class), isNull(Date.class), isNull(Date.class),
+				any(Boolean.class))).thenReturn(Arrays.asList(harryGxp, harryCxr));
+
 		List<LabTest> list = service.getLabTests(harry, false);
 		assertThat(list, Matchers.hasItems(harryGxp, harryCxr));
 		verify(dao, times(1)).getLabTests(isNull(LabTestType.class), any(Patient.class), isNull(String.class),
-		    isNull(String.class), isNull(Concept.class), isNull(Provider.class), isNull(Date.class), isNull(Date.class),
-		    any(Boolean.class));
+				isNull(String.class), isNull(Concept.class), isNull(Provider.class), isNull(Date.class),
+				isNull(Date.class), any(Boolean.class));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(java.lang.String, boolean)}
@@ -396,33 +397,34 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	@Test
 	public final void testGetLabTestsByReferenceNumber() {
 		when(dao.getLabTests(isNull(LabTestType.class), isNull(Patient.class), isNull(String.class), any(String.class),
-		    isNull(Concept.class), isNull(Provider.class), isNull(Date.class), isNull(Date.class), any(Boolean.class)))
-		            .thenReturn(Arrays.asList(harryGxp));
-		
+				isNull(Concept.class), isNull(Provider.class), isNull(Date.class), isNull(Date.class),
+				any(Boolean.class))).thenReturn(Arrays.asList(harryGxp));
+
 		List<LabTest> list = service.getLabTests(harryGxp.getLabReferenceNumber(), false);
 		assertThat(list, Matchers.hasItems(harryGxp));
 		verify(dao, times(1)).getLabTests(isNull(LabTestType.class), isNull(Patient.class), isNull(String.class),
-		    any(String.class), isNull(Concept.class), isNull(Provider.class), isNull(Date.class), isNull(Date.class),
-		    any(Boolean.class));
-		
+				any(String.class), isNull(Concept.class), isNull(Provider.class), isNull(Date.class),
+				isNull(Date.class), any(Boolean.class));
+
 	}
-	
+
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(...)} .
+	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLabTests(...)}
+	 * .
 	 */
 	@Test
 	public final void testGetLabTestsByDateRange() {
-		when(dao.getLabTests(isNull(LabTestType.class), isNull(Patient.class), isNull(String.class), isNull(String.class),
-		    isNull(Concept.class), isNull(Provider.class), any(Date.class), any(Date.class), any(Boolean.class)))
-		            .thenReturn(Arrays.asList(harryGxp));
+		when(dao.getLabTests(isNull(LabTestType.class), isNull(Patient.class), isNull(String.class),
+				isNull(String.class), isNull(Concept.class), isNull(Provider.class), any(Date.class), any(Date.class),
+				any(Boolean.class))).thenReturn(Arrays.asList(harryGxp));
 		List<LabTest> list = service.getLabTests(null, null, null, null, null, null, new Date(), new Date(), false);
 		assertThat(list, Matchers.hasItems(harryGxp));
 		verify(dao, times(1)).getLabTests(isNull(LabTestType.class), isNull(Patient.class), isNull(String.class),
-		    isNull(String.class), isNull(Concept.class), isNull(Provider.class), any(Date.class), any(Date.class),
-		    any(Boolean.class));
+				isNull(String.class), isNull(Concept.class), isNull(Provider.class), any(Date.class), any(Date.class),
+				any(Boolean.class));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLatestLabTest(org.openmrs.Patient)}
@@ -431,13 +433,13 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	@Test
 	public final void testGetLatestLabTest() {
 		when(dao.getNLabTests(any(Patient.class), any(Integer.class), any(Boolean.class), any(Boolean.class),
-		    any(Boolean.class))).thenReturn(Arrays.asList(harryGxp));
+				any(Boolean.class))).thenReturn(Arrays.asList(harryGxp));
 		LabTest labTest = service.getLatestLabTest(harry);
 		assertThat(labTest, Matchers.is(harryGxp));
-		verify(dao, times(1)).getNLabTests(any(Patient.class), any(Integer.class), any(Boolean.class), any(Boolean.class),
-		    any(Boolean.class));
+		verify(dao, times(1)).getNLabTests(any(Patient.class), any(Integer.class), any(Boolean.class),
+				any(Boolean.class), any(Boolean.class));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#getLatestLabTestSample(org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus)}
@@ -446,11 +448,11 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	@Test
 	public final void testGetLatestLabTestSample() {
 		when(dao.getNLabTestSamples(any(Patient.class), any(LabTestSampleStatus.class), any(Integer.class),
-		    any(Boolean.class), any(Boolean.class), any(Boolean.class))).thenReturn(Arrays.asList(harrySample));
+				any(Boolean.class), any(Boolean.class), any(Boolean.class))).thenReturn(Arrays.asList(harrySample));
 		LabTestSample labTestSample = service.getLatestLabTestSample(harry, null);
 		assertThat(labTestSample, Matchers.is(harrySample));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTest(org.openmrs.module.commonlabtest.LabTest)}
@@ -470,7 +472,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		verify(dao, times(3)).saveLabTestAttribute(any(LabTestAttribute.class));
 		verifyNoMoreInteractions(dao);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)}
@@ -485,7 +487,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		verify(dao, times(1)).saveLabTestAttributeType(any(LabTestAttributeType.class));
 		verifyNoMoreInteractions(dao);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)}
@@ -500,7 +502,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		verify(dao, times(1)).saveLabTestSample(any(LabTestSample.class));
 		verifyNoMoreInteractions(dao);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#saveLabTestType(org.openmrs.module.commonlabtest.LabTestType)}
@@ -515,7 +517,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		verify(dao, times(1)).saveLabTestType(any(LabTestType.class));
 		verifyNoMoreInteractions(dao);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#retireLabTestType(org.openmrs.module.commonlabtest.LabTestType, java.lang.String)}
@@ -528,7 +530,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		verify(dao, times(1)).saveLabTestType(any(LabTestType.class));
 		verifyNoMoreInteractions(dao);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#retireLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType, java.lang.String)}
@@ -541,7 +543,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		verify(dao, times(1)).saveLabTestAttributeType(any(LabTestAttributeType.class));
 		verifyNoMoreInteractions(dao);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unretireLabTestType(org.openmrs.module.commonlabtest.LabTestType)}
@@ -554,7 +556,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		verify(dao, times(1)).saveLabTestType(any(LabTestType.class));
 		verifyNoMoreInteractions(dao);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#unretireLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)}
@@ -567,7 +569,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		verify(dao, times(1)).saveLabTestAttributeType(any(LabTestAttributeType.class));
 		verifyNoMoreInteractions(dao);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)}
@@ -580,7 +582,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		verify(dao, times(1)).purgeLabTestAttribute(any(LabTestAttribute.class));
 		verifyNoMoreInteractions(dao);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)}
@@ -589,17 +591,18 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	@Test
 	public final void testDeleteLabTestAttributeType() {
 		when(dao.getLabTestAttributes(any(LabTestAttributeType.class), isNull(String.class), isNull(Date.class),
-		    isNull(Date.class), any(Boolean.class))).thenReturn(Arrays.asList(harryCartridgeId, hermioneCartridgeId));
+				isNull(Date.class), any(Boolean.class)))
+						.thenReturn(Arrays.asList(harryCartridgeId, hermioneCartridgeId));
 		doNothing().when(dao).purgeLabTestAttributeType(any(LabTestAttributeType.class));
 		doNothing().when(dao).purgeLabTestAttribute(any(LabTestAttribute.class));
 		service.deleteLabTestAttributeType(cartridgeId, true);
-		verify(dao, times(1)).getLabTestAttributes(any(LabTestAttributeType.class), isNull(String.class), isNull(Date.class),
-		    isNull(Date.class), any(Boolean.class));
+		verify(dao, times(1)).getLabTestAttributes(any(LabTestAttributeType.class), isNull(String.class),
+				isNull(Date.class), isNull(Date.class), any(Boolean.class));
 		verify(dao, times(1)).purgeLabTestAttributeType(any(LabTestAttributeType.class));
 		verify(dao, times(2)).purgeLabTestAttribute(any(LabTestAttribute.class));
 		verifyNoMoreInteractions(dao);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)}
@@ -612,7 +615,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		verify(dao, times(1)).purgeLabTestSample(any(LabTestSample.class));
 		verifyNoMoreInteractions(dao);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl#deleteLabTestType(org.openmrs.module.commonlabtest.LabTestType)}
@@ -623,5 +626,5 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	public final void shouldNotDeleteLabTestType() {
 		service.deleteLabTestType(chestXRay, false);
 	}
-	
+
 }

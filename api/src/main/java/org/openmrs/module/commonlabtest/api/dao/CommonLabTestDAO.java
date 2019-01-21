@@ -16,7 +16,7 @@ import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 
 public interface CommonLabTestDAO {
-	
+
 	/**
 	 * Returns list of {@link LabTestAttributeType} objects
 	 * 
@@ -24,7 +24,7 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	List<LabTestAttributeType> getAllLabTestAttributeTypes(boolean includeRetired);
-	
+
 	/**
 	 * Returns list of {@link LabTestType} objects
 	 * 
@@ -32,9 +32,10 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	List<LabTestType> getAllLabTestTypes(boolean includeRetired);
-	
+
 	/**
-	 * Returns list of {@link LabTestType} objects matching all non-null parameters given
+	 * Returns list of {@link LabTestType} objects matching all non-null parameters
+	 * given
 	 * 
 	 * @param name
 	 * @param shortName
@@ -44,8 +45,8 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup, Concept referenceConcept,
-	        boolean includeRetired);
-	
+			boolean includeRetired);
+
 	/**
 	 * Returns {@link LabTest} object by matching given {@link Order} object
 	 * 
@@ -53,7 +54,7 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTest getLabTest(Order order);
-	
+
 	/**
 	 * Returns {@link LabTest} object by generated ID
 	 * 
@@ -61,7 +62,7 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTest getLabTest(Integer labTestId);
-	
+
 	/**
 	 * Returns {@link LabTestAttribute} object by generated ID
 	 * 
@@ -69,7 +70,7 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTestAttribute getLabTestAttribute(Integer labTestAttributeId);
-	
+
 	/**
 	 * Returns {@link LabTestAttribute} object by generated ID
 	 * 
@@ -77,7 +78,7 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTestAttribute getLabTestAttributeByUuid(String uuid);
-	
+
 	/**
 	 * Returns list of {@link LabTestAttribute} objects by {@link Order} Id
 	 * 
@@ -85,9 +86,10 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	List<LabTestAttribute> getLabTestAttributes(Integer testOrderId);
-	
+
 	/**
-	 * Returns list of {@link LabTestAttribute} objects by matching given non-null parameters
+	 * Returns list of {@link LabTestAttribute} objects by matching given non-null
+	 * parameters
 	 * 
 	 * @param labTestAttributeType
 	 * @param valueReference
@@ -96,11 +98,12 @@ public interface CommonLabTestDAO {
 	 * @param includeVoided
 	 * @return
 	 */
-	List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, String valueReference, Date from,
-	        Date to, boolean includeVoided);
-	
+	List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, String valueReference,
+			Date from, Date to, boolean includeVoided);
+
 	/**
-	 * Returns list of {@link LabTestAttribute} objects by matching given non-null parameters
+	 * Returns list of {@link LabTestAttribute} objects by matching given non-null
+	 * parameters
 	 * 
 	 * @param patient
 	 * @param labTestAttributeType
@@ -108,8 +111,8 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	List<LabTestAttribute> getLabTestAttributes(Patient patient, LabTestAttributeType labTestAttributeType,
-	        boolean includeVoided);
-	
+			boolean includeVoided);
+
 	/**
 	 * Returns {@link LabTestAttributeType} object by generated Id
 	 * 
@@ -117,7 +120,7 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTestAttributeType getLabTestAttributeType(Integer labTestAttributeTypeId);
-	
+
 	/**
 	 * Returns {@link LabTestAttributeType} object by UUID
 	 * 
@@ -125,9 +128,10 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTestAttributeType getLabTestAttributeTypeByUuid(String uuid);
-	
+
 	/**
-	 * Returns list of {@link LabTestAttributeType} objects by matching non-null parameters
+	 * Returns list of {@link LabTestAttributeType} objects by matching non-null
+	 * parameters
 	 * 
 	 * @param name
 	 * @param datatypeClassname
@@ -135,16 +139,17 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname, boolean includeRetired);
-	
+
 	/**
-	 * Returns list of {@link LabTestAttributeType} objects by given {@link LabTestType} parameter
+	 * Returns list of {@link LabTestAttributeType} objects by given
+	 * {@link LabTestType} parameter
 	 * 
 	 * @param labTestType
 	 * @param includeRetired
 	 * @return
 	 */
 	List<LabTestAttributeType> getLabTestAttributeTypes(LabTestType labTestType, boolean includeRetired);
-	
+
 	/**
 	 * Returns {@link LabTest} object by UUID
 	 * 
@@ -152,7 +157,7 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTest getLabTestByUuid(String uuid);
-	
+
 	/**
 	 * Returns list of {@link LabTest} objects by matching non-null parameters
 	 * 
@@ -168,8 +173,8 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	List<LabTest> getLabTests(LabTestType labTestType, Patient patient, String orderNumber, String referenceNumber,
-	        Concept orderConcept, Provider orderer, Date from, Date to, boolean includeVoided);
-	
+			Concept orderConcept, Provider orderer, Date from, Date to, boolean includeVoided);
+
 	/**
 	 * Returns {@link LabTestSample} object by generated Id
 	 * 
@@ -177,7 +182,7 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTestSample getLabTestSample(Integer labTestSampleId);
-	
+
 	/**
 	 * Returns {@link LabTestSample} object by UUID
 	 * 
@@ -185,7 +190,7 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTestSample getLabTestSampleByUuid(String uuid);
-	
+
 	/**
 	 * Returns list of {@link LabTestSample} objects by given {@link LabTest}
 	 * 
@@ -194,16 +199,17 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	List<LabTestSample> getLabTestSamples(LabTest labTest, boolean includeVoided);
-	
+
 	/**
-	 * Returns list of {@link LabTestSample} objects by given {@link Provider} object as collector
+	 * Returns list of {@link LabTestSample} objects by given {@link Provider}
+	 * object as collector
 	 * 
 	 * @param collector
 	 * @param includeVoided
 	 * @return
 	 */
 	List<LabTestSample> getLabTestSamples(Provider collector, boolean includeVoided);
-	
+
 	/**
 	 * Returns list of {@link LabTestSample} objects by given {@link Patient} object
 	 * 
@@ -212,7 +218,7 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	List<LabTestSample> getLabTestSamples(Patient patient, boolean includeVoided);
-	
+
 	/**
 	 * Returns {@link LabTestType} object by generated Id
 	 * 
@@ -220,7 +226,7 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTestType getLabTestType(Integer labTestTypeId);
-	
+
 	/**
 	 * Returns {@link LabTestType} object by UUID
 	 * 
@@ -228,12 +234,13 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTestType getLabTestTypeByUuid(String uuid);
-	
+
 	/**
-	 * Returns a list of 'n' number of {@link LabTest} objects. If firstNObjects is true, then earliest
-	 * 'n' objects are returned; if lastNObjects is true, then latest 'n' objects are returned. If both
-	 * a true, then a union of both results is returned. Maximum number of objects to return is limited
-	 * by MAX_FETCH_LIMIT
+	 * Returns a list of 'n' number of {@link LabTest} objects. If firstNObjects is
+	 * true, then earliest 'n' objects are returned; if lastNObjects is true, then
+	 * latest 'n' objects are returned. If both a true, then a union of both results
+	 * is returned. Maximum number of objects to return is limited by
+	 * MAX_FETCH_LIMIT
 	 * 
 	 * @param patient
 	 * @param n
@@ -242,14 +249,16 @@ public interface CommonLabTestDAO {
 	 * @param includeVoided
 	 * @return
 	 */
-	List<LabTest> getNLabTests(Patient patient, int n, boolean firstNObjects, boolean lastNObjects, boolean includeVoided);
-	
+	List<LabTest> getNLabTests(Patient patient, int n, boolean firstNObjects, boolean lastNObjects,
+			boolean includeVoided);
+
 	/**
-	 * Returns a list of 'n' number of {@link LabTestSample} objects by matching {@link Patient} and
-	 * {@link LabTestSampleStatus} (optional, pass null to ignore). If firstNObjects is true, then
-	 * earliest 'n' objects are returned; if lastNObjects is true, then latest 'n' objects are returned.
-	 * If both a true, then a union of both results is returned. Maximum number of objects to return is
-	 * limited by MAX_FETCH_LIMIT
+	 * Returns a list of 'n' number of {@link LabTestSample} objects by matching
+	 * {@link Patient} and {@link LabTestSampleStatus} (optional, pass null to
+	 * ignore). If firstNObjects is true, then earliest 'n' objects are returned; if
+	 * lastNObjects is true, then latest 'n' objects are returned. If both a true,
+	 * then a union of both results is returned. Maximum number of objects to return
+	 * is limited by MAX_FETCH_LIMIT
 	 * 
 	 * @param patient
 	 * @param status
@@ -260,52 +269,52 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	List<LabTestSample> getNLabTestSamples(Patient patient, LabTestSampleStatus status, int n, boolean firstNObjects,
-	        boolean lastNObjects, boolean includeVoided);
-	
+			boolean lastNObjects, boolean includeVoided);
+
 	/**
 	 * Permanently delete {@link LabTest}
 	 * 
 	 * @param labTest
 	 */
 	void purgeLabTest(LabTest labTest);
-	
+
 	/**
 	 * Permanently delete {@link LabTestAttribute}
 	 * 
 	 * @param labTestAttribute
 	 */
 	void purgeLabTestAttribute(LabTestAttribute labTestAttribute);
-	
+
 	/**
 	 * Permanently delete {@link LabTestAttributeType}
 	 * 
 	 * @param labTestAttributeType
 	 */
 	void purgeLabTestAttributeType(LabTestAttributeType labTestAttributeType);
-	
+
 	/**
 	 * Permanently delete {@link LabTestSample}
 	 * 
 	 * @param labTestSample
 	 */
 	void purgeLabTestSample(LabTestSample labTestSample);
-	
+
 	/**
 	 * Permanently delete {@link LabTestType}
 	 * 
 	 * @param labTestType
 	 */
 	void purgeLabTestType(LabTestType labTestType);
-	
+
 	/**
-	 * Persists {@link LabTest} in database. This method also persists {@link Order} entity, because
-	 * unlike {@link Order}, the {@link LabTest} is not hierarchical
+	 * Persists {@link LabTest} in database. This method also persists {@link Order}
+	 * entity, because unlike {@link Order}, the {@link LabTest} is not hierarchical
 	 * 
 	 * @param labTest
 	 * @return
 	 */
 	LabTest saveLabTest(LabTest labTest);
-	
+
 	/**
 	 * Persists {@link LabTestAttribute} in database
 	 * 
@@ -313,7 +322,7 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTestAttribute saveLabTestAttribute(LabTestAttribute labTestAttribute);
-	
+
 	/**
 	 * Persists {@link LabTestAttributeType} in database
 	 * 
@@ -321,7 +330,7 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTestAttributeType saveLabTestAttributeType(LabTestAttributeType labTestAttributeType);
-	
+
 	/**
 	 * Persists {@link LabTestSample} in database
 	 * 
@@ -329,7 +338,7 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTestSample saveLabTestSample(LabTestSample labTestSample);
-	
+
 	/**
 	 * Persists {@link LabTestType} in database
 	 * 
@@ -337,5 +346,5 @@ public interface CommonLabTestDAO {
 	 * @return
 	 */
 	LabTestType saveLabTestType(LabTestType labTestType);
-	
+
 }

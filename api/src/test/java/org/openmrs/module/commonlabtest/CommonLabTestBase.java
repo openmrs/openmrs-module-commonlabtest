@@ -33,85 +33,85 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
  * @author owais.hussain@ihsinformatics.com
  */
 public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
-	
+
 	protected static final String DATA_XML = "CommonLabTestService-initialData.xml";
-	
+
 	protected Provider owais;
-	
+
 	protected Provider tahira;
-	
+
 	private Concept gxpConcept;
-	
+
 	private Concept cxrConcept;
-	
+
 	private Order harryGxpOrder;
-	
+
 	private Order harryCxrOrder;
-	
+
 	private Order hermioneGxpOrder;
-	
+
 	protected Patient harry;
-	
+
 	protected Patient hermione;
-	
+
 	protected LabTestType unknownTest;
-	
+
 	protected LabTestType geneXpert;
-	
+
 	protected LabTestType chestXRay;
-	
+
 	protected List<LabTestType> labTestTypes;
-	
+
 	protected LabTestAttributeType cartridgeId;
-	
+
 	protected LabTestAttributeType mtbResult;
-	
+
 	protected LabTestAttributeType rifResult;
-	
+
 	protected LabTestAttributeType cxrResult;
-	
+
 	protected LabTestAttributeType radiologistRemarks;
-	
+
 	protected LabTestAttributeType cad4tbScore;
-	
+
 	protected LabTestAttributeType xrayFilmPrinted;
-	
+
 	protected List<LabTestAttributeType> labTestAttributeTypes;
-	
+
 	protected List<LabTestAttributeType> activeLabTestAttributeTypes;
-	
+
 	protected LabTest harryGxp;
-	
+
 	protected LabTest harryCxr;
-	
+
 	protected LabTest hermioneGxp;
-	
+
 	protected LabTestSample harrySample;
-	
+
 	protected LabTestSample hermioneSample;
-	
+
 	protected LabTestAttribute harryCartridgeId;
-	
+
 	protected LabTestAttribute harryMtbResult;
-	
+
 	protected LabTestAttribute harryRifResult;
-	
+
 	protected LabTestAttribute harryCxrResult;
-	
+
 	protected LabTestAttribute harryRadiologistRemarks;
-	
+
 	protected LabTestAttribute hermioneCartridgeId;
-	
+
 	protected LabTestAttribute hermioneMtbResult;
-	
+
 	protected LabTestAttribute hermioneRifResult;
-	
+
 	protected Set<LabTestAttribute> harryGxpResults;
-	
+
 	protected Set<LabTestAttribute> harryCxrResults;
-	
+
 	protected Set<LabTestAttribute> hermioneGxpResults;
-	
+
 	/**
 	 * Initialize all data objects before each test
 	 * 
@@ -120,27 +120,27 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 	public void initTestData() throws Exception {
 		initializeInMemoryDatabase();
 		executeDataSet(DATA_XML);
-		
+
 		owais = Context.getProviderService().getProvider(300);
 		tahira = Context.getProviderService().getProvider(400);
-		
+
 		harry = Context.getPatientService().getPatient(1000);
 		hermione = Context.getPatientService().getPatient(2000);
-		
+
 		gxpConcept = Context.getConceptService().getConcept(500);
 		cxrConcept = Context.getConceptService().getConcept(600);
-		
+
 		harryGxpOrder = Context.getOrderService().getOrder(100);
 		harryCxrOrder = Context.getOrderService().getOrder(200);
 		hermioneGxpOrder = Context.getOrderService().getOrder(300);
-		
+
 		unknownTest = new LabTestType(1);
 		unknownTest.setName("Unknown Test Type");
 		unknownTest.setShortName("UNKNOWN");
 		unknownTest.setTestGroup(LabTestGroup.OTHER);
 		unknownTest.setRequiresSpecimen(Boolean.FALSE);
 		unknownTest.setUuid(LabTestType.UNKNOWN_TEST_UUID);
-		
+
 		geneXpert = new LabTestType(2);
 		geneXpert.setName("GeneXpert Test");
 		geneXpert.setShortName("GXP");
@@ -148,7 +148,7 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		geneXpert.setRequiresSpecimen(Boolean.TRUE);
 		geneXpert.setReferenceConcept(gxpConcept);
 		geneXpert.setUuid("4bf46c09-46e9-11e8-943c-40b034c3cfee");
-		
+
 		chestXRay = new LabTestType(3);
 		chestXRay.setName("Chest X-ray Test");
 		chestXRay.setShortName("CXR");
@@ -156,9 +156,9 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		chestXRay.setRequiresSpecimen(Boolean.FALSE);
 		chestXRay.setReferenceConcept(cxrConcept);
 		chestXRay.setUuid("a277edf4-46ea-11e8-943c-40b034c3cfee");
-		
+
 		labTestTypes = Arrays.asList(geneXpert, chestXRay);
-		
+
 		cartridgeId = new LabTestAttributeType(1);
 		cartridgeId.setName("Cartridge ID");
 		cartridgeId.setLabTestType(geneXpert);
@@ -167,7 +167,7 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		cartridgeId.setMinOccurs(1);
 		cartridgeId.setMinOccurs(1);
 		cartridgeId.setUuid("ecf166e5-478e-11e8-943c-40b034c3cfee");
-		
+
 		mtbResult = new LabTestAttributeType(2);
 		mtbResult.setName("MTB Result");
 		mtbResult.setLabTestType(geneXpert);
@@ -176,7 +176,7 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		mtbResult.setMinOccurs(0);
 		mtbResult.setMinOccurs(1);
 		mtbResult.setUuid("ea22684f-478e-11e8-943c-40b034c3cfee");
-		
+
 		rifResult = new LabTestAttributeType(3);
 		rifResult.setName("RIF Result");
 		rifResult.setLabTestType(geneXpert);
@@ -185,7 +185,7 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		rifResult.setMinOccurs(0);
 		rifResult.setMinOccurs(1);
 		rifResult.setUuid("eb66655f-478e-11e8-943c-40b034c3cfee");
-		
+
 		cxrResult = new LabTestAttributeType(4);
 		cxrResult.setName("Chest X-Ray Result");
 		cxrResult.setLabTestType(chestXRay);
@@ -195,7 +195,7 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		cxrResult.setMinOccurs(1);
 		cxrResult.setMinOccurs(1);
 		cxrResult.setUuid("efeb9339-538d-11e8-9c7c-40b034c3cfee");
-		
+
 		radiologistRemarks = new LabTestAttributeType(5);
 		radiologistRemarks.setName("Radiologist Remarks");
 		radiologistRemarks.setLabTestType(chestXRay);
@@ -204,7 +204,7 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		radiologistRemarks.setMinOccurs(0);
 		radiologistRemarks.setMinOccurs(5);
 		radiologistRemarks.setUuid("f43de058-538d-11e8-9c7c-40b034c3cfee");
-		
+
 		cad4tbScore = new LabTestAttributeType(6);
 		cad4tbScore.setName("CAD4TB Score");
 		cad4tbScore.setLabTestType(chestXRay);
@@ -216,7 +216,7 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		cad4tbScore.setRetireReason("CAD4TB no longer functional.");
 		cad4tbScore.setDateRetired(new Date());
 		cad4tbScore.setUuid("ed8b4caf-478e-11e8-943c-40b034c3cfee");
-		
+
 		xrayFilmPrinted = new LabTestAttributeType(7);
 		xrayFilmPrinted.setName("X-Ray Film Printed");
 		xrayFilmPrinted.setLabTestType(chestXRay);
@@ -228,12 +228,12 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		xrayFilmPrinted.setRetireReason("Printing has been outsourced.");
 		xrayFilmPrinted.setDateRetired(new Date());
 		xrayFilmPrinted.setUuid("ee261470-478e-11e8-943c-40b034c3cfee");
-		
-		labTestAttributeTypes = Arrays.asList(cartridgeId, mtbResult, rifResult, cxrResult, radiologistRemarks, cad4tbScore,
-		    xrayFilmPrinted);
-		
+
+		labTestAttributeTypes = Arrays.asList(cartridgeId, mtbResult, rifResult, cxrResult, radiologistRemarks,
+				cad4tbScore, xrayFilmPrinted);
+
 		activeLabTestAttributeTypes = Arrays.asList(cartridgeId, mtbResult, rifResult, cxrResult, radiologistRemarks);
-		
+
 		harrySample = new LabTestSample(1);
 		harrySample.setCollector(owais);
 		Calendar collectionDate = Calendar.getInstance();
@@ -249,7 +249,7 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		harrySample.setQuantity(20D);
 		harrySample.setUnits("ml");
 		harrySample.setUuid("f4bffc2f-5343-11e8-9c7c-40b034c3cfee");
-		
+
 		hermioneSample = new LabTestSample(1);
 		hermioneSample.setCollector(owais);
 		collectionDate = Calendar.getInstance();
@@ -262,49 +262,49 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		hermioneSample.setQuantity(30D);
 		hermioneSample.setUnits("ml");
 		hermioneSample.setUuid("f40420f8-5346-11e8-9c7c-40b034c3cfee");
-		
+
 		harryCartridgeId = new LabTestAttribute();
 		harryCartridgeId.setLabTest(harryGxp);
 		harryCartridgeId.setAttributeType(cartridgeId);
 		harryCartridgeId.setValueReferenceInternal("201805071211");
 		harryCartridgeId.setUuid("2c9737d9-47c2-11e8-943c-40b034c3cfee");
-		
+
 		harryMtbResult = new LabTestAttribute();
 		harryMtbResult.setLabTest(harryGxp);
 		harryMtbResult.setAttributeType(mtbResult);
 		harryMtbResult.setValueReferenceInternal("MTB DETECTED");
 		harryMtbResult.setUuid("2d9cc0d3-47c2-11e8-943c-40b034c3cfee");
-		
+
 		harryRifResult = new LabTestAttribute();
 		harryRifResult.setLabTest(harryGxp);
 		harryRifResult.setAttributeType(rifResult);
 		harryRifResult.setValueReferenceInternal("DETECTED");
 		harryRifResult.setUuid("2e45af47-47c2-11e8-943c-40b034c3cfee");
-		
+
 		harryCxrResult = new LabTestAttribute();
 		harryCxrResult.setLabTest(harryCxr);
 		harryCxrResult.setAttributeType(cxrResult);
 		harryCxrResult.setValueReferenceInternal("ABNORMAL");
 		harryCxrResult.setUuid("2efe1af7-47c2-11e8-943c-40b034c3cfee");
-		
+
 		harryRadiologistRemarks = new LabTestAttribute();
 		harryRadiologistRemarks.setLabTest(harryCxr);
 		harryRadiologistRemarks.setAttributeType(radiologistRemarks);
 		harryRadiologistRemarks.setValueReferenceInternal("Not just abnormal, but paranormal");
 		harryRadiologistRemarks.setUuid("2f9066fb-47c2-11e8-943c-40b034c3cfee");
-		
+
 		hermioneCartridgeId = new LabTestAttribute();
 		hermioneCartridgeId.setLabTest(hermioneGxp);
 		hermioneCartridgeId.setAttributeType(cartridgeId);
 		hermioneCartridgeId.setValueReferenceInternal("201805071325");
 		hermioneCartridgeId.setUuid("b46ad728-51f0-11e8-b60d-080027ea421d");
-		
+
 		hermioneMtbResult = new LabTestAttribute();
 		hermioneMtbResult.setLabTest(hermioneGxp);
 		hermioneMtbResult.setAttributeType(mtbResult);
 		hermioneMtbResult.setValueReferenceInternal("NOT DETECTED");
 		hermioneMtbResult.setUuid("acbf3ff5-51f0-11e8-b60d-080027ea421d");
-		
+
 		harryGxp = new LabTest(harryGxpOrder);
 		harryGxp.setLabTestType(geneXpert);
 		harryGxp.addLabTestSample(harrySample);
@@ -313,7 +313,7 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		harryGxpResults.addAll(Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
 		harryGxp.setAttributes(harryGxpResults);
 		harryGxp.setUuid("d175e92e-47bf-11e8-943c-40b034c3cfee");
-		
+
 		harryCxr = new LabTest(harryCxrOrder);
 		harryCxr.setLabTestType(chestXRay);
 		harryCxr.setLabReferenceNumber("HARRY-CXR-1");
@@ -321,7 +321,7 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		harryCxrResults.addAll(Arrays.asList(harryCxrResult, harryRadiologistRemarks));
 		harryCxr.setAttributes(harryCxrResults);
 		harryCxr.setUuid("d23c2576-47bf-11e8-943c-40b034c3cfee");
-		
+
 		hermioneGxp = new LabTest(hermioneGxpOrder);
 		hermioneGxp.setLabTestType(geneXpert);
 		hermioneGxp.addLabTestSample(hermioneSample);

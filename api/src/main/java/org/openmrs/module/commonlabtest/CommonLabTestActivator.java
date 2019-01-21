@@ -27,43 +27,43 @@ import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
 
 /**
- * This class contains the logic that is run every time this module is either started or shutdown
+ * This class contains the logic that is run every time this module is either
+ * started or shutdown
  */
 public class CommonLabTestActivator extends BaseModuleActivator {
-	
+
 	private Log log = LogFactory.getLog(this.getClass());
-	
+
 	public static final String SPECIMEN_TYPE_CONCEPT_UUID = "commonlabtest.specimenTypeConceptUuid";
-	
+
 	public static final String SPECIMEN_SITE_CONCEPT_UUID = "commonlabtest.specimenSiteConceptUuid";
-	
+
 	public static final String TEST_UNITS_CONCEPT_UUID = "commonlabtest.testunitsConceptUuid";
-	
+
 	public static final String UPLOAD_FILE_DIRECTORY = "commonlabtest.fileDirectory";
-	
+
 	public static final String UPLOAD_FILE_EXTENSIONS = "commonlabtest.fileExtensions";
-	
+
 	public static final String FILE_EXTENSIONS_NAMES = ".bmp ,.jpg ,.jpeg,.jfif,.GIF,.png,.bat,.BPG,.FLV,.AVI,.MOV,.M4P,.MPG,.WMV,.3gp,.RM,.SWF,.3GP,.ACT,.AIFF,.MP3,.WAV,.OGG,.FLAC,.AU,.RAW,.docx,.docm,.dotx,.docb,.dotm,.pdf";
-	
+
 	ConceptService conceptService;
-	
+
 	File dir = OpenmrsUtil.getDirectoryInApplicationDataDirectory(
-	    Context.getAdministrationService().getGlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_COMPLEX_OBS_DIR));
-	
+			Context.getAdministrationService().getGlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_COMPLEX_OBS_DIR));
+
 	Path path = Paths.get(dir.getPath() + "/commonLabTestFiles");
-	
+
 	/**
 	 * @see #started()
 	 */
 	public void started() {
 		log.info("Started Common Lab Test");
-		
+
 		conceptService = Context.getConceptService();
 		if (!Files.exists(path)) {
 			try {
 				Files.createDirectories(path);
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -73,9 +73,9 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 		setGlobalProperty(administrationService, SPECIMEN_SITE_CONCEPT_UUID, "159959AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		setGlobalProperty(administrationService, TEST_UNITS_CONCEPT_UUID, "5db4f53e-6218-4ae0-ae4e-5e0343b5d301");
 		setGlobalProperty(administrationService, UPLOAD_FILE_EXTENSIONS, FILE_EXTENSIONS_NAMES);
-		
+
 	}
-	
+
 	private void setGlobalProperty(AdministrationService service, String prop, String val) {
 		GlobalProperty gp = service.getGlobalPropertyObject(prop);
 		if (gp == null) {
@@ -85,23 +85,22 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 			service.saveGlobalProperty(gp);
 		}
 	}
-	
+
 	/**
 	 * @see #shutdown()
 	 */
 	public void shutdown() {
 		log.info("Shutdown Common Lab Test");
 	}
-	
+
 	public void contextRefreshed() {
 		log.info("========================== Common Lab Test Lab contextRefreshed called ======");
 		conceptService = Context.getConceptService();
-		
+
 		if (!Files.exists(path)) {
 			try {
 				Files.createDirectories(path);
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -112,5 +111,5 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 		setGlobalProperty(administrationService, TEST_UNITS_CONCEPT_UUID, "5db4f53e-6218-4ae0-ae4e-5e0343b5d301");
 		setGlobalProperty(administrationService, UPLOAD_FILE_EXTENSIONS, FILE_EXTENSIONS_NAMES);
 	}
-	
+
 }

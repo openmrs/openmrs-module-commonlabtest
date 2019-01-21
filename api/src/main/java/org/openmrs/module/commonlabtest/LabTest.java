@@ -38,62 +38,68 @@ import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 
 /**
- * This entity represents main Lab test, which manages test order. A Lab Test has a LabTestType, has
- * a reference in LabTestSample object and defines its results as a set of attributes of type
- * LabTestAttribute. This class extends BaseCustomizableData to inherit the properties of Attributes
+ * This entity represents main Lab test, which manages test order. A Lab Test
+ * has a LabTestType, has a reference in LabTestSample object and defines its
+ * results as a set of attributes of type LabTestAttribute. This class extends
+ * BaseCustomizableData to inherit the properties of Attributes
  * 
  * @author owais.hussain@ihsinformatics.com
  */
 @Entity(name = "commonlabtest.LabTest")
 @Table(name = "commonlabtest_test")
-public class LabTest extends BaseCustomizableData<LabTestAttribute> implements java.io.Serializable, Attributable<LabTest> {
-	
+public class LabTest extends BaseCustomizableData<LabTestAttribute>
+		implements
+			java.io.Serializable,
+			Attributable<LabTest> {
+
 	private static final long serialVersionUID = 2561859108258402721L;
-	
+
 	@Id
 	@Column(name = "test_order_id")
 	private Integer testOrderId;
-	
+
 	@OneToOne(optional = false, targetEntity = Order.class)
 	@PrimaryKeyJoinColumn(name = "testOrderId")
 	private Order order;
-	
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "test_type_id")
 	private LabTestType labTestType;
-	
+
 	@Field
 	@Column(name = "lab_reference_number", length = 255)
 	private String labReferenceNumber;
-	
+
 	@Column(name = "instructions", length = 255)
 	private String labInstructions;
-	
+
 	@Column(name = "report_file_path")
 	private String filePath;
-	
+
 	@Column(name = "result_comments")
 	private String resultComments;
-	
+
 	@ContainedIn
 	private transient Set<LabTestSample> labTestSamples = new HashSet<LabTestSample>(0);
-	
+
 	/**
 	 * Default constructor
 	 */
 	public LabTest() {
 	}
-	
+
 	/**
 	 * Overloaded constructor.
 	 * 
-	 * @param order since LabTest has one-to-one identifying relationship with Order class
+	 * @param order
+	 *            since LabTest has one-to-one identifying relationship with Order
+	 *            class
 	 */
 	public LabTest(Order order) {
 		setTestOrderId(order.getId());
 		setOrder(order);
 	}
-	
+
 	/**
 	 * @see org.openmrs.Order#getOrderId()
 	 */
@@ -101,7 +107,7 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	public Integer getId() {
 		return order.getId();
 	}
-	
+
 	/**
 	 * @see org.openmrs.Order#setOrderId(java.lang.Integer)
 	 */
@@ -110,23 +116,23 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 		setTestOrderId(id);
 		order.setId(getTestOrderId());
 	}
-	
+
 	public String getResultComments() {
 		return resultComments;
 	}
-	
+
 	public void setResultComments(String resultComments) {
 		this.resultComments = resultComments;
 	}
-	
+
 	public String getFilePath() {
 		return filePath;
 	}
-	
+
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
-	
+
 	/**
 	 * Finds a list of LabTest objects from Lab reference number. Also @see
 	 * org.openmrs.Attributable#findPossibleValues(java.lang.String)
@@ -135,29 +141,29 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	public List<LabTest> findPossibleValues(String referenceNumber) {
 		try {
 			return Context.getService(CommonLabTestService.class).getLabTests(referenceNumber, false);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return Collections.emptyList();
 		}
 	}
-	
+
 	@Override
 	public String getDisplayString() {
 		return new ToStringBuilder(toString()).append("reference", getLabReferenceNumber()).build();
 	}
-	
+
 	/**
-	 * Always returns an empty list because returning complete list of all LabTests will be burdensome.
-	 * Also @see org.openmrs.Attributable#getPossibleValues()
+	 * Always returns an empty list because returning complete list of all LabTests
+	 * will be burdensome. Also @see org.openmrs.Attributable#getPossibleValues()
 	 */
 	@Override
 	public List<LabTest> getPossibleValues() {
 		return Collections.emptyList();
 	}
-	
+
 	/**
-	 * Searches LabTest object by given UUID and returns the matching object. If the object is not
-	 * found, a new object is returned. Also @see org.openmrs.Attributable#hydrate(java.lang.String)
+	 * Searches LabTest object by given UUID and returns the matching object. If the
+	 * object is not found, a new object is returned. Also @see
+	 * org.openmrs.Attributable#hydrate(java.lang.String)
 	 */
 	@Override
 	public LabTest hydrate(String uuid) {
@@ -168,15 +174,14 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 				throw new Exception();
 			}
 			return labTest;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return new LabTest();
 		}
 	}
-	
+
 	/**
-	 * Searches LabTest object by given Id and returns the matching object. If the object is not found,
-	 * a new object is returned.
+	 * Searches LabTest object by given Id and returns the matching object. If the
+	 * object is not found, a new object is returned.
 	 */
 	public LabTest hydrate(Integer labTestId) {
 		try {
@@ -186,12 +191,11 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 				throw new Exception();
 			}
 			return labTest;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return new LabTest();
 		}
 	}
-	
+
 	/**
 	 * @see org.openmrs.Attributable#serialize()
 	 */
@@ -203,79 +207,85 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 			return "";
 		}
 	}
-	
+
 	/**
 	 * @return the testOrderId
 	 */
 	public Integer getTestOrderId() {
 		return testOrderId;
 	}
-	
+
 	/**
-	 * @param testOrderId the testOrderId to set
+	 * @param testOrderId
+	 *            the testOrderId to set
 	 */
 	public void setTestOrderId(Integer testOrderId) {
 		this.testOrderId = testOrderId;
 	}
-	
+
 	/**
 	 * @return the order
 	 */
 	public Order getOrder() {
 		return order;
 	}
-	
+
 	/**
-	 * @param the order to set
+	 * @param the
+	 *            order to set
 	 */
 	public void setOrder(Order order) {
 		this.order = order;
 	}
-	
+
 	/**
 	 * @return the labTestType
 	 */
 	public LabTestType getLabTestType() {
 		return labTestType;
 	}
-	
+
 	/**
-	 * @param labTestType the labTestType to set
+	 * @param labTestType
+	 *            the labTestType to set
 	 */
 	public void setLabTestType(LabTestType labTestType) {
 		this.labTestType = labTestType;
 	}
-	
+
 	/**
 	 * @return the labReferenceNumber
 	 */
 	public String getLabReferenceNumber() {
 		return labReferenceNumber;
 	}
-	
+
 	/**
-	 * @param labReferenceNumber the labReferenceNumber to set
+	 * @param labReferenceNumber
+	 *            the labReferenceNumber to set
 	 */
 	public void setLabReferenceNumber(String labReferenceNumber) {
 		this.labReferenceNumber = labReferenceNumber;
 	}
-	
+
 	/**
 	 * @return the labTestSamples
 	 */
 	public Set<LabTestSample> getLabTestSamples() {
 		return labTestSamples;
 	}
-	
+
 	/**
-	 * @param labTestSamples the labTestSamples to set
+	 * @param labTestSamples
+	 *            the labTestSamples to set
 	 */
 	public void setLabTestSamples(Set<LabTestSample> labTestSamples) {
 		this.labTestSamples = labTestSamples;
 	}
-	
+
 	/**
-	 * Add labTestSample to existing set. A duplicate object will be skipped without any exception
+	 * Add labTestSample to existing set. A duplicate object will be skipped without
+	 * any exception
 	 * 
 	 * @param labTestSample
 	 */
@@ -293,7 +303,7 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 		}
 		labTestSamples.add(labTestSample);
 	}
-	
+
 	/**
 	 * Remove labTestSample object from the existing set
 	 * 
@@ -304,15 +314,15 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 			labTestSamples.remove(labTestSample);
 		}
 	}
-	
+
 	public String getLabInstructions() {
 		return labInstructions;
 	}
-	
+
 	public void setLabInstructions(String labInstructions) {
 		this.labInstructions = labInstructions;
 	}
-	
+
 	/**
 	 * Remove labTestAttribute object from the existing set
 	 * 
@@ -323,9 +333,10 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 			getAttributes().remove(labTestAttribute);
 		}
 	}
-	
+
 	/**
-	 * Returns first non-voided object in labTestSamples matching the given status, or null.
+	 * Returns first non-voided object in labTestSamples matching the given status,
+	 * or null.
 	 * 
 	 * @param status
 	 * @return
@@ -338,7 +349,7 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 		}
 		return null;
 	}
-	
+
 	@Override
 	public String toString() {
 		return testOrderId + ", " + labTestType + ", " + labReferenceNumber;

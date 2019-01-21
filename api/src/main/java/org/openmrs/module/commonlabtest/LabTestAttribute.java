@@ -18,58 +18,61 @@ import org.openmrs.attribute.Attribute;
 import org.openmrs.attribute.BaseAttribute;
 
 /**
- * This class represents attribtues of a LabTest object; it extends BaseAttribute class and
- * implements Attributable interface. Results of a lab test should be stored as attributes.
+ * This class represents attribtues of a LabTest object; it extends
+ * BaseAttribute class and implements Attributable interface. Results of a lab
+ * test should be stored as attributes.
  * 
  * @author owais.hussain@ihsinformatics.com
  */
-public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTest> implements Attribute<LabTestAttributeType, LabTest> {
-	
+public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTest>
+		implements
+			Attribute<LabTestAttributeType, LabTest> {
+
 	private static final long serialVersionUID = 22986710762598701L;
-	
+
 	private Integer labTestAttributeId;
-	
+
 	/**
 	 * Default constructor
 	 */
 	public LabTestAttribute() {
 	}
-	
+
 	public Integer getLabTestAttributeId() {
 		return labTestAttributeId;
 	}
-	
+
 	public void setLabTestAttributeId(Integer labTestAttributeId) {
 		this.labTestAttributeId = labTestAttributeId;
 	}
-	
+
 	/**
 	 * @return {@link LabTest}
 	 */
 	public LabTest getLabTest() {
 		return getOwner();
 	}
-	
+
 	/**
 	 * @param labTest
 	 */
 	public void setLabTest(LabTest labTest) {
 		setOwner(labTest);
 	}
-	
+
 	@Override
 	public Integer getId() {
 		return getLabTestAttributeId();
 	}
-	
+
 	@Override
 	public void setId(Integer id) {
 		setLabTestAttributeId(id);
 	}
-	
+
 	@Override
 	public String toString() {
 		return labTestAttributeId + ", " + getOwner().getDisplayString() + ", " + getAttributeType() + ", "
-		        + getValueReference();
+				+ getValueReference();
 	}
 }

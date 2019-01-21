@@ -29,121 +29,108 @@ import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.Concept;
 
 /**
- * This entity represents types of Laboratory tests. A lab test type object is prerequisite for
- * LabTest, LabTestAttributeType and LabTestSample objects
+ * This entity represents types of Laboratory tests. A lab test type object is
+ * prerequisite for LabTest, LabTestAttributeType and LabTestSample objects
  * 
  * @author owais.hussain@ihsinformatics.com
  */
 @Entity(name = "commonlabtest.LabTestType")
 @Table(name = "commonlabtest_type")
 public class LabTestType extends BaseOpenmrsMetadata {
-	
+
 	public enum LabTestGroup {
-		SEROLOGY,
-		CARDIOLOGY,
-		OPHTHALMOLOGY,
-		BACTERIOLOGY,
-		BIOCHEMISTRY,
-		BLOOD_BANK,
-		CYTOLOGY,
-		HEMATOLOGY,
-		IMMUNOLOGY,
-		MICROBIOLOGY,
-		RADIOLOGY,
-		SONOLOGY,
-		URINALYSIS,
-		OTHER
+		SEROLOGY, CARDIOLOGY, OPHTHALMOLOGY, BACTERIOLOGY, BIOCHEMISTRY, BLOOD_BANK, CYTOLOGY, HEMATOLOGY, IMMUNOLOGY, MICROBIOLOGY, RADIOLOGY, SONOLOGY, URINALYSIS, OTHER
 	}
-	
+
 	private static final long serialVersionUID = -4734826044571156784L;
-	
+
 	public static final String UNKNOWN_TEST_UUID = "ee9b140e-9a29-11e8-a296-40b034c3cfee";
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "test_type_id")
 	private Integer labTestTypeId;
-	
+
 	@Field
 	@Column(name = "short_name", length = 50)
 	private String shortName;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "test_group", length = 50)
 	private LabTestGroup testGroup;
-	
+
 	@Field
 	@Column(name = "requires_specimen", nullable = false)
 	private Boolean requiresSpecimen = Boolean.FALSE;
-	
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "reference_concept_id")
 	private Concept referenceConcept;
-	
+
 	/**
 	 * Default constructor
 	 */
 	public LabTestType() {
 	}
-	
+
 	public LabTestType(Integer id) {
 		this.labTestTypeId = id;
 	}
-	
+
 	@Override
 	public Integer getId() {
 		return labTestTypeId;
 	}
-	
+
 	public Integer getLabTestTypeId() {
 		return labTestTypeId;
 	}
-	
+
 	public void setLabTestTypeId(Integer id) {
 		setId(id);
 	}
-	
+
 	@Override
 	public void setId(Integer id) {
 		this.labTestTypeId = id;
 	}
-	
+
 	public String getShortName() {
 		return shortName;
 	}
-	
+
 	public void setShortName(String shortName) {
 		this.shortName = shortName;
 	}
-	
+
 	public LabTestGroup getTestGroup() {
 		return testGroup;
 	}
-	
+
 	public void setTestGroup(LabTestGroup testGroup) {
 		this.testGroup = testGroup;
 	}
-	
+
 	public Boolean getRequiresSpecimen() {
 		return requiresSpecimen;
 	}
-	
+
 	public void setRequiresSpecimen(Boolean requiresSpecimen) {
 		this.requiresSpecimen = requiresSpecimen;
 	}
-	
+
 	public Concept getReferenceConcept() {
 		return referenceConcept;
 	}
-	
+
 	public void setReferenceConcept(Concept referenceConcept) {
 		this.referenceConcept = referenceConcept;
 	}
-	
+
 	@Override
 	public String toString() {
 		return labTestTypeId + ", " + shortName + ", " + testGroup + ", " + referenceConcept + ", " + getName() + ", "
-		        + getUuid();
+				+ getUuid();
 	}
-	
+
 }

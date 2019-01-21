@@ -33,16 +33,16 @@ import org.openmrs.Concept;
 import org.openmrs.Provider;
 
 /**
- * This entity represents a test sample on which certain lab test is performed. A LabTestType has a
- * property requiresSpecimen, which determines if a LabTestSample object is needed in order to run
- * the test.
+ * This entity represents a test sample on which certain lab test is performed.
+ * A LabTestType has a property requiresSpecimen, which determines if a
+ * LabTestSample object is needed in order to run the test.
  * 
  * @author owais.hussain@ihsinformatics.com
  */
 @Entity(name = "commonlabtest.LabTestSample")
 @Table(name = "commonlabtest_sample")
 public class LabTestSample extends BaseOpenmrsData {
-	
+
 	/**
 	 * Enumerated type to represent status of sample
 	 */
@@ -50,80 +50,80 @@ public class LabTestSample extends BaseOpenmrsData {
 		COLLECTED, // First state of sample, when received by sample collector
 		ACCEPTED, // When lab accepts the sample for processing
 		REJECTED, // Set when lab does not accept the sample due to any reason (contamination,
-	    // insufficient quantity, etc.)
+		// insufficient quantity, etc.)
 		PROCESSED // After the sample has been processed by lab
 	}
-	
+
 	private static final long serialVersionUID = 1169373793251683587L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "test_sample_id")
 	private Integer labTestSampleId;
-	
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "test_order_id")
 	private LabTest labTest;
-	
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "specimen_type")
 	private Concept specimenType;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "specimen_site")
 	private Concept specimenSite;
-	
+
 	// @Temporal(TemporalType.DATE)
 	@Column(name = "collection_date")
 	private Date collectionDate;
-	
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "collector")
 	private Provider collector;
-	
+
 	@Field
 	@Column(name = "quantity")
 	private Double quantity;
-	
+
 	@Basic
 	@Column(name = "units")
 	private String units;
-	
+
 	private transient Boolean expirable = Boolean.FALSE;
-	
+
 	// @Temporal(TemporalType.DATE)
 	@Column(name = "expiry_date")
 	private Date expiryDate;
-	
+
 	// @Temporal(TemporalType.DATE)
 	@Column(name = "processed_date")
 	private Date processedDate;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false, length = 50)
 	private LabTestSampleStatus status = LabTestSampleStatus.COLLECTED;
-	
+
 	@Basic
 	@Column(name = "lab_sample_identifier", length = 255)
 	private String sampleIdentifier;
-	
+
 	@Basic
 	@Column(name = "comments", length = 255)
 	private String comments;
-	
+
 	/**
 	 * Default constructor
 	 */
 	public LabTestSample() {
 	}
-	
+
 	/**
 	 * @param id
 	 */
 	public LabTestSample(Integer id) {
 		setId(id);
 	}
-	
+
 	/**
 	 * @see org.openmrs.OpenmrsObject#getId()
 	 */
@@ -131,7 +131,7 @@ public class LabTestSample extends BaseOpenmrsData {
 	public Integer getId() {
 		return labTestSampleId;
 	}
-	
+
 	/**
 	 * @see org.openmrs.OpenmrsObject#setId(java.lang.Integer)
 	 */
@@ -139,21 +139,22 @@ public class LabTestSample extends BaseOpenmrsData {
 	public void setId(Integer id) {
 		this.labTestSampleId = id;
 	}
-	
+
 	/**
 	 * @return the labTest
 	 */
 	public LabTest getLabTest() {
 		return labTest;
 	}
-	
+
 	/**
-	 * @param labTest the labTest to set
+	 * @param labTest
+	 *            the labTest to set
 	 */
 	public void setLabTest(LabTest labTest) {
 		this.labTest = labTest;
 	}
-	
+
 	/**
 	 * Concept which represents the specimen type
 	 * 
@@ -162,30 +163,31 @@ public class LabTestSample extends BaseOpenmrsData {
 	public Concept getSpecimenType() {
 		return specimenType;
 	}
-	
+
 	/**
 	 * @param specimenType
 	 */
 	public void setSpecimenType(Concept specimenType) {
 		this.specimenType = specimenType;
 	}
-	
+
 	/**
-	 * Concept which represents the body Site from which the specimen sample was taken
+	 * Concept which represents the body Site from which the specimen sample was
+	 * taken
 	 * 
 	 * @return
 	 */
 	public Concept getSpecimenSite() {
 		return specimenSite;
 	}
-	
+
 	/**
 	 * @param specimenSite
 	 */
 	public void setSpecimenSite(Concept specimenSite) {
 		this.specimenSite = specimenSite;
 	}
-	
+
 	/**
 	 * Date of sample collection
 	 * 
@@ -194,14 +196,14 @@ public class LabTestSample extends BaseOpenmrsData {
 	public Date getCollectionDate() {
 		return collectionDate;
 	}
-	
+
 	/**
 	 * @param collectionDate
 	 */
 	public void setCollectionDate(Date collectionDate) {
 		this.collectionDate = collectionDate;
 	}
-	
+
 	/**
 	 * Who collected the sample. Usually a lab representative
 	 * 
@@ -210,28 +212,29 @@ public class LabTestSample extends BaseOpenmrsData {
 	public Provider getCollector() {
 		return collector;
 	}
-	
+
 	/**
 	 * @param collector
 	 */
 	public void setCollector(Provider collector) {
 		this.collector = collector;
 	}
-	
+
 	/**
 	 * @return the expirable
 	 */
 	public Boolean getExpirable() {
 		return expirable;
 	}
-	
+
 	/**
-	 * @param expirable the expirable to set
+	 * @param expirable
+	 *            the expirable to set
 	 */
 	private void setExpirable(Boolean expirable) {
 		this.expirable = expirable;
 	}
-	
+
 	/**
 	 * In case of non-expirable sample, this should be null
 	 * 
@@ -240,7 +243,7 @@ public class LabTestSample extends BaseOpenmrsData {
 	public Date getExpiryDate() {
 		return expiryDate;
 	}
-	
+
 	/**
 	 * @param expiryDate
 	 */
@@ -248,7 +251,7 @@ public class LabTestSample extends BaseOpenmrsData {
 		this.expiryDate = expiryDate;
 		setExpirable(getExpiryDate() != null);
 	}
-	
+
 	/**
 	 * Quantity of the sample
 	 * 
@@ -257,14 +260,14 @@ public class LabTestSample extends BaseOpenmrsData {
 	public Double getQuantity() {
 		return quantity;
 	}
-	
+
 	/**
 	 * @param quantity
 	 */
 	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
 	}
-	
+
 	/**
 	 * Unit(s) of quantity
 	 * 
@@ -273,14 +276,14 @@ public class LabTestSample extends BaseOpenmrsData {
 	public String getUnits() {
 		return units;
 	}
-	
+
 	/**
 	 * @param units
 	 */
 	public void setUnits(String units) {
 		this.units = units;
 	}
-	
+
 	/**
 	 * Date on which the sample was processed
 	 * 
@@ -289,14 +292,14 @@ public class LabTestSample extends BaseOpenmrsData {
 	public Date getProcessedDate() {
 		return processedDate;
 	}
-	
+
 	/**
 	 * @param processingDate
 	 */
 	public void setProcessedDate(Date processingDate) {
 		this.processedDate = processingDate;
 	}
-	
+
 	/**
 	 * Status of the sample
 	 * 
@@ -305,14 +308,14 @@ public class LabTestSample extends BaseOpenmrsData {
 	public LabTestSampleStatus getStatus() {
 		return status;
 	}
-	
+
 	/**
 	 * @param status
 	 */
 	public void setStatus(LabTestSampleStatus status) {
 		this.status = status;
 	}
-	
+
 	/**
 	 * Sample identifier used by lab
 	 * 
@@ -321,14 +324,14 @@ public class LabTestSample extends BaseOpenmrsData {
 	public String getSampleIdentifier() {
 		return sampleIdentifier;
 	}
-	
+
 	/**
 	 * @param sampleIdentifier
 	 */
 	public void setSampleIdentifier(String sampleIdentifier) {
 		this.sampleIdentifier = sampleIdentifier;
 	}
-	
+
 	/**
 	 * Open text Comments
 	 * 
@@ -337,22 +340,22 @@ public class LabTestSample extends BaseOpenmrsData {
 	public String getComments() {
 		return comments;
 	}
-	
+
 	/**
 	 * @param comments
 	 */
 	public void setComments(String comments) {
 		this.comments = comments;
 	}
-	
+
 	public Integer getLabTestSampleId() {
 		return labTestSampleId;
 	}
-	
+
 	public void setLabTestSampleId(Integer id) {
 		this.labTestSampleId = id;
 	}
-	
+
 	@Override
 	public String toString() {
 		return labTestSampleId + ", " + labTest + ", " + specimenType + ", " + status + ", " + sampleIdentifier;
