@@ -15,7 +15,7 @@ import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 
-public interface CommonLabTestDao {
+public interface CommonLabTestDAO {
 	
 	/**
 	 * Returns list of {@link LabTestAttributeType} objects

@@ -34,7 +34,7 @@ import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
-import org.openmrs.module.commonlabtest.api.dao.CommonLabTestDao;
+import org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO;
 import org.openmrs.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,12 +44,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommonLabTestServiceImpl extends BaseOpenmrsService implements CommonLabTestService {
 	
 	@Autowired
-	CommonLabTestDao dao;
+	CommonLabTestDAO dao;
 	
 	/**
 	 * Injected in moduleApplicationContext.xml
 	 */
-	public void setDao(CommonLabTestDao dao) {
+	public void setDao(CommonLabTestDAO dao) {
 		this.dao = dao;
 	}
 	

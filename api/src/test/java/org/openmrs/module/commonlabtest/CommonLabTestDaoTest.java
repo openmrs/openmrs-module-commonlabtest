@@ -29,7 +29,7 @@ import org.openmrs.TestOrder;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
-import org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl;
+import org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -41,7 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	@Autowired
-	CommonLabTestDaoImpl dao;
+	CommonLabTestDAOImpl dao;
 	
 	@Before
 	public void runBeforeEachTest() throws Exception {
@@ -50,7 +50,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getAllLabTestAttributeTypes(boolean)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getAllLabTestAttributeTypes(boolean)}
 	 * .
 	 */
 	@Test
@@ -63,7 +63,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getAllLabTestTypes(boolean)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getAllLabTestTypes(boolean)}
 	 * .
 	 */
 	@Test
@@ -75,7 +75,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestTypes(java.lang.String, java.lang.String, org.openmrs.module.commonlabtest.LabTestType.LabTestGroup, org.openmrs.Concept, boolean)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestTypes(java.lang.String, java.lang.String, org.openmrs.module.commonlabtest.LabTestType.LabTestGroup, org.openmrs.Concept, boolean)}
 	 * .
 	 */
 	@Test
@@ -87,7 +87,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTest(org.openmrs.Encounter)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTest(org.openmrs.Encounter)}
 	 * .
 	 */
 	@Test
@@ -100,7 +100,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTest(java.lang.Integer)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTest(java.lang.Integer)}
 	 * .
 	 */
 	@Test
@@ -112,7 +112,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestAttribute(java.lang.Integer)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestAttribute(java.lang.Integer)}
 	 * .
 	 */
 	@Test
@@ -124,7 +124,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestAttributeByUuid(java.lang.String)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestAttributeByUuid(java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -136,7 +136,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType, org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, java.lang.String, java.util.Date, java.util.Date, boolean)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType, org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, java.lang.String, java.util.Date, java.util.Date, boolean)}
 	 * .
 	 */
 	@Test
@@ -148,7 +148,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType, org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, java.lang.String, java.util.Date, java.util.Date, boolean)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType, org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, java.lang.String, java.util.Date, java.util.Date, boolean)}
 	 * .
 	 */
 	@Test
@@ -160,7 +160,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType, org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, java.lang.String, java.util.Date, java.util.Date, boolean)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType, org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, java.lang.String, java.util.Date, java.util.Date, boolean)}
 	 * .
 	 */
 	@Test
@@ -172,7 +172,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType, org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, java.lang.String, java.util.Date, java.util.Date, boolean)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType, org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient, java.lang.String, java.util.Date, java.util.Date, boolean)}
 	 * .
 	 */
 	@Test
@@ -185,7 +185,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestAttributeType(java.lang.Integer)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestAttributeType(java.lang.Integer)}
 	 * .
 	 */
 	@Test
@@ -197,7 +197,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestAttributeTypeByUuid(java.lang.String)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestAttributeTypeByUuid(java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -210,7 +210,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestAttributeTypes(java.lang.String, java.lang.String, boolean)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestAttributeTypes(java.lang.String, java.lang.String, boolean)}
 	 * .
 	 */
 	@Test
@@ -238,7 +238,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestByUuid(java.lang.String)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestByUuid(java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -249,7 +249,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTests(org.openmrs.module.commonlabtest.LabTestType, org.openmrs.Patient, java.lang.String, java.lang.String, org.openmrs.Concept, org.openmrs.Provider, java.util.Date, java.util.Date, boolean)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTests(org.openmrs.module.commonlabtest.LabTestType, org.openmrs.Patient, java.lang.String, java.lang.String, org.openmrs.Concept, org.openmrs.Provider, java.util.Date, java.util.Date, boolean)}
 	 * .
 	 */
 	@Test
@@ -260,7 +260,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestSample(java.lang.Integer)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestSample(java.lang.Integer)}
 	 * .
 	 */
 	@Test
@@ -271,7 +271,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestSampleByUuid(java.lang.String)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestSampleByUuid(java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -282,7 +282,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest, boolean)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest, boolean)}
 	 * .
 	 */
 	@Test
@@ -294,7 +294,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestSamples(org.openmrs.Patient, boolean)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestSamples(org.openmrs.Patient, boolean)}
 	 * .
 	 */
 	@Test
@@ -306,7 +306,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestSamples(org.openmrs.Provider, boolean)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestSamples(org.openmrs.Provider, boolean)}
 	 * .
 	 */
 	@Test
@@ -318,7 +318,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestType(java.lang.Integer)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestType(java.lang.Integer)}
 	 * .
 	 */
 	@Test
@@ -329,7 +329,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getLabTestTypeByUuid(java.lang.String)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getLabTestTypeByUuid(java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -340,7 +340,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getNLabTests(org.openmrs.Patient, int, boolean, boolean, boolean)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getNLabTests(org.openmrs.Patient, int, boolean, boolean, boolean)}
 	 * .
 	 */
 	@Test
@@ -351,7 +351,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#getNLabTestSamples(org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus, int, boolean, boolean, boolean)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#getNLabTestSamples(org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus, int, boolean, boolean, boolean)}
 	 * .
 	 */
 	@Test
@@ -369,7 +369,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#purgeLabTest(org.openmrs.module.commonlabtest.LabTest)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#purgeLabTest(org.openmrs.module.commonlabtest.LabTest)}
 	 * .
 	 */
 	@Test
@@ -384,7 +384,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#purgeLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#purgeLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)}
 	 * .
 	 */
 	@Test
@@ -402,7 +402,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for sequence purg..
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#purgeLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#purgeLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)}
 	 * .
 	 */
 	@Test
@@ -420,7 +420,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#purgeLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#purgeLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)}
 	 * .
 	 */
 	@Test
@@ -439,7 +439,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#purgeLabTestType(org.openmrs.module.commonlabtest.LabTestType)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#purgeLabTestType(org.openmrs.module.commonlabtest.LabTestType)}
 	 * .
 	 */
 	@Test
@@ -457,7 +457,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#saveLabTest(org.openmrs.module.commonlabtest.LabTest)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#saveLabTest(org.openmrs.module.commonlabtest.LabTest)}
 	 * .
 	 */
 	@Test
@@ -476,7 +476,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#saveLabTestOrder(org.openmrs.Order)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#saveLabTestOrder(org.openmrs.Order)}
 	 * .
 	 */
 	@Test
@@ -503,7 +503,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#saveLabTestOrder(org.openmrs.Order)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#saveLabTestOrder(org.openmrs.Order)}
 	 * .
 	 */
 	@Test
@@ -530,7 +530,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#saveLabTestOrder(org.openmrs.Order)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#saveLabTestOrder(org.openmrs.Order)}
 	 * .
 	 */
 	@Test
@@ -544,7 +544,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#saveLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#saveLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)}
 	 * .
 	 */
 	@Test
@@ -576,7 +576,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#saveLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#saveLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)}
 	 * .
 	 */
 	@Test
@@ -609,7 +609,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#saveLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#saveLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)}
 	 * .
 	 */
 	@Test
@@ -638,7 +638,7 @@ public class CommonLabTestDaoTest extends CommonLabTestBase {
 	
 	/**
 	 * Test method for
-	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDaoImpl#saveLabTestType(org.openmrs.module.commonlabtest.LabTestType)}
+	 * {@link org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl#saveLabTestType(org.openmrs.module.commonlabtest.LabTestType)}
 	 * .
 	 */
 	@Test
