@@ -7,7 +7,7 @@
 	<name>${project.parent.name}</name>
 	<version>${project.parent.version}</version>
 	<package>org.openmrs.module.commonlabtest</package>
-	<author>Owais-IHS</author>
+	<author>owais.hussain</author>
 	<description>
 			${project.parent.description}
 	</description>
@@ -17,12 +17,21 @@
 	<!-- <updateURL>https://modules.openmrs.org/modules/download/@MODULE_ID@/update.rdf</updateURL> -->
 	<!-- /Base Module Properties -->
 	
-	<require_version>1.11.6</require_version>
+	<require_version>2.0.3</require_version>
+
+	<require_modules>
+		<require_module version="${wsrestVersion}">org.openmrs.module.webservices.rest</require_module>
+	</require_modules>
 	
 	<!-- Extensions -->
 	<extension>
 		<point>org.openmrs.admin.list</point>
 		<class>org.openmrs.module.commonlabtest.extension.html.AdminList</class>
+	</extension>
+
+	<extension>
+		<point>org.openmrs.patientDashboardTab</point>
+		<class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.CommonLabTestExt</class>
 	</extension>
 
 	<aware_of_modules>
@@ -38,12 +47,11 @@
 	 /AOP -->
 	
 	
-	<!-- Required Privileges 
+	<!-- Required Privileges -->
 	<privilege>
-		<name>Form Entry</name>
-		<description>Allows user to access Form Entry pages/functions</description>
+		<name>View Common Lab Tests</name>
+		<description>Allows user to access Patient Lab Tests</description>
 	</privilege>
-	 /Required Privileges -->
 
 
 	<!-- Required Global Properties 
@@ -94,13 +102,16 @@
 	</messages>
 	<messages>
 		<lang>fr</lang>
-		<file>messages_fr.properties</file>
+		<file>messages.properties</file>
 	</messages>
 	<messages>
 		<lang>es</lang>
-		<file>messages_es.properties</file>
+		<file>messages.properties</file>
 	</messages>
 	<!-- /Internationalization -->
+	<mappingFiles>
+		CommonLabTestAttribute.hbm.xml
+	</mappingFiles>
 	
 </module>
 

@@ -1,5 +1,5 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public License,
+s * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
@@ -17,20 +17,37 @@ import org.springframework.stereotype.Component;
 @Component("commonlabtest.CommonLabTestConfig")
 public class CommonLabTestConfig {
 	
-	public static final String ADD_LAB_TEST_METADATA_PRIVILEGE = "Add Common Lab Test Metadata";
+	public static final String ADD_LAB_TEST_METADATA_PRIVILEGE = "Add CommonLabTest Metadata";
 	
-	public static final String EDIT_LAB_TEST_METADATA_PRIVILEGE = "Edit Common Lab Test Metadata";
+	public static final String EDIT_LAB_TEST_METADATA_PRIVILEGE = "Edit CommonLabTest Metadata";
 	
-	public static final String PURGE_LAB_TEST_METADATA_PRIVILEGE = "Delete Common Lab Test Metadata";
+	public static final String DELETE_LAB_TEST_METADATA_PRIVILEGE = "Delete CommonLabTest Metadata";
 	
-	public static final String VIEW_LAB_TEST_METADATA_PRIVILEGE = "View Common Lab Test Metadata";
+	public static final String VIEW_LAB_TEST_METADATA_PRIVILEGE = "View CommonLabTest Metadata";
 	
-	public static final String ADD_LAB_TEST_PRIVILEGE = "Add Common Lab Tests";
+	public static final String ADD_LAB_TEST_SAMPLE_PRIVILEGE = "Add CommonLabTest Samples";
 	
-	public static final String EDIT_LAB_TEST_PRIVILEGE = "Edit Common Lab Tests";
+	public static final String EDIT_LAB_TEST_SAMPLE_PRIVILEGE = "Edit CommonLabTest Samples";
 	
-	public static final String VIEW_LAB_TEST_PRIVILEGE = "View Common Lab Tests";
+	public static final String VIEW_LAB_TEST_SAMPLE_PRIVILEGE = "View CommonLabTest Samples";
 	
-	public static final String DELETE_LAB_TEST_PRIVILEGE = "Delete Common Lab Tests";
+	public static final String DELETE_LAB_TEST_SAMPLE_PRIVILEGE = "Delete CommonLabTest Samples";
 	
+	public static final String ADD_LAB_TEST_PRIVILEGE = "Add CommonLabTest Orders";
+	
+	public static final String EDIT_LAB_TEST_PRIVILEGE = "Edit CommonLabTest Orders";
+	
+	public static final String VIEW_LAB_TEST_PRIVILEGE = "View CommonLabTest Orders";
+	
+	public static final String DELETE_LAB_TEST_PRIVILEGE = "Delete CommonLabTest Orders";
+	
+	public static final String ADD_LAB_RESULT_PRIVILEGE = "Add CommonLabTest Results";
+	
+	public static final String EDIT_LAB_RESULT_PRIVILEGE = "Edit CommonLabTest Results";
+	
+	public static final String VIEW_LAB_RESULT_PRIVILEGE = "View CommonLabTest Results";
+	
+	public static final String DELETE_LAB_RESULT_PRIVILEGE = "Delete CommonLabTest Results";
+	
+	public static final Boolean AUTO_VOID_REJECTED_SAMPLES = Boolean.TRUE;
 }

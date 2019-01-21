@@ -1,221 +1,341 @@
-/**
- * The contents of this file are subject to the OpenMRS Public License
- * Version 1.0 (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://license.openmrs.org
- *
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
- *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
- */
 package org.openmrs.module.commonlabtest.api.dao;
 
+import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.Criteria;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.openmrs.Concept;
+import org.openmrs.Order;
+import org.openmrs.Patient;
+import org.openmrs.Provider;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
 import org.openmrs.module.commonlabtest.LabTestSample;
+import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.LabTestType;
+import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 
-/**
- * @author owais.hussain@ihsinformatics.com
- */
-public class CommonLabTestDAO {
-	
-	protected final Log log = LogFactory.getLog(this.getClass());
-	
-	private SessionFactory sessionFactory;
+public interface CommonLabTestDao {
 	
 	/**
-	 * @param sessionFactory the sessionFactory to set
+	 * Returns list of {@link LabTestAttributeType} objects
+	 * 
+	 * @param includeRetired
+	 * @return
 	 */
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+	List<LabTestAttributeType> getAllLabTestAttributeTypes(boolean includeRetired);
 	
 	/**
-	 * @return the sessionFactory
+	 * Returns list of {@link LabTestType} objects
+	 * 
+	 * @param includeRetired
+	 * @return
 	 */
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
+	List<LabTestType> getAllLabTestTypes(boolean includeRetired);
 	
-	/* Lab Test Type */
-	public LabTestType getLabTestTypeByUuid(String uuid) {
-		// TODO
-		return null;
-	}
+	/**
+	 * Returns list of {@link LabTestType} objects matching all non-null parameters given
+	 * 
+	 * @param name
+	 * @param shortName
+	 * @param testGroup
+	 * @param referenceConcept
+	 * @param includeRetired
+	 * @return
+	 */
+	List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup, Concept referenceConcept,
+	        boolean includeRetired);
 	
-	@SuppressWarnings("unchecked")
-	public List<LabTestType> getAllLabTestTypes(boolean includeRetired) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestType.class);
-		criteria.addOrder(Order.asc("name"));
-		if (!includeRetired) {
-			criteria.add(Restrictions.eq("retired", false));
-		}
-		return criteria.list();
-	}
+	/**
+	 * Returns {@link LabTest} object by matching given {@link Order} object
+	 * 
+	 * @param order
+	 * @return
+	 */
+	LabTest getLabTest(Order order);
 	
-	public LabTestType getLabTestType(Integer labTestTypeId) {
-		return (LabTestType) sessionFactory.getCurrentSession().get(LabTestType.class, labTestTypeId);
-	}
+	/**
+	 * Returns {@link LabTest} object by generated ID
+	 * 
+	 * @param labTestId
+	 * @return
+	 */
+	LabTest getLabTest(Integer labTestId);
 	
-	public LabTestType saveLabTestType(LabTestType labTestType) {
-		sessionFactory.getCurrentSession().save(labTestType);
-		return labTestType;
-	}
+	/**
+	 * Returns {@link LabTestAttribute} object by generated ID
+	 * 
+	 * @param labTestId
+	 * @return
+	 */
+	LabTestAttribute getLabTestAttribute(Integer labTestAttributeId);
 	
-	public void purgeLabTestType(LabTestType labTestType) {
-		sessionFactory.getCurrentSession().delete(labTestType);
-	}
+	/**
+	 * Returns {@link LabTestAttribute} object by generated ID
+	 * 
+	 * @param labTestId
+	 * @return
+	 */
+	LabTestAttribute getLabTestAttributeByUuid(String uuid);
 	
-	/* Lab Test Attribute Type */
-	public LabTestAttributeType getLabTestAttributeTypeByUuid(String uuid) {
-		// TODO
-		return null;
-	}
+	/**
+	 * Returns list of {@link LabTestAttribute} objects by {@link Order} Id
+	 * 
+	 * @param testOrderId
+	 * @return
+	 */
+	List<LabTestAttribute> getLabTestAttributes(Integer testOrderId);
 	
-	@SuppressWarnings("unchecked")
-	public List<LabTestAttributeType> getAllLabTestAttributeTypes(boolean includeRetired) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttributeType.class);
-		criteria.addOrder(Order.asc("name"));
-		if (!includeRetired) {
-			criteria.add(Restrictions.eq("retired", false));
-		}
-		return criteria.list();
-	}
+	/**
+	 * Returns list of {@link LabTestAttribute} objects by matching given non-null parameters
+	 * 
+	 * @param labTestAttributeType
+	 * @param valueReference
+	 * @param from
+	 * @param to
+	 * @param includeVoided
+	 * @return
+	 */
+	List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, String valueReference, Date from,
+	        Date to, boolean includeVoided);
 	
-	@SuppressWarnings("unchecked")
-	public List<LabTestAttributeType> getLabTestAttributesByTestType(Integer labTestTypeId, boolean includeRetired) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttributeType.class);
-		criteria.createAlias("labTestType", "ltt").add(Restrictions.eq("ltt.labTestTypeId", labTestTypeId));
-		if (!includeRetired) {
-			criteria.add(Restrictions.eq("retired", false));
-		}
-		return criteria.list();
-	}
+	/**
+	 * Returns list of {@link LabTestAttribute} objects by matching given non-null parameters
+	 * 
+	 * @param patient
+	 * @param labTestAttributeType
+	 * @param includeVoided
+	 * @return
+	 */
+	List<LabTestAttribute> getLabTestAttributes(Patient patient, LabTestAttributeType labTestAttributeType,
+	        boolean includeVoided);
 	
-	public LabTestAttributeType getLabTestAttributeType(Integer labTestAttributeTypeId) {
-		return (LabTestAttributeType) sessionFactory.getCurrentSession().get(LabTestAttributeType.class,
-		    labTestAttributeTypeId);
-	}
+	/**
+	 * Returns {@link LabTestAttributeType} object by generated Id
+	 * 
+	 * @param labTestAttributeTypeId
+	 * @return
+	 */
+	LabTestAttributeType getLabTestAttributeType(Integer labTestAttributeTypeId);
 	
-	public LabTestAttributeType saveLabTestAttributeType(LabTestAttributeType labTestAttributeType) {
-		sessionFactory.getCurrentSession().save(labTestAttributeType);
-		return labTestAttributeType;
-	}
+	/**
+	 * Returns {@link LabTestAttributeType} object by UUID
+	 * 
+	 * @param uuid
+	 * @return
+	 */
+	LabTestAttributeType getLabTestAttributeTypeByUuid(String uuid);
 	
-	public void purgeLabTestAttributeType(LabTestAttributeType labTestAttributeType) {
-		sessionFactory.getCurrentSession().delete(labTestAttributeType);
-	}
+	/**
+	 * Returns list of {@link LabTestAttributeType} objects by matching non-null parameters
+	 * 
+	 * @param name
+	 * @param datatypeClassname
+	 * @param includeRetired
+	 * @return
+	 */
+	List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname, boolean includeRetired);
 	
-	/* Lab Test */
-	public LabTest getLabTestByUuid(String uuid) {
-		// TODO
-		return null;
-	}
+	/**
+	 * Returns list of {@link LabTestAttributeType} objects by given {@link LabTestType} parameter
+	 * 
+	 * @param labTestType
+	 * @param includeRetired
+	 * @return
+	 */
+	List<LabTestAttributeType> getLabTestAttributeTypes(LabTestType labTestType, boolean includeRetired);
 	
-	public LabTest getLabTest(Integer labTestId) {
-		return (LabTest) sessionFactory.getCurrentSession().get(LabTest.class, labTestId);
-	}
+	/**
+	 * Returns {@link LabTest} object by UUID
+	 * 
+	 * @param uuid
+	 * @return
+	 */
+	LabTest getLabTestByUuid(String uuid);
 	
-	public List<LabTest> getLabTestsByPatient(Integer patientId, boolean includeVoided) {
-		// TODO:
-		return null;
-	}
+	/**
+	 * Returns list of {@link LabTest} objects by matching non-null parameters
+	 * 
+	 * @param labTestType
+	 * @param patient
+	 * @param orderNumber
+	 * @param referenceNumber
+	 * @param orderConcept
+	 * @param orderer
+	 * @param from
+	 * @param to
+	 * @param includeVoided
+	 * @return
+	 */
+	List<LabTest> getLabTests(LabTestType labTestType, Patient patient, String orderNumber, String referenceNumber,
+	        Concept orderConcept, Provider orderer, Date from, Date to, boolean includeVoided);
 	
-	public List<LabTest> getLabTestsByPatientAndType(Integer patientId, Integer labTestTypeId, boolean includeVoided) {
-		// TODO: when creating criteria, apply order clause on test type
-		return null;
-	}
+	/**
+	 * Returns {@link LabTestSample} object by generated Id
+	 * 
+	 * @param labTestSampleId
+	 * @return
+	 */
+	LabTestSample getLabTestSample(Integer labTestSampleId);
 	
-	public List<LabTest> getLabTestsBySample(Integer labTestSampleId, boolean includeVoided) {
-		// TODO: when creating criteria, apply order clause on test date
-		return null;
-	}
+	/**
+	 * Returns {@link LabTestSample} object by UUID
+	 * 
+	 * @param uuid
+	 * @return
+	 */
+	LabTestSample getLabTestSampleByUuid(String uuid);
 	
-	public LabTest saveLabTest(LabTest labTest) {
-		sessionFactory.getCurrentSession().save(labTest);
-		return labTest;
-	}
+	/**
+	 * Returns list of {@link LabTestSample} objects by given {@link LabTest}
+	 * 
+	 * @param labTest
+	 * @param includeVoided
+	 * @return
+	 */
+	List<LabTestSample> getLabTestSamples(LabTest labTest, boolean includeVoided);
 	
-	public void purgeLabTest(LabTest labTest) {
-		sessionFactory.getCurrentSession().delete(labTest);
-	}
+	/**
+	 * Returns list of {@link LabTestSample} objects by given {@link Provider} object as collector
+	 * 
+	 * @param collector
+	 * @param includeVoided
+	 * @return
+	 */
+	List<LabTestSample> getLabTestSamples(Provider collector, boolean includeVoided);
 	
-	/* Lab Test Attribute */
-	public LabTestAttribute getLabTestAttributeByUuid(String uuid) {
-		return null;
-	}
+	/**
+	 * Returns list of {@link LabTestSample} objects by given {@link Patient} object
+	 * 
+	 * @param patient
+	 * @param includeVoided
+	 * @return
+	 */
+	List<LabTestSample> getLabTestSamples(Patient patient, boolean includeVoided);
 	
-	public LabTestAttributeType getLabTestAttribute(Integer labTestAttributeId) {
-		// TODO:
-		return null;
-	}
+	/**
+	 * Returns {@link LabTestType} object by generated Id
+	 * 
+	 * @param labTestTypeId
+	 * @return
+	 */
+	LabTestType getLabTestType(Integer labTestTypeId);
 	
-	public List<LabTestAttributeType> getLabTestAttributesByAttributeType(Integer labTestAttributeTypeId,
-	        boolean includeRetired) {
-		// TODO:
-		return null;
-	}
+	/**
+	 * Returns {@link LabTestType} object by UUID
+	 * 
+	 * @param uuid
+	 * @return
+	 */
+	LabTestType getLabTestTypeByUuid(String uuid);
 	
-	public List<LabTestAttributeType> getLabTestAttributesByPatient(Integer patientId, boolean includeRetired) {
-		// TODO:
-		return null;
-	}
+	/**
+	 * Returns a list of 'n' number of {@link LabTest} objects. If firstNObjects is true, then earliest
+	 * 'n' objects are returned; if lastNObjects is true, then latest 'n' objects are returned. If both
+	 * a true, then a union of both results is returned. Maximum number of objects to return is limited
+	 * by MAX_FETCH_LIMIT
+	 * 
+	 * @param patient
+	 * @param n
+	 * @param firstNObjects
+	 * @param lastNObjects
+	 * @param includeVoided
+	 * @return
+	 */
+	List<LabTest> getNLabTests(Patient patient, int n, boolean firstNObjects, boolean lastNObjects, boolean includeVoided);
 	
-	public List<LabTestAttributeType> getLabTestAttributesByPatientAndAttributeType(Integer labTestAttributeTypeId,
-	        Integer patientId, boolean includeRetired) {
-		// TODO:
-		return null;
-	}
+	/**
+	 * Returns a list of 'n' number of {@link LabTestSample} objects by matching {@link Patient} and
+	 * {@link LabTestSampleStatus} (optional, pass null to ignore). If firstNObjects is true, then
+	 * earliest 'n' objects are returned; if lastNObjects is true, then latest 'n' objects are returned.
+	 * If both a true, then a union of both results is returned. Maximum number of objects to return is
+	 * limited by MAX_FETCH_LIMIT
+	 * 
+	 * @param patient
+	 * @param status
+	 * @param n
+	 * @param firstNObjects
+	 * @param lastNObjects
+	 * @param includeVoided
+	 * @return
+	 */
+	List<LabTestSample> getNLabTestSamples(Patient patient, LabTestSampleStatus status, int n, boolean firstNObjects,
+	        boolean lastNObjects, boolean includeVoided);
 	
-	public LabTestAttribute saveLabTestAttribute(LabTestAttribute labTestAttribute) {
-		sessionFactory.getCurrentSession().save(labTestAttribute);
-		return labTestAttribute;
-	}
+	/**
+	 * Permanently delete {@link LabTest}
+	 * 
+	 * @param labTest
+	 */
+	void purgeLabTest(LabTest labTest);
 	
-	public void purgeLabTestAttribute(LabTestAttribute labTestAttribute) {
-		sessionFactory.getCurrentSession().delete(labTestAttribute);
-	}
+	/**
+	 * Permanently delete {@link LabTestAttribute}
+	 * 
+	 * @param labTestAttribute
+	 */
+	void purgeLabTestAttribute(LabTestAttribute labTestAttribute);
 	
-	/* Lab Test Sample */
-	public LabTestSample getLabTestSampleByUuid(String uuid) {
-		// TODO
-		return null;
-	}
+	/**
+	 * Permanently delete {@link LabTestAttributeType}
+	 * 
+	 * @param labTestAttributeType
+	 */
+	void purgeLabTestAttributeType(LabTestAttributeType labTestAttributeType);
 	
-	public LabTestSample getLabTestSample(Integer labTestSampleId) {
-		// TODO:
-		return null;
-	}
+	/**
+	 * Permanently delete {@link LabTestSample}
+	 * 
+	 * @param labTestSample
+	 */
+	void purgeLabTestSample(LabTestSample labTestSample);
 	
-	public List<LabTestSample> getLabTestSamplesByPatient(Integer patientId, boolean includeVoided) {
-		// TODO:
-		return null;
-	}
+	/**
+	 * Permanently delete {@link LabTestType}
+	 * 
+	 * @param labTestType
+	 */
+	void purgeLabTestType(LabTestType labTestType);
 	
-	public List<LabTestSample> getLabTestSamplesByCollector(Integer collectorId, boolean includeVoided) {
-		// TODO:
-		return null;
-	}
+	/**
+	 * Persists {@link LabTest} in database. This method also persists {@link Order} entity, because
+	 * unlike {@link Order}, the {@link LabTest} is not hierarchical
+	 * 
+	 * @param labTest
+	 * @return
+	 */
+	LabTest saveLabTest(LabTest labTest);
 	
-	public LabTestSample saveLabTestSample(LabTestSample labTestSample) {
-		sessionFactory.getCurrentSession().save(labTestSample);
-		return labTestSample;
-	}
+	/**
+	 * Persists {@link LabTestAttribute} in database
+	 * 
+	 * @param labTestAttribute
+	 * @return
+	 */
+	LabTestAttribute saveLabTestAttribute(LabTestAttribute labTestAttribute);
 	
-	public void purgeLabTestSample(LabTestSample labTestSample) {
-		sessionFactory.getCurrentSession().delete(labTestSample);
-	}
+	/**
+	 * Persists {@link LabTestAttributeType} in database
+	 * 
+	 * @param labTestAttributeType
+	 * @return
+	 */
+	LabTestAttributeType saveLabTestAttributeType(LabTestAttributeType labTestAttributeType);
+	
+	/**
+	 * Persists {@link LabTestSample} in database
+	 * 
+	 * @param labTestSample
+	 * @return
+	 */
+	LabTestSample saveLabTestSample(LabTestSample labTestSample);
+	
+	/**
+	 * Persists {@link LabTestType} in database
+	 * 
+	 * @param labTestType
+	 * @return
+	 */
+	LabTestType saveLabTestType(LabTestType labTestType);
+	
 }

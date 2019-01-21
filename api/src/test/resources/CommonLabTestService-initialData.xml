@@ -1,0 +1,206 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<dataset>
+
+	<!-- User-Persons -->
+	<person person_id="500" gender="M" birthdate="1984-05-26" birthdate_estimated="0" dead="0" creator="1"
+		date_created="2016-08-22 13:56:44" voided="false" uuid="660484f6-0d02-4e2a-8e0e-fd2f71906f81" deathdate_estimated="0" />
+	<person person_id="600" gender="F" birthdate="1993-12-21" birthdate_estimated="0" dead="0" creator="1"
+		date_created="2016-12-28 11:54:56" voided="false" uuid="ae50cf5e-02bf-4380-9b64-f06b2f944457" deathdate_estimated="0" />
+
+	<!-- User-Person Names -->
+	<person_name person_name_id="500" preferred="1" person_id="500" given_name="Owais" family_name="Hussain"
+		creator="1" date_created="2016-08-22 13:56:44" voided="false" uuid="b210a5bd-9ab1-4b57-8a89-c0bf2580a68d" />
+	<person_name person_name_id="600" preferred="1" person_id="600" given_name="Tahira" family_name="Niazi" creator="1"
+		date_created="2016-12-28 11:54:56" voided="false" uuid="ee11bea3-3aad-4266-a5d7-bc6f3a6aaee5" />
+
+	<!-- Users -->
+	<users user_id="300" system_id="300-3" username=""
+		password=""
+		salt=""
+		secret_question="" creator="1" date_created="2016-08-22 13:56:44" changed_by="1" date_changed="2017-02-02 11:21:25"
+		person_id="500" retired="false" uuid="36b071d8-d5ea-4703-8e56-5b066420b569" />
+	<users user_id="400" system_id="400-3" username=""
+		password=""
+		salt=""
+		secret_question="" creator="1" date_created="2016-12-28 11:54:56" changed_by="1" date_changed="2018-02-22 11:27:15"
+		person_id="600" retired="false" uuid="e4ef4d4d-5cf2-47ff-af6b-bb9abdabdd60" />
+
+	<!-- Providers -->
+	<provider provider_id="300" person_id="500" identifier="OWAIS" creator="1" date_created="2016-08-24 15:36:09"
+		changed_by="1" date_changed="2017-02-07 16:19:01" retired="false" uuid="1a61a0b5-d271-4b00-a803-5cef8b06ba8f" />
+	<provider provider_id="400" person_id="600" identifier="TAHIRA" creator="1" date_created="2017-02-27 12:47:30"
+		changed_by="1" date_changed="2017-02-27 12:49:13" retired="false" uuid="449390a0-d338-4ff2-9b3f-61dc1617c2fe" />
+
+	<!-- Concepts -->
+	<concept concept_id="500" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1"
+		date_created="2017-02-14 15:51:57.0" version="" uuid="a8102d6d-c528-477a-80bd-acc38ebc6252" />
+	<concept concept_id="600" retired="false" datatype_id="2" class_id="1" is_set="false" creator="1"
+		date_created="2004-01-01 00:00:57.0" version="" uuid="a9103d6e-d538-488a-81bd-acc38acc6525" />
+	<concept concept_id="700" retired="false" datatype_id="2" class_id="1" is_set="false" creator="1"
+		date_created="2016-01-01 00:00:57.0" version="" uuid="deb16ee8-5344-11e8-9c7c-40b034c3cfee" />
+	<concept concept_id="800" retired="false" datatype_id="2" class_id="1" is_set="false" creator="1"
+		date_created="2016-01-01 00:00:57.0" version="" uuid="e721ec30-5344-11e8-9c7c-40b034c3cfee" />
+
+	<concept_description concept_description_id="500" concept_id="500"
+		description="GeneXpert is a type of bacteriology test for Tuberculosis." locale="en_GB" creator="1" date_created="2014-08-12 00:00:00.0"
+		uuid="5ddd709c-e125-40b7-b449-6e0e739d15d0" />
+	<concept_description concept_description_id="600" concept_id="600" description="Chest X-Ray is a common radiology test."
+		locale="en_GB" creator="1" date_created="2004-05-12 00:00:00.0" uuid="99e79be4-52b9-11e8-b60d-080027ea421d" />
+	<concept_description concept_description_id="700" concept_id="700" description="Sputum - Specimen type for medical tests."
+		locale="en_GB" creator="1" date_created="2017-05-12 00:00:00.0" uuid="298b75eb-5345-11e8-9c7c-40b034c3cfee" />
+	<concept_description concept_description_id="800" concept_id="800" description="Lungs." locale="en_GB"
+		creator="1" date_created="2017-05-12 00:00:00.0" uuid="3209c732-5345-11e8-9c7c-40b034c3cfee" />
+
+	<concept_name concept_name_id="500" concept_id="500" name="GENEXPERT TEST" locale="en_GB" creator="1"
+		date_created="2014-01-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false"
+		uuid="7a49b329-52b9-11e8-b60d-080027ea421d" />
+	<concept_name concept_name_id="600" concept_id="600" name="CHEST XRAY TEST" locale="en_GB" creator="1"
+		date_created="2004-05-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false"
+		uuid="b0de794a-52b9-11e8-b60d-080027ea421d" />
+	<concept_name concept_name_id="700" concept_id="700" name="GENEXPERT TEST" locale="en_GB" creator="1"
+		date_created="2017-01-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false"
+		uuid="9f027306-5345-11e8-9c7c-40b034c3cfee" />
+	<concept_name concept_name_id="800" concept_id="800" name="CHEST XRAY TEST" locale="en_GB" creator="1"
+		date_created="2017-05-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false"
+		uuid="a457ac00-5345-11e8-9c7c-40b034c3cfee" />
+
+	<!-- Patient-Persons -->
+	<person person_id="1000" gender="M" birthdate="1980-07-31" birthdate_estimated="0" dead="0" creator="1"
+		date_created="2016-08-19 15:58:32" voided="false" uuid="993c46d2-5007-45e8-9512-969300717761" deathdate_estimated="0" />
+	<person person_id="2000" gender="F" birthdate="1979-09-19" birthdate_estimated="0" dead="0" creator="1"
+		date_created="2016-09-07 11:44:23" voided="false" uuid="1f6959e5-d15a-4025-bb48-340ee9e2c58d" deathdate_estimated="0" />
+
+	<!-- Patient-Person Names -->
+	<person_name person_name_id="1000" preferred="1" person_id="1000" given_name="Harry" middle_name="James"
+		family_name="Potter" creator="1" date_created="2016-08-19 15:58:32" voided="false" uuid="b1090031-0a93-4999-9185-3d28e4ac9b69" />
+	<person_name person_name_id="2000" preferred="1" person_id="2000" given_name="Hermione" middle_name="Jean"
+		family_name="Granger" creator="1" date_created="2016-09-07 11:44:23" voided="false" uuid="316405e4-bcaa-4f12-ad27-6f2c1a831809" />
+
+	<!-- Patients -->
+	<patient patient_id="1000" creator="1" date_created="2016-08-19 15:58:32" voided="false" allergy_status="Unknown" />
+	<patient patient_id="2000" creator="1" date_created="2016-09-07 11:44:23" voided="false" allergy_status="Unknown" />
+
+	<!-- Care Settings -->
+	<care_setting care_setting_id="1" name="Outpatient" description="Out-patient care setting" care_setting_type="OUTPATIENT"
+		creator="1" date_created="2013-12-27 00:00:00" retired="false" uuid="6f0c9a92-6f24-11e3-af88-005056821db0" />
+	<care_setting care_setting_id="2" name="Inpatient" description="In-patient care setting" care_setting_type="INPATIENT"
+		creator="1" date_created="2013-12-27 00:00:00" retired="false" uuid="c365e560-c3ec-11e3-9c1a-0800200c9a66" />
+
+	<!-- Lab Test Types -->
+	<commonlabtest_type test_type_id="1" name="Unknown Test Type" short_name="UNKNOWN" test_group="OTHER"
+		requires_specimen="false" reference_concept_id="500" description="Used when Test Type is not known. For example when actual test type is purged"
+		creator="1" date_created="2018-08-07 12:00:00" retired="false" uuid="ee9b140e-9a29-11e8-a296-40b034c3cfee" />
+	<commonlabtest_type test_type_id="2" name="GeneXpert Test" short_name="GXP" test_group="BACTERIOLOGY"
+		requires_specimen="true" reference_concept_id="500" description="Microbacterium GeneXpert Test is performed to identify TB cases"
+		creator="1" date_created="2018-04-23 16:27:08" retired="false" uuid="4bf46c09-46e9-11e8-943c-40b034c3cfee" />
+	<commonlabtest_type test_type_id="3" name="Chest X-Ray" short_name="CXR" test_group="RADIOLOGY"
+		requires_specimen="false" reference_concept_id="600" description="Chest X-ray using Computer Aided Design for TB case detection"
+		creator="1" date_created="2018-04-23 16:36:43" retired="false" uuid="a277edf4-46ea-11e8-943c-40b034c3cfee" />
+
+	<!-- Unused Lab Test Type -->
+	<commonlabtest_type test_type_id="4" name="Spirometry" short_name="SPR" test_group="SONOLOGY"
+		requires_specimen="false" reference_concept_id="600" description="Lung function test using spirometer" creator="1"
+		date_created="2018-05-10 16:36:43" retired="false" uuid="65813584-5445-11e8-906e-02002e520001" />
+
+	<!-- Test Attribute Types for GeneXpert -->
+	<commonlabtest_attribute_type test_attribute_type_id="1" test_type_id="2" name="Cartridge ID"
+		datatype="org.openmrs.customdatatype.datatype.FreeTextDatatype" min_occurs="1" max_occurs="1" datatype_config="[0-9]{9,12}"
+		sort_weight="3" description="Unique cartridge serial number." creator="1" date_created="2018-04-24 12:12:28" retired="false"
+		uuid="ecf166e5-478e-11e8-943c-40b034c3cfee" />
+	<commonlabtest_attribute_type test_attribute_type_id="2" test_type_id="2" name="MTB Result"
+		datatype="org.openmrs.customdatatype.datatype.ConceptDatatype" min_occurs="1" max_occurs="1" datatype_config="162202"
+		sort_weight="1" description="Microbacterium Tuberculosis bacteria presence." creator="1" date_created="2018-04-24 12:12:23"
+		retired="false" uuid="ea22684f-478e-11e8-943c-40b034c3cfee" />
+	<commonlabtest_attribute_type test_attribute_type_id="3" test_type_id="2" name="RIF Result"
+		datatype="org.openmrs.customdatatype.datatype.ConceptDatatype" min_occurs="1" max_occurs="1" datatype_config="164347"
+		sort_weight="2" description="Resistance against Rifampicin." creator="1" date_created="2018-04-24 12:12:26" retired="false"
+		uuid="eb66655f-478e-11e8-943c-40b034c3cfee" />
+
+	<!-- Test Attribute Types for Chest X-Ray -->
+	<commonlabtest_attribute_type test_attribute_type_id="4" test_type_id="3" name="Chest X-Ray Result"
+		datatype="org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype" min_occurs="1" max_occurs="1" datatype_config="(AB)?NORMAL|ERROR"
+		sort_weight="1" description="Result of Chest X-Ray." creator="1" date_created="2018-04-24 12:12:29" retired="false"
+		uuid="efeb9339-538d-11e8-9c7c-40b034c3cfee" />
+	<commonlabtest_attribute_type test_attribute_type_id="5" test_type_id="3" name="Radiologist Remarks"
+		datatype="org.openmrs.customdatatype.datatype.FreeTextDatatype" min_occurs="1" max_occurs="1" sort_weight="2"
+		description="Remarks by Radiologist." creator="1" date_created="2018-04-24 12:12:30" retired="false"
+		uuid="f43de058-538d-11e8-9c7c-40b034c3cfee" />
+
+	<!-- Used, Retired Test Attribute Type for Chest X-Ray -->
+	<commonlabtest_attribute_type test_attribute_type_id="6" test_type_id="3" name="CAD4TB Score"
+		datatype="org.openmrs.customdatatype.datatype.FloatDatatype" min_occurs="1" max_occurs="1" datatype_config="1-100"
+		sort_weight="1" description="CAD4TB Machine score." creator="1" date_created="2018-04-24 12:12:29" retired="1"
+		retire_reason="CAD4TB no longer functional." date_retired="2018-05-05 10:12:00" uuid="ed8b4caf-478e-11e8-943c-40b034c3cfee" />
+
+	<!-- Unused, Retired Test Attribute Type for Chest X-Ray -->
+	<commonlabtest_attribute_type test_attribute_type_id="7" test_type_id="3" name="X-Ray Film Printed"
+		datatype="org.openmrs.customdatatype.datatype.BooleanDatatype" min_occurs="1" max_occurs="1" sort_weight="2"
+		description="The X-Ray image was printed on film." creator="1" date_created="2018-04-24 12:12:30" retired="1"
+		retire_reason="Printing has been outsourced." date_retired="2018-05-05 12:00:00" uuid="ee261470-478e-11e8-943c-40b034c3cfee" />
+
+	<!-- Encounters and Providers -->
+	<encounter encounter_id="1000" encounter_type="2" patient_id="1000" encounter_datetime="2018-05-01 00:00:00.0"
+		creator="1" date_created="2018-05-07 14:09:05.0" voided="false" uuid="b98b5208-52bf-11e8-b60d-080027ea421d" />
+	<encounter encounter_id="2000" encounter_type="2" patient_id="2000" encounter_datetime="2018-05-01 00:00:00.0"
+		creator="1" date_created="2018-05-07 14:09:05.0" voided="false" uuid="7b79403c-52c0-11e8-b60d-080027ea421d" />
+	<encounter_provider encounter_provider_id="1" encounter_id="1000" provider_id="300" encounter_role_id="1"
+		creator="1" date_created="2018-03-11 15:57:35.0" voided="false" uuid="d3e4f8b7-52bf-11e8-b60d-080027ea421d" />
+	<encounter_provider encounter_provider_id="1" encounter_id="2000" provider_id="400" encounter_role_id="1"
+		creator="1" date_created="2018-03-11 15:57:35.0" voided="false" uuid="84aa0e76-52c0-11e8-b60d-080027ea421d" />
+
+	<!-- Orders of type Test -->
+	<orders order_id="100" order_type_id="3" concept_id="500" orderer="300" encounter_id="1000" instructions="PERFORM GENEXPERT"
+		date_activated="2018-05-07 11:44:23" order_action="NEW" order_reason_non_coded="Presumptive case" creator="300"
+		date_created="2018-05-07 11:44:23" voided="false" patient_id="1000" uuid="863c6448-51e8-11e8-b60d-080027ea421d" urgency="ROUTINE"
+		order_number="GXP-201807051" care_setting="1" />
+	<orders order_id="200" order_type_id="3" concept_id="600" orderer="300" encounter_id="1000" instructions="PERFORM CXR"
+		date_activated="2018-05-07 11:44:00" order_action="NEW" order_reason_non_coded="Presumptive case" creator="300"
+		date_created="2018-05-07 11:44:00" voided="false" patient_id="1000" uuid="8acaf3b9-51e8-11e8-b60d-080027ea421d" urgency="ROUTINE"
+		order_number="CXR-201805071" care_setting="1" />
+	<orders order_id="300" order_type_id="3" concept_id="500" orderer="400" encounter_id="2000" instructions="PERFORM GENEXPERT"
+		date_activated="2018-05-05 05:44:23" order_action="NEW" order_reason_non_coded="Presumptive case" creator="400"
+		date_created="2018-05-05 05:44:23" voided="false" patient_id="2000" uuid="093e99de-51e9-11e8-b60d-080027ea421d" urgency="ROUTINE"
+		order_number="GXP-201807052" care_setting="1" />
+
+	<!-- Lab Tests -->
+	<commonlabtest_test test_order_id="100" test_type_id="2" lab_reference_number="GXP-IRS12345" creator="300"
+		date_created="2018-04-24 18:02:27" voided="false" uuid="d175e92e-47bf-11e8-943c-40b034c3cfee" />
+	<commonlabtest_test test_order_id="200" test_type_id="3" lab_reference_number="CXR-NRL9876543100-52"
+		creator="300" date_created="2018-04-24 18:02:29" voided="false" uuid="d23c2576-47bf-11e8-943c-40b034c3cfee" />
+	<commonlabtest_test test_order_id="300" test_type_id="2" lab_reference_number="GXP-IRS987654" creator="400"
+		date_created="2018-05-04 18:02:27" voided="false" uuid="d175e92e-dc93-11e8-d298-40b034c3cfee" />
+
+	<!-- Lab Test Samples for GeneXpert Tests -->
+	<commonlabtest_sample test_sample_id="1" test_order_id="100" specimen_type="700" specimen_site="800"
+		status="PROCESSED" lab_sample_identifier="GXP-IRS12345-1" collector="300" creator="300" quantity="3" units="ml"
+		collection_date="2017-05-05 05:15:00" processed_date="2017-05-06 10:45:00" date_created="2017-05-05 18:02:27" voided="false"
+		uuid="f4bffc2f-5343-11e8-9c7c-40b034c3cfee" />
+
+	<commonlabtest_sample test_sample_id="2" test_order_id="300" specimen_type="700" specimen_site="800"
+		status="ACCEPTED" lab_sample_identifier="GXP-IRS12345-2" collector="400" creator="300" quantity="2" units="ml"
+		collection_date="2017-08-15 02:55:00" date_created="2017-08-15 18:02:27" voided="false" uuid="f40420f8-5346-11e8-9c7c-40b034c3cfee" />
+
+	<commonlabtest_sample test_sample_id="3" test_order_id="300" specimen_type="700" specimen_site="800"
+		status="REJECTED" lab_sample_identifier="GXP-IRS12345-3" collector="400" creator="300" quantity="1" units="ml"
+		collection_date="2017-08-15 02:55:00" comments="Insufficient quantity" date_created="2017-08-15 18:02:27" voided="false"
+		uuid="g2120c8d-5346-11e8-9c7c-40b034c3cfee" />
+
+	<!-- Lab Test Results -->
+	<commonlabtest_attribute test_attribute_id="1" test_order_id="100" attribute_type_id="1"
+		value_reference="1301" creator="300" date_created="2018-04-24 18:19:19" voided="false" uuid="2c9737d9-47c2-11e8-943c-40b034c3cfee" />
+	<commonlabtest_attribute test_attribute_id="2" test_order_id="100" attribute_type_id="2"
+		value_reference="1138" creator="300" date_created="2018-04-24 18:19:21" voided="false" uuid="2d9cc0d3-47c2-11e8-943c-40b034c3cfee" />
+	<commonlabtest_attribute test_attribute_id="3" test_order_id="100" attribute_type_id="3"
+		value_reference="526778038" creator="300" date_created="2018-04-24 18:19:22" voided="false" uuid="2e45af47-47c2-11e8-943c-40b034c3cfee" />
+	<commonlabtest_attribute test_attribute_id="4" test_order_id="200" attribute_type_id="4"
+		value_reference="100" creator="300" date_created="2018-04-24 18:19:23" voided="false" uuid="2efe1af7-47c2-11e8-943c-40b034c3cfee" />
+	<commonlabtest_attribute test_attribute_id="5" test_order_id="200" attribute_type_id="5"
+		value_reference="1" creator="300" date_created="2018-04-24 18:19:24" voided="false" uuid="2f9066fb-47c2-11e8-943c-40b034c3cfee" />
+	<commonlabtest_attribute test_attribute_id="6" test_order_id="300" attribute_type_id="1"
+		value_reference="1302" creator="400" date_created="2018-04-24 18:19:19" voided="false" uuid="b46ad728-51f0-11e8-b60d-080027ea421d" />
+	<commonlabtest_attribute test_attribute_id="7" test_order_id="300" attribute_type_id="3"
+		value_reference="2018220454" creator="400" date_created="2018-05-04 18:19:22" voided="false" uuid="acbf3ff5-51f0-11e8-b60d-080027ea421d" />
+	<commonlabtest_attribute test_attribute_id="8" test_order_id="100" attribute_type_id="6"
+		value_reference="140" creator="300" date_created="2018-04-25 08:00:19" voided="false" uuid="ca7393b3-538f-11e8-9c7c-40b034c3cfee" />
+
+</dataset>

@@ -1,4 +1,5 @@
 /**
+
  * The contents of this file are subject to the OpenMRS Public License
  * Version 1.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
@@ -17,29 +18,58 @@ import org.openmrs.attribute.Attribute;
 import org.openmrs.attribute.BaseAttribute;
 
 /**
+ * This class represents attribtues of a LabTest object; it extends BaseAttribute class and
+ * implements Attributable interface. Results of a lab test should be stored as attributes.
+ * 
  * @author owais.hussain@ihsinformatics.com
  */
 public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTest> implements Attribute<LabTestAttributeType, LabTest> {
 	
+	private static final long serialVersionUID = 22986710762598701L;
+	
 	private Integer labTestAttributeId;
+	
+	/**
+	 * Default constructor
+	 */
+	public LabTestAttribute() {
+	}
+	
+	public Integer getLabTestAttributeId() {
+		return labTestAttributeId;
+	}
+	
+	public void setLabTestAttributeId(Integer labTestAttributeId) {
+		this.labTestAttributeId = labTestAttributeId;
+	}
+	
+	/**
+	 * @return {@link LabTest}
+	 */
+	public LabTest getLabTest() {
+		return getOwner();
+	}
+	
+	/**
+	 * @param labTest
+	 */
+	public void setLabTest(LabTest labTest) {
+		setOwner(labTest);
+	}
 	
 	@Override
 	public Integer getId() {
-		return labTestAttributeId;
+		return getLabTestAttributeId();
 	}
 	
 	@Override
 	public void setId(Integer id) {
-		this.labTestAttributeId = id;
+		setLabTestAttributeId(id);
 	}
 	
 	@Override
-	public LabTest getOwner() {
-		return null;
+	public String toString() {
+		return labTestAttributeId + ", " + getOwner().getDisplayString() + ", " + getAttributeType() + ", "
+		        + getValueReference();
 	}
-	
-	@Override
-	public void setOwner(LabTest test) {
-	}
-	
 }
