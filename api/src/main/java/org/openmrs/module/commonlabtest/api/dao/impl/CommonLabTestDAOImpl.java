@@ -316,7 +316,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 			criteria.add(Restrictions.between("dateCreated", from, to));
 		}
 		if (!includeVoided) {
-			criteria.add(Restrictions.eq("voided", false));
+			criteria.add(Restrictions.eq("o.voided", false));
 		}
 		criteria.addOrder(Order.asc("testOrderId")).addOrder(Order.asc("voided")).list();
 		return criteria.list();

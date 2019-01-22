@@ -39,12 +39,11 @@
 	</aware_of_modules>
 	
 	
-	<!-- AOP
+	<!--  AOP Support -->
 	<advice>
-		<point>org.openmrs.api.FormService</point>
-		<class>@MODULE_PACKAGE@.advice.DuplicateFormAdvisor</class>
+		<point>org.openmrs.api.EncounterService</point>
+		<class>org.openmrs.module.commonlabtest.aop.AfterOrderVoidAdvice</class>
 	</advice>
-	 /AOP -->
 	
 	
 	<!-- Required Privileges -->
