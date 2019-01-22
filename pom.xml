@@ -25,8 +25,8 @@
 	
 	<distributionManagement>
 		<repository>
-			<id>bintray-openmrs-maven</id>
-			<name>openmrs-maven</name>
+			<id>bintray-seekme94-maven</id>
+			<name>seekme94-maven</name>
 			<url>https://api.bintray.com/maven/seekme94/maven/openmrs-module-commonlabtest/;publish=1</url>
 		</repository>
 	</distributionManagement>
