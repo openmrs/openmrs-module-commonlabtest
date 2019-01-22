@@ -89,11 +89,9 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 	}
 
 	/**
-	 * Overloaded constructor.
-	 * 
 	 * @param order
-	 *            since LabTest has one-to-one identifying relationship with Order
-	 *            class
+	 *            since {@link LabTest} has one-to-one identifying relationship with
+	 *            {@link Order} class
 	 */
 	public LabTest(Order order) {
 		setTestOrderId(order.getId());
@@ -136,6 +134,10 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 	/**
 	 * Finds a list of LabTest objects from Lab reference number. Also @see
 	 * org.openmrs.Attributable#findPossibleValues(java.lang.String)
+	 * 
+	 * @param referenceNumber
+	 *            the reference number
+	 * @return {@link LabTest} object(s)
 	 */
 	@Override
 	public List<LabTest> findPossibleValues(String referenceNumber) {
@@ -154,6 +156,8 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 	/**
 	 * Always returns an empty list because returning complete list of all LabTests
 	 * will be burdensome. Also @see org.openmrs.Attributable#getPossibleValues()
+	 * 
+	 * @return {@link LabTest} object(s)
 	 */
 	@Override
 	public List<LabTest> getPossibleValues() {
@@ -164,6 +168,10 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 	 * Searches LabTest object by given UUID and returns the matching object. If the
 	 * object is not found, a new object is returned. Also @see
 	 * org.openmrs.Attributable#hydrate(java.lang.String)
+	 * 
+	 * @param uuid
+	 *            the unique Id
+	 * @return {@link LabTest} object
 	 */
 	@Override
 	public LabTest hydrate(String uuid) {
@@ -182,6 +190,10 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 	/**
 	 * Searches LabTest object by given Id and returns the matching object. If the
 	 * object is not found, a new object is returned.
+	 * 
+	 * @param labTestId
+	 *            the Id
+	 * @return {@link LabTest} object
 	 */
 	public LabTest hydrate(Integer labTestId) {
 		try {
@@ -208,86 +220,52 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 		}
 	}
 
-	/**
-	 * @return the testOrderId
-	 */
 	public Integer getTestOrderId() {
 		return testOrderId;
 	}
 
-	/**
-	 * @param testOrderId
-	 *            the testOrderId to set
-	 */
 	public void setTestOrderId(Integer testOrderId) {
 		this.testOrderId = testOrderId;
 	}
 
-	/**
-	 * @return the order
-	 */
 	public Order getOrder() {
 		return order;
 	}
 
-	/**
-	 * @param the
-	 *            order to set
-	 */
 	public void setOrder(Order order) {
 		this.order = order;
 	}
 
-	/**
-	 * @return the labTestType
-	 */
 	public LabTestType getLabTestType() {
 		return labTestType;
 	}
 
-	/**
-	 * @param labTestType
-	 *            the labTestType to set
-	 */
 	public void setLabTestType(LabTestType labTestType) {
 		this.labTestType = labTestType;
 	}
 
-	/**
-	 * @return the labReferenceNumber
-	 */
 	public String getLabReferenceNumber() {
 		return labReferenceNumber;
 	}
 
-	/**
-	 * @param labReferenceNumber
-	 *            the labReferenceNumber to set
-	 */
 	public void setLabReferenceNumber(String labReferenceNumber) {
 		this.labReferenceNumber = labReferenceNumber;
 	}
 
-	/**
-	 * @return the labTestSamples
-	 */
 	public Set<LabTestSample> getLabTestSamples() {
 		return labTestSamples;
 	}
 
-	/**
-	 * @param labTestSamples
-	 *            the labTestSamples to set
-	 */
 	public void setLabTestSamples(Set<LabTestSample> labTestSamples) {
 		this.labTestSamples = labTestSamples;
 	}
 
 	/**
-	 * Add labTestSample to existing set. A duplicate object will be skipped without
-	 * any exception
+	 * Add a {@link LabTestSample} to existing set. A duplicate object will be
+	 * skipped without any exception
 	 * 
 	 * @param labTestSample
+	 *            the {@link LabTestSample} object
 	 */
 	public void addLabTestSample(LabTestSample labTestSample) {
 		if (labTestSample != null) {
@@ -304,11 +282,6 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 		labTestSamples.add(labTestSample);
 	}
 
-	/**
-	 * Remove labTestSample object from the existing set
-	 * 
-	 * @param labTestSample
-	 */
 	public void removeLabTestSample(LabTestSample labTestSample) {
 		if (labTestSamples != null && labTestSample != null) {
 			labTestSamples.remove(labTestSample);
@@ -323,11 +296,6 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 		this.labInstructions = labInstructions;
 	}
 
-	/**
-	 * Remove labTestAttribute object from the existing set
-	 * 
-	 * @param labTestAttribute
-	 */
 	public void removeLabTestAttribute(LabTestAttribute labTestAttribute) {
 		if (getAttributes() != null && labTestAttribute != null) {
 			getAttributes().remove(labTestAttribute);
@@ -335,11 +303,9 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 	}
 
 	/**
-	 * Returns first non-voided object in labTestSamples matching the given status,
-	 * or null.
-	 * 
 	 * @param status
-	 * @return
+	 *            the {@link LabTestSampleStatus} object
+	 * @return the {@link LabTestSample} object
 	 */
 	public LabTestSample getLabTestSample(LabTestSampleStatus status) {
 		for (LabTestSample labTestSample : labTestSamples) {

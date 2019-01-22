@@ -134,8 +134,9 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 	}
 
 	/**
-	 * @param LabTest
-	 * @return getLabReferenceNumber as Display
+	 * @param labTest
+	 *            the {@link LabTest} object
+	 * @return labReferenceNumber as Display
 	 */
 	@PropertyGetter("display")
 	public String getDisplayString(LabTest labTest) {

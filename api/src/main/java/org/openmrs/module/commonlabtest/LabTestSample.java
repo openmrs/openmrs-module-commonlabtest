@@ -117,9 +117,6 @@ public class LabTestSample extends BaseOpenmrsData {
 	public LabTestSample() {
 	}
 
-	/**
-	 * @param id
-	 */
 	public LabTestSample(Integer id) {
 		setId(id);
 	}
@@ -140,25 +137,16 @@ public class LabTestSample extends BaseOpenmrsData {
 		this.labTestSampleId = id;
 	}
 
-	/**
-	 * @return the labTest
-	 */
 	public LabTest getLabTest() {
 		return labTest;
 	}
 
-	/**
-	 * @param labTest
-	 *            the labTest to set
-	 */
 	public void setLabTest(LabTest labTest) {
 		this.labTest = labTest;
 	}
 
 	/**
-	 * Concept which represents the specimen type
-	 * 
-	 * @return
+	 * @return the {@link Concept} object which represents the specimen type
 	 */
 	public Concept getSpecimenType() {
 		return specimenType;
@@ -166,16 +154,15 @@ public class LabTestSample extends BaseOpenmrsData {
 
 	/**
 	 * @param specimenType
+	 *            the {@link Concept} object which represents the specimen type
 	 */
 	public void setSpecimenType(Concept specimenType) {
 		this.specimenType = specimenType;
 	}
 
 	/**
-	 * Concept which represents the body Site from which the specimen sample was
-	 * taken
-	 * 
-	 * @return
+	 * @return the {@link Concept} object which represents the source of specimen
+	 *         sample
 	 */
 	public Concept getSpecimenSite() {
 		return specimenSite;
@@ -183,167 +170,90 @@ public class LabTestSample extends BaseOpenmrsData {
 
 	/**
 	 * @param specimenSite
+	 *            {@link Concept} object which represents the source of specimen
+	 *            sample
 	 */
 	public void setSpecimenSite(Concept specimenSite) {
 		this.specimenSite = specimenSite;
 	}
 
-	/**
-	 * Date of sample collection
-	 * 
-	 * @return
-	 */
 	public Date getCollectionDate() {
 		return collectionDate;
 	}
 
-	/**
-	 * @param collectionDate
-	 */
 	public void setCollectionDate(Date collectionDate) {
 		this.collectionDate = collectionDate;
 	}
 
-	/**
-	 * Who collected the sample. Usually a lab representative
-	 * 
-	 * @return
-	 */
 	public Provider getCollector() {
 		return collector;
 	}
 
-	/**
-	 * @param collector
-	 */
 	public void setCollector(Provider collector) {
 		this.collector = collector;
 	}
 
-	/**
-	 * @return the expirable
-	 */
 	public Boolean getExpirable() {
 		return expirable;
 	}
 
-	/**
-	 * @param expirable
-	 *            the expirable to set
-	 */
 	private void setExpirable(Boolean expirable) {
 		this.expirable = expirable;
 	}
 
-	/**
-	 * In case of non-expirable sample, this should be null
-	 * 
-	 * @return
-	 */
 	public Date getExpiryDate() {
 		return expiryDate;
 	}
 
-	/**
-	 * @param expiryDate
-	 */
 	public void setExpiryDate(Date expiryDate) {
 		this.expiryDate = expiryDate;
 		setExpirable(getExpiryDate() != null);
 	}
 
-	/**
-	 * Quantity of the sample
-	 * 
-	 * @return
-	 */
 	public Double getQuantity() {
 		return quantity;
 	}
 
-	/**
-	 * @param quantity
-	 */
 	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
 	}
 
-	/**
-	 * Unit(s) of quantity
-	 * 
-	 * @return
-	 */
 	public String getUnits() {
 		return units;
 	}
 
-	/**
-	 * @param units
-	 */
 	public void setUnits(String units) {
 		this.units = units;
 	}
 
-	/**
-	 * Date on which the sample was processed
-	 * 
-	 * @return
-	 */
 	public Date getProcessedDate() {
 		return processedDate;
 	}
 
-	/**
-	 * @param processingDate
-	 */
 	public void setProcessedDate(Date processingDate) {
 		this.processedDate = processingDate;
 	}
 
-	/**
-	 * Status of the sample
-	 * 
-	 * @return
-	 */
 	public LabTestSampleStatus getStatus() {
 		return status;
 	}
 
-	/**
-	 * @param status
-	 */
 	public void setStatus(LabTestSampleStatus status) {
 		this.status = status;
 	}
 
-	/**
-	 * Sample identifier used by lab
-	 * 
-	 * @return
-	 */
 	public String getSampleIdentifier() {
 		return sampleIdentifier;
 	}
 
-	/**
-	 * @param sampleIdentifier
-	 */
 	public void setSampleIdentifier(String sampleIdentifier) {
 		this.sampleIdentifier = sampleIdentifier;
 	}
 
-	/**
-	 * Open text Comments
-	 * 
-	 * @return
-	 */
 	public String getComments() {
 		return comments;
 	}
 
-	/**
-	 * @param comments
-	 */
 	public void setComments(String comments) {
 		this.comments = comments;
 	}

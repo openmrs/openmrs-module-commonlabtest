@@ -117,8 +117,9 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 	}
 
 	/**
-	 * @param LabTestAttribute
-	 * @return getValueReference as Display
+	 * @param attribute
+	 *            the {@link LabTestAttribute} object
+	 * @return valueReference as display
 	 */
 	@PropertyGetter("display")
 	public String getDisplayString(LabTestAttribute attribute) {
@@ -129,7 +130,8 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 
 	/**
 	 * @param attribute
-	 * @return
+	 *            {@link LabTestAttribute} object
+	 * @return valueReference
 	 */
 	@PropertyGetter("valueReference")
 	public String getValueReference(LabTestAttribute attribute) {
@@ -142,7 +144,9 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 
 	/**
 	 * @param instance
-	 * @param value
+	 *            the {@link LabTestAttribute} object
+	 * @param valueReference
+	 *            the valueReference to set
 	 */
 	@PropertySetter("valueReference")
 	public static void setValueReference(LabTestAttribute instance, String valueReference) {

@@ -125,7 +125,8 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 	}
 
 	/**
-	 * @param LabTestAttributeType
+	 * @param labTestAttributeType
+	 *            the {@link LabTestAttributeType} object
 	 * @return description as Display
 	 */
 	@Override

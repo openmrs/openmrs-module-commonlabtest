@@ -116,6 +116,7 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 	 * Initialize all data objects before each test
 	 * 
 	 * @throws Exception
+	 *             on Exception
 	 */
 	public void initTestData() throws Exception {
 		initializeInMemoryDatabase();

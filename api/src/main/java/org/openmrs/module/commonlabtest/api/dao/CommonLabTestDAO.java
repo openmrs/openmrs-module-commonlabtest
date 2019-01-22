@@ -18,220 +18,215 @@ import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 public interface CommonLabTestDAO {
 
 	/**
-	 * Returns list of {@link LabTestAttributeType} objects
-	 * 
 	 * @param includeRetired
-	 * @return
+	 *            include retired objects
+	 * @return {@link LabTestAttributeType} objects
 	 */
 	List<LabTestAttributeType> getAllLabTestAttributeTypes(boolean includeRetired);
 
 	/**
-	 * Returns list of {@link LabTestType} objects
-	 * 
 	 * @param includeRetired
-	 * @return
+	 *            include retired objects
+	 * @return {@link LabTestType} objects
 	 */
 	List<LabTestType> getAllLabTestTypes(boolean includeRetired);
 
 	/**
-	 * Returns list of {@link LabTestType} objects matching all non-null parameters
-	 * given
-	 * 
 	 * @param name
+	 *            the name of lab test type
 	 * @param shortName
+	 *            the short name
 	 * @param testGroup
+	 *            the {@link LabTestGroup} object
 	 * @param referenceConcept
+	 *            the {@link Concept} object
 	 * @param includeRetired
-	 * @return
+	 *            include retired objects
+	 * @return {@link LabTestType} objects
 	 */
 	List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup, Concept referenceConcept,
 			boolean includeRetired);
 
 	/**
-	 * Returns {@link LabTest} object by matching given {@link Order} object
-	 * 
 	 * @param order
-	 * @return
+	 *            the {@link Order} object
+	 * @return {@link LabTest} object by matching given {@link Order} object
 	 */
 	LabTest getLabTest(Order order);
 
 	/**
-	 * Returns {@link LabTest} object by generated ID
-	 * 
 	 * @param labTestId
-	 * @return
+	 *            the Id
+	 * @return {@link LabTest} object
 	 */
 	LabTest getLabTest(Integer labTestId);
 
 	/**
-	 * Returns {@link LabTestAttribute} object by generated ID
-	 * 
-	 * @param labTestId
-	 * @return
+	 * @param labTestAttributeId
+	 *            the Id
+	 * @return {@link LabTestAttribute} object
 	 */
 	LabTestAttribute getLabTestAttribute(Integer labTestAttributeId);
 
 	/**
-	 * Returns {@link LabTestAttribute} object by generated ID
-	 * 
-	 * @param labTestId
-	 * @return
+	 * @param uuid
+	 *            the unique Id
+	 * @return {@link LabTestAttribute} object
 	 */
 	LabTestAttribute getLabTestAttributeByUuid(String uuid);
 
 	/**
-	 * Returns list of {@link LabTestAttribute} objects by {@link Order} Id
-	 * 
 	 * @param testOrderId
-	 * @return
+	 *            the Id
+	 * @return {@link LabTestAttribute} object(s)
 	 */
 	List<LabTestAttribute> getLabTestAttributes(Integer testOrderId);
 
 	/**
-	 * Returns list of {@link LabTestAttribute} objects by matching given non-null
-	 * parameters
-	 * 
 	 * @param labTestAttributeType
+	 *            the {@link LabTestAttributeType} object
 	 * @param valueReference
+	 *            the reference value
 	 * @param from
+	 *            the start {@link Date} object
 	 * @param to
+	 *            the end {@link Date} object
 	 * @param includeVoided
-	 * @return
+	 *            include retired objects
+	 * @return {@link LabTestAttribute} object(s)
 	 */
 	List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, String valueReference,
 			Date from, Date to, boolean includeVoided);
 
 	/**
-	 * Returns list of {@link LabTestAttribute} objects by matching given non-null
-	 * parameters
-	 * 
 	 * @param patient
+	 *            the {@link Patient} object
 	 * @param labTestAttributeType
+	 *            the {@link LabTestAttributeType} object
 	 * @param includeVoided
-	 * @return
+	 *            include retired objects
+	 * @return {@link LabTestAttribute} object(s)
 	 */
 	List<LabTestAttribute> getLabTestAttributes(Patient patient, LabTestAttributeType labTestAttributeType,
 			boolean includeVoided);
 
 	/**
-	 * Returns {@link LabTestAttributeType} object by generated Id
-	 * 
 	 * @param labTestAttributeTypeId
-	 * @return
+	 *            the Id
+	 * @return {@link LabTestAttributeType} object
 	 */
 	LabTestAttributeType getLabTestAttributeType(Integer labTestAttributeTypeId);
 
 	/**
-	 * Returns {@link LabTestAttributeType} object by UUID
-	 * 
 	 * @param uuid
-	 * @return
+	 *            the unique Id
+	 * @return {@link LabTestAttributeType} object
 	 */
 	LabTestAttributeType getLabTestAttributeTypeByUuid(String uuid);
 
 	/**
-	 * Returns list of {@link LabTestAttributeType} objects by matching non-null
-	 * parameters
-	 * 
 	 * @param name
+	 *            the name
 	 * @param datatypeClassname
+	 *            the name of fully specified data type class
 	 * @param includeRetired
-	 * @return
+	 *            include retired objects
+	 * @return {@link LabTestAttributeType} object(s)
 	 */
 	List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname, boolean includeRetired);
 
 	/**
-	 * Returns list of {@link LabTestAttributeType} objects by given
-	 * {@link LabTestType} parameter
-	 * 
 	 * @param labTestType
+	 *            {@link LabTestType} object
 	 * @param includeRetired
-	 * @return
+	 *            include retired objects
+	 * @return {@link LabTestAttributeType} object(s)
 	 */
 	List<LabTestAttributeType> getLabTestAttributeTypes(LabTestType labTestType, boolean includeRetired);
 
 	/**
-	 * Returns {@link LabTest} object by UUID
-	 * 
 	 * @param uuid
-	 * @return
+	 *            the unique Id
+	 * @return {@link LabTest} object
 	 */
 	LabTest getLabTestByUuid(String uuid);
 
 	/**
-	 * Returns list of {@link LabTest} objects by matching non-null parameters
-	 * 
 	 * @param labTestType
+	 *            the {@link LabTestType} object
 	 * @param patient
+	 *            the {@link Patient} object
 	 * @param orderNumber
+	 *            the order number
 	 * @param referenceNumber
+	 *            the reference number
 	 * @param orderConcept
+	 *            the {@link Order} concept object
 	 * @param orderer
+	 *            the {@link Provider} object
 	 * @param from
+	 *            the start {@link Date} object
 	 * @param to
+	 *            the end {@link Date} object
 	 * @param includeVoided
-	 * @return
+	 *            include retired objects
+	 * @return {@link LabTest} object(s)
 	 */
 	List<LabTest> getLabTests(LabTestType labTestType, Patient patient, String orderNumber, String referenceNumber,
 			Concept orderConcept, Provider orderer, Date from, Date to, boolean includeVoided);
 
 	/**
-	 * Returns {@link LabTestSample} object by generated Id
-	 * 
 	 * @param labTestSampleId
-	 * @return
+	 *            the generated Id
+	 * @return {@link LabTestSample} object
 	 */
 	LabTestSample getLabTestSample(Integer labTestSampleId);
 
 	/**
-	 * Returns {@link LabTestSample} object by UUID
-	 * 
 	 * @param uuid
-	 * @return
+	 *            the unique Id
+	 * @return {@link LabTestSample} object
 	 */
 	LabTestSample getLabTestSampleByUuid(String uuid);
 
 	/**
-	 * Returns list of {@link LabTestSample} objects by given {@link LabTest}
-	 * 
 	 * @param labTest
+	 *            the {@link LabTest} object
 	 * @param includeVoided
-	 * @return
+	 *            include retired objects
+	 * @return {@link LabTestSample} object(s)
 	 */
 	List<LabTestSample> getLabTestSamples(LabTest labTest, boolean includeVoided);
 
 	/**
-	 * Returns list of {@link LabTestSample} objects by given {@link Provider}
-	 * object as collector
-	 * 
 	 * @param collector
+	 *            the {@link Provider} object
 	 * @param includeVoided
-	 * @return
+	 *            include retired objects
+	 * @return {@link LabTestSample} object(s)
 	 */
 	List<LabTestSample> getLabTestSamples(Provider collector, boolean includeVoided);
 
 	/**
-	 * Returns list of {@link LabTestSample} objects by given {@link Patient} object
-	 * 
 	 * @param patient
+	 *            the {@link Patient} object
 	 * @param includeVoided
-	 * @return
+	 *            include retired objects
+	 * @return {@link LabTestSample} object(s)
 	 */
 	List<LabTestSample> getLabTestSamples(Patient patient, boolean includeVoided);
 
 	/**
-	 * Returns {@link LabTestType} object by generated Id
-	 * 
 	 * @param labTestTypeId
-	 * @return
+	 *            the generated Id
+	 * @return {@link LabTestType} object
 	 */
 	LabTestType getLabTestType(Integer labTestTypeId);
 
 	/**
-	 * Returns {@link LabTestType} object by UUID
-	 * 
 	 * @param uuid
-	 * @return
+	 *            the unique Id
+	 * @return {@link LabTestType} object
 	 */
 	LabTestType getLabTestTypeByUuid(String uuid);
 
@@ -243,11 +238,16 @@ public interface CommonLabTestDAO {
 	 * MAX_FETCH_LIMIT
 	 * 
 	 * @param patient
+	 *            the {@link Patient} object
 	 * @param n
+	 *            the number of objects to return
 	 * @param firstNObjects
+	 *            whether to return initial n objects
 	 * @param lastNObjects
+	 *            whether to return last n objects
 	 * @param includeVoided
-	 * @return
+	 *            include retired objects
+	 * @return {@link LabTest} object
 	 */
 	List<LabTest> getNLabTests(Patient patient, int n, boolean firstNObjects, boolean lastNObjects,
 			boolean includeVoided);
@@ -261,48 +261,49 @@ public interface CommonLabTestDAO {
 	 * is limited by MAX_FETCH_LIMIT
 	 * 
 	 * @param patient
+	 *            the {@link Patient} object
 	 * @param status
+	 *            the {@link LabTestSampleStatus} object
 	 * @param n
+	 *            the number of objects to return
 	 * @param firstNObjects
+	 *            whether to return initial n objects
 	 * @param lastNObjects
+	 *            whether to return last n objects
 	 * @param includeVoided
-	 * @return
+	 *            include retired objects
+	 * @return {@link LabTestSample} object
 	 */
 	List<LabTestSample> getNLabTestSamples(Patient patient, LabTestSampleStatus status, int n, boolean firstNObjects,
 			boolean lastNObjects, boolean includeVoided);
 
 	/**
-	 * Permanently delete {@link LabTest}
-	 * 
 	 * @param labTest
+	 *            the {@link LabTest} object to delete
 	 */
 	void purgeLabTest(LabTest labTest);
 
 	/**
-	 * Permanently delete {@link LabTestAttribute}
-	 * 
 	 * @param labTestAttribute
+	 *            the {@link LabTestAttribute} object to delete
 	 */
 	void purgeLabTestAttribute(LabTestAttribute labTestAttribute);
 
 	/**
-	 * Permanently delete {@link LabTestAttributeType}
-	 * 
 	 * @param labTestAttributeType
+	 *            the {@link LabTestAttributeType} object to delete
 	 */
 	void purgeLabTestAttributeType(LabTestAttributeType labTestAttributeType);
 
 	/**
-	 * Permanently delete {@link LabTestSample}
-	 * 
 	 * @param labTestSample
+	 *            the {@link LabTestSample} object to delete
 	 */
 	void purgeLabTestSample(LabTestSample labTestSample);
 
 	/**
-	 * Permanently delete {@link LabTestType}
-	 * 
 	 * @param labTestType
+	 *            the {@link LabTestType} object to delete
 	 */
 	void purgeLabTestType(LabTestType labTestType);
 
@@ -311,39 +312,36 @@ public interface CommonLabTestDAO {
 	 * entity, because unlike {@link Order}, the {@link LabTest} is not hierarchical
 	 * 
 	 * @param labTest
-	 * @return
+	 *            the {@link LabTest} object to save
+	 * @return saved {@link LabTest} object
 	 */
 	LabTest saveLabTest(LabTest labTest);
 
 	/**
-	 * Persists {@link LabTestAttribute} in database
-	 * 
 	 * @param labTestAttribute
-	 * @return
+	 *            the {@link LabTestAttribute} object to save
+	 * @return saved {@link LabTestAttribute} object
 	 */
 	LabTestAttribute saveLabTestAttribute(LabTestAttribute labTestAttribute);
 
 	/**
-	 * Persists {@link LabTestAttributeType} in database
-	 * 
 	 * @param labTestAttributeType
-	 * @return
+	 *            the {@link LabTestAttributeType} object to save
+	 * @return saved {@link LabTestAttributeType} object
 	 */
 	LabTestAttributeType saveLabTestAttributeType(LabTestAttributeType labTestAttributeType);
 
 	/**
-	 * Persists {@link LabTestSample} in database
-	 * 
 	 * @param labTestSample
-	 * @return
+	 *            the {@link LabTestSample} object to save
+	 * @return saved {@link LabTestSample} object
 	 */
 	LabTestSample saveLabTestSample(LabTestSample labTestSample);
 
 	/**
-	 * Persists {@link LabTestType} in database
-	 * 
 	 * @param labTestType
-	 * @return
+	 *            the {@link LabTestType} object to save
+	 * @return saved {@link LabTestType} object
 	 */
 	LabTestType saveLabTestType(LabTestType labTestType);
 

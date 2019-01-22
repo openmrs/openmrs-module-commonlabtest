@@ -48,13 +48,18 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 
 	/**
 	 * Injected in moduleApplicationContext.xml
+	 * 
+	 * @param dao
+	 *            the {@link CommonLabTestDAO} object
 	 */
 	public void setDao(CommonLabTestDAO dao) {
 		this.dao = dao;
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getAllLabTestAttributeTypes(boolean)
+	/*
+	 * 
+	 * 
+	 * @see CommonLabTestService#getAllLabTestAttributeTypes(boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
@@ -63,8 +68,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getAllLabTestAttributeTypes(includeRetired);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getAllLabTestTypes(boolean)
+	/*
+	 * 
+	 * 
+	 * @see CommonLabTestService#getAllLabTestTypes(boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
@@ -73,8 +80,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getAllLabTestTypes(includeRetired);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getEarliestLabTest(org.openmrs.Patient)
+	/*
+	 * @see CommonLabTestService#getEarliestLabTest(org.openmrs.Patient)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -87,9 +94,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return null;
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getEarliestLabTestSample(org.openmrs.Patient,
-	 *      org.openmrs.module.commonlabtest.LabTestSampleStatus)
+	/*
+	 * @see CommonLabTestService#getEarliestLabTestSample(Patient,
+	 * LabTestSampleStatus)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
@@ -102,8 +109,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return null;
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTest(java.lang.Integer)
+	/*
+	 * @see CommonLabTestService#getLabTest(Integer)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -112,8 +119,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTest(labTestId);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttribute(java.lang.Integer)
+	/*
+	 * @see CommonLabTestService#getLabTestAttribute(java.lang.Integer)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -122,8 +129,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestAttribute(labTestAttributeId);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributeByUuid(java.lang.String)
+	/*
+	 * @see CommonLabTestService#getLabTestAttributeByUuid(String)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -132,9 +139,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestAttributeByUuid(uuid);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType,
-	 *      java.lang.String, java.util.Date, java.util.Date, boolean)
+	/*
+	 * @see CommonLabTestService#getLabTestAttributes(LabTestAttributeType, String,
+	 * Date, Date, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -144,9 +151,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestAttributes(labTestAttributeType, valueReference, from, to, includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType,
-	 *      boolean)
+	/*
+	 * @see CommonLabTestService#getLabTestAttributes(LabTestAttributeType, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -156,9 +162,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return getLabTestAttributes(labTestAttributeType, null, null, null, includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType,
-	 *      boolean)
+	/*
+	 * @see CommonLabTestService#getLabTestAttributes(LabTestAttributeType, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -167,9 +172,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestAttributes(testOrderId);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributes(org.openmrs.Patient,
-	 *      boolean)
+	/*
+	 * @see CommonLabTestService#getLabTestAttributes(org.openmrs.Patient, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -178,9 +182,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestAttributes(patient, null, includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributes(org.openmrs.Patient,
-	 *      org.openmrs.module.commonlabtest.LabTestAttributeType, boolean)
+	/*
+	 * @see CommonLabTestService#getLabTestAttributes(Patient, LabTestAttributeType,
+	 * boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -190,8 +194,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestAttributes(patient, labTestAttributeType, includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributeType(java.lang.Integer)
+	/*
+	 * @see CommonLabTestService#getLabTestAttributeType(Integer)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
@@ -200,8 +204,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestAttributeType(labTestAttributeTypeId);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributeTypeByUuid(java.lang.String)
+	/*
+	 * @see CommonLabTestService#getLabTestAttributeTypeByUuid(String)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
@@ -210,9 +214,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestAttributeTypeByUuid(uuid);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributeTypes(java.lang.String,
-	 *      java.lang.String, boolean)
+	/*
+	 * @see CommonLabTestService#getLabTestAttributeTypes(String, String, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
@@ -222,9 +225,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestAttributeTypes(name, datatypeClassname, includeRetired);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestAttributeTypes(LabTestType,
-	 *      boolean)
+	/*
+	 * @see CommonLabTestService#getLabTestAttributeTypes(LabTestType, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
@@ -234,8 +236,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestAttributeTypes(labTestType, includeRetired);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestByUuid(java.lang.String)
+	/*
+	 * @see CommonLabTestService#getLabTestByUuid(String)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -244,8 +246,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestByUuid(uuid);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTest(org.openmrs.Order)
+	/*
+	 * @see CommonLabTestService#getLabTest(org.openmrs.Order)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -254,8 +256,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTest(order);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSample(java.lang.Integer)
+	/*
+	 * @see CommonLabTestService#getLabTestSample(Integer)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
@@ -264,8 +266,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestSample(labTestSampleId);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSampleByUuid(java.lang.String)
+	/*
+	 * @see CommonLabTestService#getLabTestSampleByUuid(String)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
@@ -274,11 +276,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestSampleByUuid(uuid);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest,
-	 *      org.openmrs.Patient,
-	 *      org.openmrs.module.commonlabtest.LabTestSampleStatus, java.lang.String,
-	 *      org.openmrs.Provider, java.util.Date, java.util.Date, boolean)
+	/*
+	 * @see CommonLabTestService#getLabTestSamples(LabTest, Patient,
+	 * LabTestSampleStatus, String, Provider, Date, Date, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
@@ -290,9 +290,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return null;
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(java.lang.String,
-	 *      java.lang.String, java.lang.String, boolean)
+	/*
+	 * @see CommonLabTestService#getLabTestSamples(String, String, String, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
@@ -302,9 +301,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return getLabTestSamples(null, null, null, labSampleIdentifier, null, null, null, includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest,
-	 *      boolean)
+	/*
+	 * @see CommonLabTestService#getLabTestSamples(LabTest, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
@@ -313,9 +311,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestSamples(labTest, includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(org.openmrs.Patient,
-	 *      boolean)
+	/*
+	 * @see CommonLabTestService#getLabTestSamples(Patient, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
@@ -324,9 +321,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestSamples(patient, includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(org.openmrs.Provider,
-	 *      boolean)
+	/*
+	 * @see CommonLabTestService#getLabTestSamples(Provider, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
@@ -335,9 +331,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestSamples(collector, includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestSamples(org.openmrs.module.commonlabtest.LabTestSampleStatus,
-	 *      java.util.Date, java.util.Date, boolean)
+	/*
+	 * @see CommonLabTestService#getLabTestSamples(LabTestSampleStatus, Date, Date,
+	 * boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
@@ -347,8 +343,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return getLabTestSamples(null, null, status, null, null, from, to, includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestType(java.lang.Integer)
+	/*
+	 * @see CommonLabTestService#getLabTestType(Integer)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
@@ -357,8 +353,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestType(labTestTypeId);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestTypeByUuid(java.lang.String)
+	/*
+	 * @see CommonLabTestService#getLabTestTypeByUuid(String)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
@@ -367,10 +363,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.getLabTestTypeByUuid(uuid);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestTypes(java.lang.String,
-	 *      java.lang.String, org.openmrs.module.commonlabtest.LabTestGroup,
-	 *      java.lang.Boolean, org.openmrs.Concept, boolean)
+	/*
+	 * @see CommonLabTestService#getLabTestTypes(String, String, LabTestGroup,
+	 * Boolean, Concept, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
@@ -390,11 +385,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return labTestTypes;
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTests(org.openmrs.module.commonlabtest.LabTestType,
-	 *      org.openmrs.Patient, org.openmrs.module.commonlabtest.LabTestSample,
-	 *      java.lang.String, java.lang.String, org.openmrs.Concept,
-	 *      org.openmrs.Provider, java.util.Date, java.util.Date, boolean)
+	/*
+	 * @see CommonLabTestService#getLabTests(LabTestType, Patient, String, String,
+	 * Concept, Provider, Date, Date, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -406,9 +399,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 				includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTests(org.openmrs.module.commonlabtest.LabTestType,
-	 *      boolean)
+	/*
+	 * @see CommonLabTestService#getLabTests(org.openmrs.module.commonlabtest.
+	 * LabTestType, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -417,9 +410,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return getLabTests(labTestType, null, null, null, null, null, null, null, includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTests(org.openmrs.Concept,
-	 *      boolean)
+	/*
+	 * @see CommonLabTestService#getLabTests(org.openmrs.Concept, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -428,9 +420,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return getLabTests(null, null, null, null, orderConcept, null, null, null, includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTests(org.openmrs.Provider,
-	 *      boolean)
+	/*
+	 * @see CommonLabTestService#getLabTests(org.openmrs.Provider, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -439,9 +430,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return getLabTests(null, null, null, null, null, orderer, null, null, includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTests(org.openmrs.Patient,
-	 *      boolean)
+	/*
+	 * @see CommonLabTestService#getLabTests(org.openmrs.Patient, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -450,9 +440,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return getLabTests(null, patient, null, null, null, null, null, null, includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTests(java.lang.String,
-	 *      boolean)
+	/*
+	 * @see CommonLabTestService#getLabTests(String, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -464,8 +453,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return getLabTests(null, null, null, referenceNumber, null, null, null, null, includeVoided);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLatestLabTest(org.openmrs.Patient)
+	/*
+	 * @see CommonLabTestService#getLatestLabTest(Patient)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -478,9 +467,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return null;
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#getLatestLabTestSample(org.openmrs.Patient,
-	 *      org.openmrs.module.commonlabtest.LabTestSampleStatus)
+	/*
+	 * @see CommonLabTestService#getLatestLabTestSample(Patient,
+	 * LabTestSampleStatus)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
@@ -493,8 +482,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return null;
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#saveLabTest(org.openmrs.module.commonlabtest.LabTest)
+	/*
+	 * @see CommonLabTestService#saveLabTest(LabTest)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_PRIVILEGE)
@@ -503,9 +492,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return saveLabTest(labTest, null, null);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#saveLabTest(org.openmrs.module.commonlabtest.LabTest,
-	 *      org.openmrs.module.commonlabtest.LabTestSample, java.util.Collection)
+	/*
+	 * @see CommonLabTestService#saveLabTest(LabTest, LabTestSample, Collection)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_PRIVILEGE)
@@ -545,8 +533,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return savedLabTest;
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#saveLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)
+	/*
+	 * @see CommonLabTestService#saveLabTestAttribute(LabTestAttribute)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_PRIVILEGE)
@@ -555,8 +543,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.saveLabTestAttribute(labTestAttribute);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#saveLabTestAttributes(java.util.List)
+	/*
+	 * @see CommonLabTestService#saveLabTestAttributes(List)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_PRIVILEGE)
@@ -568,8 +556,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return labTestAttributes;
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#saveLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)
+	/*
+	 * @see CommonLabTestService#saveLabTestAttributeType(LabTestAttributeType)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_METADATA_PRIVILEGE)
@@ -579,8 +567,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.saveLabTestAttributeType(labTestAttributeType);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#saveLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)
+	/*
+	 * @see CommonLabTestService#saveLabTestSample(LabTestSample)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_SAMPLE_PRIVILEGE)
@@ -589,8 +577,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		return dao.saveLabTestSample(labTestSample);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#saveLabTestType(org.openmrs.module.commonlabtest.LabTestType)
+	/*
+	 * @see CommonLabTestService#saveLabTestType(LabTestType)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_METADATA_PRIVILEGE)
@@ -614,8 +602,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		}
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#retireLabTestType(org.openmrs.module.commonlabtest.LabTestType)
+	/*
+	 * @see CommonLabTestService#retireLabTestType(LabTestType, String)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
@@ -631,8 +619,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		dao.saveLabTestType(labTestType);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#retireLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)
+	/*
+	 * @see CommonLabTestService#retireLabTestAttributeType(LabTestAttributeType,
+	 * String)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
@@ -648,8 +637,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		dao.saveLabTestAttributeType(labTestAttributeType);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#unretireLabTestType(org.openmrs.module.commonlabtest.LabTestType)
+	/*
+	 * @see CommonLabTestService#unretireLabTestType(LabTestType)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
@@ -661,8 +650,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		dao.saveLabTestType(labTestType);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#unretireLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)
+	/*
+	 * @see CommonLabTestService#unretireLabTestAttributeType(LabTestAttributeType)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
@@ -674,8 +663,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		dao.saveLabTestAttributeType(labTestAttributeType);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#voidLabTest(org.openmrs.module.commonlabtest.LabTest)
+	/*
+	 * @see CommonLabTestService#voidLabTest(LabTest, String)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
@@ -700,8 +689,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		dao.saveLabTest(labTest);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#voidLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)
+	/*
+	 * @see CommonLabTestService#voidLabTestAttribute(LabTestAttribute, String)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
@@ -714,9 +703,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		dao.saveLabTestAttribute(labTestAttribute);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#voidLabTestAttributes(org.openmrs.module.commonlabtest.LabTest,
-	 *      java.lang.String)
+	/*
+	 * @see CommonLabTestService#voidLabTestAttributes(LabTest, String)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
@@ -742,8 +730,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		}
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#voidLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)
+	/*
+	 * @see CommonLabTestService#voidLabTestSample(LabTestSample, String)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_SAMPLE_PRIVILEGE)
@@ -756,8 +744,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		dao.saveLabTestSample(labTestSample);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#unvoidLabTest(org.openmrs.module.commonlabtest.LabTest)
+	/*
+	 * @see CommonLabTestService#unvoidLabTest(LabTest)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
@@ -783,8 +771,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		dao.saveLabTest(labTest);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#unvoidLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)
+	/*
+	 * @see CommonLabTestService#unvoidLabTestAttribute(LabTestAttribute)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
@@ -795,8 +783,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		dao.saveLabTestAttribute(labTestAttribute);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#unvoidLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)
+	/*
+	 * @see CommonLabTestService#unvoidLabTestSample(LabTestSample)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_SAMPLE_PRIVILEGE)
@@ -807,8 +795,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		dao.saveLabTestSample(labTestSample);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTest(org.openmrs.module.commonlabtest.LabTest)
+	/*
+	 * @see
+	 * CommonLabTestService#deleteLabTest(org.openmrs.module.commonlabtest.LabTest)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
@@ -817,8 +806,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		dao.purgeLabTest(labTest);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)
+	/*
+	 * @see CommonLabTestService#deleteLabTestAttribute(LabTestAttribute)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
@@ -827,8 +816,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		dao.purgeLabTestAttribute(labTestAttribute);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)
+	/*
+	 * @see CommonLabTestService#deleteLabTestAttributeType(LabTestAttributeType)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
@@ -837,9 +826,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		deleteLabTestAttributeType(labTestAttributeType, false);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType,
-	 *      boolean)
+	/*
+	 * @see CommonLabTestService#deleteLabTestAttributeType(LabTestAttributeType,
+	 * boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
@@ -859,8 +848,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		dao.purgeLabTestAttributeType(labTestAttributeType);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)
+	/*
+	 * @see CommonLabTestService#deleteLabTestSample(LabTestSample)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
@@ -869,8 +858,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		dao.purgeLabTestSample(labTestSample);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestType(org.openmrs.module.commonlabtest.LabTestType)
+	/*
+	 * @see CommonLabTestService#deleteLabTestType(LabTestType)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
@@ -879,9 +868,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		deleteLabTestType(labTestType, null);
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestType(org.openmrs.module.commonlabtest.LabTestType,
-	 *      boolean)
+	/*
+	 * @see CommonLabTestService#deleteLabTestType(LabTestType, boolean)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
@@ -901,9 +889,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		}
 	}
 
-	/**
-	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#deleteLabTestType(org.openmrs.module.commonlabtest.LabTestType,
-	 *      org.openmrs.module.commonlabtest.LabTestType)
+	/*
+	 * @see CommonLabTestService#deleteLabTestType(LabTestType, LabTestType)
 	 */
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
