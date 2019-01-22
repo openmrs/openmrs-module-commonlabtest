@@ -122,7 +122,8 @@ public class LabTestSampleResourceController extends DataDelegatingCrudResource<
 	}
 
 	/**
-	 * @param LabTestSample
+	 * @param sample
+	 *            the {@link LabTestSample} object
 	 * @return getSampleIdentifier as Display
 	 */
 	@PropertyGetter("display")

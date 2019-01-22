@@ -57,22 +57,16 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	/**
-	 * Get session factory
-	 */
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
-	/**
-	 * Set session factory
-	 */
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getAllLabTestAttributeTypes(boolean)
+	 * @see CommonLabTestDAO#getAllLabTestAttributeTypes(boolean)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -86,7 +80,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getAllLabTestTypes(boolean)
+	 * @see CommonLabTestDAO#getAllLabTestTypes(boolean)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -100,8 +94,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestTypes(java.lang.String,
-	 *      java.lang.String,
+	 * @see CommonLabTestDAO#getLabTestTypes(java.lang.String, java.lang.String,
 	 *      org.openmrs.module.commonlabtest.LabTestType.LabTestGroup,
 	 *      org.openmrs.Concept, boolean)
 	 */
@@ -130,7 +123,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTest(org.openmrs.Encounter)
+	 * @see CommonLabTestDAO#getLabTest(org.openmrs.Order)
 	 */
 	@Override
 	public LabTest getLabTest(org.openmrs.Order order) {
@@ -140,7 +133,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTest(java.lang.Integer)
+	 * @see CommonLabTestDAO#getLabTest(java.lang.Integer)
 	 */
 	@Override
 	public LabTest getLabTest(Integer labTestId) {
@@ -148,7 +141,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestAttribute(java.lang.Integer)
+	 * @see CommonLabTestDAO#getLabTestAttribute(java.lang.Integer)
 	 */
 	@Override
 	public LabTestAttribute getLabTestAttribute(Integer labTestAttributeId) {
@@ -156,7 +149,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestAttributeByUuid(java.lang.String)
+	 * @see CommonLabTestDAO#getLabTestAttributeByUuid(java.lang.String)
 	 */
 	@Override
 	public LabTestAttribute getLabTestAttributeByUuid(String uuid) {
@@ -166,7 +159,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestAttributes(java.lang.Integer)
+	 * @see CommonLabTestDAO#getLabTestAttributes(java.lang.Integer)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -177,7 +170,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType,
+	 * @see CommonLabTestDAO#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType,
 	 *      java.lang.String, java.util.Date, java.util.Date, boolean)
 	 */
 	@Override
@@ -201,9 +194,8 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestAttributes(org.openmrs.module.commonlabtest.LabTestAttributeType,
-	 *      org.openmrs.module.commonlabtest.LabTest, org.openmrs.Patient,
-	 *      java.lang.String, java.util.Date, java.util.Date, boolean)
+	 * @see CommonLabTestDAO#getLabTestAttributes(Patient, LabTestAttributeType,
+	 *      boolean)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -227,7 +219,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestAttributeType(java.lang.Integer)
+	 * @see CommonLabTestDAO#getLabTestAttributeType(java.lang.Integer)
 	 */
 	@Override
 	public LabTestAttributeType getLabTestAttributeType(Integer labTestAttributeTypeId) {
@@ -236,7 +228,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestAttributeTypeByUuid(java.lang.String)
+	 * @see CommonLabTestDAO#getLabTestAttributeTypeByUuid(java.lang.String)
 	 */
 	@Override
 	public LabTestAttributeType getLabTestAttributeTypeByUuid(String uuid) {
@@ -246,7 +238,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestAttributeTypes(java.lang.String,
+	 * @see CommonLabTestDAO#getLabTestAttributeTypes(java.lang.String,
 	 *      java.lang.String, boolean)
 	 */
 	@Override
@@ -270,7 +262,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestAttributeTypes(org.openmrs.module.commonlabtest.LabTestType,
+	 * @see CommonLabTestDAO#getLabTestAttributeTypes(org.openmrs.module.commonlabtest.LabTestType,
 	 *      boolean)
 	 */
 	@Override
@@ -286,7 +278,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestByUuid(java.lang.String)
+	 * @see CommonLabTestDAO#getLabTestByUuid(java.lang.String)
 	 */
 	@Override
 	public LabTest getLabTestByUuid(String uuid) {
@@ -296,7 +288,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTests(org.openmrs.module.commonlabtest.LabTestType,
+	 * @see CommonLabTestDAO#getLabTests(org.openmrs.module.commonlabtest.LabTestType,
 	 *      org.openmrs.Patient, java.lang.String, java.lang.String,
 	 *      org.openmrs.Concept, org.openmrs.Provider, java.util.Date,
 	 *      java.util.Date, boolean)
@@ -336,7 +328,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestSample(java.lang.Integer)
+	 * @see CommonLabTestDAO#getLabTestSample(java.lang.Integer)
 	 */
 	@Override
 	public LabTestSample getLabTestSample(Integer labTestSampleId) {
@@ -344,7 +336,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestSampleByUuid(java.lang.String)
+	 * @see CommonLabTestDAO#getLabTestSampleByUuid(java.lang.String)
 	 */
 	@Override
 	public LabTestSample getLabTestSampleByUuid(String uuid) {
@@ -354,7 +346,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest,
+	 * @see CommonLabTestDAO#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest,
 	 *      boolean)
 	 */
 	@Override
@@ -370,11 +362,10 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestSamples(org.openmrs.Patient,
-	 *      boolean)
+	 * @see CommonLabTestDAO#getLabTestSamples(org.openmrs.Patient, boolean)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "deprecation"})
 	public List<LabTestSample> getLabTestSamples(Patient patient, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
 
@@ -397,8 +388,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestSamples(org.openmrs.Patient,
-	 *      boolean)
+	 * @see CommonLabTestDAO#getLabTestSamples(org.openmrs.Patient, boolean)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -413,7 +403,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestType(java.lang.Integer)
+	 * @see CommonLabTestDAO#getLabTestType(java.lang.Integer)
 	 */
 	@Override
 	public LabTestType getLabTestType(Integer labTestTypeId) {
@@ -421,7 +411,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getLabTestTypeByUuid(java.lang.String)
+	 * @see CommonLabTestDAO#getLabTestTypeByUuid(java.lang.String)
 	 */
 	@Override
 	public LabTestType getLabTestTypeByUuid(String uuid) {
@@ -431,11 +421,11 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getNLabTests(org.openmrs.Patient,
-	 *      int, boolean, boolean, boolean)
+	 * @see CommonLabTestDAO#getNLabTests(org.openmrs.Patient, int, boolean,
+	 *      boolean, boolean)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "deprecation"})
 	public List<LabTest> getNLabTests(Patient patient, int n, boolean firstNObjects, boolean lastNObjects,
 			boolean includeVoided) {
 		// Disallow fetching more than 100 records per query
@@ -472,12 +462,12 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#getNLabTestSamples(org.openmrs.Patient,
+	 * @see CommonLabTestDAO#getNLabTestSamples(org.openmrs.Patient,
 	 *      org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus, int,
 	 *      boolean, boolean, boolean)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "deprecation"})
 	public List<LabTestSample> getNLabTestSamples(Patient patient, LabTestSampleStatus status, int n,
 			boolean firstNObjects, boolean lastNObjects, boolean includeVoided) {
 		// Disallow fetching more than 100 records per query
@@ -518,7 +508,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#purgeLabTest(org.openmrs.module.commonlabtest.LabTest)
+	 * @see CommonLabTestDAO#purgeLabTest(org.openmrs.module.commonlabtest.LabTest)
 	 */
 	@Override
 	public void purgeLabTest(LabTest labTest) {
@@ -526,7 +516,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#purgeLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)
+	 * @see CommonLabTestDAO#purgeLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)
 	 */
 	@Override
 	public void purgeLabTestAttribute(LabTestAttribute labTestAttribute) {
@@ -534,7 +524,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#purgeLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)
+	 * @see CommonLabTestDAO#purgeLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)
 	 */
 	@Override
 	public void purgeLabTestAttributeType(LabTestAttributeType labTestAttributeType) {
@@ -542,7 +532,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#purgeLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)
+	 * @see CommonLabTestDAO#purgeLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)
 	 */
 	@Override
 	public void purgeLabTestSample(LabTestSample labTestSample) {
@@ -550,7 +540,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#purgeLabTestType(org.openmrs.module.commonlabtest.LabTestType)
+	 * @see CommonLabTestDAO#purgeLabTestType(org.openmrs.module.commonlabtest.LabTestType)
 	 */
 	@Override
 	public void purgeLabTestType(LabTestType labTestType) {
@@ -562,7 +552,8 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	 * exits, it is NOT overridden because Order objects are immutable
 	 * 
 	 * @param order
-	 * @return
+	 *            the {@link org.openmrs.Order} object to save
+	 * @return saved {@link org.openmrs.Order} object
 	 */
 	public org.openmrs.Order saveLabTestOrder(org.openmrs.Order order) {
 		OrderType expectedOrderType = order.getOrderType();
@@ -583,7 +574,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#saveLabTest(org.openmrs.module.commonlabtest.LabTest)
+	 * @see CommonLabTestDAO#saveLabTest(org.openmrs.module.commonlabtest.LabTest)
 	 */
 	@Override
 	public LabTest saveLabTest(LabTest labTest) {
@@ -596,7 +587,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#saveLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)
+	 * @see CommonLabTestDAO#saveLabTestAttribute(org.openmrs.module.commonlabtest.LabTestAttribute)
 	 */
 	@Override
 	public LabTestAttribute saveLabTestAttribute(LabTestAttribute labTestAttribute) {
@@ -606,7 +597,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#saveLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)
+	 * @see CommonLabTestDAO#saveLabTestAttributeType(org.openmrs.module.commonlabtest.LabTestAttributeType)
 	 */
 	@Override
 	public LabTestAttributeType saveLabTestAttributeType(LabTestAttributeType labTestAttributeType) {
@@ -615,7 +606,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#saveLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)
+	 * @see CommonLabTestDAO#saveLabTestSample(org.openmrs.module.commonlabtest.LabTestSample)
 	 */
 	@Override
 	public LabTestSample saveLabTestSample(LabTestSample labTestSample) {
@@ -624,7 +615,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO#saveLabTestType(org.openmrs.module.commonlabtest.LabTestType)
+	 * @see CommonLabTestDAO#saveLabTestType(org.openmrs.module.commonlabtest.LabTestType)
 	 */
 	@Override
 	public LabTestType saveLabTestType(LabTestType labTestType) {

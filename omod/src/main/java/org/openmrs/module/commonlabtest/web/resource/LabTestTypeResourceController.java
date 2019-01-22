@@ -106,7 +106,8 @@ public class LabTestTypeResourceController extends MetadataDelegatingCrudResourc
 	}
 
 	/**
-	 * @param LabTestType
+	 * @param labTestType
+	 *            the {@link LabTestType} object
 	 * @return description as Display
 	 */
 	@Override

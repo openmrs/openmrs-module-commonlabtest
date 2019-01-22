@@ -47,7 +47,7 @@ public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTes
 	}
 
 	/**
-	 * @return {@link LabTest}
+	 * @return {@link LabTest} object
 	 */
 	public LabTest getLabTest() {
 		return getOwner();
@@ -55,6 +55,7 @@ public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTes
 
 	/**
 	 * @param labTest
+	 *            the {@link LabTest} object
 	 */
 	public void setLabTest(LabTest labTest) {
 		setOwner(labTest);

@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -22,6 +23,14 @@
 		<developerConnection>scm:git:git@github.com:openmrs/openmrs-module-commonlabtest.git</developerConnection>
 		<url>https://github.com/openmrs/openmrs-module-commonlabtest/</url>
 	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>bintray-seekme94-maven</id>
+			<name>seekme94-maven</name>
+			<url>https://api.bintray.com/maven/seekme94/maven/openmrs-module-commonlabtest/;publish=1</url>
+		</repository>
+	</distributionManagement>
 
 	<modules>
 		<module>api</module>
