@@ -38,19 +38,15 @@ import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 
 /**
- * This entity represents main Lab test, which manages test order. A Lab Test
- * has a LabTestType, has a reference in LabTestSample object and defines its
- * results as a set of attributes of type LabTestAttribute. This class extends
- * BaseCustomizableData to inherit the properties of Attributes
+ * This entity represents main Lab test, which manages test order. A Lab Test has a LabTestType, has
+ * a reference in LabTestSample object and defines its results as a set of attributes of type
+ * LabTestAttribute. This class extends BaseCustomizableData to inherit the properties of Attributes
  * 
  * @author owais.hussain@ihsinformatics.com
  */
 @Entity(name = "commonlabtest.LabTest")
 @Table(name = "commonlabtest_test")
-public class LabTest extends BaseCustomizableData<LabTestAttribute>
-		implements
-			java.io.Serializable,
-			Attributable<LabTest> {
+public class LabTest extends BaseCustomizableData<LabTestAttribute> implements java.io.Serializable, Attributable<LabTest> {
 
 	private static final long serialVersionUID = 2561859108258402721L;
 
@@ -89,9 +85,8 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 	}
 
 	/**
-	 * @param order
-	 *            since {@link LabTest} has one-to-one identifying relationship with
-	 *            {@link Order} class
+	 * @param order since {@link LabTest} has one-to-one identifying relationship with {@link Order}
+	 *            class
 	 */
 	public LabTest(Order order) {
 		setTestOrderId(order.getId());
@@ -135,15 +130,15 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 	 * Finds a list of LabTest objects from Lab reference number. Also @see
 	 * org.openmrs.Attributable#findPossibleValues(java.lang.String)
 	 * 
-	 * @param referenceNumber
-	 *            the reference number
+	 * @param referenceNumber the reference number
 	 * @return {@link LabTest} object(s)
 	 */
 	@Override
 	public List<LabTest> findPossibleValues(String referenceNumber) {
 		try {
 			return Context.getService(CommonLabTestService.class).getLabTests(referenceNumber, false);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			return Collections.emptyList();
 		}
 	}
@@ -154,8 +149,8 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 	}
 
 	/**
-	 * Always returns an empty list because returning complete list of all LabTests
-	 * will be burdensome. Also @see org.openmrs.Attributable#getPossibleValues()
+	 * Always returns an empty list because returning complete list of all LabTests will be burdensome.
+	 * Also @see org.openmrs.Attributable#getPossibleValues()
 	 * 
 	 * @return {@link LabTest} object(s)
 	 */
@@ -165,12 +160,10 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 	}
 
 	/**
-	 * Searches LabTest object by given UUID and returns the matching object. If the
-	 * object is not found, a new object is returned. Also @see
-	 * org.openmrs.Attributable#hydrate(java.lang.String)
+	 * Searches LabTest object by given UUID and returns the matching object. If the object is not
+	 * found, a new object is returned. Also @see org.openmrs.Attributable#hydrate(java.lang.String)
 	 * 
-	 * @param uuid
-	 *            the unique Id
+	 * @param uuid the unique Id
 	 * @return {@link LabTest} object
 	 */
 	@Override
@@ -182,17 +175,17 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 				throw new Exception();
 			}
 			return labTest;
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			return new LabTest();
 		}
 	}
 
 	/**
-	 * Searches LabTest object by given Id and returns the matching object. If the
-	 * object is not found, a new object is returned.
+	 * Searches LabTest object by given Id and returns the matching object. If the object is not found,
+	 * a new object is returned.
 	 * 
-	 * @param labTestId
-	 *            the Id
+	 * @param labTestId the Id
 	 * @return {@link LabTest} object
 	 */
 	public LabTest hydrate(Integer labTestId) {
@@ -203,7 +196,8 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 				throw new Exception();
 			}
 			return labTest;
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			return new LabTest();
 		}
 	}
@@ -261,11 +255,10 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 	}
 
 	/**
-	 * Add a {@link LabTestSample} to existing set. A duplicate object will be
-	 * skipped without any exception
+	 * Add a {@link LabTestSample} to existing set. A duplicate object will be skipped without any
+	 * exception
 	 * 
-	 * @param labTestSample
-	 *            the {@link LabTestSample} object
+	 * @param labTestSample the {@link LabTestSample} object
 	 */
 	public void addLabTestSample(LabTestSample labTestSample) {
 		if (labTestSample != null) {
@@ -303,8 +296,7 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute>
 	}
 
 	/**
-	 * @param status
-	 *            the {@link LabTestSampleStatus} object
+	 * @param status the {@link LabTestSampleStatus} object
 	 * @return the {@link LabTestSample} object
 	 */
 	public LabTestSample getLabTestSample(LabTestSampleStatus status) {

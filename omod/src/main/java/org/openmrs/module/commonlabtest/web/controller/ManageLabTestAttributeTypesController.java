@@ -26,7 +26,7 @@ public class ManageLabTestAttributeTypesController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String showLabTestAttributeTypes(@RequestParam(required = false) String save, ModelMap model) {
 		List<LabTestAttributeType> list = Context.getService(CommonLabTestService.class)
-				.getAllLabTestAttributeTypes(Boolean.FALSE);
+		        .getAllLabTestAttributeTypes(Boolean.FALSE);
 		model.put("labTestAttributeTypes", list);
 		model.addAttribute("status", save);
 		return SUCCESS_FORM_VIEW;

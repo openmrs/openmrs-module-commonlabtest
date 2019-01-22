@@ -43,11 +43,11 @@ public class LabTestResultViewController {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		try {
 			for (LabTestAttributeType attribut : commonLabTestService.getLabTestAttributeTypes(labTest.getLabTestType(),
-					Boolean.TRUE)) {
+			    Boolean.TRUE)) {
 				for (int i = 0; i < testAttributes.size(); i++) {
 					if (!testAttributes.get(i).getVoided()) {
 						if (testAttributes.get(i).getAttributeType().getLabTestAttributeTypeId() == attribut
-								.getLabTestAttributeTypeId()) {
+						        .getLabTestAttributeTypeId()) {
 							testAttributes.get(i).setAttributeType(attribut);
 						}
 					}
@@ -65,10 +65,11 @@ public class LabTestResultViewController {
 			if (testAttributes != null && !testAttributes.isEmpty()) {
 				LabTestAttributeType labTestAttributeType = testAttributes.get(0).getAttributeType();
 				List<LabTestAttributeType> labTestAttributeTypes = commonLabTestService
-						.getLabTestAttributeTypes(labTestAttributeType.getLabTestType(), Boolean.FALSE);
+				        .getLabTestAttributeTypes(labTestAttributeType.getLabTestType(), Boolean.FALSE);
 				testResultArray = getAttributeTypeList(labTestAttributeTypes, testOrderId, testAttributes);
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			testResultList.add("sample", testSampleArray);
 			testResultList.add("result", testResultArray);
 		}
@@ -86,7 +87,7 @@ public class LabTestResultViewController {
 		testSample = commonLabTestService.getLabTestSamples(labTest, Boolean.FALSE);
 		for (LabTestSample labTestSample : testSample) {
 			if (labTestSample.getStatus().equals(LabTestSampleStatus.ACCEPTED)
-					|| labTestSample.getStatus().equals(LabTestSampleStatus.PROCESSED)) {
+			        || labTestSample.getStatus().equals(LabTestSampleStatus.PROCESSED)) {
 				return Boolean.TRUE;
 			}
 		}
@@ -118,7 +119,7 @@ public class LabTestResultViewController {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestType labTestType = commonLabTestService.getLabTestType(testTypeId);
 		List<LabTestAttributeType> labTestAttributeType = commonLabTestService.getLabTestAttributeTypes(labTestType,
-				Boolean.FALSE);
+		    Boolean.FALSE);
 
 		JsonObject testAttributeList = new JsonObject();
 		JsonArray testAttributeArray = new JsonArray();
@@ -146,7 +147,8 @@ public class LabTestResultViewController {
 					isExist = true;
 				}
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 			return isExist;
 		}
@@ -157,9 +159,11 @@ public class LabTestResultViewController {
 	public static boolean isInteger(String s) {
 		try {
 			Integer.parseInt(s);
-		} catch (NumberFormatException e) {
+		}
+		catch (NumberFormatException e) {
 			return false;
-		} catch (NullPointerException e) {
+		}
+		catch (NullPointerException e) {
 			return false;
 		}
 		// only got here if we didn't return false
@@ -167,7 +171,7 @@ public class LabTestResultViewController {
 	}
 
 	public JsonArray getAttributeTypeList(List<LabTestAttributeType> labTestAttributeTypeList, int testOrderId,
-			List<LabTestAttribute> labTestAttributes) {
+	        List<LabTestAttribute> labTestAttributes) {
 		List<String> holderGroupIdList = new ArrayList<String>();
 		JsonArray parentJsonArray = new JsonArray();
 		JsonObject labTestGroupObj;
@@ -182,10 +186,10 @@ public class LabTestResultViewController {
 				holderGroupIdList.add(labTestAttributeType.getGroupName());
 				labTestGroupObj.addProperty("groupName", labTestAttributeType.getGroupName());
 				List<LabTestAttributeType> groupLabTestATList = getFilterAttributeTypes(labTestAttributeType,
-						labTestAttributeTypeList);
+				    labTestAttributeTypeList);
 				for (LabTestAttributeType labTestAttributeTypeResults : groupLabTestATList) {
 					LabTestAttribute labTestAttributeResult = getFilterAttribute(labTestAttributeTypeResults,
-							labTestAttributes);
+					    labTestAttributes);
 					jsonGroupArray.add(getLabTestAttributeObj(labTestAttributeResult));
 				}
 				labTestGroupObj.add("groups", jsonGroupArray);
@@ -200,12 +204,12 @@ public class LabTestResultViewController {
 	}
 
 	private LabTestAttribute getFilterAttribute(LabTestAttributeType labTestAttributeType,
-			List<LabTestAttribute> LabTestAttribute) {
+	        List<LabTestAttribute> LabTestAttribute) {
 		LabTestAttribute labTestAttributeResult = new LabTestAttribute();
 		if (!LabTestAttribute.isEmpty()) {
 			for (LabTestAttribute filterLabTestAttribute : LabTestAttribute) {
 				if (labTestAttributeType.getLabTestAttributeTypeId() == filterLabTestAttribute.getAttributeType()
-						.getLabTestAttributeTypeId()) {
+				        .getLabTestAttributeTypeId()) {
 					labTestAttributeResult = filterLabTestAttribute;
 					break;
 				}
@@ -215,7 +219,7 @@ public class LabTestResultViewController {
 	}
 
 	private List<LabTestAttributeType> getFilterAttributeTypes(LabTestAttributeType labTestAttributeType,
-			List<LabTestAttributeType> listLabTestAttributeType) {
+	        List<LabTestAttributeType> listLabTestAttributeType) {
 		List<LabTestAttributeType> filterLabTestAttributeTypes = new ArrayList<LabTestAttributeType>();
 		if (!listLabTestAttributeType.isEmpty()) {
 			for (LabTestAttributeType filterLabTestAttributeType : listLabTestAttributeType) {
@@ -234,16 +238,16 @@ public class LabTestResultViewController {
 		JsonObject objTestResult = new JsonObject();
 		if (labTestAttribute != null) {
 			if (labTestAttribute.getAttributeType().getDatatypeClassname()
-					.equals("org.openmrs.customdatatype.datatype.ConceptDatatype")) {
+			        .equals("org.openmrs.customdatatype.datatype.ConceptDatatype")) {
 				objTestResult.addProperty("question", labTestAttribute.getAttributeType().getName());
 				boolean isTrue = isInteger(labTestAttribute.getAttributeType().getDatatypeConfig());
 				if (isTrue) {
 					Concept conceptConfig = Context.getConceptService()
-							.getConcept(Integer.parseInt(labTestAttribute.getAttributeType().getDatatypeConfig()));
+					        .getConcept(Integer.parseInt(labTestAttribute.getAttributeType().getDatatypeConfig()));
 					if (conceptConfig != null) {
 						if (conceptConfig.getDatatype().getName().equals("Coded")) {
 							Concept concept = Context.getConceptService()
-									.getConcept(Integer.parseInt(labTestAttribute.getValueReference()));
+							        .getConcept(Integer.parseInt(labTestAttribute.getValueReference()));
 							objTestResult.addProperty("valuesReference", concept.getName().getName());
 						} else {
 							objTestResult.addProperty("valuesReference", labTestAttribute.getValueReference());

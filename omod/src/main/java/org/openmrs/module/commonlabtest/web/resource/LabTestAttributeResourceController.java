@@ -26,8 +26,8 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-		+ "/commonlab/labtestattribute", supportedClass = LabTestAttribute.class, supportedOpenmrsVersions = {
-				"2.0.*,2.1.*"})
+        + "/commonlab/labtestattribute", supportedClass = LabTestAttribute.class, supportedOpenmrsVersions = {
+                "2.0.*,2.1.*" })
 public class LabTestAttributeResourceController extends DataDelegatingCrudResource<LabTestAttribute> {
 
 	/**
@@ -84,7 +84,7 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 
 	@Override
 	protected void delete(LabTestAttribute labTestAttribute, String s, RequestContext requestContext)
-			throws ResponseException {
+	        throws ResponseException {
 		commonLabTestService.voidLabTestAttribute(labTestAttribute, s);
 	}
 
@@ -117,8 +117,7 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 	}
 
 	/**
-	 * @param attribute
-	 *            the {@link LabTestAttribute} object
+	 * @param attribute the {@link LabTestAttribute} object
 	 * @return valueReference as display
 	 */
 	@PropertyGetter("display")
@@ -129,24 +128,22 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 	}
 
 	/**
-	 * @param attribute
-	 *            {@link LabTestAttribute} object
+	 * @param attribute {@link LabTestAttribute} object
 	 * @return valueReference
 	 */
 	@PropertyGetter("valueReference")
 	public String getValueReference(LabTestAttribute attribute) {
 		try {
 			return attribute.getValueReference();
-		} catch (NotYetPersistedException ex) {
+		}
+		catch (NotYetPersistedException ex) {
 			return null;
 		}
 	}
 
 	/**
-	 * @param instance
-	 *            the {@link LabTestAttribute} object
-	 * @param valueReference
-	 *            the valueReference to set
+	 * @param instance the {@link LabTestAttribute} object
+	 * @param valueReference the valueReference to set
 	 */
 	@PropertySetter("valueReference")
 	public static void setValueReference(LabTestAttribute instance, String valueReference) {

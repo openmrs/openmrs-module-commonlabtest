@@ -31,8 +31,8 @@ public class ManageLabTestSampleController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/manageLabTestSamples.form")
 	public String showLabTestSample(HttpServletRequest request, @RequestParam(required = true) Integer patientId,
-			@RequestParam(required = false) Integer testOrderId, @RequestParam(required = false) String save,
-			ModelMap model) {
+	        @RequestParam(required = false) Integer testOrderId, @RequestParam(required = false) String save,
+	        ModelMap model) {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		List<LabTestSample> testSample;
 		if (testOrderId == null) {
@@ -47,7 +47,7 @@ public class ManageLabTestSampleController {
 				return "redirect:../../patientDashboard.form?patientId=" + patientId;
 			}
 			testSample = commonLabTestService.getLabTestSamples(labTest, Boolean.FALSE);// need to check this get sample
-																						// method...
+			                                                                            // method...
 		}
 
 		for (LabTestSample labTestSample : testSample) {
@@ -68,9 +68,9 @@ public class ManageLabTestSampleController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/statuslabtestsample.form")
 	public String onStatuChange(ModelMap model, HttpSession httpSession, HttpServletRequest request,
-			@RequestParam("uuid") String uuid, @RequestParam("patientId") String patientId,
-			@RequestParam(value = "rejectedReason", required = false) String rejectedReason,
-			@RequestParam(value = "isAccepted", required = false) String isAccepted) {
+	        @RequestParam("uuid") String uuid, @RequestParam("patientId") String patientId,
+	        @RequestParam(value = "rejectedReason", required = false) String rejectedReason,
+	        @RequestParam(value = "isAccepted", required = false) String isAccepted) {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestSample labTestSample = commonLabTestService.getLabTestSampleByUuid(uuid);
 		String status;
@@ -87,17 +87,18 @@ public class ManageLabTestSampleController {
 			StringBuilder sb = new StringBuilder();
 			sb.append("Lab Test Sample is updated");
 			status = sb.toString();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 			status = "Error! could not save Lab Test Sample.";
 			model.addAttribute("error", status);
 			return "redirect:manageLabTestSamples.form?patientId=" + patientId + "&testOrderId="
-					+ labTestSample.getLabTest().getTestOrderId();
+			        + labTestSample.getLabTest().getTestOrderId();
 
 		}
 		model.addAttribute("save", status);
 		return "redirect:manageLabTestSamples.form?patientId=" + patientId + "&testOrderId="
-				+ labTestSample.getLabTest().getTestOrderId();
+		        + labTestSample.getLabTest().getTestOrderId();
 	}
 
 }

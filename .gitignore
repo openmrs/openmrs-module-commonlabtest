@@ -5,6 +5,7 @@
 .project
 *.sass-cache
 target
+doc
 .java-version
 *.releaseBackup
 release.properties
@@ -21,8 +22,10 @@ api/.classpath
 api/.project
 api/.settings/*
 api/target/*
+api/doc/*
 omod/.classpath
 omod/.project
 omod/.settings/*
 omod/target/*
+omod/doc/*
 /.settings

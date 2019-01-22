@@ -23,8 +23,8 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-		+ "/commonlab/labtestattributetype", supportedClass = LabTestAttributeType.class, supportedOpenmrsVersions = {
-				"2.0.*,2.1.*"})
+        + "/commonlab/labtestattributetype", supportedClass = LabTestAttributeType.class, supportedOpenmrsVersions = {
+                "2.0.*,2.1.*" })
 public class LabTestAttributeTypeResourceController extends MetadataDelegatingCrudResource<LabTestAttributeType> {
 
 	/**
@@ -50,8 +50,7 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 	}
 
 	@Override
-	public void purge(LabTestAttributeType labTestAttributeType, RequestContext requestContext)
-			throws ResponseException {
+	public void purge(LabTestAttributeType labTestAttributeType, RequestContext requestContext) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
 
@@ -125,8 +124,7 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 	}
 
 	/**
-	 * @param labTestAttributeType
-	 *            the {@link LabTestAttributeType} object
+	 * @param labTestAttributeType the {@link LabTestAttributeType} object
 	 * @return description as Display
 	 */
 	@Override

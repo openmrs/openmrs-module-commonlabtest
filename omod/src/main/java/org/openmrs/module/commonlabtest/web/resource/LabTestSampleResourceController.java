@@ -19,7 +19,7 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-		+ "/commonlab/labtestsample", supportedClass = LabTestSample.class, supportedOpenmrsVersions = {"2.0.*,2.1.*"})
+        + "/commonlab/labtestsample", supportedClass = LabTestSample.class, supportedOpenmrsVersions = { "2.0.*,2.1.*" })
 public class LabTestSampleResourceController extends DataDelegatingCrudResource<LabTestSample> {
 
 	/**
@@ -35,8 +35,7 @@ public class LabTestSampleResourceController extends DataDelegatingCrudResource<
 	}
 
 	@Override
-	protected void delete(LabTestSample labTestSample, String s, RequestContext requestContext)
-			throws ResponseException {
+	protected void delete(LabTestSample labTestSample, String s, RequestContext requestContext) throws ResponseException {
 		commonLabTestService.voidLabTestSample(labTestSample, s);
 	}
 
@@ -122,8 +121,7 @@ public class LabTestSampleResourceController extends DataDelegatingCrudResource<
 	}
 
 	/**
-	 * @param sample
-	 *            the {@link LabTestSample} object
+	 * @param sample the {@link LabTestSample} object
 	 * @return getSampleIdentifier as Display
 	 */
 	@PropertyGetter("display")

@@ -38,7 +38,7 @@ public class LabTestTypeController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestType.form")
 	public String showForm(ModelMap model, @RequestParam(value = "uuid", required = false) String uuid,
-			@RequestParam(value = "error", required = false) String error) {
+	        @RequestParam(value = "error", required = false) String error) {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestType testType;
 		if (uuid == null || uuid.equalsIgnoreCase("")) {
@@ -57,9 +57,7 @@ public class LabTestTypeController {
 			json.addProperty("id", c.getId() + "");
 			json.addProperty("name", c.getName() != null ? c.getName().getName() : "");
 			json.addProperty("shortName",
-					c.getShortNameInLocale(Locale.ENGLISH) != null
-							? c.getShortNameInLocale(Locale.ENGLISH).getName()
-							: "");
+			    c.getShortNameInLocale(Locale.ENGLISH) != null ? c.getShortNameInLocale(Locale.ENGLISH).getName() : "");
 			json.addProperty("description", c.getDescription() != null ? c.getDescription().getDescription() : "");
 			jsonArray.add(json);
 		}
@@ -70,8 +68,8 @@ public class LabTestTypeController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/addLabTestType.form")
 	public String onSubmit(ModelMap model, HttpSession httpSession,
-			@ModelAttribute("anyRequestObject") Object anyRequestObject, HttpServletRequest request,
-			@ModelAttribute("labTestType") LabTestType labTestType, BindingResult result) {
+	        @ModelAttribute("anyRequestObject") Object anyRequestObject, HttpServletRequest request,
+	        @ModelAttribute("labTestType") LabTestType labTestType, BindingResult result) {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status = "";
 		if (Context.getAuthenticatedUser() == null) {
@@ -93,7 +91,8 @@ public class LabTestTypeController {
 				sb.append(labTestType.getUuid());
 				sb.append(" is  saved!");
 				status = sb.toString();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				status = "could not save Lab Test Type.";
 				e.printStackTrace();
 				model.addAttribute("error", status);
@@ -110,7 +109,7 @@ public class LabTestTypeController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/retirelabtesttype.form")
 	public String onRetire(ModelMap model, HttpSession httpSession, HttpServletRequest request,
-			@RequestParam("uuid") String uuid, @RequestParam("retireReason") String retireReason) {
+	        @RequestParam("uuid") String uuid, @RequestParam("retireReason") String retireReason) {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestType labTestType = commonLabTestService.getLabTestTypeByUuid(uuid);
 		String status;
@@ -124,7 +123,8 @@ public class LabTestTypeController {
 			sb.append(labTestType.getUuid());
 			sb.append(" is permanently retired!");
 			status = sb.toString();
-		} catch (Exception exception) {
+		}
+		catch (Exception exception) {
 			status = "could not retire Lab Test Type.";
 			exception.printStackTrace();
 			model.addAttribute("error", status);
@@ -140,7 +140,7 @@ public class LabTestTypeController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/deletelabtesttype.form")
 	public String onDelete(ModelMap model, HttpSession httpSession, HttpServletRequest request,
-			@RequestParam("uuid") String uuid) {
+	        @RequestParam("uuid") String uuid) {
 		LabTestType labTestType = Context.getService(CommonLabTestService.class).getLabTestTypeByUuid(uuid);
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status;
@@ -151,7 +151,8 @@ public class LabTestTypeController {
 			sb.append(labTestType.getUuid());
 			sb.append(" is permanently deleted!");
 			status = sb.toString();
-		} catch (Exception exception) {
+		}
+		catch (Exception exception) {
 			status = "could not delete Lab Test Type.";
 			exception.printStackTrace();
 			model.addAttribute("error", status);

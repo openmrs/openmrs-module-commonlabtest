@@ -49,8 +49,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	/**
 	 * Injected in moduleApplicationContext.xml
 	 * 
-	 * @param dao
-	 *            the {@link CommonLabTestDAO} object
+	 * @param dao the {@link CommonLabTestDAO} object
 	 */
 	public void setDao(CommonLabTestDAO dao) {
 		this.dao = dao;
@@ -147,7 +146,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, String valueReference,
-			Date from, Date to, boolean includeVoided) throws APIException {
+	        Date from, Date to, boolean includeVoided) throws APIException {
 		return dao.getLabTestAttributes(labTestAttributeType, valueReference, from, to, includeVoided);
 	}
 
@@ -158,7 +157,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, boolean includeVoided)
-			throws APIException {
+	        throws APIException {
 		return getLabTestAttributes(labTestAttributeType, null, null, null, includeVoided);
 	}
 
@@ -190,7 +189,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestAttribute> getLabTestAttributes(Patient patient, LabTestAttributeType labTestAttributeType,
-			boolean includeVoided) throws APIException {
+	        boolean includeVoided) throws APIException {
 		return dao.getLabTestAttributes(patient, labTestAttributeType, includeVoided);
 	}
 
@@ -220,8 +219,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional(readOnly = true)
-	public List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname,
-			boolean includeRetired) throws APIException {
+	public List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname, boolean includeRetired)
+	        throws APIException {
 		return dao.getLabTestAttributeTypes(name, datatypeClassname, includeRetired);
 	}
 
@@ -232,7 +231,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestAttributeType> getLabTestAttributeTypes(LabTestType labTestType, boolean includeRetired)
-			throws APIException {
+	        throws APIException {
 		return dao.getLabTestAttributeTypes(labTestType, includeRetired);
 	}
 
@@ -284,8 +283,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestSample> getLabTestSamples(LabTest labTest, Patient patient, LabTestSampleStatus status,
-			String labSampleIdentifier, Provider collector, Date from, Date to, boolean includeVoided)
-			throws APIException {
+	        String labSampleIdentifier, Provider collector, Date from, Date to, boolean includeVoided) throws APIException {
 		// TODO
 		return null;
 	}
@@ -296,8 +294,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
 	@Transactional(readOnly = true)
-	public List<LabTestSample> getLabTestSamples(String labSampleIdentifier, String orderNumber,
-			String labReferenceNumber, boolean includeVoided) throws APIException {
+	public List<LabTestSample> getLabTestSamples(String labSampleIdentifier, String orderNumber, String labReferenceNumber,
+	        boolean includeVoided) throws APIException {
 		return getLabTestSamples(null, null, null, labSampleIdentifier, null, null, null, includeVoided);
 	}
 
@@ -339,7 +337,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestSample> getLabTestSamples(LabTestSampleStatus status, Date from, Date to, boolean includeVoided)
-			throws APIException {
+	        throws APIException {
 		return getLabTestSamples(null, null, status, null, null, from, to, includeVoided);
 	}
 
@@ -371,9 +369,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup,
-			final Boolean isSpecimenRequired, Concept referenceConcept, boolean includeRetired) throws APIException {
-		List<LabTestType> labTestTypes = dao.getLabTestTypes(name, shortName, testGroup, referenceConcept,
-				includeRetired);
+	        final Boolean isSpecimenRequired, Concept referenceConcept, boolean includeRetired) throws APIException {
+		List<LabTestType> labTestTypes = dao.getLabTestTypes(name, shortName, testGroup, referenceConcept, includeRetired);
 		if (isSpecimenRequired != null) {
 			for (Iterator<LabTestType> iterator = labTestTypes.iterator(); iterator.hasNext();) {
 				LabTestType labTestType = iterator.next();
@@ -392,11 +389,10 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Override
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
-	public List<LabTest> getLabTests(LabTestType labTestType, Patient patient, String orderNumber,
-			String referenceNumber, Concept orderConcept, Provider orderer, Date from, Date to, boolean includeVoided)
-			throws APIException {
+	public List<LabTest> getLabTests(LabTestType labTestType, Patient patient, String orderNumber, String referenceNumber,
+	        Concept orderConcept, Provider orderer, Date from, Date to, boolean includeVoided) throws APIException {
 		return dao.getLabTests(labTestType, patient, orderNumber, referenceNumber, orderConcept, orderer, from, to,
-				includeVoided);
+		    includeVoided);
 	}
 
 	/*
@@ -498,8 +494,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_PRIVILEGE)
 	@Transactional
-	public LabTest saveLabTest(LabTest labTest, LabTestSample labTestSample,
-			Collection<LabTestAttribute> labTestAttributes) throws APIException {
+	public LabTest saveLabTest(LabTest labTest, LabTestSample labTestSample, Collection<LabTestAttribute> labTestAttributes)
+	        throws APIException {
 		// Check mandatory fields
 		if (labTest.getOrder() == null) {
 			throw new APIException("org.openmrs.Order", (Object[]) null);
@@ -562,8 +558,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Override
 	@Authorized(CommonLabTestConfig.ADD_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
-	public LabTestAttributeType saveLabTestAttributeType(LabTestAttributeType labTestAttributeType)
-			throws APIException {
+	public LabTestAttributeType saveLabTestAttributeType(LabTestAttributeType labTestAttributeType) throws APIException {
 		return dao.saveLabTestAttributeType(labTestAttributeType);
 	}
 
@@ -589,16 +584,15 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	}
 
 	/**
-	 * This method disallows any modification in Unknown {@link LabTestType}. This
-	 * method must be called in before DML operations in any {@link LabTestType}
-	 * object
+	 * This method disallows any modification in Unknown {@link LabTestType}. This method must be called
+	 * in before DML operations in any {@link LabTestType} object
 	 * 
 	 * @param labTestType
 	 */
 	private void handleUnknownTestTypeOperation(LabTestType labTestType) {
 		if (labTestType.getUuid().equals(LabTestType.UNKNOWN_TEST_UUID)) {
-			throw new UnchangeablePropertyException("The LabTestType: UNKNOWN " + LabTestType.UNKNOWN_TEST_UUID
-					+ " is mandatory, and cannot be altered.");
+			throw new UnchangeablePropertyException(
+			        "The LabTestType: UNKNOWN " + LabTestType.UNKNOWN_TEST_UUID + " is mandatory, and cannot be altered.");
 		}
 	}
 
@@ -627,7 +621,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
 	public void retireLabTestAttributeType(LabTestAttributeType labTestAttributeType, String retireReason)
-			throws APIException {
+	        throws APIException {
 		if (labTestAttributeType.getRetired()) {
 			throw new APIException("Object has alread been retired.");
 		}
@@ -658,8 +652,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Transactional
 	public void unretireLabTestAttributeType(LabTestAttributeType labTestAttributeType) throws APIException {
 		labTestAttributeType.setRetired(Boolean.FALSE);
-		labTestAttributeType
-				.setRetireReason("Previously retired for reason: " + labTestAttributeType.getRetireReason());
+		labTestAttributeType.setRetireReason("Previously retired for reason: " + labTestAttributeType.getRetireReason());
 		dao.saveLabTestAttributeType(labTestAttributeType);
 	}
 
@@ -753,8 +746,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	public void unvoidLabTest(LabTest labTest) throws APIException {
 		for (LabTestSample sample : labTest.getLabTestSamples()) {
 			boolean reasonMatched = sample.getVoidReason().equals(labTest.getVoidReason());
-			boolean dateMatched = DateUtil.truncateToSeconds(labTest.getDateVoided())
-					.compareTo(sample.getDateVoided()) == 0;
+			boolean dateMatched = DateUtil.truncateToSeconds(labTest.getDateVoided()).compareTo(sample.getDateVoided()) == 0;
 			if (reasonMatched && dateMatched) {
 				unvoidLabTestSample(sample);
 			}
@@ -762,7 +754,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		for (LabTestAttribute attribute : labTest.getAttributes()) {
 			boolean reasonMatched = attribute.getVoidReason().equals(labTest.getVoidReason());
 			boolean dateMatched = DateUtil.truncateToSeconds(labTest.getDateVoided())
-					.compareTo(attribute.getDateVoided()) == 0;
+			        .compareTo(attribute.getDateVoided()) == 0;
 			if (reasonMatched && dateMatched) {
 				unvoidLabTestAttribute(attribute);
 			}
@@ -833,14 +825,14 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Override
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_METADATA_PRIVILEGE)
 	@Transactional
-	public void deleteLabTestAttributeType(LabTestAttributeType labTestAttributeType, boolean cascade)
-			throws APIException {
+	public void deleteLabTestAttributeType(LabTestAttributeType labTestAttributeType, boolean cascade) throws APIException {
 		if (cascade) {
 			List<LabTestAttribute> labTestAttributes = getLabTestAttributes(labTestAttributeType, true);
 			for (LabTestAttribute labTestAttribute : labTestAttributes) {
 				try {
 					dao.purgeLabTestAttribute(labTestAttribute);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					throw new APIException(e.getMessage());
 				}
 			}
@@ -913,16 +905,15 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	}
 
 	/**
-	 * This method changes the {@link LabTestType} object in respective
-	 * {@link LabTest} and {@link LabTestAttributeType} dependencies, and
-	 * voides/retires them afterwards with given message
+	 * This method changes the {@link LabTestType} object in respective {@link LabTest} and
+	 * {@link LabTestAttributeType} dependencies, and voides/retires them afterwards with given message
 	 * 
 	 * @param labTestType
 	 * @param newObjectForCascade
 	 * @param voidMessage
 	 */
 	private void handleLabTestTypeDependencies(LabTestType labTestType, LabTestType newObjectForCascade,
-			String voidMessage) {
+	        String voidMessage) {
 		List<LabTest> labTests = getLabTests(labTestType, true);
 		if (labTests != null) {
 			for (LabTest labTest : labTests) {

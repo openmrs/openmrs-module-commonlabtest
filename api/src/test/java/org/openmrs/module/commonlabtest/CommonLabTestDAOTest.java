@@ -33,11 +33,10 @@ import org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * It is an integration test (extends BaseModuleContextSensitiveTest), which
- * verifies DAO methods against the in-memory H2 database. The database is
- * initially loaded with data from standardTestDataset.xml in openmrs-api. All
- * test methods are executed in transactions, which are rolled back by the end
- * of each test method.
+ * It is an integration test (extends BaseModuleContextSensitiveTest), which verifies DAO methods
+ * against the in-memory H2 database. The database is initially loaded with data from
+ * standardTestDataset.xml in openmrs-api. All test methods are executed in transactions, which are
+ * rolled back by the end of each test method.
  */
 public class CommonLabTestDAOTest extends CommonLabTestBase {
 
@@ -125,8 +124,8 @@ public class CommonLabTestDAOTest extends CommonLabTestBase {
 	public final void testGetLabTestAttributesByPatient() {
 		Context.clearSession();
 		List<LabTestAttribute> list = dao.getLabTestAttributes(harry, null, false);
-		assertThat(list, Matchers.hasItems(harryCartridgeId, harryMtbResult, harryRifResult, harryCxrResult,
-				harryRadiologistRemarks));
+		assertThat(list,
+		    Matchers.hasItems(harryCartridgeId, harryMtbResult, harryRifResult, harryCxrResult, harryRadiologistRemarks));
 	}
 
 	@Test
@@ -145,11 +144,11 @@ public class CommonLabTestDAOTest extends CommonLabTestBase {
 	@Test
 	public final void testGetLabTestAttributeTypes() {
 		List<LabTestAttributeType> classNameList = dao.getLabTestAttributeTypes(null,
-				"org.openmrs.customdatatype.datatype.FreeTextDatatype", false);
+		    "org.openmrs.customdatatype.datatype.FreeTextDatatype", false);
 		assertThat(classNameList, Matchers.hasSize(2));
 
 		List<LabTestAttributeType> classNameListRetired = dao.getLabTestAttributeTypes(null,
-				"org.openmrs.customdatatype.datatype.FloatDatatype", true);
+		    "org.openmrs.customdatatype.datatype.FloatDatatype", true);
 		assertThat(classNameListRetired, Matchers.hasSize(1));
 
 		List<LabTestAttributeType> nameListRetired = dao.getLabTestAttributeTypes("CAD4TB Score", null, true);
@@ -159,7 +158,7 @@ public class CommonLabTestDAOTest extends CommonLabTestBase {
 		assertThat(nameList, Matchers.hasSize(1));
 
 		List<LabTestAttributeType> nameWithClassNameListRetired = dao.getLabTestAttributeTypes("CAD4TB Score",
-				"org.openmrs.customdatatype.datatype.FloatDatatype", true);
+		    "org.openmrs.customdatatype.datatype.FloatDatatype", true);
 		assertThat(nameWithClassNameListRetired, Matchers.hasSize(1));
 
 	}
@@ -229,8 +228,8 @@ public class CommonLabTestDAOTest extends CommonLabTestBase {
 	public final void testGetNLabTestSamples() {
 		List<LabTestSample> samples = dao.getNLabTestSamples(harry, null, 2, true, false, false);
 		assertThat(samples, Matchers.hasItem(harrySample));
-		List<LabTestSample> processedSamples = dao.getNLabTestSamples(harry, LabTestSampleStatus.PROCESSED, 2, true,
-				false, false);
+		List<LabTestSample> processedSamples = dao.getNLabTestSamples(harry, LabTestSampleStatus.PROCESSED, 2, true, false,
+		    false);
 		assertThat(processedSamples, Matchers.hasItem(harrySample));
 		assertThat(processedSamples, Matchers.hasSize(1));
 		assertEquals(processedSamples.get(0).getStatus(), LabTestSampleStatus.PROCESSED);
@@ -373,7 +372,7 @@ public class CommonLabTestDAOTest extends CommonLabTestBase {
 		labTestAttribute.setValueReferenceInternal("2018-10-03");
 		LabTestAttribute resultLabTestAttribute = dao.saveLabTestAttribute(labTestAttribute);
 		assertThat(resultLabTestAttribute,
-				Matchers.hasProperty("uuid", org.hamcrest.Matchers.is(resultLabTestAttribute.getUuid())));
+		    Matchers.hasProperty("uuid", org.hamcrest.Matchers.is(resultLabTestAttribute.getUuid())));
 	}
 
 	@Test
@@ -394,7 +393,7 @@ public class CommonLabTestDAOTest extends CommonLabTestBase {
 		LabTestAttributeType savedAttributeType = dao.getLabTestAttributeTypeByUuid(attributeType.getUuid());
 		assertThat(savedAttributeType, Matchers.hasProperty("uuid", org.hamcrest.Matchers.is(attributeType.getUuid())));
 		assertThat(savedAttributeType,
-				Matchers.hasProperty("creator", org.hamcrest.Matchers.is(attributeType.getCreator())));
+		    Matchers.hasProperty("creator", org.hamcrest.Matchers.is(attributeType.getCreator())));
 	}
 
 	@Test
@@ -412,8 +411,7 @@ public class CommonLabTestDAOTest extends CommonLabTestBase {
 		Context.clearSession();
 		LabTestSample savedLabTestSample = dao.getLabTestSample(testSample.getId());
 		assertThat(savedLabTestSample, Matchers.hasProperty("uuid", org.hamcrest.Matchers.is(testSample.getUuid())));
-		assertThat(savedLabTestSample,
-				Matchers.hasProperty("creator", org.hamcrest.Matchers.is(testSample.getCreator())));
+		assertThat(savedLabTestSample, Matchers.hasProperty("creator", org.hamcrest.Matchers.is(testSample.getCreator())));
 	}
 
 	@Test

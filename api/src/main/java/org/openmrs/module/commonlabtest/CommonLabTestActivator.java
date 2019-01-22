@@ -27,8 +27,7 @@ import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
 
 /**
- * This class contains the logic that is run every time this module is either
- * started or shutdown
+ * This class contains the logic that is run every time this module is either started or shutdown
  */
 public class CommonLabTestActivator extends BaseModuleActivator {
 
@@ -49,7 +48,7 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 	ConceptService conceptService;
 
 	File dir = OpenmrsUtil.getDirectoryInApplicationDataDirectory(
-			Context.getAdministrationService().getGlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_COMPLEX_OBS_DIR));
+	    Context.getAdministrationService().getGlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_COMPLEX_OBS_DIR));
 
 	Path path = Paths.get(dir.getPath() + "/commonLabTestFiles");
 
@@ -63,7 +62,8 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 		if (!Files.exists(path)) {
 			try {
 				Files.createDirectories(path);
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -100,7 +100,8 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 		if (!Files.exists(path)) {
 			try {
 				Files.createDirectories(path);
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

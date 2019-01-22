@@ -29,8 +29,8 @@ import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.Concept;
 
 /**
- * This entity represents types of Laboratory tests. A lab test type object is
- * prerequisite for LabTest, LabTestAttributeType and LabTestSample objects
+ * This entity represents types of Laboratory tests. A lab test type object is prerequisite for
+ * LabTest, LabTestAttributeType and LabTestSample objects
  * 
  * @author owais.hussain@ihsinformatics.com
  */
@@ -39,7 +39,20 @@ import org.openmrs.Concept;
 public class LabTestType extends BaseOpenmrsMetadata {
 
 	public enum LabTestGroup {
-		SEROLOGY, CARDIOLOGY, OPHTHALMOLOGY, BACTERIOLOGY, BIOCHEMISTRY, BLOOD_BANK, CYTOLOGY, HEMATOLOGY, IMMUNOLOGY, MICROBIOLOGY, RADIOLOGY, SONOLOGY, URINALYSIS, OTHER
+		SEROLOGY,
+		CARDIOLOGY,
+		OPHTHALMOLOGY,
+		BACTERIOLOGY,
+		BIOCHEMISTRY,
+		BLOOD_BANK,
+		CYTOLOGY,
+		HEMATOLOGY,
+		IMMUNOLOGY,
+		MICROBIOLOGY,
+		RADIOLOGY,
+		SONOLOGY,
+		URINALYSIS,
+		OTHER
 	}
 
 	private static final long serialVersionUID = -4734826044571156784L;
@@ -130,7 +143,7 @@ public class LabTestType extends BaseOpenmrsMetadata {
 	@Override
 	public String toString() {
 		return labTestTypeId + ", " + shortName + ", " + testGroup + ", " + referenceConcept + ", " + getName() + ", "
-				+ getUuid();
+		        + getUuid();
 	}
 
 }

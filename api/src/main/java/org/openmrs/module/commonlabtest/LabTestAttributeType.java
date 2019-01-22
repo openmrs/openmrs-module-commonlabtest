@@ -27,8 +27,8 @@ import org.openmrs.attribute.AttributeType;
 import org.openmrs.attribute.BaseAttributeType;
 
 /**
- * This entity represents attribute types associated with each type of test.
- * This class extends BaseAttributeType of type LabTest.
+ * This entity represents attribute types associated with each type of test. This class extends
+ * BaseAttributeType of type LabTest.
  * 
  * @author owais.hussain@ihsinformatics.com
  */

@@ -45,16 +45,15 @@ public class LabTestOrderPortletController extends PortletController {
 						childJsonObject.addProperty("dateCreated", labTest.getDateCreated().toString());
 						childJsonObject.addProperty("createdBy", labTest.getCreator().getUsername());
 						childJsonObject.addProperty("encounterType",
-								labTest.getOrder().getEncounter().getEncounterType().getName().toString());
+						    labTest.getOrder().getEncounter().getEncounterType().getName().toString());
 						childJsonObject.addProperty("changedBy",
-								(labTest.getChangedBy() == null) ? "" : labTest.getChangedBy().getName());
+						    (labTest.getChangedBy() == null) ? "" : labTest.getChangedBy().getName());
 						childJsonObject.addProperty("uuid", labTest.getUuid());
 						List<LabTestAttribute> labTestAttribute = Context.getService(CommonLabTestService.class)
-								.getLabTestAttributes(labTest.getTestOrderId());
+						        .getLabTestAttributes(labTest.getTestOrderId());
 						if (labTestAttribute != null && labTestAttribute.size() > 0) {
 							childJsonObject.addProperty("resultFilled", Boolean.TRUE);
-							childJsonObject.addProperty("resultDate",
-									labTestAttribute.get(0).getDateCreated().toString());
+							childJsonObject.addProperty("resultDate", labTestAttribute.get(0).getDateCreated().toString());
 						} else {
 							childJsonObject.addProperty("resultFilled", Boolean.FALSE);
 							childJsonObject.addProperty("resultDate", "");

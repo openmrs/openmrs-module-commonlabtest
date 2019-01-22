@@ -44,7 +44,7 @@ public class LabTestRequestController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestRequest.form")
 	public String showForm(HttpServletRequest request, @RequestParam(required = false) String error,
-			@RequestParam(required = false) Integer patientId, ModelMap model) {
+	        @RequestParam(required = false) Integer patientId, ModelMap model) {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		if (Context.getAuthenticatedUser() == null) {
 			return "redirect:../../login.htm";
@@ -62,8 +62,8 @@ public class LabTestRequestController {
 		for (LabTestGroup labTestGroup : labTestGroupList) {
 			JsonObject labTestGroupObj = new JsonObject();
 			JsonArray jsonChildArray = new JsonArray();
-			List<LabTestType> labTestTypeList = commonLabTestService.getLabTestTypes(null, null, labTestGroup, null,
-					null, Boolean.FALSE);
+			List<LabTestType> labTestTypeList = commonLabTestService.getLabTestTypes(null, null, labTestGroup, null, null,
+			    Boolean.FALSE);
 			if (!(labTestTypeList.size() > 0) || labTestTypeList.equals("") || labTestTypeList.isEmpty()) {
 				continue; // skip the current iteration.
 			} else if (labTestTypeList.size() == 1 && labTestGroup.equals(LabTestGroup.OTHER)) {
@@ -116,8 +116,8 @@ public class LabTestRequestController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/addLabTestRequest.form")
 	@ResponseBody
-	public boolean onSubmit(ModelMap model, HttpSession httpSession, HttpServletRequest request,
-			@RequestBody String json, @RequestParam(required = false) Integer patientId) {
+	public boolean onSubmit(ModelMap model, HttpSession httpSession, HttpServletRequest request, @RequestBody String json,
+	        @RequestParam(required = false) Integer patientId) {
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status = "";
 		boolean boolStatus = Boolean.TRUE;
@@ -129,12 +129,11 @@ public class LabTestRequestController {
 				JsonObject jsonObject = arry.get(i).getAsJsonObject();
 				Order order = new Order();
 				order.setCareSetting(Context.getOrderService().getCareSetting(1));
-				Encounter encounter = Context.getEncounterService()
-						.getEncounter(jsonObject.get("encounterId").getAsInt());
+				Encounter encounter = Context.getEncounterService().getEncounter(jsonObject.get("encounterId").getAsInt());
 				order.setEncounter(encounter);
 				order.setAction(Action.NEW);
 				order.setOrderer(Context.getProviderService()
-						.getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
+				        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
 				order.setOrderType(Context.getOrderService().getOrderType(3));
 				order.setDateActivated(encounter.getEncounterDatetime());
 				order.setPatient(Context.getPatientService().getPatient(patientId));
@@ -150,7 +149,8 @@ public class LabTestRequestController {
 			for (LabTest labTest : labTestArray) {
 				commonLabTestService.saveLabTest(labTest);
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			status = "could not save Lab Test Request";
 			e.printStackTrace();
 			model.addAttribute("error", status);
@@ -160,7 +160,7 @@ public class LabTestRequestController {
 			request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Test Request saved successfully");
 		}
 		return boolStatus; // "redirect:../../patientDashboard.form?patientId="
-							// + patientId;
+		                   // + patientId;
 	}
 
 }

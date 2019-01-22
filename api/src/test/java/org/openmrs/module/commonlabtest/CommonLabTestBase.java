@@ -115,8 +115,7 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 	/**
 	 * Initialize all data objects before each test
 	 * 
-	 * @throws Exception
-	 *             on Exception
+	 * @throws Exception on Exception
 	 */
 	public void initTestData() throws Exception {
 		initializeInMemoryDatabase();
@@ -230,8 +229,8 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 		xrayFilmPrinted.setDateRetired(new Date());
 		xrayFilmPrinted.setUuid("ee261470-478e-11e8-943c-40b034c3cfee");
 
-		labTestAttributeTypes = Arrays.asList(cartridgeId, mtbResult, rifResult, cxrResult, radiologistRemarks,
-				cad4tbScore, xrayFilmPrinted);
+		labTestAttributeTypes = Arrays.asList(cartridgeId, mtbResult, rifResult, cxrResult, radiologistRemarks, cad4tbScore,
+		    xrayFilmPrinted);
 
 		activeLabTestAttributeTypes = Arrays.asList(cartridgeId, mtbResult, rifResult, cxrResult, radiologistRemarks);
 

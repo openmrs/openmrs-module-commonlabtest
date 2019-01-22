@@ -30,7 +30,7 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-		+ "/commonlab/labtestorder", supportedClass = LabTest.class, supportedOpenmrsVersions = {"2.0.*,2.1.*"})
+        + "/commonlab/labtestorder", supportedClass = LabTest.class, supportedOpenmrsVersions = { "2.0.*,2.1.*" })
 public class LabTestOrderResourceController extends DataDelegatingCrudResource<LabTest> {
 
 	/**
@@ -81,7 +81,8 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 				labTest.setOrder(order);
 			}
 			return commonLabTestService.saveLabTest(labTest, labTestSample, labTestAttributes);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new ResourceDoesNotSupportOperationException("Test Order was not saved", e);
 		}
 	}
@@ -134,8 +135,7 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 	}
 
 	/**
-	 * @param labTest
-	 *            the {@link LabTest} object
+	 * @param labTest the {@link LabTest} object
 	 * @return labReferenceNumber as Display
 	 */
 	@PropertyGetter("display")

@@ -95,13 +95,12 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 
 	/**
 	 * @see CommonLabTestDAO#getLabTestTypes(java.lang.String, java.lang.String,
-	 *      org.openmrs.module.commonlabtest.LabTestType.LabTestGroup,
-	 *      org.openmrs.Concept, boolean)
+	 *      org.openmrs.module.commonlabtest.LabTestType.LabTestGroup, org.openmrs.Concept, boolean)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup,
-			Concept referenceConcept, boolean includeRetired) {
+	public List<LabTestType> getLabTestTypes(String name, String shortName, LabTestGroup testGroup, Concept referenceConcept,
+	        boolean includeRetired) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestType.class);
 		if (name != null) {
 			criteria.add(Restrictions.ilike("name", name, MatchMode.START));
@@ -176,7 +175,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<LabTestAttribute> getLabTestAttributes(LabTestAttributeType labTestAttributeType, String valueReference,
-			Date from, Date to, boolean includeVoided) {
+	        Date from, Date to, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttribute.class);
 		if (labTestAttributeType != null) {
 			criteria.add(Restrictions.eqOrIsNull("attributeType.labTestAttributeTypeId", labTestAttributeType.getId()));
@@ -194,18 +193,16 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see CommonLabTestDAO#getLabTestAttributes(Patient, LabTestAttributeType,
-	 *      boolean)
+	 * @see CommonLabTestDAO#getLabTestAttributes(Patient, LabTestAttributeType, boolean)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<LabTestAttribute> getLabTestAttributes(Patient patient, LabTestAttributeType labTestAttributeType,
-			boolean includeVoided) {
+	        boolean includeVoided) {
 		StringBuilder queryString = new StringBuilder();
 		queryString.append("from LabTestAttribute lta where lta.labTest.order.patient.patientId = :patientId");
-		queryString.append(labTestAttributeType == null
-				? ""
-				: " and lta.labTestAttributeType.labTestAttributeTypeId = :labTestAttributeType");
+		queryString.append(labTestAttributeType == null ? ""
+		        : " and lta.labTestAttributeType.labTestAttributeTypeId = :labTestAttributeType");
 		queryString.append(includeVoided ? "" : " and lta.voided = :voided");
 		Query query = sessionFactory.getCurrentSession().createQuery(queryString.toString());
 		query.setInteger("patientId", patient.getPatientId());
@@ -224,7 +221,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	@Override
 	public LabTestAttributeType getLabTestAttributeType(Integer labTestAttributeTypeId) {
 		return (LabTestAttributeType) sessionFactory.getCurrentSession().get(LabTestAttributeType.class,
-				labTestAttributeTypeId);
+		    labTestAttributeTypeId);
 	}
 
 	/**
@@ -238,13 +235,12 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see CommonLabTestDAO#getLabTestAttributeTypes(java.lang.String,
-	 *      java.lang.String, boolean)
+	 * @see CommonLabTestDAO#getLabTestAttributeTypes(java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<LabTestAttributeType> getLabTestAttributeTypes(String name, String datatypeClassname,
-			boolean includeRetired) {
+	        boolean includeRetired) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttributeType.class);
 		if (name != null) {
 			criteria.add(Restrictions.ilike("name", name, MatchMode.START));
@@ -289,14 +285,13 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 
 	/**
 	 * @see CommonLabTestDAO#getLabTests(org.openmrs.module.commonlabtest.LabTestType,
-	 *      org.openmrs.Patient, java.lang.String, java.lang.String,
-	 *      org.openmrs.Concept, org.openmrs.Provider, java.util.Date,
-	 *      java.util.Date, boolean)
+	 *      org.openmrs.Patient, java.lang.String, java.lang.String, org.openmrs.Concept,
+	 *      org.openmrs.Provider, java.util.Date, java.util.Date, boolean)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<LabTest> getLabTests(LabTestType labTestType, Patient patient, String orderNumber,
-			String referenceNumber, Concept orderConcept, Provider orderer, Date from, Date to, boolean includeVoided) {
+	public List<LabTest> getLabTests(LabTestType labTestType, Patient patient, String orderNumber, String referenceNumber,
+	        Concept orderConcept, Provider orderer, Date from, Date to, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTest.class);
 		criteria.createAlias("order", "o");
 		if (labTestType != null) {
@@ -346,8 +341,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see CommonLabTestDAO#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest,
-	 *      boolean)
+	 * @see CommonLabTestDAO#getLabTestSamples(org.openmrs.module.commonlabtest.LabTest, boolean)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -365,17 +359,16 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	 * @see CommonLabTestDAO#getLabTestSamples(org.openmrs.Patient, boolean)
 	 */
 	@Override
-	@SuppressWarnings({"unchecked", "deprecation"})
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public List<LabTestSample> getLabTestSamples(Patient patient, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
 
-		criteria.createAlias("labTest", "labTest", CriteriaSpecification.INNER_JOIN)
-				.setFetchMode("labTest", FetchMode.JOIN)
-				// .add(Restrictions.eq("labTest.order.patient.personId",
-				// patient.getPatientId()))
-				.createAlias("labTest.order", "order", CriteriaSpecification.INNER_JOIN)
-				.setFetchMode("order", FetchMode.JOIN)
-				.add(Restrictions.eq("order.patient.personId", patient.getPatientId()));
+		criteria.createAlias("labTest", "labTest", CriteriaSpecification.INNER_JOIN).setFetchMode("labTest", FetchMode.JOIN)
+		        // .add(Restrictions.eq("labTest.order.patient.personId",
+		        // patient.getPatientId()))
+		        .createAlias("labTest.order", "order", CriteriaSpecification.INNER_JOIN)
+		        .setFetchMode("order", FetchMode.JOIN)
+		        .add(Restrictions.eq("order.patient.personId", patient.getPatientId()));
 		// .createAlias("labTest", "labTest",
 		// CriteriaSpecification.INNER_JOIN).setFetchMode("labTest", FetchMode.JOIN);
 		// criteria.add(Restrictions.eq("order.patient.patientId",
@@ -421,13 +414,12 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * @see CommonLabTestDAO#getNLabTests(org.openmrs.Patient, int, boolean,
-	 *      boolean, boolean)
+	 * @see CommonLabTestDAO#getNLabTests(org.openmrs.Patient, int, boolean, boolean, boolean)
 	 */
 	@Override
-	@SuppressWarnings({"unchecked", "deprecation"})
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public List<LabTest> getNLabTests(Patient patient, int n, boolean firstNObjects, boolean lastNObjects,
-			boolean includeVoided) {
+	        boolean includeVoided) {
 		// Disallow fetching more than 100 records per query
 		if (n > MAX_FETCH_LIMIT) {
 			n = MAX_FETCH_LIMIT;
@@ -437,7 +429,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 		List<LabTest> lastN = null;
 		if (patient != null) {
 			criteria.createAlias("order", "o", CriteriaSpecification.INNER_JOIN).setFetchMode("o", FetchMode.JOIN)
-					.add(Restrictions.eq("o.patient.personId", patient.getPatientId()));
+			        .add(Restrictions.eq("o.patient.personId", patient.getPatientId()));
 		}
 		if (!includeVoided) {
 			criteria.add(Restrictions.eq("voided", false));
@@ -463,13 +455,13 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 
 	/**
 	 * @see CommonLabTestDAO#getNLabTestSamples(org.openmrs.Patient,
-	 *      org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus, int,
-	 *      boolean, boolean, boolean)
+	 *      org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus, int, boolean, boolean,
+	 *      boolean)
 	 */
 	@Override
-	@SuppressWarnings({"unchecked", "deprecation"})
-	public List<LabTestSample> getNLabTestSamples(Patient patient, LabTestSampleStatus status, int n,
-			boolean firstNObjects, boolean lastNObjects, boolean includeVoided) {
+	@SuppressWarnings({ "unchecked", "deprecation" })
+	public List<LabTestSample> getNLabTestSamples(Patient patient, LabTestSampleStatus status, int n, boolean firstNObjects,
+	        boolean lastNObjects, boolean includeVoided) {
 		// Disallow fetching more than 100 records per query
 		if (n > MAX_FETCH_LIMIT) {
 			n = MAX_FETCH_LIMIT;
@@ -477,11 +469,10 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
 		List<LabTestSample> firstN = null;
 		List<LabTestSample> lastN = null;
-		criteria.createAlias("labTest", "labTest", CriteriaSpecification.INNER_JOIN)
-				.setFetchMode("labTest", FetchMode.JOIN)
-				.createAlias("labTest.order", "order", CriteriaSpecification.INNER_JOIN)
-				.setFetchMode("order", FetchMode.JOIN)
-				.add(Restrictions.eq("order.patient.personId", patient.getPatientId()));
+		criteria.createAlias("labTest", "labTest", CriteriaSpecification.INNER_JOIN).setFetchMode("labTest", FetchMode.JOIN)
+		        .createAlias("labTest.order", "order", CriteriaSpecification.INNER_JOIN)
+		        .setFetchMode("order", FetchMode.JOIN)
+		        .add(Restrictions.eq("order.patient.personId", patient.getPatientId()));
 		if (status != null) {
 			criteria.add(Restrictions.eq("status", status));
 		}
@@ -548,11 +539,10 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
-	 * Detects whether it's a new order or existing one. In case the order already
-	 * exits, it is NOT overridden because Order objects are immutable
+	 * Detects whether it's a new order or existing one. In case the order already exits, it is NOT
+	 * overridden because Order objects are immutable
 	 * 
-	 * @param order
-	 *            the {@link org.openmrs.Order} object to save
+	 * @param order the {@link org.openmrs.Order} object to save
 	 * @return saved {@link org.openmrs.Order} object
 	 */
 	public org.openmrs.Order saveLabTestOrder(org.openmrs.Order order) {

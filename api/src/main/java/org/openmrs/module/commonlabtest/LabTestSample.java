@@ -33,9 +33,9 @@ import org.openmrs.Concept;
 import org.openmrs.Provider;
 
 /**
- * This entity represents a test sample on which certain lab test is performed.
- * A LabTestType has a property requiresSpecimen, which determines if a
- * LabTestSample object is needed in order to run the test.
+ * This entity represents a test sample on which certain lab test is performed. A LabTestType has a
+ * property requiresSpecimen, which determines if a LabTestSample object is needed in order to run
+ * the test.
  * 
  * @author owais.hussain@ihsinformatics.com
  */
@@ -50,7 +50,7 @@ public class LabTestSample extends BaseOpenmrsData {
 		COLLECTED, // First state of sample, when received by sample collector
 		ACCEPTED, // When lab accepts the sample for processing
 		REJECTED, // Set when lab does not accept the sample due to any reason (contamination,
-		// insufficient quantity, etc.)
+	    // insufficient quantity, etc.)
 		PROCESSED // After the sample has been processed by lab
 	}
 
@@ -153,25 +153,21 @@ public class LabTestSample extends BaseOpenmrsData {
 	}
 
 	/**
-	 * @param specimenType
-	 *            the {@link Concept} object which represents the specimen type
+	 * @param specimenType the {@link Concept} object which represents the specimen type
 	 */
 	public void setSpecimenType(Concept specimenType) {
 		this.specimenType = specimenType;
 	}
 
 	/**
-	 * @return the {@link Concept} object which represents the source of specimen
-	 *         sample
+	 * @return the {@link Concept} object which represents the source of specimen sample
 	 */
 	public Concept getSpecimenSite() {
 		return specimenSite;
 	}
 
 	/**
-	 * @param specimenSite
-	 *            {@link Concept} object which represents the source of specimen
-	 *            sample
+	 * @param specimenSite {@link Concept} object which represents the source of specimen sample
 	 */
 	public void setSpecimenSite(Concept specimenSite) {
 		this.specimenSite = specimenSite;
