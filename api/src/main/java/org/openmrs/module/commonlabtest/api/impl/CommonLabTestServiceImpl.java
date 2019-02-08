@@ -754,7 +754,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		List<LabTestAttribute> labTestAttributes = dao.getLabTestAttributes(labTest.getId());
 
 		for (LabTestAttribute attribute : labTestAttributes) {
-			unvoidLabTestAttribute(attribute);
+			unvoidLabTestAttribute(attribute); 
 		}
 		Context.getOrderService().unvoidOrder(labTest.getOrder());
 		dao.saveLabTest(labTest);
