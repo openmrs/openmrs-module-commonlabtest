@@ -744,20 +744,30 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.DELETE_LAB_TEST_PRIVILEGE)
 	@Transactional
 	public void unvoidLabTest(LabTest labTest) throws APIException {
-		for (LabTestSample sample : labTest.getLabTestSamples()) {
-			boolean reasonMatched = sample.getVoidReason().equals(labTest.getVoidReason());
-			boolean dateMatched = DateUtil.truncateToSeconds(labTest.getDateVoided()).compareTo(sample.getDateVoided()) == 0;
-			if (reasonMatched && dateMatched) {
-				unvoidLabTestSample(sample);
-			}
+
+		List<LabTestSample> labTestSamples = dao.getLabTestSamples(labTest, Boolean.TRUE);
+
+		for (LabTestSample sample : labTestSamples) {
+			// boolean reasonMatched =
+			// sample.getVoidReason().equals(labTest.getVoidReason());
+			// boolean dateMatched =
+			// DateUtil.truncateToSeconds(labTest.getDateVoided()).compareTo(sample.getDateVoided())
+			// == 0;
+			// if (reasonMatched && dateMatched) {
+			unvoidLabTestSample(sample);
+			// }
 		}
-		for (LabTestAttribute attribute : labTest.getAttributes()) {
-			boolean reasonMatched = attribute.getVoidReason().equals(labTest.getVoidReason());
-			boolean dateMatched = DateUtil.truncateToSeconds(labTest.getDateVoided())
-			        .compareTo(attribute.getDateVoided()) == 0;
-			if (reasonMatched && dateMatched) {
-				unvoidLabTestAttribute(attribute);
-			}
+
+		List<LabTestAttribute> labTestAttributes = dao.getLabTestAttributes(labTest.getId());
+
+		for (LabTestAttribute attribute : labTestAttributes) {
+			// boolean reasonMatched =
+			// attribute.getVoidReason().equals(labTest.getVoidReason());
+			// boolean dateMatched = DateUtil.truncateToSeconds(labTest.getDateVoided())
+			// .compareTo(attribute.getDateVoided()) == 0;
+			// if (reasonMatched && dateMatched) {
+			unvoidLabTestAttribute(attribute);
+			// }
 		}
 		Context.getOrderService().unvoidOrder(labTest.getOrder());
 		dao.saveLabTest(labTest);
