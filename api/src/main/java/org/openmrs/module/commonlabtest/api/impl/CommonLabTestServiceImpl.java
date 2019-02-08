@@ -748,13 +748,13 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		List<LabTestSample> labTestSamples = dao.getLabTestSamples(labTest, Boolean.TRUE);
 
 		for (LabTestSample sample : labTestSamples) {
-			unvoidLabTestSample(sample); 
+			unvoidLabTestSample(sample);
 		}
 
 		List<LabTestAttribute> labTestAttributes = dao.getLabTestAttributes(labTest.getId());
 
 		for (LabTestAttribute attribute : labTestAttributes) {
-			unvoidLabTestAttribute(attribute); 
+			unvoidLabTestAttribute(attribute);
 		}
 		Context.getOrderService().unvoidOrder(labTest.getOrder());
 		dao.saveLabTest(labTest);
