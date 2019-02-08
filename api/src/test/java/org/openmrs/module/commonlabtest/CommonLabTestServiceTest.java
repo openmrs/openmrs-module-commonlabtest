@@ -436,4 +436,41 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	public final void shouldNotDeleteLabTestType() {
 		service.deleteLabTestType(chestXRay, false);
 	}
+
+	@Test
+	public final void testVoidLabTest() {
+
+		when(dao.getLabTestSamples(any(LabTest.class), any(Boolean.class))).thenReturn(Arrays.asList(harrySample));
+		when(dao.getLabTestAttributes(any(Integer.class)))
+		        .thenReturn(Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
+		when(dao.saveLabTest(any(LabTest.class))).thenReturn(harryGxp);
+
+		service.voidLabTest(harryGxp, "Incorrect test order");
+		verify(dao, times(1)).getLabTestSamples(any(LabTest.class), any(Boolean.class));
+		verify(dao, times(1)).getLabTestAttributes(any(Integer.class));
+		verify(dao, times(1)).saveLabTest(any(LabTest.class));
+		verify(dao, times(1)).saveLabTestSample(any(LabTestSample.class));
+		verify(dao, times(3)).saveLabTestAttribute(any(LabTestAttribute.class));
+
+		verifyNoMoreInteractions(dao);
+
+	}
+
+	@Test
+	public final void testUnVoidLabTest() {
+		when(dao.getLabTestSamples(any(LabTest.class), any(Boolean.class))).thenReturn(Arrays.asList(harrySample));
+		when(dao.getLabTestAttributes(any(Integer.class)))
+		        .thenReturn(Arrays.asList(harryCartridgeId, harryMtbResult, harryRifResult));
+		when(dao.saveLabTest(any(LabTest.class))).thenReturn(harryGxp);
+
+		service.unvoidLabTest(harryGxp);
+		verify(dao, times(1)).getLabTestSamples(any(LabTest.class), any(Boolean.class));
+		verify(dao, times(1)).getLabTestAttributes(any(Integer.class));
+		verify(dao, times(1)).saveLabTest(any(LabTest.class));
+		verify(dao, times(1)).saveLabTestSample(any(LabTestSample.class));
+		verify(dao, times(3)).saveLabTestAttribute(any(LabTestAttribute.class));
+
+		verifyNoMoreInteractions(dao);
+
+	}
 }
