@@ -2,6 +2,7 @@ package org.openmrs.module.commonlabtest.web.resource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -42,7 +43,11 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 
 	@Override
 	public LabTest getByUniqueId(String s) {
-		return commonLabTestService.getLabTestByUuid(s);
+		LabTest labTest = commonLabTestService.getLabTestByUuid(s);
+		labTest.setLabTestSamples(new HashSet<LabTestSample>(commonLabTestService.getLabTestSamples(labTest, false)));
+		labTest.setAttributes(
+		    new HashSet<LabTestAttribute>(commonLabTestService.getLabTestAttributes(labTest.getTestOrderId())));
+		return labTest;
 	}
 
 	@Override
