@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +43,19 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 	public String getUuid() {
 		return "d175e92e-47bf-11e8-943c-40b034c3cfee";
 	}
+	
+	@Override
+	public void shouldGetFullByUuid() throws Exception {
+		MockHttpServletRequest request = request(RequestMethod.GET, getURI() + "/" + getUuid());
+		request.addParameter("v", "full");
+		SimpleObject result = deserialize(handle(request));
+		Assert.assertNotNull(result);
+		Assert.assertEquals(getUuid(), PropertyUtils.getProperty(result, "uuid"));
+		Object samples = PropertyUtils.getProperty(result, "labTestSamples");
+		Assert.assertNotNull(samples);
+		Object attributes = PropertyUtils.getProperty(result, "attributes");
+		Assert.assertNotNull(attributes);
+	}
 
 	@Override
 	@Test(expected = ResourceDoesNotSupportOperationException.class)
@@ -49,7 +63,7 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 		handle(request(RequestMethod.GET, getURI()));
 		fail();
 	}
-
+	
 	@Test
 	public void shouldSearchByPatient() throws Exception {
 		MockHttpServletRequest request = request(RequestMethod.GET, getURI());
