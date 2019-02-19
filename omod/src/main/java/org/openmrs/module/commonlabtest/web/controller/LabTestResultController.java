@@ -51,6 +51,7 @@ public class LabTestResultController {
 	public String showForm(HttpServletRequest request, @RequestParam(required = false) Integer testOrderId,
 	        @RequestParam(required = false) Integer patientId, ModelMap model) {
 
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTest labTest = commonLabTestService.getLabTest(testOrderId);
 		if (labTest == null) {
 			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "Test Order does not exist");

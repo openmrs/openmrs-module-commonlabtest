@@ -99,31 +99,38 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
-		DelegatingResourceDescription description = new DelegatingResourceDescription();
-		description.addProperty("uuid");
-		description.addSelfLink();
-		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
-		description.addProperty("display");
 		if (representation instanceof DefaultRepresentation) {
+			DelegatingResourceDescription description = new DelegatingResourceDescription();
+			description.addProperty("uuid");
+			description.addProperty("display");
 			description.addProperty("order");
 			description.addProperty("labTestType", Representation.REF);
 			description.addProperty("labReferenceNumber");
+			description.addProperty("labTestSamples");
 			description.addProperty("attributes", Representation.REF);
+			description.addSelfLink();
+			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
 		} else if (representation instanceof FullRepresentation) {
+			DelegatingResourceDescription description = new DelegatingResourceDescription();
+			description.addProperty("uuid");
+			description.addProperty("display");
 			description.addProperty("order");
 			description.addProperty("labTestType");
 			description.addProperty("labReferenceNumber");
 			description.addProperty("labTestSamples");
 			description.addProperty("attributes", Representation.DEFAULT);
 			description.addProperty("auditInfo");
+			description.addSelfLink();
 			return description;
 		} else if (representation instanceof RefRepresentation) {
+			DelegatingResourceDescription description = new DelegatingResourceDescription();
+			description.addProperty("uuid");
 			description.addProperty("order");
 			description.addProperty("labReferenceNumber");
 			return description;
 		}
-		return description;
+		return null;
 	}
 
 	@Override
