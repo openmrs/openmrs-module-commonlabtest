@@ -9,7 +9,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>commonlabtest</artifactId>
-	<version>1.4.2-SNAPSHOT</version>
+	<version>1.4.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Common Lab Test</name>
 	<description>Basic module to manage Laboratory tests</description>
