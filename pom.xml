@@ -27,7 +27,7 @@
 		<repository>
 			<id>bintray-seekme94-omod</id>
 			<name>seekme94-omod</name>
-			<url>https://api.bintray.com/content/seekme94/omod/commonlabtest/;publish=1</url>
+			<url>https://api.bintray.com/seekme94/omod/commonlabtest/;publish=1</url>
 		</repository>
 	</distributionManagement>
 
