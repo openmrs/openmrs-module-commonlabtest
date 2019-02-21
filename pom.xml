@@ -9,7 +9,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>commonlabtest</artifactId>
-	<version>1.4.1-SNAPSHOT</version>
+	<version>1.4.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Common Lab Test</name>
 	<description>Basic module to manage Laboratory tests</description>
@@ -27,7 +27,7 @@
 		<repository>
 			<id>bintray-seekme94-maven</id>
 			<name>seekme94-maven</name>
-			<url>https://api.bintray.com/maven/seekme94/maven/commonlabtest/;publish=1</url>
+			<url>https://api.bintray.com/seekme94/omod/commonlabtest/;publish=1</url>
 		</repository>
 	</distributionManagement>
 
