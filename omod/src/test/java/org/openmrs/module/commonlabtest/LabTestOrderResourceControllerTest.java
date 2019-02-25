@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.test.Util;
@@ -43,7 +45,7 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 	public String getUuid() {
 		return "d175e92e-47bf-11e8-943c-40b034c3cfee";
 	}
-	
+
 	@Override
 	public void shouldGetFullByUuid() throws Exception {
 		MockHttpServletRequest request = request(RequestMethod.GET, getURI() + "/" + getUuid());
@@ -63,7 +65,7 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 		handle(request(RequestMethod.GET, getURI()));
 		fail();
 	}
-	
+
 	@Test
 	public void shouldSearchByPatient() throws Exception {
 		MockHttpServletRequest request = request(RequestMethod.GET, getURI());
@@ -115,4 +117,41 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 		SimpleObject objectCreated = deserialize(handle);
 		Assert.assertNotNull(objectCreated);
 	}
+
+	@Test
+	public void validateDefaultRepresentaion() throws Exception {
+		LabTest labTest = commonLabTestService.getLabTestByUuid(getUuid());
+		SimpleObject result = deserialize(handle(newGetRequest(getURI() + "/" + getUuid())));
+		Assert.assertThat(getUuid(), Matchers.is(PropertyUtils.getProperty(result, "uuid")));
+		Assert.assertThat(labTest.getLabReferenceNumber(),
+		    Matchers.is(PropertyUtils.getProperty(result, "labReferenceNumber")));
+		Object order = PropertyUtils.getProperty(result, "order");
+		Assert.assertNotNull(order);
+		Object labTestSamples = PropertyUtils.getProperty(result, "labTestSamples");
+		Assert.assertNotNull(labTestSamples);
+		Object attributes = PropertyUtils.getProperty(result, "attributes");
+		Assert.assertNotNull(attributes);
+		Object labTestType = PropertyUtils.getProperty(result, "labTestType");
+		Assert.assertNotNull(labTestType);
+
+	}
+
+	@Test
+	public void validateFullRepresentaion() throws Exception {
+		LabTest labTest = commonLabTestService.getLabTestByUuid(getUuid());
+		SimpleObject result = deserialize(handle(newGetRequest(getURI() + "/" + getUuid(), new Parameter("v", "full"))));
+		Assert.assertThat(getUuid(), Matchers.is(PropertyUtils.getProperty(result, "uuid")));
+		Assert.assertThat(labTest.getLabReferenceNumber(),
+		    Matchers.is(PropertyUtils.getProperty(result, "labReferenceNumber")));
+		Object order = PropertyUtils.getProperty(result, "order");
+		Assert.assertNotNull(order);
+		Object labTestSamples = PropertyUtils.getProperty(result, "labTestSamples");
+		Assert.assertNotNull(labTestSamples);
+		Object attributes = PropertyUtils.getProperty(result, "attributes");
+		Assert.assertNotNull(attributes);
+		Object labTestType = PropertyUtils.getProperty(result, "labTestType");
+		Assert.assertNotNull(labTestType);
+
+	}
+
 }
