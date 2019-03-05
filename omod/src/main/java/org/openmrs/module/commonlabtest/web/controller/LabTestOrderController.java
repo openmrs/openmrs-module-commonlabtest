@@ -20,6 +20,7 @@ import org.openmrs.module.commonlabtest.CommonLabTestConfig;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
+import org.openmrs.module.commonlabtest.utility.Consts;
 import org.openmrs.web.WebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -42,6 +43,7 @@ public class LabTestOrderController {
 	public String showForm(@RequestParam(required = true) Integer patientId,
 	        @RequestParam(required = false) Integer testOrderId, @RequestParam(required = false) String error,
 	        ModelMap model) {
+
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTest labTest;
 		if (testOrderId == null) {
@@ -50,7 +52,7 @@ public class LabTestOrderController {
 			labTest = commonLabTestService.getLabTest(testOrderId);
 		}
 		List<Encounter> encounterList = Context.getEncounterService().getEncountersByPatientId(patientId);
-		if (encounterList.size() > 0) {
+		if (!encounterList.isEmpty() && encounterList.size() > 0) {
 			Collections.sort(encounterList, new Comparator<Encounter>() {
 
 				@Override
@@ -66,21 +68,21 @@ public class LabTestOrderController {
 				labTestTypeHavingAttributes.add(labTestTypeIt);
 			}
 		}
-		model.addAttribute("labTest", labTest);
-		model.addAttribute("patientId", patientId);
-		model.addAttribute("testTypes", labTestTypeHavingAttributes);
-		model.addAttribute("error", error);
+		model.addAttribute(Consts.LAB_TEST, labTest);
+		model.addAttribute(Consts.PATIENT_ID, patientId);
+		model.addAttribute(Consts.TEST_TYPES, labTestTypeHavingAttributes);
+		model.addAttribute(Consts.ERROR, error);
 		Collection<Provider> providers = Context.getProviderService()
 		        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false);
 		if (providers == null || providers.isEmpty()) {} else {
-			model.addAttribute("provider", Context.getProviderService()
+			model.addAttribute(Consts.PROVIDER, Context.getProviderService()
 			        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
 		}
 		// show only first 10 encounters
 		if (encounterList.size() > 10) {
-			model.addAttribute("encounters", encounterList.subList(0, encounterList.size() - 1));
+			model.addAttribute(Consts.ENCOUNTER, encounterList.subList(0, encounterList.size() - 1));
 		} else {
-			model.addAttribute("encounters", encounterList);
+			model.addAttribute(Consts.ENCOUNTER, encounterList);
 		}
 		return SUCCESS_ADD_FORM_VIEW;
 	}
@@ -90,6 +92,7 @@ public class LabTestOrderController {
 	public String onSubmit(ModelMap model, HttpSession httpSession,
 	        @ModelAttribute("anyRequestObject") Object anyRequestObject, HttpServletRequest request,
 	        @ModelAttribute("labTest") LabTest labTest, BindingResult result) {
+
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status = "";
 		if (Context.getAuthenticatedUser() == null) {
@@ -108,9 +111,8 @@ public class LabTestOrderController {
 			}
 		}
 		catch (Exception e) {
-			status = "could not save Lab Test Order";
-			e.printStackTrace();
-			model.addAttribute("error", status);
+			status = Consts.COULD_NOT_SAVE_TEST_ORDER_MESSAGE;
+			model.addAttribute(Consts.ERROR, status);
 			if (labTest.getTestOrderId() == null) {
 				return "redirect:addLabTestOrder.form?patientId=" + labTest.getOrder().getPatient().getPatientId();
 			} else {
@@ -118,13 +120,14 @@ public class LabTestOrderController {
 				        + "&testOrderId=" + labTest.getTestOrderId();
 			}
 		}
-		request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Test order saved successfully");
+		request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, Consts.TEST_ORDER_SAVED_MESSAGE);
 		return "redirect:../../patientDashboard.form?patientId=" + labTest.getOrder().getPatient().getPatientId();
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/voidlabtestorder.form")
 	public String onVoid(ModelMap model, HttpSession httpSession, HttpServletRequest request,
 	        @RequestParam("uuid") String uuid, @RequestParam("voidReason") String voidReason) {
+
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTest labTest = commonLabTestService.getLabTestByUuid(uuid);
 		String status = "";
@@ -136,9 +139,8 @@ public class LabTestOrderController {
 			commonLabTestService.voidLabTest(labTest, voidReason);
 		}
 		catch (Exception e) {
-			status = "could not void Lab Test Order";
-			e.printStackTrace();
-			model.addAttribute("error", status);
+			status = Consts.COULD_NOT_VOID_TEST_ORDER_MESSAGE;
+			model.addAttribute(Consts.ERROR, status);
 			if (labTest.getTestOrderId() == null) {
 				return "redirect:addLabTestOrder.form?patientId=" + labTest.getOrder().getPatient().getPatientId();
 			} else {
@@ -147,7 +149,7 @@ public class LabTestOrderController {
 			}
 		}
 		int patientId = labTest.getOrder().getPatient().getPatientId();
-		request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Test order retire successfully");
+		request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, Consts.TEST_ORDER_VOIDED_MESSAGE);
 		return "redirect:../../patientDashboard.form?patientId=" + patientId;
 	}
 

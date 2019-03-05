@@ -13,6 +13,7 @@ import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
+import org.openmrs.module.commonlabtest.utility.Consts;
 import org.openmrs.web.WebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -40,28 +41,27 @@ public class ManageLabTestSampleController {
 		} else {
 			LabTest labTest = commonLabTestService.getLabTest(testOrderId);
 			if (labTest == null) {
-				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "Test Order does not exist");
+				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, Consts.TEST_ORDER_DOES_NOT_EXIST_MESSAGE);
 				return "redirect:../../patientDashboard.form?patientId=" + patientId;
 			} else if (labTest.getVoided()) {
-				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "Test Order is not found");
+				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, Consts.TEST_ORDER_NOT_FOUND_MESSAGE);
 				return "redirect:../../patientDashboard.form?patientId=" + patientId;
 			}
-			testSample = commonLabTestService.getLabTestSamples(labTest, Boolean.FALSE);// need to check this get sample
-			                                                                            // method...
+			testSample = commonLabTestService.getLabTestSamples(labTest, Boolean.FALSE);
 		}
 
 		for (LabTestSample labTestSample : testSample) {
 			if (labTestSample.getStatus().equals(LabTestSampleStatus.PROCESSED)) {
-				model.addAttribute("sampleProcessed", Boolean.TRUE);
+				model.addAttribute(Consts.SAMPLE_PROCESSED, Boolean.TRUE);
 				break;
 			} else {
-				model.addAttribute("sampleProcessed", Boolean.FALSE);
+				model.addAttribute(Consts.SAMPLE_PROCESSED, Boolean.FALSE);
 			}
 		}
-		model.addAttribute("labSampleTest", testSample);
-		model.addAttribute("orderId", testOrderId);
-		model.addAttribute("patientId", patientId);
-		model.addAttribute("status", save);
+		model.addAttribute(Consts.LAB_SAMPLE_TEST, testSample);
+		model.addAttribute(Consts.ORDER_ID, testOrderId);
+		model.addAttribute(Consts.PATIENT_ID, patientId);
+		model.addAttribute(Consts.STATUS, save);
 
 		return SUCCESS_ADD_FORM_VIEW;
 	}
@@ -71,6 +71,7 @@ public class ManageLabTestSampleController {
 	        @RequestParam("uuid") String uuid, @RequestParam("patientId") String patientId,
 	        @RequestParam(value = "rejectedReason", required = false) String rejectedReason,
 	        @RequestParam(value = "isAccepted", required = false) String isAccepted) {
+
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestSample labTestSample = commonLabTestService.getLabTestSampleByUuid(uuid);
 		String status;
@@ -84,19 +85,18 @@ public class ManageLabTestSampleController {
 				labTestSample.setComments(rejectedReason);
 			}
 			commonLabTestService.saveLabTestSample(labTestSample);
-			StringBuilder sb = new StringBuilder();
-			sb.append("Lab Test Sample is updated");
-			status = sb.toString();
+			StringBuilder satatusString = new StringBuilder();
+			satatusString.append(Consts.LAB_TEST_SAMPLE_UPDATED_MESSAGE);
+			status = satatusString.toString();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
-			status = "Error! could not save Lab Test Sample.";
-			model.addAttribute("error", status);
+			status = Consts.COULD_NOT_SAVE_LAB_TEST_SAMPLE;
+			model.addAttribute(Consts.ERROR, status);
 			return "redirect:manageLabTestSamples.form?patientId=" + patientId + "&testOrderId="
 			        + labTestSample.getLabTest().getTestOrderId();
 
 		}
-		model.addAttribute("save", status);
+		model.addAttribute(Consts.SAVED, status);
 		return "redirect:manageLabTestSamples.form?patientId=" + patientId + "&testOrderId="
 		        + labTestSample.getLabTest().getTestOrderId();
 	}

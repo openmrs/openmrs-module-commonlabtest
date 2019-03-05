@@ -10,6 +10,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
+import org.openmrs.module.commonlabtest.utility.Consts;
 import org.openmrs.web.controller.PortletController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,7 @@ public class LabTestOrderPortletController extends PortletController {
 	@Override
 	protected void populateModel(HttpServletRequest request, Map<String, Object> model) {
 
-		String patientId = request.getParameter("patientId");
+		String patientId = request.getParameter(Consts.PATIENT_ID);
 		if (patientId != null) {
 			int id = Integer.parseInt(patientId);
 			Patient patient = Context.getPatientService().getPatient(id);
@@ -37,34 +38,48 @@ public class LabTestOrderPortletController extends PortletController {
 				if (testList != null && !testList.isEmpty()) {
 					for (LabTest labTest : testList) {
 						JsonObject childJsonObject = new JsonObject();
-						childJsonObject.addProperty("id", labTest.getTestOrderId());
-						childJsonObject.addProperty("requiredSpecimen", labTest.getLabTestType().getRequiresSpecimen());
-						childJsonObject.addProperty("testTypeName", labTest.getLabTestType().getName());
-						childJsonObject.addProperty("labReferenceNumber", labTest.getLabReferenceNumber());
-						childJsonObject.addProperty("testGroup", labTest.getLabTestType().getTestGroup().name());
-						childJsonObject.addProperty("dateCreated", labTest.getDateCreated().toString());
-						childJsonObject.addProperty("createdBy", labTest.getCreator().getUsername());
-						childJsonObject.addProperty("encounterType",
+						childJsonObject.addProperty(Consts.ID, labTest.getTestOrderId());
+						childJsonObject.addProperty(Consts.REQUIRED_SPECIMEN,
+						    labTest.getLabTestType().getRequiresSpecimen());
+						childJsonObject.addProperty(Consts.TEST_TYPE_NAME, labTest.getLabTestType().getName());
+						childJsonObject.addProperty(Consts.LAB_REFERENCE_NUMBER, labTest.getLabReferenceNumber());
+						childJsonObject.addProperty(Consts.TEST_GROUP, labTest.getLabTestType().getTestGroup().name());
+						childJsonObject.addProperty(Consts.DATE_CREATED, labTest.getDateCreated().toString());
+						childJsonObject.addProperty(Consts.CREATED_BY, labTest.getCreator().getUsername());
+						childJsonObject.addProperty(Consts.ENCOUNTER_TYPE,
 						    labTest.getOrder().getEncounter().getEncounterType().getName().toString());
-						childJsonObject.addProperty("changedBy",
+						childJsonObject.addProperty(Consts.CHANGED_BY,
 						    (labTest.getChangedBy() == null) ? "" : labTest.getChangedBy().getName());
-						childJsonObject.addProperty("uuid", labTest.getUuid());
+						childJsonObject.addProperty(Consts.UUID, labTest.getUuid());
 						List<LabTestAttribute> labTestAttribute = Context.getService(CommonLabTestService.class)
 						        .getLabTestAttributes(labTest.getTestOrderId());
+
 						if (labTestAttribute != null && labTestAttribute.size() > 0) {
-							childJsonObject.addProperty("resultFilled", Boolean.TRUE);
-							childJsonObject.addProperty("resultDate", labTestAttribute.get(0).getDateCreated().toString());
+							boolean isVoided = false;
+							LabTestAttribute labTestAttributeCurrentVal = null;
+							for (int i = 0; i < labTestAttribute.size(); i++) {
+								if (!labTestAttribute.get(i).getVoided()) {
+									labTestAttributeCurrentVal = labTestAttribute.get(i);
+									isVoided = true;
+									break;
+								}
+							}
+							if (isVoided && labTestAttributeCurrentVal != null) {
+								childJsonObject.addProperty(Consts.RESULT_FILLED, Boolean.TRUE);
+								childJsonObject.addProperty(Consts.RESULT_DATE,
+								    labTestAttributeCurrentVal.getDateCreated().toString());
+							} else {
+								childJsonObject.addProperty(Consts.RESULT_FILLED, Boolean.FALSE);
+								childJsonObject.addProperty(Consts.RESULT_DATE, "");
+							}
 						} else {
-							childJsonObject.addProperty("resultFilled", Boolean.FALSE);
-							childJsonObject.addProperty("resultDate", "");
+							childJsonObject.addProperty(Consts.RESULT_FILLED, Boolean.FALSE);
+							childJsonObject.addProperty(Consts.RESULT_DATE, "");
 						}
 						orderJsonArray.add(childJsonObject);
 					}
 				}
-				System.out.println("Totatl Resullt SET ::" + orderJsonArray);
-				model.put("testOrder", orderJsonArray);
-				// generalObj.add(testList);
-				// model.put("testOrder", testList);
+				model.put(Consts.TEST_ORDER, orderJsonArray);
 			}
 		}
 

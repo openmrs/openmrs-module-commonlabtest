@@ -13,6 +13,7 @@ import org.openmrs.ConceptClass;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
+import org.openmrs.module.commonlabtest.utility.Consts;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -39,6 +40,7 @@ public class LabTestTypeController {
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestType.form")
 	public String showForm(ModelMap model, @RequestParam(value = "uuid", required = false) String uuid,
 	        @RequestParam(value = "error", required = false) String error) {
+
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestType testType;
 		if (uuid == null || uuid.equalsIgnoreCase("")) {
@@ -46,23 +48,23 @@ public class LabTestTypeController {
 		} else {
 			testType = commonLabTestService.getLabTestTypeByUuid(uuid);
 		}
-		ConceptClass conceptClass = Context.getConceptService().getConceptClassByName("Test");
+		ConceptClass conceptClass = Context.getConceptService().getConceptClassByName(Consts.TEST);
 		List<Concept> conceptlist = Context.getConceptService().getConceptsByClass(conceptClass);
-		model.addAttribute("labTestType", testType);
+		model.addAttribute(Consts.LAB_TEST_TYPE, testType);
 		JsonArray jsonArray = new JsonArray();
 		for (Concept c : conceptlist) {
 			if (c.getRetired())
 				continue;
 			JsonObject json = new JsonObject();
-			json.addProperty("id", c.getId() + "");
-			json.addProperty("name", c.getName() != null ? c.getName().getName() : "");
-			json.addProperty("shortName",
+			json.addProperty(Consts.ID, c.getId() + "");
+			json.addProperty(Consts.NAME, c.getName() != null ? c.getName().getName() : "");
+			json.addProperty(Consts.SHORT_NAME,
 			    c.getShortNameInLocale(Locale.ENGLISH) != null ? c.getShortNameInLocale(Locale.ENGLISH).getName() : "");
-			json.addProperty("description", c.getDescription() != null ? c.getDescription().getDescription() : "");
+			json.addProperty(Consts.DESCRIPTION, c.getDescription() != null ? c.getDescription().getDescription() : "");
 			jsonArray.add(json);
 		}
-		model.addAttribute("conceptsJson", jsonArray);
-		model.addAttribute("error", error);
+		model.addAttribute(Consts.CONCEPT_JSON, jsonArray);
+		model.addAttribute(Consts.ERROR, error);
 		return SUCCESS_ADD_FORM_VIEW;
 	}
 
@@ -70,14 +72,15 @@ public class LabTestTypeController {
 	public String onSubmit(ModelMap model, HttpSession httpSession,
 	        @ModelAttribute("anyRequestObject") Object anyRequestObject, HttpServletRequest request,
 	        @ModelAttribute("labTestType") LabTestType labTestType, BindingResult result) {
+
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status = "";
 		if (Context.getAuthenticatedUser() == null) {
 			return "redirect:../../login.htm";
 		}
 		if (result.hasErrors()) {
-			status = "Invalid Reference concept Id entered";
-			model.addAttribute("error", status);
+			status = Consts.INVALID_REFERENCE_MESSAGE;
+			model.addAttribute(Consts.ERROR, status);
 			if (labTestType.getLabTestTypeId() == null) {
 				return "redirect:addLabTestType.form";
 			} else {
@@ -86,16 +89,15 @@ public class LabTestTypeController {
 		} else {
 			try {
 				commonLabTestService.saveLabTestType(labTestType);
-				StringBuilder sb = new StringBuilder();
-				sb.append("Lab Test Type with Uuid :");
-				sb.append(labTestType.getUuid());
-				sb.append(" is  saved!");
-				status = sb.toString();
+				StringBuilder statusString = new StringBuilder();
+				statusString.append(Consts.LAB_TEST_TYPE_UUID_MESSAGE);
+				statusString.append(labTestType.getUuid());
+				statusString.append(" is  saved!");
+				status = statusString.toString();
 			}
 			catch (Exception e) {
-				status = "could not save Lab Test Type.";
-				e.printStackTrace();
-				model.addAttribute("error", status);
+				status = Consts.COULD_NOT_SAVE_TEST_TYPE_MESAGE;
+				model.addAttribute(Consts.ERROR, status);
 				if (labTestType.getLabTestTypeId() == null) {
 					return "redirect:addLabTestType.form";
 				} else {
@@ -103,13 +105,14 @@ public class LabTestTypeController {
 				}
 			}
 		}
-		model.addAttribute("save", status);
+		model.addAttribute(Consts.SAVED, status);
 		return "redirect:manageLabTestTypes.form";
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/retirelabtesttype.form")
 	public String onRetire(ModelMap model, HttpSession httpSession, HttpServletRequest request,
 	        @RequestParam("uuid") String uuid, @RequestParam("retireReason") String retireReason) {
+
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestType labTestType = commonLabTestService.getLabTestTypeByUuid(uuid);
 		String status;
@@ -118,26 +121,26 @@ public class LabTestTypeController {
 		}
 		try {
 			commonLabTestService.retireLabTestType(labTestType, retireReason);
-			StringBuilder sb = new StringBuilder();
-			sb.append("Lab Test Type with Uuid :");
-			sb.append(labTestType.getUuid());
-			sb.append(" is permanently retired!");
-			status = sb.toString();
+			StringBuilder statusString = new StringBuilder();
+			statusString.append(Consts.LAB_TEST_TYPE_UUID_MESSAGE);
+			statusString.append(labTestType.getUuid());
+			statusString.append(Consts.PERMANENTLY_RETIRED_MESSAGE);
+			status = statusString.toString();
 		}
 		catch (Exception exception) {
-			status = "could not retire Lab Test Type.";
-			exception.printStackTrace();
-			model.addAttribute("error", status);
+			status = Consts.COULD_NOT_RETIRE_TEST_TYPE_MESSAGE;
+			model.addAttribute(Consts.ERROR, status);
 			if (labTestType.getLabTestTypeId() == null) {
 				return "redirect:addLabTestType.form";
 			} else {
 				return "redirect:addLabTestType.form?uuid=" + labTestType.getUuid();
 			}
 		}
-		model.addAttribute("save", status);
+		model.addAttribute(Consts.SAVED, status);
 		return "redirect:manageLabTestTypes.form";
 	}
 
+	@SuppressWarnings("deprecation")
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/deletelabtesttype.form")
 	public String onDelete(ModelMap model, HttpSession httpSession, HttpServletRequest request,
 	        @RequestParam("uuid") String uuid) {
@@ -146,23 +149,22 @@ public class LabTestTypeController {
 		String status;
 		try {
 			commonLabTestService.deleteLabTestType(labTestType, true);
-			StringBuilder sb = new StringBuilder();
-			sb.append("Lab Test Type with Uuid :");
-			sb.append(labTestType.getUuid());
-			sb.append(" is permanently deleted!");
-			status = sb.toString();
+			StringBuilder statusString = new StringBuilder();
+			statusString.append(Consts.LAB_TEST_TYPE_UUID_MESSAGE);
+			statusString.append(labTestType.getUuid());
+			statusString.append(Consts.PERMANENTLY_DELETED_MESSAGE);
+			status = statusString.toString();
 		}
 		catch (Exception exception) {
-			status = "could not delete Lab Test Type.";
-			exception.printStackTrace();
-			model.addAttribute("error", status);
+			status = Consts.COULD_NOT_DELETE_TEST_TYPE;
+			model.addAttribute(Consts.ERROR, status);
 			if (labTestType.getLabTestTypeId() == null) {
 				return "redirect:addLabTestType.form";
 			} else {
 				return "redirect:addLabTestType.form?uuid=" + labTestType.getUuid();
 			}
 		}
-		model.addAttribute("save", status);
+		model.addAttribute(Consts.SAVED, status);
 		return "redirect:manageLabTestTypes.form";
 
 	}

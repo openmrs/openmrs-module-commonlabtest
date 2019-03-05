@@ -1,6 +1,5 @@
 package org.openmrs.module.commonlabtest.web.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -18,6 +17,7 @@ import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
+import org.openmrs.module.commonlabtest.utility.Consts;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -39,29 +39,28 @@ public class LabTestSampleController {
 
 	CommonLabTestService commonLabTestService;
 
-	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(simpleDateFormat, true));
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(Consts.simpleDateFormat, true));
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestSample.form")
 	public String showForm(HttpServletRequest request, ModelMap model, @RequestParam(required = true) Integer patientId,
 	        @RequestParam(required = false) Integer testSampleId, @RequestParam(required = false) Integer orderId,
 	        @RequestParam(required = false) String error) {
+
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String orderDate = "";
 		if (orderId != null) {
 			LabTest labTest = commonLabTestService.getLabTest(orderId);
 			if (labTest == null) {
-				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "Test Order does not exist");
+				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, Consts.TEST_ORDER_DOES_NOT_EXIST_MESSAGE);
 				return "redirect:../../patientDashboard.form?patientId=" + patientId;
 			} else if (labTest.getVoided()) {
-				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "Test Order is voided");
+				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, Consts.TEST_ORDER_VOIED_MESSAGE);
 				return "redirect:../../patientDashboard.form?patientId=" + patientId;
 			}
-			orderDate = simpleDateFormat.format(labTest.getOrder().getEncounter().getEncounterDatetime());
+			orderDate = Consts.simpleDateFormat.format(labTest.getOrder().getEncounter().getEncounterDatetime());
 		}
 
 		LabTestSample labTestSample;
@@ -70,14 +69,13 @@ public class LabTestSampleController {
 		} else {
 			labTestSample = commonLabTestService.getLabTestSample(testSampleId);
 		}
-
 		// get Specimen Type .
 		String specimenTypeUuid = Context.getAdministrationService()
 		        .getGlobalProperty("commonlabtest.specimenTypeConceptUuid");
 		Concept specimenType = Context.getConceptService().getConceptByUuid(specimenTypeUuid);
 		if (specimenType != null && specimenType.getSetMembers().size() > 0) {
 			List<Concept> specimenTypeConcepts = specimenType.getSetMembers();
-			model.put("specimenType", specimenTypeConcepts);
+			model.put(Consts.SPECIMENT_TYPE, specimenTypeConcepts);
 		}
 		// get Specimen Site
 		String specimenSiteUuid = Context.getAdministrationService()
@@ -87,11 +85,11 @@ public class LabTestSampleController {
 			Collection<ConceptAnswer> specimenSiteConcepts = specimenSiteSet.getAnswers();
 			List<ConceptAnswer> specimenSiteConceptlist;
 			if (specimenSiteConcepts instanceof List)
-				specimenSiteConceptlist = (List) specimenSiteConcepts;
+				specimenSiteConceptlist = (List<ConceptAnswer>) specimenSiteConcepts;
 			else
 				specimenSiteConceptlist = new ArrayList<ConceptAnswer>(specimenSiteConcepts);
 
-			model.put("specimenSite", specimenSiteConceptlist);
+			model.put(Consts.SPECIMENT_SITE, specimenSiteConceptlist);
 		}
 
 		// get test units
@@ -102,18 +100,18 @@ public class LabTestSampleController {
 			Collection<ConceptAnswer> testUnitsConcepts = testUnitsUuid.getAnswers();
 			List<ConceptAnswer> testUnitsConceptlist;
 			if (testUnitsConcepts instanceof List)
-				testUnitsConceptlist = (List) testUnitsConcepts;
+				testUnitsConceptlist = (List<ConceptAnswer>) testUnitsConcepts;
 			else
 				testUnitsConceptlist = new ArrayList<ConceptAnswer>(testUnitsConcepts);
-			model.put("testUnits", testUnitsConceptlist);
+			model.put(Consts.TEST_UNIT, testUnitsConceptlist);
 		}
 
-		model.addAttribute("testSample", labTestSample);
-		model.addAttribute("patientId", patientId);
-		model.addAttribute("orderEncDate", orderDate);
-		model.addAttribute("orderId", orderId);
-		model.addAttribute("error", error);
-		model.addAttribute("provider", Context.getProviderService()
+		model.addAttribute(Consts.TEST_SAMPLE, labTestSample);
+		model.addAttribute(Consts.PATIENT_ID, patientId);
+		model.addAttribute(Consts.ORDER_ENC_DATE, orderDate);
+		model.addAttribute(Consts.ORDER_ID, orderId);
+		model.addAttribute(Consts.ERROR, error);
+		model.addAttribute(Consts.PROVIDER, Context.getProviderService()
 		        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
 		return SUCCESS_ADD_FORM_VIEW;
 	}
@@ -122,6 +120,7 @@ public class LabTestSampleController {
 	public String onSubmit(ModelMap model, HttpSession httpSession,
 	        @ModelAttribute("anyRequestObject") Object anyRequestObject, HttpServletRequest request,
 	        @ModelAttribute("testSample") LabTestSample labTestSample, BindingResult result) {
+
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status = "";
 		if (Context.getAuthenticatedUser() == null) {
@@ -142,21 +141,20 @@ public class LabTestSampleController {
 					        + labTestSample.getLabTest().getOrder().getId();
 				}
 			} else {
-				// labTest.set
 				if (labTestSample.getId() == null)
 					labTestSample.setStatus(LabTestSampleStatus.COLLECTED);
 				commonLabTestService.saveLabTestSample(labTestSample);
-				StringBuilder sb = new StringBuilder();
-				sb.append("Lab Test Sample with Uuid :");
-				sb.append(labTestSample.getUuid());
-				sb.append(" is  saved!");
-				status = sb.toString();
+				StringBuilder stringBuilder = new StringBuilder();
+				stringBuilder.append(Consts.LAB_TEST_SAMPLE_UUID_MESSAGE);
+				stringBuilder.append(labTestSample.getUuid());
+				stringBuilder.append(" is  saved!");
+				status = stringBuilder.toString();
 			}
 		}
 		catch (Exception e) {
-			status = "Error! could not save Lab Test Sample";
+			status = Consts.COULD_NOT_SAVE_TEST_SAMPLE_MESSAGE;
 			e.printStackTrace();
-			model.addAttribute("error", status);
+			model.addAttribute(Consts.ERROR, status);
 			if (labTestSample.getLabTestSampleId() == null) {
 				return "redirect:addLabTestSample.form?patientId="
 				        + labTestSample.getLabTest().getOrder().getPatient().getPatientId() + "&orderId="
@@ -185,16 +183,15 @@ public class LabTestSampleController {
 		}
 		try {
 			commonLabTestService.voidLabTestSample(labTestSample, voidReason);
-			StringBuilder sb = new StringBuilder();
-			sb.append("Lab Test Sample with Uuid :");
-			sb.append(labTestSample.getUuid());
-			sb.append(" is  voided!");
-			status = sb.toString();
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.append(Consts.LAB_TEST_SAMPLE_UUID_MESSAGE);
+			stringBuilder.append(labTestSample.getUuid());
+			stringBuilder.append(" is  voided!");
+			status = stringBuilder.toString();
 		}
 		catch (Exception e) {
-			status = "could not void Lab Test Sample";
-			e.printStackTrace();
-			model.addAttribute("error", status);
+			status = Consts.COULD_NOT_VOID_TEST_SAMPLE_MESSAGE;
+			model.addAttribute(Consts.ERROR, status);
 			if (labTestSample.getLabTestSampleId() == null) {
 				return "redirect:addLabTestSample.form?patientId="
 				        + labTestSample.getLabTest().getOrder().getPatient().getPatientId();

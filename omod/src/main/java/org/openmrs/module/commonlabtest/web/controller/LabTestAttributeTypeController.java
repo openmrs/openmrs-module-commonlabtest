@@ -13,6 +13,7 @@ import org.openmrs.customdatatype.CustomDatatypeUtil;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
+import org.openmrs.module.commonlabtest.utility.Consts;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -46,6 +47,7 @@ public class LabTestAttributeTypeController {
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestAttributeType.form")
 	public String showForm(ModelMap model, @RequestParam(value = "error", required = false) String error,
 	        @RequestParam(value = "uuid", required = false) String uuid) {
+
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestAttributeType attributeType;
 		if (uuid == null || uuid.equalsIgnoreCase("")) {
@@ -55,14 +57,15 @@ public class LabTestAttributeTypeController {
 			List<LabTestAttribute> labTestAttributes = commonLabTestService.getLabTestAttributes(attributeType,
 			    Boolean.FALSE);
 			if (labTestAttributes.size() > 0) {
-				model.addAttribute("available", Boolean.TRUE);
+				model.addAttribute(Consts.AVAILABLE, Boolean.TRUE);
 			} else {
-				model.addAttribute("available", Boolean.FALSE);
+				model.addAttribute(Consts.AVAILABLE, Boolean.FALSE);
 			}
 		}
-		model.addAttribute("listTestType", commonLabTestService.getAllLabTestTypes(Boolean.FALSE));
-		model.addAttribute("attributeType", attributeType);
-		model.addAttribute("error", error);
+		model.addAttribute(Consts.LIST_TEST_TYPE, commonLabTestService.getAllLabTestTypes(Boolean.FALSE));
+		model.addAttribute(Consts.ATTRIBUTE_TYPE, attributeType);
+		model.addAttribute(Consts.ERROR, error);
+
 		return SUCCESS_ADD_FORM_VIEW;
 	}
 
@@ -70,12 +73,13 @@ public class LabTestAttributeTypeController {
 	public String onSubmit(ModelMap model, HttpSession httpSession,
 	        @ModelAttribute("anyRequestObject") Object anyRequestObject, HttpServletRequest request,
 	        @ModelAttribute("attributeType") LabTestAttributeType attributeType, BindingResult result) {
+
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status = "";
 		try {
 			if (result.hasErrors()) {
-				status = "Invalid Lab Test Type concept Id entered";
-				model.addAttribute("error", status);
+				status = Consts.INVALID_LAB_TESTTYPE;
+				model.addAttribute(Consts.ERROR, status);
 				if (attributeType.getLabTestAttributeTypeId() == null) {
 					return "redirect:addLabTestAttributeType.form";
 				} else {
@@ -84,23 +88,22 @@ public class LabTestAttributeTypeController {
 			} else {
 				commonLabTestService.saveLabTestAttributeType(attributeType);
 				StringBuilder subString = new StringBuilder();
-				subString.append("Lab Test Attribute with Uuid :");
+				subString.append(Consts.TEST_ATTRIBUTE_UUID_MESSAGE);
 				subString.append(attributeType.getUuid());
 				subString.append(" is  saved!");
 				status = subString.toString();
 			}
 		}
 		catch (Exception e) {
-			status = "could not save Lab Test Attribute Type";
-			e.printStackTrace();
-			model.addAttribute("error", status);
+			status = Consts.NOT_SAVE_TEST_ATTRIBUTE_TYPE_MESSAGE;
+			model.addAttribute(Consts.ERROR, status);
 			if (attributeType.getLabTestAttributeTypeId() == null) {
 				return "redirect:addLabTestAttributeType.form";
 			} else {
 				return "redirect:addLabTestAttributeType.form?uuid=" + attributeType.getUuid();
 			}
 		}
-		model.addAttribute("save", status);
+		model.addAttribute(Consts.SAVED, status);
 		return "redirect:manageLabTestAttributeTypes.form";
 
 	}
@@ -108,6 +111,7 @@ public class LabTestAttributeTypeController {
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/retirelabtestattributetype.form")
 	public String onRetire(ModelMap model, HttpSession httpSession, HttpServletRequest request,
 	        @RequestParam("uuid") String uuid, @RequestParam("retireReason") String retireReason) {
+
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestAttributeType attributeType = Context.getService(CommonLabTestService.class)
 		        .getLabTestAttributeTypeByUuid(uuid);
@@ -121,22 +125,21 @@ public class LabTestAttributeTypeController {
 		try {
 			commonLabTestService.retireLabTestAttributeType(attributeType, retireReason);
 			StringBuilder subString = new StringBuilder();
-			subString.append("Lab Test Attribute with Uuid :");
+			subString.append(Consts.TEST_ATTRIBUTE_UUID_MESSAGE);
 			subString.append(attributeType.getUuid());
-			subString.append(" is  retired!");
+			subString.append(" is retired!");
 			status = subString.toString();
 		}
 		catch (Exception e) {
-			status = "could not retire Lab Test Attribute Type";
-			e.printStackTrace();
-			model.addAttribute("error", status);
+			status = Consts.COULD_NOT_RETIRE_TEST_ATTRIBUTE_TYPE_MESSAGE;
+			model.addAttribute(Consts.ERROR, status);
 			if (attributeType.getLabTestAttributeTypeId() == null) {
 				return "redirect:addLabTestAttributeType.form";
 			} else {
 				return "redirect:addLabTestAttributeType.form?uuid=" + attributeType.getUuid();
 			}
 		}
-		model.addAttribute("save", status);
+		model.addAttribute(Consts.SAVED, status);
 		return "redirect:manageLabTestAttributeTypes.form";
 
 	}
@@ -144,6 +147,7 @@ public class LabTestAttributeTypeController {
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/deletelabtestattributetype.form")
 	public String onDelete(ModelMap model, HttpSession httpSession, HttpServletRequest request,
 	        @RequestParam("uuid") String uuid) {
+
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestAttributeType attributeType = commonLabTestService.getLabTestAttributeTypeByUuid(uuid);
 		String status;
@@ -159,13 +163,11 @@ public class LabTestAttributeTypeController {
 			status = subString.toString();
 		}
 		catch (Exception exception) {
-			// status = exception.getLocalizedMessage();
-			status = "could not delete Lab Test Attribute Type";
-			exception.printStackTrace();
-			model.addAttribute("error", status);
+			status = Consts.COULD_NOT_DELETE_ATTRIBUTE_TYPE_MESSAGE;
+			model.addAttribute(Consts.ERROR, status);
 			return "redirect:addLabTestAttributeType.form?uuid=" + attributeType.getUuid();
 		}
-		model.addAttribute("save", status);
+		model.addAttribute(Consts.SAVED, status);
 		return "redirect:manageLabTestAttributeTypes.form";
 	}
 }

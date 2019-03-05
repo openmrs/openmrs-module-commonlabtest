@@ -149,7 +149,7 @@ legend.scheduler-border {
 									<td>${testSample.getSpecimenSite().getName()}</td>
 									<td>${testSample.getSampleIdentifier()}</td>
 									<td><fmt:formatDate value="${testSample.collectionDate}"
-											pattern="yyyy-mm-dd" /></td>
+											pattern="yyyy-MM-dd" /></td>
 									<td>${testSample.getStatus()}</td>
 									<td hidden="true" class="uuid">${testSample.uuid}</td>
 									<openmrs:hasPrivilege
@@ -173,7 +173,7 @@ legend.scheduler-border {
 									<td>${testSample.getSpecimenSite().getName()}</td>
 									<td>${testSample.getSampleIdentifier()}</td>
 									<td><fmt:formatDate value="${testSample.collectionDate}"
-											pattern="yyyy-mm-dd" /></td>
+											pattern="yyyy-MM-dd" /></td>
 									<td>${testSample.getStatus()}</td>
 									<td hidden="true" class="uuid">${testSample.uuid}</td>
 									<openmrs:hasPrivilege
