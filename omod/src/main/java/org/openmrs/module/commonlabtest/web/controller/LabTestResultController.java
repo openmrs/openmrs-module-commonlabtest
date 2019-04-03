@@ -43,9 +43,9 @@ public class LabTestResultController {
 
 	private final String SUCCESS_ADD_FORM_VIEW = "/module/commonlabtest/addLabTestResult";
 
-	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
 	CommonLabTestService commonLabTestService;
+
+	public static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestResult.form")
 	public String showForm(HttpServletRequest request, @RequestParam(required = false) Integer testOrderId,
@@ -53,6 +53,7 @@ public class LabTestResultController {
 
 		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTest labTest = commonLabTestService.getLabTest(testOrderId);
+
 		if (labTest == null) {
 			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "Test Order does not exist");
 			return "redirect:../../patientDashboard.form?patientId=" + patientId;
@@ -113,64 +114,150 @@ public class LabTestResultController {
 	        @RequestParam(required = false) Integer testAttributeId,
 	        @RequestParam(required = false) MultipartFile documentTypeFile, @RequestParam(required = false) Boolean update) {
 
+		commonLabTestService = Context.getService(CommonLabTestService.class);
+
 		if (Context.getAuthenticatedUser() == null) {
 			return "redirect:../../login.htm";
 		}
 		LabTest labTest = commonLabTestService.getLabTest(testOrderId);
 		List<LabTestAttributeType> attributeTypeList = Context.getService(CommonLabTestService.class)
 		        .getLabTestAttributeTypes(labTest.getLabTestType(), false);
-		String conceptValue = "", textValue = "", boolValue = "", floatValue, testAtrrId, regexValue, dateValue;
+
+		List<LabTestAttribute> existingLabTestAttributes = commonLabTestService.getLabTestAttributes(testOrderId);
+		String testAtrrId;
 		String status;
 		try {
 			List<LabTestAttribute> labTestAttributes = new ArrayList<LabTestAttribute>();
 
 			for (LabTestAttributeType labTestAttributeType : attributeTypeList) {
 				LabTestAttribute testAttribute = new LabTestAttribute();
-
-				conceptValue = request.getParameter("concept." + labTestAttributeType.getId());
-				textValue = request.getParameter("valueText." + labTestAttributeType.getId());
-				boolValue = (request.getParameter("bool." + labTestAttributeType.getId()) == null) ? "false"
-				        : request.getParameter("bool." + labTestAttributeType.getId());
-				floatValue = request.getParameter("float." + labTestAttributeType.getId());
-				dateValue = request.getParameter("date." + labTestAttributeType.getId());
-				regexValue = request.getParameter("regex." + labTestAttributeType.getId());
+				String dataTypeName = labTestAttributeType.getDatatypeClassname();
+				String valueReference = "";
 				testAtrrId = request.getParameter("testAttributeId." + labTestAttributeType.getId());
 
-				if (update && (!testAtrrId.equals("undefined") && !testAtrrId.equals(""))) {
+				if (update && testAtrrId != null && !testAtrrId.equals("undefined") && !testAtrrId.isEmpty()) {
 					testAttribute = commonLabTestService.getLabTestAttribute(Integer.parseInt(testAtrrId));
 				} else {
 					testAttribute.setLabTest(labTest);
 					testAttribute.setAttributeType(labTestAttributeType);
 				}
-				// set the value reference
-				if (conceptValue != null && !conceptValue.equals("") && !conceptValue.isEmpty()) {
-					testAttribute.setValueReferenceInternal(conceptValue);
+				if (dataTypeName.equals("org.openmrs.customdatatype.datatype.ConceptDatatype")
+				        || dataTypeName.equals("Coded")) {
+					valueReference = request.getParameter("concept." + labTestAttributeType.getId());
+					LabTestAttribute existAttributeinner = getExistingAttributeValue(existingLabTestAttributes,
+					    labTestAttributeType.getId());
+					if (existAttributeinner == null && (valueReference == null || valueReference.isEmpty())) {
+						continue;
+					} else if (existAttributeinner != null && (valueReference == null || valueReference.isEmpty())) {
+						existAttributeinner.setVoided(Boolean.TRUE);
+						existAttributeinner.setVoidReason("Attribute no longer required.");
+						labTestAttributes.add(existAttributeinner);
+					} else if (existAttributeinner == null && (valueReference != null && !valueReference.isEmpty())) {
+						testAttribute.setValueReferenceInternal(valueReference);
+						labTestAttributes.add(testAttribute);
+					} else if (existAttributeinner.getValueReference().equalsIgnoreCase(valueReference)) {
+						continue;
+					} else {
+						labTestAttributes.add(existingTestAttribute(existAttributeinner));
+						testAttribute.setValueReferenceInternal(valueReference);
+						labTestAttributes.add(testAttribute);
+					}
+				} else if (dataTypeName.equals("org.openmrs.customdatatype.datatype.BooleanDatatype")
+				        || dataTypeName.equals("Boolean")) {
+					valueReference = (request.getParameter("bool." + labTestAttributeType.getId()) == null) ? "false"
+					        : request.getParameter("bool." + labTestAttributeType.getId());
+					testAttribute.setValueReferenceInternal(valueReference);
 					labTestAttributes.add(testAttribute);
-				} else if (textValue != null && !textValue.equals("") && !textValue.isEmpty()) {
-					testAttribute.setValueReferenceInternal(textValue);
-					labTestAttributes.add(testAttribute);
-				} else if (floatValue != null && !floatValue.equals("") && !floatValue.isEmpty()) {
-					testAttribute.setValueReferenceInternal(floatValue);
-					labTestAttributes.add(testAttribute);
-				} else if (dateValue != null && !dateValue.equals("") && !dateValue.isEmpty()) {
-					testAttribute.setValueReferenceInternal(dateValue);
-					labTestAttributes.add(testAttribute);
-				} else if (regexValue != null && !regexValue.equals("") && !regexValue.isEmpty()) {
-					testAttribute.setValueReferenceInternal(regexValue);
-					labTestAttributes.add(testAttribute);
-				} else if (boolValue != null && !boolValue.equals("") && !boolValue.isEmpty()) {
-					testAttribute.setValueReferenceInternal(boolValue);
-					labTestAttributes.add(testAttribute);
+
+				} else if (dataTypeName.equals("org.openmrs.customdatatype.datatype.FreeTextDatatype")
+				        || dataTypeName.equals("Text")
+				        || dataTypeName.equals("org.openmrs.customdatatype.datatype.LongFreeTextDatatype")) {
+
+					valueReference = request.getParameter("valueText." + labTestAttributeType.getId());
+					LabTestAttribute existAttributeinner = getExistingAttributeValue(existingLabTestAttributes,
+					    labTestAttributeType.getId());
+					if (existAttributeinner == null && (valueReference == null || valueReference.isEmpty())) {
+						continue;
+					} else if (existAttributeinner != null && (valueReference == null || valueReference.isEmpty())) {
+						existAttributeinner.setVoided(Boolean.TRUE);
+						labTestAttributes.add(existAttributeinner);
+					} else if (existAttributeinner == null && (valueReference != null && !valueReference.isEmpty())) {
+						testAttribute.setValueReferenceInternal(valueReference);
+						labTestAttributes.add(testAttribute);
+					} else if (existAttributeinner.getValueReference().equalsIgnoreCase(valueReference)) {
+						continue;
+					} else {
+						labTestAttributes.add(existingTestAttribute(existAttributeinner));
+						testAttribute.setValueReferenceInternal(valueReference);
+						labTestAttributes.add(testAttribute);
+					}
+				} else if (dataTypeName.equals("org.openmrs.customdatatype.datatype.FloatDatatype")
+				        || dataTypeName.equals("Numeric")) {
+					valueReference = request.getParameter("float." + labTestAttributeType.getId());
+					LabTestAttribute existAttributeinner = getExistingAttributeValue(existingLabTestAttributes,
+					    labTestAttributeType.getId());
+					if (existAttributeinner == null && (valueReference == null || valueReference.isEmpty())) {
+						continue;
+					} else if (existAttributeinner != null && (valueReference == null || valueReference.isEmpty())) {
+						existAttributeinner.setVoided(Boolean.TRUE);
+						labTestAttributes.add(existAttributeinner);
+					} else if (existAttributeinner == null && (valueReference != null && !valueReference.isEmpty())) {
+						testAttribute.setValueReferenceInternal(valueReference);
+						labTestAttributes.add(testAttribute);
+					} else if (existAttributeinner.getValueReference().equalsIgnoreCase(valueReference)) {
+						continue;
+					} else {
+						labTestAttributes.add(existingTestAttribute(existAttributeinner));
+						testAttribute.setValueReferenceInternal(valueReference);
+						labTestAttributes.add(testAttribute);
+					}
+				} else if (dataTypeName.endsWith("org.openmrs.customdatatype.datatype.DateDatatype")
+				        || dataTypeName.equals("Datetime") || dataTypeName.equals("Date")) {
+					valueReference = request.getParameter("date." + labTestAttributeType.getId());
+					LabTestAttribute existAttributeinner = getExistingAttributeValue(existingLabTestAttributes,
+					    labTestAttributeType.getId());
+					if (existAttributeinner == null && (valueReference == null || valueReference.isEmpty())) {
+						continue;
+					} else if (existAttributeinner != null && (valueReference == null || valueReference.isEmpty())) {
+						existAttributeinner.setVoided(Boolean.TRUE);
+						labTestAttributes.add(existAttributeinner);
+					} else if (existAttributeinner == null && (valueReference != null && !valueReference.isEmpty())) {
+						testAttribute.setValueReferenceInternal(valueReference);
+						labTestAttributes.add(testAttribute);
+					} else if (existAttributeinner.getValueReference().equalsIgnoreCase(valueReference)) {
+						continue;
+					} else {
+						labTestAttributes.add(existingTestAttribute(existAttributeinner));
+						testAttribute.setValueReferenceInternal(valueReference);
+						labTestAttributes.add(testAttribute);
+					}
+				} else if (dataTypeName.equals("org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype")) {
+					valueReference = request.getParameter("regex." + labTestAttributeType.getId());
+					LabTestAttribute existAttributeinner = getExistingAttributeValue(existingLabTestAttributes,
+					    labTestAttributeType.getId());
+					if (existAttributeinner == null && (valueReference == null || valueReference.isEmpty())) {
+						continue;
+					} else if (existAttributeinner != null && (valueReference == null || valueReference.isEmpty())) {
+						existAttributeinner.setVoided(Boolean.TRUE);
+						labTestAttributes.add(existAttributeinner);
+					} else if (existAttributeinner == null && (valueReference != null && !valueReference.isEmpty())) {
+						testAttribute.setValueReferenceInternal(valueReference);
+						labTestAttributes.add(testAttribute);
+					} else if (existAttributeinner.getValueReference().equalsIgnoreCase(valueReference)) {
+						continue;
+					} else {
+						labTestAttributes.add(existingTestAttribute(existAttributeinner));
+						testAttribute.setValueReferenceInternal(valueReference);
+						labTestAttributes.add(testAttribute);
+					}
 				}
 
 			}
 			// save the file
-			if (documentTypeFile.isEmpty()) {} else {
-
+			if (documentTypeFile == null || documentTypeFile.isEmpty()) {} else {
 				try {
 					String fileDirectory = Context.getAdministrationService()
 					        .getGlobalProperty("commonlabtest.fileDirectory");
-
 					FileCopyUtils.copy(documentTypeFile.getBytes(), new FileOutputStream(
 					        fileDirectory + "/" + documentTypeFile.getOriginalFilename().replace(" ", "-")));
 					String name = documentTypeFile.getOriginalFilename().replace(" ", "-");
@@ -195,7 +282,6 @@ public class LabTestResultController {
 		}
 		catch (Exception e) {
 			status = "Could not save Lab Test Result";
-			e.printStackTrace();
 			model.addAttribute("error", status);
 		}
 
@@ -207,6 +293,8 @@ public class LabTestResultController {
 	public String onVoid(ModelMap model, HttpSession httpSession, HttpServletRequest request,
 	        @RequestParam("testOrderId") Integer testOrderId, @RequestParam("patientId") Integer patientId,
 	        @RequestParam("voidReason") String voidReason) {
+
+		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status;
 		if (Context.getAuthenticatedUser() == null) {
 			return "redirect:../../login.htm";
@@ -214,16 +302,12 @@ public class LabTestResultController {
 		try {
 			LabTest labTest = commonLabTestService.getLabTest(testOrderId);
 			commonLabTestService.voidLabTestAttributes(labTest, voidReason);
-			StringBuilder sb = new StringBuilder();
-			sb.append("Lab Test Result ");
-			sb.append(" is  voided!");
-			status = sb.toString();
 		}
 		catch (Exception e) {
 			status = "Could not void Lab Test Result";
-			e.printStackTrace();
 			model.addAttribute("error", status);
 		}
+
 		request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Test Result voided successfully");
 		return "redirect:../../patientDashboard.form?patientId=" + patientId;
 
@@ -335,8 +419,6 @@ public class LabTestResultController {
 					JsonArray jsonSubGroupArray = new JsonArray();
 					String subGroupName = labTestAttributeTypechld.getMultisetName();
 					if (subGroupName != null && !subGroupName.isEmpty()) {
-						// String subGroupName = labTestAttributeTypechld.getMultisetName(); //
-						// groupName should be // change with multisetName
 						if (holderSubGroupIdList.contains(subGroupName)) {
 							continue;
 						}
@@ -398,6 +480,30 @@ public class LabTestResultController {
 			}
 		}
 		return filterLabTestAttributeTypes;
+	}
+
+	private LabTestAttribute getExistingAttributeValue(List<LabTestAttribute> labTestAttributes, int attributeTypeId) {
+		if (labTestAttributes != null && labTestAttributes.size() > 0) {
+			for (int i = 0; i < labTestAttributes.size(); i++) {
+				if (!labTestAttributes.get(i).getVoided()
+				        && labTestAttributes.get(i).getAttributeType().getId() == attributeTypeId) {
+					return labTestAttributes.get(i);
+				}
+			}
+		}
+		return null;
+	}
+
+	private LabTestAttribute existingTestAttribute(LabTestAttribute labTestAttribute) {
+		LabTestAttribute existAttribute = new LabTestAttribute();
+
+		existAttribute.setLabTest(labTestAttribute.getLabTest());
+		existAttribute.setAttributeType(labTestAttribute.getAttributeType());
+		existAttribute.setValueReferenceInternal(labTestAttribute.getValueReference());
+		existAttribute.setVoided(Boolean.TRUE);
+		existAttribute.setVoidReason("Attribute value changed.");
+
+		return existAttribute;
 	}
 
 }
