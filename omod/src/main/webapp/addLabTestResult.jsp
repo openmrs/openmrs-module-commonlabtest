@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
-<openmrs:require privilege="View labTestResult" otherwise="/login.htm"
+<openmrs:require privilege="View CommonLabTest results" otherwise="/login.htm"
 	redirect="/module/commonlabtest/addLabTestResult.form" />
 
 <openmrs:portlet url="patientHeader" id="patientDashboardHeader"
