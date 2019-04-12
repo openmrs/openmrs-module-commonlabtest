@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
-<openmrs:require privilege="View CommonLabTest results" otherwise="/login.htm"
+<openmrs:require privilege="View CommonLabTest Results" otherwise="/login.htm"
 	redirect="/module/commonlabtest/addLabTestResult.form" />
 
 <openmrs:portlet url="patientHeader" id="patientDashboardHeader"
@@ -140,7 +140,7 @@ input[type=checkbox] {
 
 			<c:choose>
 				<c:when test="${update == false}">
-					<openmrs:require privilege="Add CommonLabTest results"
+					<openmrs:require privilege="Add CommonLabTest Results"
 						otherwise="/login.htm"
 						redirect="/module/commonlabtest/addLabTestResult.form" />
 					<legend class="scheduler-border">
@@ -148,7 +148,7 @@ input[type=checkbox] {
 					</legend>
 				</c:when>
 				<c:otherwise>
-					<openmrs:require privilege="Edit CommonLabTest results"
+					<openmrs:require privilege="Edit CommonLabTest Results"
 						otherwise="/login.htm"
 						redirect="/module/commonlabtest/addLabTestResult.form" />
 					<legend class="scheduler-border">
@@ -165,7 +165,7 @@ input[type=checkbox] {
 		</fieldset>
 		<br>
 		<c:if test="${update == true}">
-			<openmrs:hasPrivilege privilege="Delete CommonLabTest results">
+			<openmrs:hasPrivilege privilege="Delete CommonLabTest Results">
 				<fieldset class="scheduler-border">
 					<legend class="scheduler-border">
 						<spring:message code="commonlabtest.result.void" />
