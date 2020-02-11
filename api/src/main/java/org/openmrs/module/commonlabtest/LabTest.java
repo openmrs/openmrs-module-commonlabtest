@@ -132,8 +132,11 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	 * 
 	 * @param referenceNumber the reference number
 	 * @return {@link LabTest} object(s)
+	 * @deprecated Data provided by this method can be better achieved from 
+	 * appropriate service at point of use.
 	 */
 	@Override
+	@Deprecated
 	public List<LabTest> findPossibleValues(String referenceNumber) {
 		try {
 			return Context.getService(CommonLabTestService.class).getLabTests(referenceNumber, false);
@@ -153,8 +156,11 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	 * Also @see org.openmrs.Attributable#getPossibleValues()
 	 * 
 	 * @return {@link LabTest} object(s)
+	 * @deprecated Data provided by this method can be better achieved from 
+	 * appropriate service at point of use.
 	 */
 	@Override
+	@Deprecated
 	public List<LabTest> getPossibleValues() {
 		return Collections.emptyList();
 	}
