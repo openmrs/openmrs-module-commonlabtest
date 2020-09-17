@@ -147,6 +147,14 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 	}
 
 	/**
+	 * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getUpdatableProperties()
+	 */
+	@Override
+	public DelegatingResourceDescription getUpdatableProperties() throws ResourceDoesNotSupportOperationException {
+		return getCreatableProperties();
+	}
+
+	/**
 	 * @param labTest the {@link LabTest} object
 	 * @return labReferenceNumber as Display
 	 */
