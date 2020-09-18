@@ -165,10 +165,26 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 		return labTest.getLabReferenceNumber();
 	}
 
+	/**
+	 * Sets attributes on the given CommonLabbTest order.
+	 * 
+	 * @param instance
+	 * @param attrs
+	 */
 	@PropertySetter("attributes")
-	public static void setAttributes(LabTest instance, List<LabTestAttribute> attributes) {
-		for (LabTestAttribute attribute : attributes) {
-			instance.addAttribute(attribute);
+	public void setAttributes(LabTest instance, List<LabTestAttribute> attributes) {
+		for (LabTestAttribute attr : attributes) {
+			LabTestAttribute existingAttribute = instance
+			        .getAttribute(commonLabTestService.getLabTestAttributeTypeByUuid(attr.getAttributeType().getUuid()));
+			if (existingAttribute != null) {
+				if (attr.getValue() == null) {
+					instance.removeLabTestAttribute(existingAttribute);
+				} else {
+					existingAttribute.setValue(attr.getValue());
+				}
+			} else {
+				instance.addAttribute(attr);
+			}
 		}
 	}
 

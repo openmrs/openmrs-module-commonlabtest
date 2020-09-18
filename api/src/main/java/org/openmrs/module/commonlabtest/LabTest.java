@@ -132,8 +132,8 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	 * 
 	 * @param referenceNumber the reference number
 	 * @return {@link LabTest} object(s)
-	 * @deprecated Data provided by this method can be better achieved from 
-	 * appropriate service at point of use.
+	 * @deprecated Data provided by this method can be better achieved from appropriate service at point
+	 *             of use.
 	 */
 	@Override
 	@Deprecated
@@ -156,8 +156,8 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 	 * Also @see org.openmrs.Attributable#getPossibleValues()
 	 * 
 	 * @return {@link LabTest} object(s)
-	 * @deprecated Data provided by this method can be better achieved from 
-	 * appropriate service at point of use.
+	 * @deprecated Data provided by this method can be better achieved from appropriate service at point
+	 *             of use.
 	 */
 	@Override
 	@Deprecated
@@ -218,6 +218,28 @@ public class LabTest extends BaseCustomizableData<LabTestAttribute> implements j
 		} else {
 			return "";
 		}
+	}
+
+	/**
+	 * Returns the first non-voided commonlabtest attribute matching a commonlabtest attribute type.
+	 * <br>
+	 * <br>
+	 * Returns null if this commonlabtest has no non-voided {@link LabTestAttribute} with the given
+	 * {@link LabTestAttributeType}, the given {@link LabTestAttributeType} is null, or this
+	 * commonlabtest has no attributes.
+	 * 
+	 * @param lat the LabTestAttributeType to look for {@link LabTestAttributeType#equals(Object)}
+	 * @return LabTestAttribute that matches the given type
+	 */
+	public LabTestAttribute getAttribute(LabTestAttributeType lat) {
+		if (lat != null) {
+			for (LabTestAttribute attribute : getAttributes()) {
+				if (lat.equals(attribute.getAttributeType()) && !attribute.getVoided()) {
+					return attribute;
+				}
+			}
+		}
+		return null;
 	}
 
 	public Integer getTestOrderId() {
