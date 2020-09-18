@@ -3,6 +3,7 @@ package org.openmrs.module.commonlabtest;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -116,6 +117,52 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 		MockHttpServletResponse handle = handle(newPostRequest);
 		SimpleObject objectCreated = deserialize(handle);
 		Assert.assertNotNull(objectCreated);
+	}
+
+	@Test
+	public void shouldSaveNewButAvoidDuplicateAttributesForExistingOrder() throws Exception {
+
+		SimpleObject firstAttribute = new SimpleObject();
+		firstAttribute.add("attributeType", "ed8b4caf-478e-11e8-943c-40b034c3cfee");
+		firstAttribute.add("valueReference", "100.0");
+
+		SimpleObject secondAttribute = new SimpleObject();
+		secondAttribute.add("attributeType", "efeb9339-538d-11e8-9c7c-40b034c3cfee");
+		secondAttribute.add("valueReference", "NORMAL");
+
+		SimpleObject newAttribute = new SimpleObject();
+		newAttribute.add("attributeType", "f43de058-538d-11e8-9c7c-40b034c3cfee");
+		newAttribute.add("valueReference", "UNSTABLE");
+
+		List<SimpleObject> attributes = new ArrayList<SimpleObject>();
+		attributes.add(firstAttribute);
+		attributes.add(secondAttribute);
+		attributes.add(newAttribute);
+
+		SimpleObject labTestOrder = new SimpleObject();
+		labTestOrder.add("attributes", attributes);
+
+		// attaching uuid in URI for existing order
+		MockHttpServletRequest newPostRequest = newPostRequest(getURI() + "/d175e92e-47bf-11e8-943c-40b034c3cfee",
+		    labTestOrder);
+		MockHttpServletResponse handle = handle(newPostRequest);
+		SimpleObject objectCreated = deserialize(handle);
+		Assert.assertNotNull(objectCreated);
+
+		LabTest existingLabOrder = commonLabTestService.getLabTestByUuid("d175e92e-47bf-11e8-943c-40b034c3cfee");
+		
+		// ensuring new attribute is saved
+		String newAttributeValue = existingLabOrder
+		        .getAttribute(commonLabTestService.getLabTestAttributeTypeByUuid("f43de058-538d-11e8-9c7c-40b034c3cfee"))
+		        .getValueReference();
+		Assert.assertEquals("UNSTABLE", newAttributeValue);
+
+		// ensuring no duplicate attributes are saved
+		List<String> listAttrTypeUuids = new ArrayList<String>();
+		for (LabTestAttribute attr : existingLabOrder.getActiveAttributes()) {
+			listAttrTypeUuids.add(attr.getAttributeType().getUuid());
+		}
+		Assert.assertEquals(1, Collections.frequency(listAttrTypeUuids, "ed8b4caf-478e-11e8-943c-40b034c3cfee"));
 	}
 
 	@Test
