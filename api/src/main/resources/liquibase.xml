@@ -585,5 +585,52 @@
 			<column name="multiset_name" type="varchar(255)" />
 		</addColumn>
 	</changeSet>
+   <!-- 	
+	<changeSet author="shujaat.ali" id="commonlabtest-2019-2019-9-4-10">
+	    <update tableName="role_privilege">
+	        <column name="privilege" value='Add CommonLabTest Results'/>
+	        <where>privilege='Add CommonLabTest results'</where>
+	    </update>
+    </changeSet> -->
+    
+    <changeSet author="shujaat.ali" id="commonlabtest-2019-2019-9-5-11">
+		<sql>
+			SET foreign_key_checks = 0; 
+			UPDATE privilege p LEFT JOIN role_privilege rp ON p.privilege = rp.privilege 
+			SET p.privilege = 'Add CommonLabTest Results' , rp.privilege ='Add CommonLabTest Results'
+			WHERE p.privilege ='Add CommonLabTest results';
+			SET foreign_key_checks = 1;
+		</sql>
+	</changeSet>
+	
+	   <changeSet author="shujaat.ali" id="commonlabtest-2019-2019-9-5-12">
+		<sql>
+			SET foreign_key_checks = 0; 
+			UPDATE privilege p LEFT JOIN role_privilege rp ON p.privilege = rp.privilege 
+			SET p.privilege = 'View CommonLabTest Results' , rp.privilege ='View CommonLabTest Results'
+			WHERE p.privilege ='View CommonLabTest results';
+			SET foreign_key_checks = 1;
+		</sql>
+	</changeSet>
+	
+	   <changeSet author="shujaat.ali" id="commonlabtest-2019-2019-9-5-13">
+		<sql>
+			SET foreign_key_checks = 0; 
+			UPDATE privilege p LEFT JOIN role_privilege rp ON p.privilege = rp.privilege 
+			SET p.privilege = 'Edit CommonLabTest Results' , rp.privilege ='Edit CommonLabTest Results'
+			WHERE p.privilege ='Edit CommonLabTest results';
+			SET foreign_key_checks = 1;
+		</sql>
+	</changeSet>
+	
+	<changeSet author="shujaat.ali" id="commonlabtest-2019-2019-9-5-14">
+		<sql>
+			SET foreign_key_checks = 0; 
+			UPDATE privilege p LEFT JOIN role_privilege rp ON p.privilege = rp.privilege 
+			SET p.privilege = 'Delete CommonLabTest Results' , rp.privilege ='Delete CommonLabTest Results'
+			WHERE p.privilege ='Delete CommonLabTest results';
+			SET foreign_key_checks = 1;
+		</sql>
+	</changeSet>
 
 </databaseChangeLog>

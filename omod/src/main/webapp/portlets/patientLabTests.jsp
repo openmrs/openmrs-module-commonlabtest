@@ -103,7 +103,7 @@ tbody.collapse.in {
 					<openmrs:hasPrivilege privilege="View CommonLabTest Samples">
 					  <th>Manage Test Sample</th>
 					</openmrs:hasPrivilege>
-					 <openmrs:hasPrivilege privilege="View CommonLabTest results">
+					 <openmrs:hasPrivilege privilege="View CommonLabTest Results">
 					 <th>Test Result</th>
 					 <th>Result Date</th>
 					</openmrs:hasPrivilege>
@@ -142,7 +142,7 @@ tbody.collapse.in {
 			       </div>
        			 </fieldset>
        		</openmrs:hasPrivilege>	
-       		<openmrs:hasPrivilege privilege="View CommonLabTest results">	 
+       		<openmrs:hasPrivilege privilege="View CommonLabTest Results">	 
        			  <!--Test Result Details -->
                <fieldset  class="scheduler-border">
       	 		  <legend  class="scheduler-border"><spring:message code="commonlabtest.result.detail" /></legend>
@@ -218,7 +218,7 @@ jQuery(document).ready(function () {
 		        resultsItems = resultsItems.concat('<openmrs:hasPrivilege privilege="View CommonLabTest Samples">');
 		        resultsItems = resultsItems.concat('<td> <span class="table-sample hvr-icon-grow" onclick="samplesTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/testSample.png"></img></span></span></td>');
 		        resultsItems = resultsItems.concat('</openmrs:hasPrivilege>');
-		        resultsItems = resultsItems.concat('<openmrs:hasPrivilege privilege="View CommonLabTest results">');
+		        resultsItems = resultsItems.concat('<openmrs:hasPrivilege privilege="View CommonLabTest Results">');
 		        if(this.resultFilled){
 		          resultsItems = resultsItems.concat('<td> <span class="table-result hvr-icon-grow" onclick="resultsTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/testResult.png"></img></span></span><span style="margin-left: 35px">  </span><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/greenchecked.png"></img></td>');
 		        }else{
@@ -417,7 +417,7 @@ function autoHide(){
 			  <openmrs:hasPrivilege privilege="View CommonLabTest Samples">
 			  		renderTestSample(parseData['sample']);
 			  </openmrs:hasPrivilege>
-			<openmrs:hasPrivilege privilege="View CommonLabTest results">
+			<openmrs:hasPrivilege privilege="View CommonLabTest Results">
 		       // renderTestResult(parseData['result'])
 		        renderResult(parseData['result']);
 		    </openmrs:hasPrivilege>
