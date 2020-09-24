@@ -166,10 +166,7 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 	}
 
 	/**
-	 * Sets attributes on the given CommonLabbTest order.
-	 * 
-	 * @param instance
-	 * @param attrs
+	 * Sets attributes on the given CommonLabTest order.
 	 */
 	@PropertySetter("attributes")
 	public void setAttributes(LabTest instance, List<LabTestAttribute> attributes) {
