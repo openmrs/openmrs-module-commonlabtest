@@ -150,7 +150,7 @@ public class LabTestOrderResourceControllerTest extends MainResourceControllerTe
 		Assert.assertNotNull(objectCreated);
 
 		LabTest existingLabOrder = commonLabTestService.getLabTestByUuid("d175e92e-47bf-11e8-943c-40b034c3cfee");
-		
+
 		// ensuring new attribute is saved
 		String newAttributeValue = existingLabOrder
 		        .getAttribute(commonLabTestService.getLabTestAttributeTypeByUuid("f43de058-538d-11e8-9c7c-40b034c3cfee"))
