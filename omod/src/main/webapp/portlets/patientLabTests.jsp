@@ -93,9 +93,11 @@ tbody.collapse.in {
 	        <thead>
 	            <tr>
 	            	<th hidden="true"></th>
-	            	<th hidden="true"></th>
+					<th>ID</th>
 					<th>Test Type</th>
 					<th>Lab Reference Number</th>
+					<th>Encounter</th>
+					<th>Encounter Date</th>
 					<th>View</th>
 					<openmrs:hasPrivilege privilege="Edit CommonLabTest Orders">
 					  <th>Edit</th>
@@ -207,10 +209,12 @@ jQuery(document).ready(function () {
 			    console.log("rspecimen :: "+this.requiredSpecimen);
 			    console.log("orderId :: "+this.id);
 			    resultsItems = resultsItems.concat('<tr id = "mainRow">');
-		        resultsItems = resultsItems.concat('<td hidden ="true" class ="orderId">'+this.id+'</td>');
 		        resultsItems = resultsItems.concat('<td hidden ="true" class ="rspecimen">'+this.requiredSpecimen+'</td>');
+		        resultsItems = resultsItems.concat('<td class ="orderId">'+this.id+'</td>');
 		        resultsItems = resultsItems.concat('<td>'+this.testTypeName+'</td>');
 		        resultsItems = resultsItems.concat(' <td>'+this.labReferenceNumber+'</td>');
+		        resultsItems = resultsItems.concat(' <td>'+this.encounterName+'</td>');
+		        resultsItems = resultsItems.concat(' <td>'+this.encounterDate+'</td>');
 		        resultsItems = resultsItems.concat('<td> <span class="table-view hvr-icon-grow" onclick="viewTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/view.png"></span></td>');
 		        resultsItems = resultsItems.concat('<openmrs:hasPrivilege privilege="Edit CommonLabTest Orders">');
 		        resultsItems = resultsItems.concat('<td> <span class="table-edit hvr-icon-grow" onclick="editTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/edit.png"></span></td>');
