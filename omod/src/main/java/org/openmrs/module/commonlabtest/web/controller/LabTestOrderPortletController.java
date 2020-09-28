@@ -1,5 +1,6 @@
 package org.openmrs.module.commonlabtest.web.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +41,11 @@ public class LabTestOrderPortletController extends PortletController {
 						childJsonObject.addProperty("id", labTest.getTestOrderId());
 						childJsonObject.addProperty("requiredSpecimen", labTest.getLabTestType().getRequiresSpecimen());
 						childJsonObject.addProperty("testTypeName", labTest.getLabTestType().getName());
+						childJsonObject.addProperty("encounterName",
+						    labTest.getOrder().getEncounter().getEncounterType().getName());
+						SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+						String encounterDate = formatter.format(labTest.getOrder().getEncounter().getEncounterDatetime());
+						childJsonObject.addProperty("encounterDate", encounterDate);
 						childJsonObject.addProperty("labReferenceNumber", labTest.getLabReferenceNumber());
 						childJsonObject.addProperty("testGroup", labTest.getLabTestType().getTestGroup().name());
 						childJsonObject.addProperty("dateCreated", labTest.getDateCreated().toString());
