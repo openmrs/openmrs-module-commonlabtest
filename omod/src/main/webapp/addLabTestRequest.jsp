@@ -1,5 +1,6 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <openmrs:portlet url="patientHeader" id="patientDashboardHeader"
 	patientId="${patientId}" />
 <openmrs:require privilege="Add CommonLabTest Orders"
@@ -21,6 +22,8 @@
 <link
 	href="/openmrs/moduleResources/commonlabtest/css/dataTables.bootstrap4.min.css"
 	rel="stylesheet" />
+	
+<link href="/openmrs/moduleResources/commonlabtest/css/chosen.css" rel="stylesheet" >
 
 </head>
 <style>
@@ -137,7 +140,8 @@ table-layout: fixed;
 				<select class="form-control" id="encounter_id">
 					<c:if test="${not empty encounters}">
 						<c:forEach var="encounter" items="${encounters}">
-							<option value="${encounter.encounterId}">${encounter.getEncounterType().getName()}</option>
+							<%-- <option value="${encounter.encounterId}">${encounter.getEncounterType().getName()}</option> --%>
+							<option value="${encounter.encounterId}"><p>${encounter.getEncounterType().getName()} [<fmt:formatDate type="date" value="${encounter.getEncounterDatetime()}" />]</p></option>
 						</c:forEach>
 					</c:if>
 				</select> <span id="encounters" class="text-danger "></span>
@@ -188,6 +192,7 @@ table-layout: fixed;
 	src="${pageContext.request.contextPath}/moduleResources/commonlabtest/js/jquery.dataTables.min.js"></script>
 <script
 	src="${pageContext.request.contextPath}/moduleResources/commonlabtest/js/dataTables.bootstrap4.min.js"></script>
+<script src="${pageContext.request.contextPath}/moduleResources/commonlabtest/js/chosen.jquery.js"></script>
 
 <script type="text/javascript">	
 var localTestRequest;
@@ -223,6 +228,10 @@ $(document).ready(function () {
             document.getElementById("ins." + testTypeId).disabled = true;
 
         }
+    });
+    
+    $(function(){ 
+    	$('select').chosen();
     });
 });
 

@@ -1,5 +1,6 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <openmrs:portlet url="patientHeader" id="patientDashboardHeader"
 	patientId="${patientId}" />
 <!-- <openmrs:require anyPrivilege="Add CommonLabTest Orders,Edit CommonLabTest Orders" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestRequest.form" />
@@ -14,6 +15,7 @@
 	rel="stylesheet" />
 <link href="/openmrs/moduleResources/commonlabtest/css/waitMe.min.css"
 	rel="stylesheet" />
+<link href="/openmrs/moduleResources/commonlabtest/css/chosen.css" rel="stylesheet" >
 
 <style>
 body {
@@ -123,15 +125,24 @@ legend.scheduler-border {
 							<form:options />
 							<c:if test="${not empty encounters}">
 								<c:forEach var="encounter" items="${encounters}">
-									<form:option item="${encounter}" value="${encounter}">${encounter.getEncounterType().getName()}</form:option>
+									<form:option item="${encounter}" value="${encounter}"><p>${encounter.getEncounterType().getName()} [<fmt:formatDate type="date" value="${encounter.getEncounterDatetime()}" />]</p></form:option>
 								</c:forEach>
 							</c:if>
 						</form:select>
+						
+						<%-- <form:input class="form-control" path="order.encounter" list="encounterTypes" placeholder="Select encounter..." id="encounter"/>
+							<c:if test="${not empty encounters}">
+								<datalist id="encounterTypes">
+									<c:forEach var="encounter" items="${encounters}">
+										<option item="${encounter}" label="${encounter.getEncounterType().getName()}" value="${encounter}"><p>${encounter.getEncounterType().getName()} [<fmt:formatDate type="date" value="${encounter.getEncounterDatetime()}" />]</p></option>
+									</c:forEach>
+								</datalist>
+							</c:if> --%>
 					</c:if>
 					<span id="encounters" class="text-danger "></span>
 				</div>
 				<div class="col-md-3">
-					<font color="#D0D0D0"><span id="encounterDate">${labTest.order.encounter.encounterDatetime}</span></font>
+					<font color="#D0D0D0"><span id="encounterDate" style="display:none">${labTest.order.encounter.encounterDatetime}</span></font>
 				</div>
 			</div>
 			<!-- Test Type -->
@@ -285,6 +296,7 @@ legend.scheduler-border {
 
 <script
 	src="${pageContext.request.contextPath}/moduleResources/commonlabtest/js/waitMe.min.js"></script>
+<script src="${pageContext.request.contextPath}/moduleResources/commonlabtest/js/chosen.jquery.js"></script>
 
 
 <script type="text/javascript">
@@ -317,15 +329,28 @@ $(document).ready(function () {
 
     $("#encounter").on("change", function () {
         console.log("Local source : " + localSource);
+        var selectedEnc = document.getElementById('encounter').value;
+        console.log(selectedEnc);
+        /* document.getElementById('encounter').value = "hello"; */
         var id = $("#encounter").find(":selected").val();
         var encounter = localSource.find(o => o.id == id);
-        console.log(encounter.date);
+        var encs = '${encounters}';
+        <c:if test="${not empty encounters}">
+            <c:forEach var="encounter" items="${encounters}" varStatus="status">
+            		console.log('${encounter.encounterDatetime}');
+            		console.log('${encounter.encounterType.name}');
+                </c:forEach>
+            </c:if>
         document.getElementById('encounterDate').innerHTML = formatDate(encounter.date);
     });
 
     //set lab Reference value 
     let labTestTypeId = document.getElementById("testType").value;
     setTestTypeVal(labTestTypeId);
+    
+    $(function(){ 
+    	$('select').chosen();
+    });
 });
 
 function setTestTypeVal(id) {
