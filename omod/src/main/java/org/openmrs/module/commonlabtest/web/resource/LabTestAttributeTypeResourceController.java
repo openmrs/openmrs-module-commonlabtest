@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
+import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -52,6 +53,14 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 	@Override
 	public void purge(LabTestAttributeType labTestAttributeType, RequestContext requestContext) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
+	}
+
+	@Override
+	protected PageableResult doSearch(RequestContext context) {
+		String testTypeUuid = context.getRequest().getParameter("testTypeUuid");
+		LabTestType labTestType = commonLabTestService.getLabTestTypeByUuid(testTypeUuid);
+		List<LabTestAttributeType> attributeTypes = commonLabTestService.getLabTestAttributeTypes(labTestType, true);
+		return new NeedsPaging<LabTestAttributeType>(attributeTypes, context);
 	}
 
 	@Override

@@ -130,14 +130,6 @@ legend.scheduler-border {
 							</c:if>
 						</form:select>
 						
-						<%-- <form:input class="form-control" path="order.encounter" list="encounterTypes" placeholder="Select encounter..." id="encounter"/>
-							<c:if test="${not empty encounters}">
-								<datalist id="encounterTypes">
-									<c:forEach var="encounter" items="${encounters}">
-										<option item="${encounter}" label="${encounter.getEncounterType().getName()}" value="${encounter}"><p>${encounter.getEncounterType().getName()} [<fmt:formatDate type="date" value="${encounter.getEncounterDatetime()}" />]</p></option>
-									</c:forEach>
-								</datalist>
-							</c:if> --%>
 					</c:if>
 					<span id="encounters" class="text-danger "></span>
 				</div>
@@ -330,17 +322,8 @@ $(document).ready(function () {
     $("#encounter").on("change", function () {
         console.log("Local source : " + localSource);
         var selectedEnc = document.getElementById('encounter').value;
-        console.log(selectedEnc);
-        /* document.getElementById('encounter').value = "hello"; */
         var id = $("#encounter").find(":selected").val();
         var encounter = localSource.find(o => o.id == id);
-        var encs = '${encounters}';
-        <c:if test="${not empty encounters}">
-            <c:forEach var="encounter" items="${encounters}" varStatus="status">
-            		console.log('${encounter.encounterDatetime}');
-            		console.log('${encounter.encounterType.name}');
-                </c:forEach>
-            </c:if>
         document.getElementById('encounterDate').innerHTML = formatDate(encounter.date);
     });
 
