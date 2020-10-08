@@ -102,9 +102,11 @@ tbody.collapse.in {
 					<openmrs:hasPrivilege privilege="Edit CommonLabTest Orders">
 					  <th>Edit</th>
 					</openmrs:hasPrivilege>
-					<openmrs:hasPrivilege privilege="View CommonLabTest Samples">
-					  <th>Manage Test Sample</th>
-					</openmrs:hasPrivilege>
+					<c:if test="${model.anyTestRequireSample eq 'true'}">
+						<openmrs:hasPrivilege privilege="View CommonLabTest Samples">
+						  <th>Manage Test Sample</th>
+						</openmrs:hasPrivilege>
+					</c:if>
 					 <openmrs:hasPrivilege privilege="View CommonLabTest Results">
 					 <th>Test Result</th>
 					 <th>Result Date</th>
@@ -175,11 +177,13 @@ tbody.collapse.in {
 
 <script type="text/javascript">	
  var testOrderArray ;
+ var anyTestRequireSpecimen = false;
  var isStatusAccepted = false;
 jQuery(document).ready(function () {
 	  testOrderArray = ${model.testOrder};
+	  anyTestRequireSpecimen = ${model.anyTestRequireSample};
 	 // console.log("Array: "+ JSON.stringify(testOrderArray));
-	   generateOrderTable(testOrderArray);
+	   generateOrderTable(testOrderArray, anyTestRequireSpecimen);
 	   
 	jQuery('#testOrderTable').dataTable({
 		 "bPaginate": true
@@ -198,7 +202,7 @@ jQuery(document).ready(function () {
 	function getTestOrderList(){
 	   	return JSON.parse(JSON.stringify('${model.testOrder}'));
 	   }
-	function generateOrderTable(localSource){
+	function generateOrderTable(localSource, anyTestRequireSpecimen){
 		  var resultsItems = "";
 		  jQuery(localSource).each(function () {
 		   /*  if(this.resultFilled){
@@ -215,20 +219,27 @@ jQuery(document).ready(function () {
 		        resultsItems = resultsItems.concat(' <td>'+this.labReferenceNumber+'</td>');
 		        resultsItems = resultsItems.concat(' <td>'+this.encounterName+'</td>');
 		        resultsItems = resultsItems.concat(' <td>'+this.encounterDate+'</td>');
-		        resultsItems = resultsItems.concat('<td> <span class="table-view hvr-icon-grow" onclick="viewTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/view.png"></span></td>');
+		        resultsItems = resultsItems.concat('<td style="text-align:center"> <span class="table-view hvr-icon-grow" onclick="viewTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/view.png"></span></td>');
 		        resultsItems = resultsItems.concat('<openmrs:hasPrivilege privilege="Edit CommonLabTest Orders">');
-		        resultsItems = resultsItems.concat('<td> <span class="table-edit hvr-icon-grow" onclick="editTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/edit.png"></span></td>');
+		        resultsItems = resultsItems.concat('<td style="text-align:center"> <span class="table-edit hvr-icon-grow" onclick="editTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/edit.png"></span></td>');
 		        resultsItems = resultsItems.concat('</openmrs:hasPrivilege>');
-		        resultsItems = resultsItems.concat('<openmrs:hasPrivilege privilege="View CommonLabTest Samples">');
-		        resultsItems = resultsItems.concat('<td> <span class="table-sample hvr-icon-grow" onclick="samplesTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/testSample.png"></img></span></span></td>');
-		        resultsItems = resultsItems.concat('</openmrs:hasPrivilege>');
+		        if(anyTestRequireSpecimen)  {
+		        	if(this.requiredSpecimen) {
+				        resultsItems = resultsItems.concat('<openmrs:hasPrivilege privilege="View CommonLabTest Samples">');
+				        resultsItems = resultsItems.concat('<td style="text-align:center"> <span class="table-sample hvr-icon-grow" onclick="samplesTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/testSample.png"></img></span></span></td>');
+				        resultsItems = resultsItems.concat('</openmrs:hasPrivilege>');
+		        	}
+			        else {
+			        	resultsItems = resultsItems.concat('<td style="text-align:center">Sample not required</td>');
+			        }
+		        }
 		        resultsItems = resultsItems.concat('<openmrs:hasPrivilege privilege="View CommonLabTest Results">');
 		        if(this.resultFilled){
-		          resultsItems = resultsItems.concat('<td> <span class="table-result hvr-icon-grow" onclick="resultsTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/testResult.png"></img></span></span><span style="margin-left: 35px">  </span><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/greenchecked.png"></img></td>');
+		          resultsItems = resultsItems.concat('<td style="text-align:center"> <span class="table-result hvr-icon-grow" onclick="resultsTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/testResult.png"></img></span></span><span style="margin-left: 35px">  </span><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/greenchecked.png"></img></td>');
 		        }else{
 			    resultsItems = resultsItems.concat('<td> <span class="table-result hvr-icon-grow" onclick="resultsTestOrder(this)"><img class="manImg hvr-icon" src="/openmrs/moduleResources/commonlabtest/img/testResult.png"></img></span></span></td>');
 		        }
-			    resultsItems = resultsItems.concat('<td>'+this.resultDate+'</td>');
+			    resultsItems = resultsItems.concat('<td style="text-align:center">'+this.resultDate+'</td>');
 		        resultsItems = resultsItems.concat('</openmrs:hasPrivilege>');
 		        resultsItems = resultsItems.concat('</tr>');
 		  	});    
@@ -430,6 +441,7 @@ function autoHide(){
 	
 	
 	function renderTestSample(sampleArray){
+		alert(this.testOrderId);
 	       var resultsItems = "";
 				resultsItems = resultsItems.concat('<table  class="table table-striped table-responsive-md table-hover mb-0" id= "tb-test-type">');
 				resultsItems = resultsItems.concat('<thead><tr>');
@@ -438,7 +450,6 @@ function autoHide(){
 					resultsItems = resultsItems.concat('<th><a>Specimen Site</a></th>');
 					resultsItems = resultsItems.concat('<th><a>Status</a></th>');
 					jQuery(sampleArray).each(function() {
-						//console.log("testOrderId : "+this.testOrderId);
 						resultsItems = resultsItems.concat('<tbody><tr>'); 
 						resultsItems = resultsItems.concat('<td><label>'+this.testOrderId+'</label></td>');
 						resultsItems = resultsItems.concat('<td><label>'+this.specimenType+'</label></td>');

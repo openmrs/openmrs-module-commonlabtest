@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -67,10 +68,14 @@ public class LabTestOrderPortletController extends PortletController {
 						orderJsonArray.add(childJsonObject);
 					}
 				}
-				System.out.println("Totatl Resullt SET ::" + orderJsonArray);
+				boolean anyTestRequireSample = false;
+				for (JsonElement element : orderJsonArray) {
+					anyTestRequireSample = ((JsonObject) element).get("requiredSpecimen").getAsBoolean();
+					if (anyTestRequireSample == true)
+						break;
+				}
 				model.put("testOrder", orderJsonArray);
-				// generalObj.add(testList);
-				// model.put("testOrder", testList);
+				model.put("anyTestRequireSample", anyTestRequireSample);
 			}
 		}
 
