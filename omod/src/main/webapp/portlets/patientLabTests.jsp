@@ -441,7 +441,6 @@ function autoHide(){
 	
 	
 	function renderTestSample(sampleArray){
-		alert(this.testOrderId);
 	       var resultsItems = "";
 				resultsItems = resultsItems.concat('<table  class="table table-striped table-responsive-md table-hover mb-0" id= "tb-test-type">');
 				resultsItems = resultsItems.concat('<thead><tr>');

@@ -349,6 +349,8 @@ public class LabTestResultController {
 		objAttrType.addProperty("sortWeight", labTestAttributeType.getSortWeight());
 		objAttrType.addProperty("config", labTestAttributeType.getDatatypeConfig());
 		objAttrType.addProperty("hint", (labTestAttributeType.getHint() == null) ? "" : labTestAttributeType.getHint());
+		objAttrType.addProperty("description",
+		    (labTestAttributeType.getDescription() == null) ? "" : labTestAttributeType.getDescription());
 
 		if (testAttributes.size() > 0) {
 			for (LabTestAttribute labTestAttribute : testAttributes) {
