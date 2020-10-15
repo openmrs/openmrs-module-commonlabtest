@@ -30,6 +30,20 @@ body {
 	font-size: 12px;
 }
 
+#description-range-line-break {
+	white-space: pre-line !important; 
+	color: #01579b !important; 
+	font-size: x-small;
+	padding-bottom: 0.5em;
+	border-bottom: 1px solid #bdbdbd;
+}
+
+.text-info {
+	color: #4caf50  !important;
+    font-size: small;
+    white-space: pre-line;
+}
+
 hr.style-three {
 	height: 30px;
 	border-style: solid;
@@ -309,14 +323,14 @@ function populateResultForm() {
             resultsItems = resultsItems.concat(codedTags(this.conceptOptions, this.value, this.id, this.name));
         }
         else if (this.dataType == 'Text') {
-            resultsItems = resultsItems.concat(textTags(this.value, this.id, this.name, this.hint));
+            resultsItems = resultsItems.concat(textTags(this.value, this.id, this.name, this.hint, this.description));
         }
         else if (this.dataType == 'TextArea') {
 
-            resultsItems = resultsItems.concat(textAreaTags(this.value, this.id, this.name, this.hint));
+            resultsItems = resultsItems.concat(textAreaTags(this.value, this.id, this.name, this.hint, this.description));
         }
         else if (this.dataType == 'Numeric') {
-            resultsItems = resultsItems.concat(numericTags(this.value, this.name, this.id, this.hint));
+            resultsItems = resultsItems.concat(numericTags(this.value, this.name, this.id, this.hint, this.description));
         }
         else if (this.dataType == 'Boolean') {
             resultsItems = resultsItems.concat(booleanTags(this.value, this.name, this.id, false));
@@ -325,7 +339,7 @@ function populateResultForm() {
             resultsItems = resultsItems.concat(dateTags(this.value, this.name, this.id));
         }
         else if (this.dataType == 'Regex') {
-            resultsItems = resultsItems.concat(regexTags(this.value, this.name, this.id, this.hint));
+            resultsItems = resultsItems.concat(regexTags(this.value, this.name, this.id, this.hint, this.description));
         }
     });
 
@@ -715,13 +729,13 @@ function generateTestGroup(localTestGroups,groupName) {
                   	resultsItems = resultsItems.concat(codedTags(this.conceptOptions, this.value, this.id, this.name));
                   }
                   else if (this.dataType == 'Text') {
-                  	resultsItems = resultsItems.concat(textTags(this.value, this.id, this.name, this.hint));
+                  	resultsItems = resultsItems.concat(textTags(this.value, this.id, this.name, this.hint, this.description));
                   }
                   else if (this.dataType == 'TextArea') {
-                  	resultsItems = resultsItems.concat(textAreaTags(this.value, this.id, this.name, this.hint));
+                  	resultsItems = resultsItems.concat(textAreaTags(this.value, this.id, this.name, this.hint, this.description));
                   }
                   else if (this.dataType == 'Numeric') {
-                  	resultsItems = resultsItems.concat(numericTags(this.value, this.name, this.id, this.hint));
+                  	resultsItems = resultsItems.concat(numericTags(this.value, this.name, this.id, this.hint, this.description));
                   }
                   else if (this.dataType == 'Boolean') {
                   	resultsItems = resultsItems.concat(booleanTags(this.value, this.name, this.id, true));
@@ -730,7 +744,7 @@ function generateTestGroup(localTestGroups,groupName) {
                   	resultsItems = resultsItems.concat(dateTags(this.value, this.name, this.id));
                   }
                   else if (this.dataType == 'Regex') {
-                  	resultsItems = resultsItems.concat(regexTags(this.value, this.name, this.id, this.hint));
+                  	resultsItems = resultsItems.concat(regexTags(this.value, this.name, this.id, this.hint, this.description));
                   }            }
             
            
@@ -767,40 +781,44 @@ function codedTags(options, value, id, question) {
 
     return codedTagItems;
 }
-function textTags(value, id, question, hint) {
+function textTags(value, id, question, hint, description) {
     let txtTagItems = "";
     txtTagItems = txtTagItems.concat('<div class="row"><div class="col-sm-3 col-md-3 col-lg-3">');
     txtTagItems = txtTagItems.concat(' <label class="control-label">' + question + '</label>');
     txtTagItems = txtTagItems.concat('</div><div class ="col-sm-4 col-md-4 col-lg-4">');
     console.log("values : " + value);
     if (value === undefined || value === 'undefined') {
-        txtTagItems = txtTagItems.concat('<input maxlength="255"  class="form-control" type="text"  id="valueText.' + id + '" name="valueText.' + id + '" value="" ><span id="error.' + id + '" class="text-danger "></span>');
+        txtTagItems = txtTagItems.concat('<input maxlength="255"  class="form-control" type="text"  id="valueText.' + id + '" name="valueText.' + id + '" value="" ><span id="error.' + id + '" class="text-danger "></span><span id="hint.' + id + '" class="text-info">' + hint + '</span>');
         txtTagItems = txtTagItems.concat('</div><div class ="col-sm-4 col-md-4 col-lg-4">');
-        txtTagItems = txtTagItems.concat('<span id="hint.' + id + '" class="text-info">' + hint + '</span>');
+        if(description !== "")
+        	txtTagItems = txtTagItems.concat('<div id="description-range-line-break">' + description + '</div>'); // add description here
     } else {
-        txtTagItems = txtTagItems.concat('<input maxlength="255"  class="form-control" type="text"  id="valueText.' + id + '" name="valueText.' + id + '" value="' + value + '"  ><span id="error.' + id + '" class="text-danger "></span>');
+        txtTagItems = txtTagItems.concat('<input maxlength="255"  class="form-control" type="text"  id="valueText.' + id + '" name="valueText.' + id + '" value="' + value + '"  ><span id="error.' + id + '" class="text-danger "></span><span id="hint.' + id + '" class="text-info">' + hint + '</span>');
         txtTagItems = txtTagItems.concat('</div><div class ="col-sm-4 col-md-4 col-lg-4">');
-        txtTagItems = txtTagItems.concat('<span id="hint.' + id + '" class="text-info">' + hint + '</span>');
+        if(description !== "")
+        	txtTagItems = txtTagItems.concat('<div id="description-range-line-break">' + description + '</div>'); //add description here 
     }
     txtTagItems = txtTagItems.concat('</div></div>');
 
     return txtTagItems;
 }
 
-function textAreaTags(value, id, question, hint) {
+function textAreaTags(value, id, question, hint, description) {
     let txtAreaTagItems = "";
     txtAreaTagItems = txtAreaTagItems.concat('<div class="row"><div class="col-sm-3 col-md-3 col-lg-3">');
     txtAreaTagItems = txtAreaTagItems.concat(' <label class="control-label">' + question + '</label>');
     txtAreaTagItems = txtAreaTagItems.concat('</div><div class ="col-sm-4 col-md-4 col-lg-4">');
     console.log("values txt erea : " + value);
     if (value === undefined || value === 'undefined') {
-        txtAreaTagItems = txtAreaTagItems.concat('<textarea  maxlength="512" class="form-control"  id="valueText.' + id + '" name="valueText.' + id + '" value="" /><span id="error.' + id + '" class="text-danger "></span>');
+        txtAreaTagItems = txtAreaTagItems.concat('<textarea  maxlength="512" class="form-control"  id="valueText.' + id + '" name="valueText.' + id + '" value="" /><span id="error.' + id + '" class="text-danger "></span><span id="hint.' + id + '" class="text-info">' + hint + '</span>');
         txtAreaTagItems = txtAreaTagItems.concat('</div><div class ="col-sm-4 col-md-4 col-lg-4">');
-        txtAreaTagItems = txtAreaTagItems.concat('<span id="hint.' + id + '" class="text-info">' + hint + '</span>');
+        if(description !== "")
+        	txtAreaTagItems = txtAreaTagItems.concat('<div id="description-range-line-break">' + description + '</div>'); // add description here
     } else {
-        txtAreaTagItems = txtAreaTagItems.concat('<textarea   maxlength="512" class="form-control"  id="valueText.' + id + '" name="valueText.' + id + '" value="' + value + '" >' + value + '</textarea><span id="error.' + id + '" class="text-danger "></span>');
+        txtAreaTagItems = txtAreaTagItems.concat('<textarea   maxlength="512" class="form-control"  id="valueText.' + id + '" name="valueText.' + id + '" value="' + value + '" >' + value + '</textarea><span id="error.' + id + '" class="text-danger "></span><span id="hint.' + id + '" class="text-info">' + hint + '</span>');
         txtAreaTagItems = txtAreaTagItems.concat('</div><div class ="col-sm-4 col-md-4 col-lg-4">');
-        txtAreaTagItems = txtAreaTagItems.concat('<span id="hint.' + id + '" class="text-info">' + hint + '</span>');
+        if(description !== "")
+        	txtAreaTagItems = txtAreaTagItems.concat('<div id="description-range-line-break">' + description + '</div>'); // add description here
 
     }
     txtAreaTagItems = txtAreaTagItems.concat('</div></div>');
@@ -808,21 +826,23 @@ function textAreaTags(value, id, question, hint) {
     return txtAreaTagItems;
 }
 
-function numericTags(value, question, id, hint) {
+function numericTags(value, question, id, hint, description) {
     let numericTagItems = "";
     numericTagItems = numericTagItems.concat('<div class="row"><div class="col-sm-3 col-md-3 col-lg-3">');
     numericTagItems = numericTagItems.concat(' <label class="control-label">' + question + '</label>');
     numericTagItems = numericTagItems.concat('</div><div class ="col-sm-4 col-md-4 col-lg-4">');
     console.log("values : " + value);
     if (value === 'undefined' || value == undefined) {
-        numericTagItems = numericTagItems.concat('<input class="form-control" type="input"  id="float.' + id + '" name="float.' + id + '" ><span id="error.' + id + '" class="text-danger "></span>');
+        numericTagItems = numericTagItems.concat('<input class="form-control" type="input"  id="float.' + id + '" name="float.' + id + '" ><span id="error.' + id + '" class="text-danger "></span><span id="hint.' + id + '" class="text-info">' + hint + '</span>');
         numericTagItems = numericTagItems.concat('</div><div class ="col-sm-4 col-md-4 col-lg-4">');
-        numericTagItems = numericTagItems.concat('<span id="hint.' + id + '" class="text-info">' + hint + '</span>');
+        if(description !== "")
+        	numericTagItems = numericTagItems.concat('<div id="description-range-line-break">' + description + '</div>'); // add description here 
     }
     else {
-        numericTagItems = numericTagItems.concat('<input class="form-control" type="input" value ="' + value + '" id="float.' + id + '" name="float.' + id + '"  ><span id="error.' + id + '" class="text-danger "></span>');
+        numericTagItems = numericTagItems.concat('<input class="form-control" type="input" value ="' + value + '" id="float.' + id + '" name="float.' + id + '"  ><span id="error.' + id + '" class="text-danger "></span><span id="hint.' + id + '" class="text-info">' + hint + '</span>');
         numericTagItems = numericTagItems.concat('</div><div class ="col-sm-4 col-md-4 col-lg-4">');
-        numericTagItems = numericTagItems.concat('<span id="hint.' + id + '" class="text-info">' + hint + '</span>');
+        if(description !== "")
+        	numericTagItems = numericTagItems.concat('<div id="description-range-line-break">' + description + '</div>') // add description here
     }
     numericTagItems = numericTagItems.concat('</div></div>');
 
@@ -931,20 +951,22 @@ function dateTags(value, question, id) {
     return dateTagItems;
 }
 
-function regexTags(value, question, id, hint) {
+function regexTags(value, question, id, hint, description) {
     let regexTagItems = "";
     regexTagItems = regexTagItems.concat('<div class="row"><div class="col-sm-3 col-md-3 col-lg-3">');
     regexTagItems = regexTagItems.concat(' <label class="control-label">' + question + '</label>');
     regexTagItems = regexTagItems.concat('</div><div class ="col-sm-4 col-md-4 col-lg-4">');
     if (value === 'undefined' || value == undefined) {
-        regexTagItems = regexTagItems.concat('<input class="form-control" type="text"  id="regex.' + id + '" name="regex.' + id + '" ><span id="error.' + id + '" class="text-danger "></span>');
+        regexTagItems = regexTagItems.concat('<input class="form-control" type="text"  id="regex.' + id + '" name="regex.' + id + '" ><span id="error.' + id + '" class="text-danger "></span><span id="hint.' + id + '" class="text-info">' + hint + '</span>');
         regexTagItems = regexTagItems.concat('</div><div class ="col-sm-4 col-md-4 col-lg-4">');
-        regexTagItems = regexTagItems.concat('<span id="hint.' + id + '" class="text-info">' + hint + '</span>');
+        if(description !== "")
+        	regexTagItems = regexTagItems.concat('<div id="description-range-line-break">' + description + '</div>') // add description here // add description here
     }
     else {
-        regexTagItems = regexTagItems.concat('<input class="form-control" type="text" value ="' + value + '" id="regex.' + id + '" name="regex.' + id + '" ><span id="error.' + id + '" class="text-danger "></span>');
+        regexTagItems = regexTagItems.concat('<input class="form-control" type="text" value ="' + value + '" id="regex.' + id + '" name="regex.' + id + '" ><span id="error.' + id + '" class="text-danger "></span><span id="hint.' + id + '" class="text-info">' + hint + '</span>');
         regexTagItems = regexTagItems.concat('</div><div class ="col-sm-4 col-md-4 col-lg-4">');
-        regexTagItems = regexTagItems.concat('<span id="hint.' + id + '" class="text-info">' + hint + '</span>');
+        if(description !== "")
+        	regexTagItems = regexTagItems.concat('<div id="description-range-line-break">' + description + '</div>') // add description here // add description here
     }
     regexTagItems = regexTagItems.concat('</div></div>');
 
