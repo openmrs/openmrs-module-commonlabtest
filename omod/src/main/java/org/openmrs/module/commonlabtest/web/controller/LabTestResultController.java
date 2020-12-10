@@ -369,8 +369,7 @@ public class LabTestResultController {
 		        .equalsIgnoreCase("org.openmrs.customdatatype.datatype.ConceptDatatype")) {
 			if (labTestAttributeType.getDatatypeConfig() != null && labTestAttributeType.getDatatypeConfig() != ""
 			        && !labTestAttributeType.getDatatypeConfig().isEmpty()) {
-				Concept concept = Context.getConceptService()
-				        .getConcept(Integer.parseInt(labTestAttributeType.getDatatypeConfig()));
+				Concept concept = Context.getConceptService().getConceptByUuid(labTestAttributeType.getDatatypeConfig());
 
 				if (concept.getDatatype().getName().equals("Coded")) {
 					JsonArray codedArray = new JsonArray();

@@ -138,11 +138,11 @@ public class LabTestResultViewController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/getConceptExist.form")
 	@ResponseBody
-	public Boolean conceptExist(@RequestParam Integer conceptId) {
+	public Boolean conceptExist(@RequestParam String conceptUuid) {
 		boolean isExist = false;
 		try {
-			if (conceptId != null) {
-				Concept concept = Context.getConceptService().getConcept(conceptId);
+			if (conceptUuid != null) {
+				Concept concept = Context.getConceptService().getConceptByUuid(conceptUuid);
 				if (concept != null && !concept.getUuid().equals("")) {
 					isExist = true;
 				}
