@@ -585,6 +585,7 @@
 			<column name="multiset_name" type="varchar(255)" />
 		</addColumn>
 	</changeSet>
+	
    <!-- 	
 	<changeSet author="shujaat.ali" id="commonlabtest-2019-2019-9-4-10">
 	    <update tableName="role_privilege">
@@ -631,6 +632,11 @@
 			WHERE p.privilege ='Delete CommonLabTest results';
 			SET foreign_key_checks = 1;
 		</sql>
+	</changeSet>
+	
+	<changeSet id="commonlabtest-2020-10-15-1" author="tahira.niazi">
+		<dropNotNullConstraint columnDataType="text"  
+            columnName="description" tableName="commonlabtest_attribute_type"/> 
 	</changeSet>
 
 </databaseChangeLog>

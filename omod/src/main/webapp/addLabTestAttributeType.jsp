@@ -660,7 +660,6 @@ legend.scheduler-border {
 	function validate(form){
 		var testAttributeName = document.getElementById('name').value.trim();
 		var labTestType = document.getElementById('testTypeSuggestBox').value;
-		var description = document.getElementById('description').value;
 		var minOccurs = document.getElementById('min_occurs').value;
 		var maxOccurs = document.getElementById('max_occurs').value;
 		var sortWeight = document.getElementById('sortWeight').value;
@@ -713,16 +712,7 @@ legend.scheduler-border {
 		  }
 		else {
 			document.getElementById("testatrname").style.display= 'none';	
-		} 
-		 /*Description  */
-		 if(description == ""){
-			    document.getElementById("atrdescription").style.display= 'block';		
-			    document.getElementById('atrdescription').innerHTML =emptyErrorMessage;
-				isValidate = false;
-			}
-		else {
-				document.getElementById("atrdescription").style.display= 'none';	
-		} 
+		}
 		 
 		 /*Min Occurs  */
 		 if(minOccurs == ""){
