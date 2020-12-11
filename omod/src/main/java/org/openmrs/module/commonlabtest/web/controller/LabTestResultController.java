@@ -349,8 +349,6 @@ public class LabTestResultController {
 		objAttrType.addProperty("sortWeight", labTestAttributeType.getSortWeight());
 		objAttrType.addProperty("config", labTestAttributeType.getDatatypeConfig());
 		objAttrType.addProperty("hint", (labTestAttributeType.getHint() == null) ? "" : labTestAttributeType.getHint());
-		objAttrType.addProperty("description",
-		    (labTestAttributeType.getDescription() == null) ? "" : labTestAttributeType.getDescription());
 
 		if (testAttributes.size() > 0) {
 			for (LabTestAttribute labTestAttribute : testAttributes) {
@@ -371,8 +369,7 @@ public class LabTestResultController {
 		        .equalsIgnoreCase("org.openmrs.customdatatype.datatype.ConceptDatatype")) {
 			if (labTestAttributeType.getDatatypeConfig() != null && labTestAttributeType.getDatatypeConfig() != ""
 			        && !labTestAttributeType.getDatatypeConfig().isEmpty()) {
-				Concept concept = Context.getConceptService()
-				        .getConcept(Integer.parseInt(labTestAttributeType.getDatatypeConfig()));
+				Concept concept = Context.getConceptService().getConceptByUuid(labTestAttributeType.getDatatypeConfig());
 
 				if (concept.getDatatype().getName().equals("Coded")) {
 					JsonArray codedArray = new JsonArray();

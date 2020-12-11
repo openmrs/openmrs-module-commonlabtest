@@ -788,11 +788,11 @@ legend.scheduler-border {
 				 var dataTypeConfig = document.getElementById('datatypeConfig').value;
 				     if(dataTypeOp == "org.openmrs.customdatatype.datatype.ConceptDatatype"){
 				    	 if(dataTypeConfig != "" && dataTypeConfig != null ){
-				        		if(checkConceptExistent(dataTypeConfig)){
+				        		if(checkObjectExist(dataTypeConfig)){
 				        			 document.getElementById("datatypeconfig").style.display= 'none';
 				        		 }else{	        			 
 				        			  document.getElementById("datatypeconfig").style.display= 'block';	
-				      				  document.getElementById('datatypeconfig').innerHTML = "Concept Id  does not exist in concept dictionary";
+				      				  document.getElementById('datatypeconfig').innerHTML = "Either concept does not exist in concept dictionary or please enter valid concept UUID";
 				      				  isValidate = false;
 				        		 }
 				          }
@@ -968,18 +968,6 @@ legend.scheduler-border {
 		 return type;
 	}
 	
-	
-	function checkConceptExistent(concepId){
-		console.log("Concept ID : "+concepId);
-		console.log("integer : "+isInt(concepId));
-		if(isInt(concepId)){
-		return	getCheckExist(concepId);
-		}
-		else {
-			return false;
-		}
-	}
-	
 	//Retire Validate
 	function retireValidate(){
 		var retireReason = document.getElementById('retireReason').value;
@@ -1080,13 +1068,12 @@ legend.scheduler-border {
 	}
 	
 	//CHECK THE CONCEPT EXIST
-	function getCheckExist(conceptId){
-		console.log("Type : "+conceptId);
+	function checkObjectExist(uuid){
 		var isExist =false;
 		 $.ajax({
 				type : "GET",
 				contentType : "application/json",
-				url : '${pageContext.request.contextPath}/module/commonlabtest/getConceptExist.form?conceptId='+conceptId,
+				url : '${pageContext.request.contextPath}/module/commonlabtest/getConceptExist.form?conceptUuid='+uuid,
 				async:false,
 				dataType : "json",
 				success : function(data) {
