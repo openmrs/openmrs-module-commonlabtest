@@ -1,5 +1,8 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
+
+<%@ taglib prefix="springform" uri="http://www.springframework.org/tags/form"%> 
+
 <%@ include
 	file="/WEB-INF/view/module/commonlabtest/include/localHeader.jsp"%>
 <!-- <openmrs:require anyPrivilege ="Add CommonLabTest Metadata , Edit CommonLabTest Metadata" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestAttributeType.form" />
@@ -106,21 +109,21 @@ legend.scheduler-border {
 					<spring:message code="commonlabtest.labtestattributetype.edit" />
 				</legend>
 			</c:if>
-			<form:form commandName="attributeType"
+			<springform:form commandName="attributeType"
 				onsubmit='return validate(this);'>
 				<div class="row">
 					<div class="col-md-2">
-						<form:input path="labTestAttributeTypeId" hidden="true"
-							id="labTestAttributeTypeId"></form:input>
-						<form:label path="labTestType.labTestTypeId" class="control-label">
+						<springform:input path="labTestAttributeTypeId" hidden="true"
+							id="labTestAttributeTypeId"></springform:input>
+						<springform:label path="labTestType.labTestTypeId" class="control-label">
 							<spring:message code="general.labTestType" />
 							<span class="text-danger required">*</span>
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:input class="form-control" id="testTypeSuggestBox"
+						<springform:input class="form-control" id="testTypeSuggestBox"
 							path="labTestType.labTestTypeId" list="testTypeOptions"
-							placeholder="Search Test Type..."></form:input>
+							placeholder="Search Test Type..."></springform:input>
 						<datalist class="lowercase" id="testTypeOptions"></datalist>
 						<span id="labtesttypeid" class="text-danger "> </span>
 					</div>
@@ -131,97 +134,97 @@ legend.scheduler-border {
 				<!--Test Attribute Type Name  -->
 				<div class="row">
 					<div class="col-md-2">
-						<form:label path="name" class="control-label">
+						<springform:label path="name" class="control-label">
 							<spring:message code="general.name" />
 							<span class="text-danger required">*</span>
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:input class="form-control" maxlength="50" path="name"
-							id="name"></form:input>
+						<springform:input class="form-control" maxlength="50" path="name"
+							id="name"></springform:input>
 						<span id="testatrname" class="text-danger "> </span>
 					</div>
 				</div>
 				<!-- Description -->
 				<div class="row">
 					<div class="col-md-2">
-						<form:label path="description" class="control-label">
+						<springform:label path="description" class="control-label">
 							<spring:message code="general.description" />
 							<span class="text-danger required">*</span>
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:textarea class="form-control" maxlength="255"
-							path="description" id="description"></form:textarea>
+						<springform:textarea class="form-control" maxlength="255"
+							path="description" id="description"></springform:textarea>
 						<span id="atrdescription" class="text-danger "> </span>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-2">
-						<form:label path="multisetName" class="control-label">
+						<springform:label path="multisetName" class="control-label">
 							<spring:message
 								code="commonlabtest.labtestattributetype.multisetName" />
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:input class="form-control" maxlength="255"
-							path="multisetName" id="multisetName"></form:input>
+						<springform:input class="form-control" maxlength="255"
+							path="multisetName" id="multisetName"></springform:input>
 						</td> <span id="multisetname" class="text-danger "> </span>
 					</div>
 				</div>
 				<!-- Group Name-->
 				<div class="row">
 					<div class="col-md-2">
-						<form:label path="groupName" class="control-label">
+						<springform:label path="groupName" class="control-label">
 							<spring:message
 								code="commonlabtest.labtestattributetype.groupName" />
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:input class="form-control" maxlength="255" path="groupName"
-							id="group_name"></form:input>
+						<springform:input class="form-control" maxlength="255" path="groupName"
+							id="group_name"></springform:input>
 						</td> <span id="groupname" class="text-danger "> </span>
 					</div>
 				</div>
 				<!-- Min Ocurance -->
 				<div class="row">
 					<div class="col-md-2">
-						<form:label path="minOccurs" class="control-label">
+						<springform:label path="minOccurs" class="control-label">
 							<spring:message code="general.minOccurs" />
 							<span class="text-danger required">*</span>
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:input class="form-control" maxlength="2" path="minOccurs"
-							id="min_occurs" onkeypress="return isNumber(event)"></form:input>
+						<springform:input class="form-control" maxlength="2" path="minOccurs"
+							id="min_occurs" onkeypress="return isNumber(event)"></springform:input>
 						</td> <span id="minoccurs" class="text-danger "> </span>
 					</div>
 				</div>
 				<!-- max occurs -->
 				<div class="row">
 					<div class="col-md-2">
-						<form:label path="maxOccurs" class="control-label">
+						<springform:label path="maxOccurs" class="control-label">
 							<spring:message code="general.maxOccurs" />
 							<span class="text-danger required">*</span>
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:input class="form-control" maxlength="2" path="maxOccurs"
-							id="max_occurs" onkeypress="return isNumber(event)"></form:input>
+						<springform:input class="form-control" maxlength="2" path="maxOccurs"
+							id="max_occurs" onkeypress="return isNumber(event)"></springform:input>
 						<span id="maxoccurs" class="text-danger "> </span>
 					</div>
 				</div>
 				<!-- sort Weight -->
 				<div class="row">
 					<div class="col-md-2">
-						<form:label path="sortWeight" class="control-label">
+						<springform:label path="sortWeight" class="control-label">
 							<spring:message code="general.sortWeight" />
 							<span class="text-danger required">*</span>
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:input class="form-control" maxlength="2" path="sortWeight"
-							id="sortWeight" onkeypress="return isNumber(event)"></form:input>
+						<springform:input class="form-control" maxlength="2" path="sortWeight"
+							id="sortWeight" onkeypress="return isNumber(event)"></springform:input>
 						<span id="sortweight" class="text-danger "> </span>
 					</div class="col-md-4">
 					<a style="text-decoration: none"
@@ -234,34 +237,34 @@ legend.scheduler-border {
 				<!-- datatypeClassname -->
 				<div class="row">
 					<div class="col-md-2">
-						<form:label path="datatypeClassname" class="control-label">
+						<springform:label path="datatypeClassname" class="control-label">
 							<spring:message code="general.dataType" />
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
 
 						<c:if test="${available != true}">
 
-							<form:select class="form-control" path="datatypeClassname"
+							<springform:select class="form-control" path="datatypeClassname"
 								id="data_type_name">
-								<form:options />
+								<springform:options />
 								<c:forEach items="${datatypes}" var="datatype">
-									<form:option item="${datatype}" value="${datatype}">
+									<springform:option item="${datatype}" value="${datatype}">
 										<c:out value="${datatype}.name" />
-									</form:option>
+									</springform:option>
 								</c:forEach>
-							</form:select>
+							</springform:select>
 						</c:if>
 						<c:if test="${available == true}">
-							<form:select class="form-control" disabled="true"
+							<springform:select class="form-control" disabled="true"
 								path="datatypeClassname" id="data_type_name">
-								<form:options />
+								<springform:options />
 								<c:forEach items="${datatypes}" var="datatype">
-									<form:option item="${datatype}" value="${datatype}">
+									<springform:option item="${datatype}" value="${datatype}">
 										<c:out value="${datatype}.name" />
-									</form:option>
+									</springform:option>
 								</c:forEach>
-							</form:select>
+							</springform:select>
 						</c:if>
 					</div>
 					<div class="col-md-4">
@@ -293,19 +296,19 @@ legend.scheduler-border {
 				<!-- datatypeConfig -->
 				<div class="row">
 					<div class="col-sm-2 col-md-2 col-lg-2">
-						<form:label path="datatypeConfig" class="control-label">
+						<springform:label path="datatypeConfig" class="control-label">
 							<spring:message code="general.datatypeConfiguration" />
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-sm-6 col-md-6 col-lg-6">
 						<c:if test="${available != true}">
-							<form:textarea class="form-control" path="datatypeConfig"
-								id="datatypeConfig"></form:textarea>
+							<springform:textarea class="form-control" path="datatypeConfig"
+								id="datatypeConfig"></springform:textarea>
 							<span id="datatypeconfig" class="text-danger "> </span>
 						</c:if>
 						<c:if test="${available == true}">
-							<form:textarea class="form-control" disabled="true"
-								path="datatypeConfig" id="datatypeConfig"></form:textarea>
+							<springform:textarea class="form-control" disabled="true"
+								path="datatypeConfig" id="datatypeConfig"></springform:textarea>
 							<span id="datatypeconfig" class="text-danger "> </span>
 						</c:if>
 					</div>
@@ -313,13 +316,13 @@ legend.scheduler-border {
 				<!--Regex Hints -->
 				<div class="row" id="hint_field">
 					<div class="col-md-2">
-						<form:label path="hint" class="control-label">
+						<springform:label path="hint" class="control-label">
 							<spring:message code="general.hint" />
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:input class="form-control" path="hint" id="hint"
-							maxlength="50"></form:input>
+						<springform:input class="form-control" path="hint" id="hint"
+							maxlength="50"></springform:input>
 						<span id="hints" class="text-danger "> </span>
 					</div>
 				</div>
@@ -327,22 +330,22 @@ legend.scheduler-border {
 				<!-- preferredHandlerClassname -->
 				<div class="row">
 					<div class="col-md-2">
-						<form:label path="preferredHandlerClassname" class="control-label">
+						<springform:label path="preferredHandlerClassname" class="control-label">
 							<spring:message code="general.preferredHandler" />
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:select class="form-control" path="preferredHandlerClassname"
+						<springform:select class="form-control" path="preferredHandlerClassname"
 							id="preferred_handler_name">
 							<option value=""><openmrs:message code="general.default" /></option>
 							<c:forEach items="${handlers}" var="handler">
 								<%-- 											<option value="${handler}" <c:if test="${handler == status.value}">selected</c:if>><spring:message code="${handler}.name"/></option>
  --%>
-								<form:option item="${handler}" value="${handler}">
+								<springform:option item="${handler}" value="${handler}">
 									<c:out value="${handler}.name" />
-								</form:option>
+								</springform:option>
 							</c:forEach>
-						</form:select>
+						</springform:select>
 					</div>
 					<div class="col-md-4">
 						<font color="#D0D0D0"><span id="handlerDescription"></span></font>
@@ -351,21 +354,21 @@ legend.scheduler-border {
 				<!-- handlerConfig-->
 				<div class="row">
 					<div class="col-md-2">
-						<form:label class="control-label" path="handlerConfig">
+						<springform:label class="control-label" path="handlerConfig">
 							<spring:message code="general.handlerConfiguration" />
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:textarea class="form-control" path="handlerConfig"
-							id="handlerConfig"></form:textarea>
+						<springform:textarea class="form-control" path="handlerConfig"
+							id="handlerConfig"></springform:textarea>
 					</div>
 				</div>
 				<c:if test="${not empty testAttributeType.name}">
 					<div class="row">
 						<div class="col-md-2">
-							<form:label path="creator">
+							<springform:label path="creator">
 								<spring:message code="general.createdBy" />
-							</form:label>
+							</springform:label>
 						</div>
 						<div class="col-md-6">
 							<c:out value="${testAttributeType.creator.personName}" />
@@ -396,7 +399,7 @@ legend.scheduler-border {
 							value="Cancel"></input>
 					</div>
 				</div>
-			</form:form>
+			</springform:form>
 		</fieldset>
 		<br>
 		<openmrs:hasPrivilege privilege="Delete CommonLabTest Metadata">
@@ -448,7 +451,7 @@ legend.scheduler-border {
 					<p class="heading lead white-text">Sort Weight Order</p>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
-						<span aria-hidden="true" class="white-text">×</span>
+						<span aria-hidden="true" class="white-text">ï¿½</span>
 					</button>
 				</div>
 				<div class="modal-body">
@@ -668,7 +671,7 @@ legend.scheduler-border {
 		var dataType = document.getElementById('data_type_name');
 		
 		///error message and regex
-		var  reText = new RegExp("^[A-Za-z][ A-Za-z0-9_()?/µ.%\\-]*$");
+		var  reText = new RegExp("^[A-Za-z][ A-Za-z0-9_()?/ï¿½.%\\-]*$");
 		var regInt =new RegExp("^[0-9]+$");
         var regErrorMesssage ="Text contains Invalid characters. Test Attribute name only accepts Alpha-Numeric value with _ -().% special characters. Please remove if there are any white spaces at the start of name";
 		var numericErrorMessage ="Only interger values are allowed";

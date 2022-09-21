@@ -36,10 +36,10 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
+import org.openmrs.module.commonlabtest.LabTestGroup;
 import org.openmrs.module.commonlabtest.LabTestSample;
-import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
+import org.openmrs.module.commonlabtest.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.LabTestType;
-import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 import org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -178,7 +178,8 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	        Date from, Date to, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestAttribute.class);
 		if (labTestAttributeType != null) {
-			criteria.add(Restrictions.eqOrIsNull("attributeType.labTestAttributeTypeId", labTestAttributeType.getId()));
+			criteria.add(Restrictions.or(Restrictions.isNull("attributeType.labTestAttributeTypeId"),
+			    Restrictions.eq("attributeType.labTestAttributeTypeId", labTestAttributeType.getId())));
 		}
 		if (valueReference != null) {
 			criteria.add(Restrictions.ilike("valueReference", valueReference, MatchMode.START));
@@ -189,7 +190,8 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 		if (!includeVoided) {
 			criteria.add(Restrictions.eq("voided", false));
 		}
-		return criteria.addOrder(Order.asc("labTestAttributeId")).addOrder(Order.asc("voided")).list();
+		criteria.addOrder(Order.asc("labTestAttributeId")).addOrder(Order.asc("voided"));
+		return criteria.list();
 	}
 
 	/**
@@ -293,21 +295,8 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	public List<LabTest> getLabTests(LabTestType labTestType, Patient patient, String orderNumber, String referenceNumber,
 	        Concept orderConcept, Provider orderer, Date from, Date to, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTest.class);
-		criteria.createAlias("order", "o");
 		if (labTestType != null) {
 			criteria.add(Restrictions.eq("labTestType", labTestType));
-		}
-		if (patient != null) {
-			criteria.add(Restrictions.eq("o.patient.id", patient.getPatientId()));
-		}
-		if (orderNumber != null) {
-			criteria.add(Restrictions.ilike("o.orderReference", orderNumber, MatchMode.START));
-		}
-		if (orderConcept != null) {
-			criteria.add(Restrictions.eq("o.concept.conceptId", orderConcept.getConceptId()));
-		}
-		if (orderer != null) {
-			criteria.add(Restrictions.eq("o.orderer.providerId", orderer.getProviderId()));
 		}
 		if (referenceNumber != null) {
 			criteria.add(Restrictions.ilike("referenceNumber", referenceNumber, MatchMode.START));
@@ -316,9 +305,38 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 			criteria.add(Restrictions.between("dateCreated", from, to));
 		}
 		if (!includeVoided) {
-			criteria.add(Restrictions.eq("o.voided", false));
+			criteria.add(Restrictions.eq("voided", false));
 		}
-		criteria.addOrder(Order.asc("testOrderId")).addOrder(Order.asc("voided")).list();
+		criteria.addOrder(Order.asc("dateCreated")).addOrder(Order.asc("voided")).list();
+		return criteria.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<LabTest> getLabTests(LabTestType labTestType, Patient patient, Date from, Date to, boolean includeVoided) {
+		if (patient == null) {
+			return null;
+		}
+		List<org.openmrs.Order> ordersByPatient = Context.getOrderService().getOrdersByPatient(patient);
+		if (ordersByPatient.size() == 0) {
+			return new ArrayList<LabTest>();
+		}
+		List<Integer> orderIds = new ArrayList<Integer>();
+		for (org.openmrs.Order order : ordersByPatient) {
+			orderIds.add(order.getOrderId());
+		}
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTest.class);
+		criteria.add(Restrictions.in("testOrderId", orderIds));
+		if (labTestType != null) {
+			criteria.add(Restrictions.eq("labTestType", labTestType));
+		}
+		if (from != null && to != null) {
+			criteria.add(Restrictions.between("dateCreated", from, to));
+		}
+		if (!includeVoided) {
+			criteria.add(Restrictions.eq("voided", false));
+		}
+		// criteria.addOrder(Order.asc("dateCreated")).addOrder(Order.asc("voided")).list();
 		return criteria.list();
 	}
 
@@ -351,7 +369,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 		if (!includeVoided) {
 			criteria.add(Restrictions.eq("voided", false));
 		}
-		criteria.addOrder(Order.asc("sampleIdentifier")).addOrder(Order.asc("voided")).list();
+		criteria.addOrder(Order.asc("dateCreated")).list();
 		return criteria.list();
 	}
 
@@ -548,8 +566,12 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	public org.openmrs.Order saveLabTestOrder(org.openmrs.Order order) {
 		OrderType expectedOrderType = order.getOrderType();
 		// Set the right order type
-		expectedOrderType.setJavaClassName(order.getClass().getName());
-		order.setOrderType(expectedOrderType);
+		List<OrderType> orderTypes = Context.getOrderService().getAllOrderTypes();
+		for (OrderType orderType : orderTypes) {
+			if (orderType.getName().equalsIgnoreCase("Lab Order"))
+				;
+			order.setOrderType(orderType);
+		}
 		boolean createNew = order.getId() == null;
 		if (!createNew) {
 			// See if the given ID actually exists or not
@@ -557,7 +579,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 		}
 		if (createNew) {
 			order.setId(null);
-			return Context.getOrderService().saveOrder(order, null);
+			return Context.getOrderService().saveOrder(order);
 		}
 		// Do nothing
 		return order;

@@ -14,11 +14,10 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Order;
-import org.openmrs.Order.Action;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTest;
+import org.openmrs.module.commonlabtest.LabTestGroup;
 import org.openmrs.module.commonlabtest.LabTestType;
-import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.web.WebConstants;
 import org.springframework.stereotype.Controller;
@@ -128,14 +127,14 @@ public class LabTestRequestController {
 				LabTest labTest = new LabTest();
 				JsonObject jsonObject = arry.get(i).getAsJsonObject();
 				Order order = new Order();
-				order.setCareSetting(Context.getOrderService().getCareSetting(1));
+				/* These attributes were added in v2.x */
+				// order.setCareSetting(Context.getOrderService().getCareSetting(1));
+				// order.setAction(Action.NEW);
 				Encounter encounter = Context.getEncounterService().getEncounter(jsonObject.get("encounterId").getAsInt());
 				order.setEncounter(encounter);
-				order.setAction(Action.NEW);
-				order.setOrderer(Context.getProviderService()
-				        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
+				order.setOrderer(Context.getAuthenticatedUser());
 				order.setOrderType(Context.getOrderService().getOrderType(3));
-				order.setDateActivated(encounter.getEncounterDatetime());
+				order.setStartDate(encounter.getEncounterDatetime());
 				order.setPatient(Context.getPatientService().getPatient(patientId));
 				Concept concept = Context.getConceptService().getConcept(jsonObject.get("testTypeId").getAsInt());
 				order.setConcept(concept);

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.commonlabtest">
+    <class name="LabTest" table="commonlabtest_test" lazy="false">
+       	<id name="testOrderId" type="int" column="test_order_id" />
+        <many-to-one name="labTestType" class="LabTestType" column="test_type_id" not-null="true" />
+		<property name="labReferenceNumber" type="java.lang.String" column="lab_reference_number" length="255" />
+        <property name="labInstructions" type="java.lang.String" column="instructions" length="512" />
+        <property name="filePath" type="java.lang.String" column="report_file_path" />
+        <property name="resultComments" type="java.lang.String" column="result_comments" />
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+		<property name="voided" type="java.lang.Boolean" column="voided" length="1" not-null="true" />
+		<many-to-one name="voidedBy" class="org.openmrs.User" column="voided_by" />
+		<property name="dateVoided" type="java.util.Date" column="date_voided" length="19" />
+		<property name="voidReason" type="java.lang.String" column="void_reason" length="255" />
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+    </class>
+</hibernate-mapping>

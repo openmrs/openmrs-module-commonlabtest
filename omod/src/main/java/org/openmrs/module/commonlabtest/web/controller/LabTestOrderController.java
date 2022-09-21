@@ -71,10 +71,10 @@ public class LabTestOrderController {
 		model.addAttribute("testTypes", labTestTypeHavingAttributes);
 		model.addAttribute("error", error);
 		Collection<Provider> providers = Context.getProviderService()
-		        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false);
+		        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson());
 		if (providers == null || providers.isEmpty()) {} else {
 			model.addAttribute("provider", Context.getProviderService()
-			        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
+			        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson()).iterator().next());
 		}
 		// show only first 10 encounters
 		if (encounterList.size() > 10) {
@@ -101,7 +101,7 @@ public class LabTestOrderController {
 			} else {
 				if (labTest.getTestOrderId() == null) {
 					Order testParentOrder = labTest.getOrder();
-					testParentOrder.setDateActivated(labTest.getOrder().getEncounter().getEncounterDatetime());
+					testParentOrder.setStartDate(labTest.getOrder().getEncounter().getEncounterDatetime());
 					labTest.setOrder(testParentOrder);
 				}
 				commonLabTestService.saveLabTest(labTest);

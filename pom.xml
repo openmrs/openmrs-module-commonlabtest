@@ -90,7 +90,7 @@
 	</build>
 
 	<properties>
-		<openmrsPlatformVersion>2.1.2</openmrsPlatformVersion>
-		<wsrestVersion>2.17</wsrestVersion>
+		<openmrsPlatformVersion>1.9.0</openmrsPlatformVersion>
+		<wsrestVersion>2.1</wsrestVersion>
 	</properties>
 </project>

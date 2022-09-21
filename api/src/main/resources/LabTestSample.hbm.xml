@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.commonlabtest">
+    <class name="LabTestSample" table="commonlabtest_sample" lazy="false">
+	    <id name="labTestSampleId" type="int" column="test_sample_id">
+			<generator class="native">
+			</generator>
+		</id>
+       	<many-to-one name="labTest" class="LabTest" column="test_order_id" />
+        <many-to-one name="specimenType" class="org.openmrs.Concept" column="specimen_type" />
+        <many-to-one name="specimenSite" class="org.openmrs.Concept" column="specimen_site" />
+        <property name="expirable" type="java.lang.Boolean" column="is_expirable" />
+        <property name="expiryDate" type="java.lang.String" column="expiry_date" />
+        <property name="sampleIdentifier" type="java.lang.String" column="lab_sample_identifier" length="255" />
+        <many-to-one name="collector" class="org.openmrs.Provider" column="collector" />
+		<property name="status" column="status" length="20">
+			<type name="org.hibernate.type.EnumType">
+		    	<param name="enumClass">org.openmrs.module.commonlabtest.LabTestSampleStatus</param>
+		    	<param name="type">12</param>
+		    </type>
+		</property>
+        <property name="comments" type="java.lang.String" column="comments" length="255" />
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<property name="dateCreated" type="java.lang.String" column="date_created" not-null="true" length="19" />
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+		<property name="dateChanged" type="java.lang.String" column="date_changed" length="19" />
+		<property name="voided" type="java.lang.Boolean" column="voided" length="1" not-null="true" />
+		<many-to-one name="voidedBy" class="org.openmrs.User" column="voided_by" />
+		<property name="dateVoided" type="java.lang.String" column="date_voided" length="19" />
+		<property name="voidReason" type="java.lang.String" column="void_reason" length="255" />
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+        <property name="collectionDate" type="java.lang.String" column="collection_date" />
+        <property name="processedDate" type="java.lang.String" column="processed_date" />
+        <property name="quantity" type="java.lang.Double" column="quantity" />
+        <property name="units" type="java.lang.String" column="units" length="255" />
+    </class>
+</hibernate-mapping>

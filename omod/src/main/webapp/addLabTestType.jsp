@@ -1,5 +1,8 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
+
+<%@ taglib prefix="springform" uri="http://www.springframework.org/tags/form"%>
+
 <%@ include
 	file="/WEB-INF/view/module/commonlabtest/include/localHeader.jsp"%>
 <!-- <openmrs:require anyPrivilege="Add CommonLabTest Metadata, Edit CommonLabTest Metadata" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestType.form" />
@@ -88,94 +91,108 @@ legend.scheduler-border {
 					<spring:message code="commonlabtest.labtesttype.edit" />
 				</legend>
 			</c:if>
-			<form:form commandName="labTestType" id="testTypeForm"
+			<springform:form commandName="labTestType" id="testTypeForm"
 				onsubmit='return validate(this);'>
 				<!-- Concept Reference -->
 				<div class="row">
-					<div class="col-md-2">
-						<form:input path="labTestTypeId" hidden="true" id="labTestTypeId"></form:input>
-						<form:label class="control-label" path="referenceConcept">
-							<spring:message code="general.referenceConcept" />
+					<div class="col-md-3">
+						<springform:label path="labTestTypeId">
+							<spring:message code="general.id" />
 							<span class="text-danger font-weight-bold">*</span>
-						</form:label>
+						</springform:label>
 					</div>
-					<div class="col-md-6">
-						<form:input id="conceptSuggestBox" path="referenceConcept"
-							class="form-control" list="conceptOptions"
-							placeholder="Search Concept..."></form:input>
+					<div class="col-md-5">
+						<springform:label path="labTestTypeId" id="labTestTypeId"></springform:label>
+					</div>
+				</div>
+				<div class="row">
+					<%-- <div class="col-md-6">
+						<springform:input id="conceptSuggestBox" path="referenceConcept"></springform:input>
 						<datalist class="lowercase" id="conceptOptions"></datalist>
 						<span id="referenceconcept" class="text-danger "> </span>
+					</div> --%>
+					<div class="col-md-3">
+						<springform:label path="referenceConcept">
+							<spring:message code="general.referenceConcept" />
+							<span class="text-danger font-weight-bold">*</span>
+						</springform:label>
+					</div>
+					<div class="col-md-5">
+						<springform:select path="referenceConcept" id="conceptBox">
+							<c:forEach var="concept" items="${labTestConcepts}">
+								<option value="${concept['key']}">${concept['value']}</option>
+							</c:forEach>
+						</springform:select>
 					</div>
 				</div>
 				<!-- Test Name -->
 				<div class="row">
-					<div class="col-md-2">
-						<form:label class="control-label" path="name">
-							<spring:message code="general.testName" />
+					<div class="col-md-3">
+						<springform:label path="name">
+							<spring:message code="commonlabtest.labtest.testName" />
 							<span class="text-danger font-weight-bold">*</span>
-						</form:label>
+						</springform:label>
 					</div>
-					<div class="col-md-6">
-						<form:input class="form-control" maxlength="50" path="name"
-							id="name" name="name"></form:input>
+					<div class="col-md-5">
+						<springform:input maxlength="50" path="name"
+							id="name"></springform:input>
 						<span id="testname" class="text-danger"> </span>
 					</div>
 				</div>
 				<!-- Short Name -->
 				<div class="row">
-					<div class="col-md-2">
-						<form:label class="control-label" path="shortName">
+					<div class="col-md-3">
+						<springform:label path="shortName">
 							<spring:message code="general.shortName" />
-						</form:label>
+						</springform:label>
 					</div>
-					<div class="col-md-6">
-						<form:input class="form-control" maxlength="20" path="shortName"
-							id="short_name"></form:input>
+					<div class="col-md-5">
+						<springform:input maxlength="20" path="shortName"
+							id="short_name"></springform:input>
 						<span id="shortname" class="text-danger"> </span>
 
 					</div>
 				</div>
 				<!-- Description -->
 				<div class="row">
-					<div class="col-md-2">
-						<form:label class="control-label" path="description">
+					<div class="col-md-3">
+						<springform:label path="description">
 							<spring:message code="general.description" />
-						</form:label>
+						</springform:label>
 					</div>
-					<div class="col-md-6">
-						<form:textarea class="form-control" maxlength="255"
-							path="description" id="description" rows="5"></form:textarea>
+					<div class="col-md-5">
+						<springform:textarea path="description" id="description" rows="5"></springform:textarea>
 					</div>
 				</div>
 				<!-- Test Group -->
 				<div class="row">
-					<div class="col-md-2">
-						<form:label class="control-label" path="testGroup">
-							<spring:message code="general.testGroup" />
-						</form:label>
+					<div class="col-md-3">
+						<springform:label path="testGroup">
+							<spring:message code="commonlabtest.labtest.testGroup" />
+						</springform:label>
 					</div>
-					<div class="col-md-6">
-						<form:select class="form-control" path="testGroup" id="testGroup">
-							<form:options items="${LabTestGroup}" />
+					<div class="col-md-5">
+						<springform:select path="testGroup" id="testGroup">
+							<springform:options items="${LabTestGroup}" />
 							<c:forEach items="${LabTestGroup}">
 								<option value="${LabTestGroup}">${LabTestGroup}</option>
 							</c:forEach>
-						</form:select>
+						</springform:select>
 					</div>
 				</div>
 				<!-- Specimen -->
 				<div class="row">
-					<div class="col-md-2">
-						<form:label class="form-check-label" path="requiresSpecimen">
-							<spring:message code="general.requiresSpecimen" />
-						</form:label>
+					<div class="col-md-3">
+						<springform:label path="requiresSpecimen">
+							<spring:message code="commonlabtest.labtest.requiresSpecimen" />
+						</springform:label>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-5">
 						<span style="margin-right: 25px"></span>
-						<form:radiobutton class="form-check-input" path="requiresSpecimen"
+						<springform:radiobutton path="requiresSpecimen"
 							value="true" />
 						Yes <span style="margin-right: 25px"></span>
-						<form:radiobutton class="form-check-input" path="requiresSpecimen"
+						<springform:radiobutton path="requiresSpecimen"
 							value="false" />
 						No
 					</div>
@@ -183,12 +200,12 @@ legend.scheduler-border {
 				<c:if test="${not empty testType.referenceConcept.conceptId}">
 					<!-- Date Create -->
 					<div class="row">
-						<div class="col-md-2">
-							<form:label class="control-label" path="creator">
+						<div class="col-md-3">
+							<springform:label path="creator">
 								<spring:message code="general.createdBy" />
-							</form:label>
+							</springform:label>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-5">
 							<c:out value="${testType.creator.personName}" />
 							-
 							<c:out value="${testType.dateCreated}" />
@@ -196,11 +213,11 @@ legend.scheduler-border {
 					</div>
 					<!-- UUID -->
 					<div class="row">
-						<div class="col-md-2">
+						<div class="col-md-3">
 							<font color="#D0D0D0"><sub> <spring:message
 										code="general.uuid" /></sub></font>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-5">
 							<font color="#D0D0D0"><sub> <c:out
 										value="${testType.uuid}" /></sub></font>
 						</div>
@@ -217,7 +234,7 @@ legend.scheduler-border {
 							value="Cancel"></input>
 					</div>
 				</div>
-			</form:form>
+			</springform:form>
 
 		</fieldset>
 		<br>
@@ -226,7 +243,7 @@ legend.scheduler-border {
 
 				<fieldset class="scheduler-border">
 					<legend class="scheduler-border">
-						<spring:message code="general.test.retire" />
+						<spring:message code="commonlabtest.labtesttype.void" />
 					</legend>
 					<form method="post"
 						action="${pageContext.request.contextPath}/module/commonlabtest/retirelabtesttype.form"
@@ -304,7 +321,7 @@ jQuery(document).ready(function () {
         var val = this.value;
         if (jQuery('#conceptOptions option').filter(function () {
             return this.value === val;
-        }).length) {
+        }).length > 2) {
             var datalist = document.getElementById("conceptOptions");
             var options = datalist.options;
             var conceptId = jQuery(this).val();
@@ -439,5 +456,3 @@ jQuery(function () {
 </script>
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>
-
-

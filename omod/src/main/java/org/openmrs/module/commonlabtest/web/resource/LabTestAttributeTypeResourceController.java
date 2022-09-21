@@ -25,7 +25,7 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
         + "/commonlab/labtestattributetype", supportedClass = LabTestAttributeType.class, supportedOpenmrsVersions = {
-                "2.0.*,2.1.*" })
+                "1.9.*" })
 public class LabTestAttributeTypeResourceController extends MetadataDelegatingCrudResource<LabTestAttributeType> {
 
 	/**

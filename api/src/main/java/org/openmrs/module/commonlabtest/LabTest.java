@@ -18,23 +18,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.Field;
 import org.openmrs.Attributable;
 import org.openmrs.BaseCustomizableData;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 
 /**
@@ -44,38 +32,24 @@ import org.openmrs.module.commonlabtest.api.CommonLabTestService;
  * 
  * @author owais.hussain@ihsinformatics.com
  */
-@Entity(name = "commonlabtest.LabTest")
-@Table(name = "commonlabtest_test")
 public class LabTest extends BaseCustomizableData<LabTestAttribute> implements java.io.Serializable, Attributable<LabTest> {
 
-	private static final long serialVersionUID = 2561859108258402721L;
+	private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(name = "test_order_id")
 	private Integer testOrderId;
 
-	@OneToOne(optional = false, targetEntity = Order.class)
-	@PrimaryKeyJoinColumn(name = "testOrderId")
 	private Order order;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "test_type_id")
 	private LabTestType labTestType;
 
-	@Field
-	@Column(name = "lab_reference_number", length = 255)
 	private String labReferenceNumber;
 
-	@Column(name = "instructions", length = 255)
 	private String labInstructions;
 
-	@Column(name = "report_file_path")
 	private String filePath;
 
-	@Column(name = "result_comments")
 	private String resultComments;
 
-	@ContainedIn
 	private transient Set<LabTestSample> labTestSamples = new HashSet<LabTestSample>(0);
 
 	/**

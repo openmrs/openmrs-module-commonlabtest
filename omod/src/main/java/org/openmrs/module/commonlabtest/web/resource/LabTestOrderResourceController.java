@@ -31,7 +31,7 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/commonlab/labtestorder", supportedClass = LabTest.class, supportedOpenmrsVersions = { "2.0.*,2.1.*" })
+        + "/commonlab/labtestorder", supportedClass = LabTest.class, supportedOpenmrsVersions = { "1.9.*" })
 public class LabTestOrderResourceController extends DataDelegatingCrudResource<LabTest> {
 
 	/**
@@ -82,7 +82,7 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 			if (existing != null) {
 				labTest.setOrder(existing);
 			} else {
-				Order order = Context.getOrderService().saveOrder(labTest.getOrder(), null);
+				Order order = Context.getOrderService().saveOrder(labTest.getOrder());
 				labTest.setOrder(order);
 			}
 			return commonLabTestService.saveLabTest(labTest, labTestSample, labTestAttributes);

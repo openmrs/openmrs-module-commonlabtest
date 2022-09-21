@@ -6,7 +6,11 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
+import org.openmrs.Order;
 import org.openmrs.Patient;
+import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
@@ -28,31 +32,32 @@ public class LabTestOrderPortletController extends PortletController {
 
 	@Override
 	protected void populateModel(HttpServletRequest request, Map<String, Object> model) {
-
 		String patientId = request.getParameter("patientId");
 		if (patientId != null) {
 			int id = Integer.parseInt(patientId);
 			Patient patient = Context.getPatientService().getPatient(id);
 			JsonArray orderJsonArray = new JsonArray();
 			if (patient != null) {
-				List<LabTest> testList = Context.getService(CommonLabTestService.class).getLabTests(patient, false);
+				List<LabTest> testList = null;
+				testList = Context.getService(CommonLabTestService.class).getLabTests(patient, false);
 				if (testList != null && !testList.isEmpty()) {
 					for (LabTest labTest : testList) {
 						JsonObject childJsonObject = new JsonObject();
 						childJsonObject.addProperty("id", labTest.getTestOrderId());
 						childJsonObject.addProperty("requiredSpecimen", labTest.getLabTestType().getRequiresSpecimen());
 						childJsonObject.addProperty("testTypeName", labTest.getLabTestType().getName());
-						childJsonObject.addProperty("encounterName",
-						    labTest.getOrder().getEncounter().getEncounterType().getName());
+						Order order = Context.getOrderService().getOrder(labTest.getTestOrderId());
+						childJsonObject.addProperty("encounterName", order.getEncounter().getEncounterType().getName());
 						SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
-						String encounterDate = formatter.format(labTest.getOrder().getEncounter().getEncounterDatetime());
+						String encounterDate = formatter.format(order.getEncounter().getEncounterDatetime());
 						childJsonObject.addProperty("encounterDate", encounterDate);
 						childJsonObject.addProperty("labReferenceNumber", labTest.getLabReferenceNumber());
 						childJsonObject.addProperty("testGroup", labTest.getLabTestType().getTestGroup().name());
 						childJsonObject.addProperty("dateCreated", labTest.getDateCreated().toString());
 						childJsonObject.addProperty("createdBy", labTest.getCreator().getUsername());
-						childJsonObject.addProperty("encounterType",
-						    labTest.getOrder().getEncounter().getEncounterType().getName().toString());
+						Encounter encounter = Context.getEncounterService()
+						        .getEncounter(order.getEncounter().getEncounterId());
+						childJsonObject.addProperty("encounterType", encounter.getEncounterType().getName());
 						childJsonObject.addProperty("changedBy",
 						    (labTest.getChangedBy() == null) ? "" : labTest.getChangedBy().getName());
 						childJsonObject.addProperty("uuid", labTest.getUuid());

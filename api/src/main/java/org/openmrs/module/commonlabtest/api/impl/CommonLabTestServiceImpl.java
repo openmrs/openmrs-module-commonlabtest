@@ -22,20 +22,18 @@ import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
-import org.openmrs.api.UnchangeablePropertyException;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.commonlabtest.CommonLabTestConfig;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
+import org.openmrs.module.commonlabtest.LabTestGroup;
 import org.openmrs.module.commonlabtest.LabTestSample;
-import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
+import org.openmrs.module.commonlabtest.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.LabTestType;
-import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.commonlabtest.api.dao.CommonLabTestDAO;
-import org.openmrs.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -433,7 +431,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public List<LabTest> getLabTests(Patient patient, boolean includeVoided) throws APIException {
-		return getLabTests(null, patient, null, null, null, null, null, null, includeVoided);
+		return dao.getLabTests(null, patient, null, null, includeVoided);
 	}
 
 	/*
@@ -498,16 +496,16 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	        throws APIException {
 		// Check mandatory fields
 		if (labTest.getOrder() == null) {
-			throw new APIException("org.openmrs.Order", (Object[]) null);
+			throw new APIException("org.openmrs.Order");
 		}
 		if (labTest.getOrder().getEncounter() == null) {
-			throw new APIException("org.openmrs.Encounter", (Object[]) null);
+			throw new APIException("org.openmrs.Encounter");
 		}
 		if (labTest.getOrder().getConcept() == null) {
-			throw new APIException("org.openmrs.Concept", (Object[]) null);
+			throw new APIException("org.openmrs.Concept");
 		}
 		if (labTest.getOrder().getOrderer() == null) {
-			throw new APIException("org.openmrs.Orderer", (Object[]) null);
+			throw new APIException("org.openmrs.Orderer");
 		}
 		// Order object is saved via DAO object
 		// Save Order
@@ -591,7 +589,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	 */
 	private void handleUnknownTestTypeOperation(LabTestType labTestType) {
 		if (labTestType.getUuid().equals(LabTestType.UNKNOWN_TEST_UUID)) {
-			throw new UnchangeablePropertyException(
+			throw new APIException(
 			        "The LabTestType: UNKNOWN " + LabTestType.UNKNOWN_TEST_UUID + " is mandatory, and cannot be altered.");
 		}
 	}

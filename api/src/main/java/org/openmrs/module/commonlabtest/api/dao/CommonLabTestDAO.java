@@ -10,10 +10,10 @@ import org.openmrs.Provider;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
+import org.openmrs.module.commonlabtest.LabTestGroup;
 import org.openmrs.module.commonlabtest.LabTestSample;
-import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
+import org.openmrs.module.commonlabtest.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.LabTestType;
-import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 
 public interface CommonLabTestDAO {
 
@@ -122,6 +122,16 @@ public interface CommonLabTestDAO {
 	 * @return {@link LabTest} object
 	 */
 	LabTest getLabTestByUuid(String uuid);
+
+	/**
+	 * @param labTestType the {@link LabTestType} object
+	 * @param patient the {@link Patient} object
+	 * @param from the start {@link Date} object
+	 * @param to the end {@link Date} object
+	 * @param includeVoided include retired objects
+	 * @return {@link LabTest} object(s)
+	 */
+	List<LabTest> getLabTests(LabTestType labTestType, Patient patient, Date from, Date to, boolean includeVoided);
 
 	/**
 	 * @param labTestType the {@link LabTestType} object

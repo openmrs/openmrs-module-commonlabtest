@@ -13,18 +13,6 @@
  */
 package org.openmrs.module.commonlabtest;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import org.hibernate.search.annotations.Field;
 import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.Concept;
 
@@ -34,50 +22,18 @@ import org.openmrs.Concept;
  * 
  * @author owais.hussain@ihsinformatics.com
  */
-@Entity(name = "commonlabtest.LabTestType")
-@Table(name = "commonlabtest_type")
 public class LabTestType extends BaseOpenmrsMetadata {
-
-	public enum LabTestGroup {
-		SEROLOGY,
-		CARDIOLOGY,
-		OPHTHALMOLOGY,
-		BACTERIOLOGY,
-		BIOCHEMISTRY,
-		BLOOD_BANK,
-		CYTOLOGY,
-		HEMATOLOGY,
-		IMMUNOLOGY,
-		MICROBIOLOGY,
-		RADIOLOGY,
-		SONOLOGY,
-		URINALYSIS,
-		OTHER
-	}
-
-	private static final long serialVersionUID = -4734826044571156784L;
 
 	public static final String UNKNOWN_TEST_UUID = "ee9b140e-9a29-11e8-a296-40b034c3cfee";
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "test_type_id")
 	private Integer labTestTypeId;
 
-	@Field
-	@Column(name = "short_name", length = 50)
 	private String shortName;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "test_group", length = 50)
 	private LabTestGroup testGroup;
 
-	@Field
-	@Column(name = "requires_specimen", nullable = false)
 	private Boolean requiresSpecimen = Boolean.FALSE;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "reference_concept_id")
 	private Concept referenceConcept;
 
 	/**

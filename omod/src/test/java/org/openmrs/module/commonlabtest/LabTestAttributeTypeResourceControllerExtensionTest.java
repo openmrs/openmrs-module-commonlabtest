@@ -16,7 +16,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.commonlabtest.web.resource.LabTestAttributeTypeResourceController;
 import org.openmrs.module.webservices.rest.SimpleObject;
@@ -26,7 +25,6 @@ import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResou
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * @author tahira.niazi@ihsinformatics.com
@@ -80,7 +78,7 @@ public class LabTestAttributeTypeResourceControllerExtensionTest extends BaseDel
 		final MockHttpServletRequest request = new MockHttpServletRequest();
 		request.addParameter("q", "");
 		request.addParameter("testTypeUuid", testTypeUuid);
-		final RequestContext context = RestUtil.getRequestContext(request, new MockHttpServletResponse());
+		final RequestContext context = RestUtil.getRequestContext(request);
 
 		// search
 		final SimpleObject simple = getResource().search(context);

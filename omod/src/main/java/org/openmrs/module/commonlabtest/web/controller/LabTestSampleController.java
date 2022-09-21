@@ -16,7 +16,7 @@ import org.openmrs.ConceptAnswer;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestSample;
-import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
+import org.openmrs.module.commonlabtest.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -113,8 +113,8 @@ public class LabTestSampleController {
 		model.addAttribute("orderEncDate", orderDate);
 		model.addAttribute("orderId", orderId);
 		model.addAttribute("error", error);
-		model.addAttribute("provider", Context.getProviderService()
-		        .getProvidersByPerson(Context.getAuthenticatedUser().getPerson(), false).iterator().next());
+		model.addAttribute("provider",
+		    Context.getProviderService().getProvidersByPerson(Context.getAuthenticatedUser().getPerson()).iterator().next());
 		return SUCCESS_ADD_FORM_VIEW;
 	}
 

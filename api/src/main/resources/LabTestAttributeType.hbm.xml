@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.commonlabtest">
+    <class name="LabTestAttributeType" table="commonlabtest_attribute_type" lazy="false">
+        <id name="labTestAttributeTypeId" type="int" column="test_attribute_type_id">
+            <generator class="native">
+			</generator>
+        </id>
+        <many-to-one name="labTestType" class="LabTestType" column="test_type_id" />
+		<property name="datatypeClassname" type="java.lang.String" column="datatype" length="255" />
+		<property name="datatypeConfig" type="java.lang.String" column="datatype_config" length="255" />
+		<property name="minOccurs" type="java.lang.Integer" column="min_occurs" />
+		<property name="maxOccurs" type="java.lang.Integer" column="max_occurs" />
+		<property name="handlerConfig" type="java.lang.String" column="handler_config" length="65536" />
+        <property name="sortWeight" type="java.lang.Double" column="sort_weight" />
+		<property name="preferredHandlerClassname" type="java.lang.String" column="preferred_handler" length="255" />
+		<property name="hint" type="java.lang.String" column="hint" length="1024" />
+		<property name="groupName" type="java.lang.String" column="group_name" length="255" />
+		<property name="multisetName" type="java.lang.String" column="multiset_name" length="255" />
+		<property name="name" type="java.lang.String" column="name" length="255" />
+		<property name="description" type="java.lang.String" column="description" length="65536" />
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+		<property name="retired" type="java.lang.Boolean" column="retired" length="1" not-null="true" />
+		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
+		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+    </class>
+</hibernate-mapping>

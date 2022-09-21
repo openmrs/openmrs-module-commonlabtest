@@ -1,6 +1,9 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
+
+<%@ taglib prefix="springform" uri="http://www.springframework.org/tags/form"%> 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <openmrs:portlet url="patientHeader" id="patientDashboardHeader"
 	patientId="${patientId}" />
 <!-- <openmrs:require anyPrivilege="Add CommonLabTest Orders,Edit CommonLabTest Orders" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestRequest.form" />
@@ -93,42 +96,45 @@ legend.scheduler-border {
 				<spring:message code="commonlabtest.order.edit" />
 			</legend>
 		</c:if>
-		<form:form commandName="labTest" id="labTestForm"
+		<springform:form commandName="labTest" id="labTestForm"
 			onsubmit="return validate()">
-			<form:input path="order.patient" hidden="true" value="${patientId}"></form:input>
-			<form:input path="order.concept.conceptId" hidden="true"
-				id="conceptId"></form:input>
-			<form:input path="order.orderer.providerId" hidden="true"
-				value="${provider.providerId}"></form:input>
-			<form:input path="order.orderType.orderTypeId" hidden="true"
-				value="3"></form:input>
-			<form:input path="order.orderId" hidden="true" id="orderId"></form:input>
-			<form:input path="resultComments" hidden="true" id="resultComments"></form:input>
-			<form:input path="filePath" hidden="true" id="filePath"></form:input>
+			<springform:input path="order.patient" hidden="true" value="${patientId}"></springform:input>
+			<springform:input path="order.concept.conceptId" hidden="true"
+				id="conceptId"></springform:input>
+			<springform:input path="order.orderer.providerId" hidden="true"
+				value="${provider.providerId}"></springform:input>
+			<springform:input path="order.orderType.orderTypeId" hidden="true"
+				value="3"></springform:input>
+			<springform:input path="order.orderId" hidden="true" id="orderId"></springform:input>
+			<springform:input path="resultComments" hidden="true" id="resultComments"></springform:input>
+			<springform:input path="filePath" hidden="true" id="filePath"></springform:input>
 			<div class="row">
 				<div class="col-md-3">
-					<form:label class="control-label" path="order.encounter">
+					<springform:label class="control-label" path="order.encounter">
 						<spring:message code="general.encounter" />
 						<span class=" text-danger required">*</span>
-					</form:label>
+					</springform:label>
 				</div>
 				<div class="col-md-6">
 					<c:if test="${not empty labTest.labReferenceNumber}">
-						<form:input class="form-control" path="order.encounter"
-							id="encounter" hidden="true" name="encounter"></form:input>
-						<form:label class="form-control" path="order.encounter"
-							id="encounter" name="encounter">${labTest.order.encounter.getEncounterType().getName()}</form:label>
+						<springform:input class="form-control" path="order.encounter"
+							id="encounter" hidden="true" name="encounter"></springform:input>
+						<springform:label class="form-control" path="order.encounter" id="encounter" name="encounter">
+							${labTest.order.encounter.encounterType.name}
+							</springform:label>
 					</c:if>
 					<c:if test="${empty labTest.labReferenceNumber}">
-						<form:select class="form-control" path="order.encounter"
+						<springform:select class="form-control" path="order.encounter"
 							id="encounter">
-							<form:options />
+							<springform:options />
 							<c:if test="${not empty encounters}">
 								<c:forEach var="encounter" items="${encounters}">
-									<form:option item="${encounter}" value="${encounter}"><p>${encounter.getEncounterType().getName()} [<fmt:formatDate type="date" value="${encounter.getEncounterDatetime()}" />]</p></form:option>
+									<form:option value="${encounter}">
+										<p>${encounter.encounterType.name} [<fmt:formatDate type="date" value="${encounter.encounterDatetime}" />]</p>
+									</form:option>
 								</c:forEach>
 							</c:if>
-						</form:select>
+						</springform:select>
 						
 					</c:if>
 					<span id="encounters" class="text-danger "></span>
@@ -140,29 +146,29 @@ legend.scheduler-border {
 			<!-- Test Type -->
 			<div class="row">
 				<div class="col-md-3">
-					<form:label class="control-label" path="labTestType.labTestTypeId">
+					<springform:label class="control-label" path="labTestType.labTestTypeId">
 						<spring:message code="general.testType" />
 						<span class="text-danger required">*</span>
-					</form:label>
+					</springform:label>
 				</div>
 				<div class="col-md-6">
 					<c:if test="${not empty labTest.labReferenceNumber}">
-						<form:input class="form-control" path="labTestType.labTestTypeId"
-							id="testType" hidden="true" name="testType"></form:input>
-						<form:label class="form-control" path="labTestType.labTestTypeId"
-							id="testType" name="testType">${labTest.labTestType.getName()}</form:label>
+						<springform:input class="form-control" path="labTestType.labTestTypeId"
+							id="testType" hidden="true" name="testType"></springform:input>
+						<springform:label class="form-control" path="labTestType.labTestTypeId"
+							id="testType" name="testType">${labTest.labTestType.name}</springform:label>
 					</c:if>
 					<c:if test="${empty labTest.labReferenceNumber}">
-						<form:select class="form-control" path="labTestType.labTestTypeId"
+						<springform:select class="form-control" path="labTestType.labTestTypeId"
 							id="testType">
-							<form:options />
+							<springform:options />
 							<c:if test="${not empty testTypes}">
 								<c:forEach var="testType" items="${testTypes}">
-									<form:option item="${testType.labTestTypeId}"
-										value="${testType.labTestTypeId}">${testType.getName()}</form:option>
+									<springform:option item="${testType.labTestTypeId}"
+										value="${testType.labTestTypeId}">${testType.name}</springform:option>
 								</c:forEach>
 							</c:if>
-						</form:select>
+						</springform:select>
 						<span id="testtype" class="text-danger "> </span>
 					</c:if>
 				</div>
@@ -170,15 +176,15 @@ legend.scheduler-border {
 			<!-- Lab Reference Number -->
 			<div class="row">
 				<div class="col-md-3">
-					<form:label class="control-label" path="labReferenceNumber">
+					<springform:label class="control-label" path="labReferenceNumber">
 						<spring:message code="commonlabtest.order.labReferenceNo" />
 						<span class="text-danger required">*</span>
-					</form:label>
+					</springform:label>
 				</div>
 				<div class="col-md-6">
-					<form:input class="form-control" maxlength="100"
+					<springform:input class="form-control" maxlength="100"
 						path="labReferenceNumber" id="labReferenceNumber"
-						name="labReferenceNumber"></form:input>
+						name="labReferenceNumber"></springform:input>
 					<span id="labreferencenumber" class="text-danger "> </span>
 
 				</div>
@@ -186,37 +192,37 @@ legend.scheduler-border {
 			<!-- Care Setting-->
 			<div class="row">
 				<div class="col-md-3">
-					<form:label class="control-label"
+					<springform:label class="control-label"
 						path="order.CareSetting.careSettingId">
 						<spring:message code="general.careSetting" />
-					</form:label>
+					</springform:label>
 				</div>
 				<div class="col-md-6">
 					<c:if test="${not empty labTest.labReferenceNumber}">
-						<form:radiobutton path="order.CareSetting.careSettingId" value="1"
+						<springform:radiobutton path="order.CareSetting.careSettingId" value="1"
 							checked="checked" onclick="return false;" />OutPatient
                         <span style="margin-right: 25px"></span>
-						<form:radiobutton path="order.CareSetting.careSettingId" value="2"
+						<springform:radiobutton path="order.CareSetting.careSettingId" value="2"
 							onclick="return false;" />InPatient
                     </c:if>
 					<c:if test="${empty labTest.labReferenceNumber}">
-						<form:radiobutton path="order.CareSetting.careSettingId" value="1"
+						<springform:radiobutton path="order.CareSetting.careSettingId" value="1"
 							checked="checked" />OutPatient
                         <span style="margin-right: 25px"></span>
-						<form:radiobutton path="order.CareSetting.careSettingId" value="2" />InPatient
+						<springform:radiobutton path="order.CareSetting.careSettingId" value="2" />InPatient
                     </c:if>
 				</div>
 			</div>
 			<!-- Instruction -->
 			<div class="row">
 				<div class="col-md-3">
-					<form:label class="control-label" path="labInstructions">
+					<springform:label class="control-label" path="labInstructions">
 						<spring:message code="general.instructions" />
-					</form:label>
+					</springform:label>
 				</div>
 				<div class="col-md-6">
-					<form:textarea class="form-control" maxlength="512"
-						path="labInstructions" type="text" id="labInstructions"></form:textarea>
+					<springform:textarea class="form-control" maxlength="512"
+						path="labInstructions" type="text" id="labInstructions"></springform:textarea>
 				</div>
 			</div>
 			<!-- Save -->
@@ -230,7 +236,7 @@ legend.scheduler-border {
 						value="Cancel"></input>
 				</div>
 			</div>
-		</form:form>
+		</springform:form>
 
 	</fieldset>
 	<br>

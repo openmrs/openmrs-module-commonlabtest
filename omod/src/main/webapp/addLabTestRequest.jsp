@@ -1,6 +1,9 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
+
+<%@ taglib prefix="springform" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <openmrs:portlet url="patientHeader" id="patientDashboardHeader"
 	patientId="${patientId}" />
 <openmrs:require privilege="Add CommonLabTest Orders"
@@ -140,8 +143,7 @@ table-layout: fixed;
 				<select class="form-control" id="encounter_id">
 					<c:if test="${not empty encounters}">
 						<c:forEach var="encounter" items="${encounters}">
-							<%-- <option value="${encounter.encounterId}">${encounter.getEncounterType().getName()}</option> --%>
-							<option value="${encounter.encounterId}"><p>${encounter.getEncounterType().getName()} [<fmt:formatDate type="date" value="${encounter.getEncounterDatetime()}" />]</p></option>
+							<option value="${encounter.encounterId}"><p>${encounter.encounterType.name} [<fmt:formatDate type="date" value="${encounter.encounterDatetime}" />]</p></option>
 						</c:forEach>
 					</c:if>
 				</select> <span id="encounters" class="text-danger "></span>
@@ -242,7 +244,7 @@ function getTestRequestList() {
 
 function showalert(message, alerttype) {
     //alertType : .alert-success, .alert-info, .alert-warning & .alert-danger
-    $('#alert_placeholder').append('<div id="alertdiv" class="alert ' + alerttype + '"><a class="close" data-dismiss="alert">×</a><span>' + message + '</span></div>')
+    $('#alert_placeholder').append('<div id="alertdiv" class="alert ' + alerttype + '"><a class="close" data-dismiss="alert">ï¿½</a><span>' + message + '</span></div>')
     autoHide();
 }
 function autoHide() {

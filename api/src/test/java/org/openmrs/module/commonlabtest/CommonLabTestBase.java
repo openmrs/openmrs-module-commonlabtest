@@ -25,8 +25,6 @@ import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
-import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 /**

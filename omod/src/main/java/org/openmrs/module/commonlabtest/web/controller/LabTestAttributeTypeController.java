@@ -1,17 +1,21 @@
 package org.openmrs.module.commonlabtest.web.controller;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.ConceptDatatype;
 import org.openmrs.api.context.Context;
 import org.openmrs.customdatatype.CustomDatatypeUtil;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
+import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -35,12 +39,24 @@ public class LabTestAttributeTypeController {
 
 	@ModelAttribute("datatypes")
 	public Collection<String> getDatatypes() {
-		return CustomDatatypeUtil.getDatatypeClassnames();
+		List<String> list = CustomDatatypeUtil.getDatatypeClassnames();
+		list.add("org.openmrs.customdatatype.datatype.ConceptDatatype");
+		return list;
 	}
 
 	@ModelAttribute("handlers")
 	public Collection<String> getHandlers() {
 		return CustomDatatypeUtil.getHandlerClassnames();
+	}
+
+	@ModelAttribute("labTestTypes")
+	public Map<Integer, String> getLabTestTypes() {
+		Map<Integer, String> map = new HashMap<Integer, String>();
+		List<LabTestType> labTestTypes = Context.getService(CommonLabTestService.class).getAllLabTestTypes(false);
+		for (LabTestType labTestType : labTestTypes) {
+			map.put(labTestType.getId(), labTestType.getName());
+		}
+		return map;
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestAttributeType.form")

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.commonlabtest">
+	<class name="LabTestType" table="commonlabtest_type" lazy="false">
+		<id name="labTestTypeId" type="int" column="test_type_id">
+			<generator class="native">
+			</generator>
+		</id>
+		<property name="name" type="java.lang.String" column="name" length="255" />
+		<property name="shortName" type="java.lang.String" column="short_name" length="20" />
+		<property name="testGroup" column="test_group" length="20">
+			<type name="org.hibernate.type.EnumType">
+		    	<param name="enumClass">org.openmrs.module.commonlabtest.LabTestGroup</param>
+		    	<param name="type">12</param>
+		    </type>
+		</property>
+		<property name="requiresSpecimen" type="java.lang.Boolean" column="requires_specimen" length="1" not-null="true" />
+		<many-to-one name="referenceConcept" class="org.openmrs.Concept" not-null="true" column="reference_concept_id" />
+		<property name="description" type="java.lang.String" column="description" length="65536" />
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+		<property name="retired" type="java.lang.Boolean" column="retired" length="1" not-null="true" />
+		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
+		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+    </class>
+</hibernate-mapping>
