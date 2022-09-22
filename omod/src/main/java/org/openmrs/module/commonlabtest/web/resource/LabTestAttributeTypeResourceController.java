@@ -64,6 +64,7 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 	}
 
 	@Override
+	// TODO: Match the resource properties with v2.0
 	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("uuid");
@@ -75,7 +76,9 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 			description.addProperty("labTestType");
 			description.addProperty("description");
 			description.addProperty("sortWeight");
+			description.addProperty("minOccurs");
 			description.addProperty("maxOccurs");
+			description.addProperty("groupName");
 			description.addProperty("datatypeClassname");
 			description.addProperty("datatypeConfig");
 			description.addProperty("preferredHandlerClassname");
@@ -86,7 +89,10 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 			description.addProperty("labTestType");
 			description.addProperty("description");
 			description.addProperty("sortWeight");
+			description.addProperty("minOccurs");
 			description.addProperty("maxOccurs");
+			description.addProperty("groupName");
+			description.addProperty("multisetName");
 			description.addProperty("datatypeClassname");
 			description.addProperty("datatypeConfig");
 			description.addProperty("preferredHandlerClassname");

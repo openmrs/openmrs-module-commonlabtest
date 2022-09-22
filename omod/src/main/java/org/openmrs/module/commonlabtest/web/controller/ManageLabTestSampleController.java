@@ -47,7 +47,6 @@ public class ManageLabTestSampleController {
 				return "redirect:../../patientDashboard.form?patientId=" + patientId;
 			}
 			testSample = commonLabTestService.getLabTestSamples(labTest, Boolean.FALSE);// need to check this get sample
-			                                                                            // method...
 		}
 
 		for (LabTestSample labTestSample : testSample) {
@@ -100,5 +99,4 @@ public class ManageLabTestSampleController {
 		return "redirect:manageLabTestSamples.form?patientId=" + patientId + "&testOrderId="
 		        + labTestSample.getLabTest().getTestOrderId();
 	}
-
 }

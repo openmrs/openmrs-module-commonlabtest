@@ -1,5 +1,8 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
+
+<%@ taglib prefix="springform" uri="http://www.springframework.org/tags/form"%>
+
 <!-- <openmrs:require anyPrivilege="Add CommonLabTest Samples , Edit CommonLabTest Samples" otherwise="/login.htm" redirect="/module/commonlabtest/addLabTestSample.form" />
  -->
 <link type="text/css" rel="stylesheet"
@@ -87,125 +90,125 @@ legend.scheduler-border {
 					<spring:message code="commonlabtest.labtestsample.edit" />
 				</legend>
 			</c:if>
-			<form:form modelAttribute="testSample" id="testSampleform"
+			<springform:form modelAttribute="testSample" id="testSampleform"
 				onsubmit='return validate(this);'>
 
-				<form:input path="labTest.order.patient" hidden="true"
-					value="${patientId}"></form:input>
-				<form:input path="collector.providerId" hidden="true"
-					value="${provider.providerId}"></form:input>
-				<form:input path="labTest.testOrderId" hidden="true"
-					value="${orderId}"></form:input>
-				<form:input path="labTestSampleId" hidden="true" value=""></form:input>
-				<form:input path="status" hidden="true" value=""></form:input>
-				<form:input path="comments" hidden="true" value=""></form:input>
+				<springform:input path="labTest.order.patient" hidden="true"
+					value="${patientId}"></springform:input>
+				<springform:input path="collector.providerId" hidden="true"
+					value="${provider.providerId}"></springform:input>
+				<springform:input path="labTest.testOrderId" hidden="true"
+					value="${orderId}"></springform:input>
+				<springform:input path="labTestSampleId" hidden="true" value=""></springform:input>
+				<springform:input path="status" hidden="true" value=""></springform:input>
+				<springform:input path="comments" hidden="true" value=""></springform:input>
 				<div class="row">
 					<div class="col-md-2">
-						<form:label class="control-label" path="specimenType">
-							<spring:message code="general.specimenType" />
+						<springform:label class="control-label" path="specimenType">
+							<spring:message code="commonlabtest.labtestsample.specimenType" />
 							<span class="text-danger required">*</span>
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:select class="form-control" path="specimenType"
+						<springform:select class="form-control" path="specimenType"
 							id="specimen_type">
-							<form:options />
+							<springform:options />
 							<c:if test="${not empty specimenType}">
 								<option></option>
 								<c:forEach var="spType" items="${specimenType}">
-									<form:option item="${spType}" value="${spType}">${spType.name}</form:option>
+									<springform:option item="${spType}" value="${spType}">${spType.name}</springform:option>
 								</c:forEach>
 							</c:if>
-						</form:select>
+						</springform:select>
 						<span id="specimentype" class="text-danger "> </span>
-						<form:errors path="specimenType" cssClass="error" />
+						<springform:errors path="specimenType" cssClass="error" />
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-2">
-						<form:label class="control-label" path="specimenSite">
-							<spring:message code="general.specimenSite" />
+						<springform:label class="control-label" path="specimenSite">
+							<spring:message code="commonlabtest.labtestsample.specimenSite" />
 							<span class="text-danger required">*</span>
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:select class="form-control" path="specimenSite"
+						<springform:select class="form-control" path="specimenSite"
 							id="specimen_site">
 							<c:if test="${not empty specimenSite}">
 								<option></option>
 								<c:forEach var="spSite" items="${specimenSite}">
-									<form:option item="${spSite.getAnswerConcept()}"
-										value="${spSite.getAnswerConcept()}">${spSite.getAnswerConcept().getName()}</form:option>
+									<springform:option item="${spSite}"
+										value="${spSite}">${spSite.name}</springform:option>
 								</c:forEach>
 							</c:if>
-						</form:select>
+						</springform:select>
 						<span id="specimensite" class="text-danger "> </span>
-						<form:errors path="specimenSite" cssClass="error" />
+						<springform:errors path="specimenSite" cssClass="error" />
 					</div>
 				</div>
 				<!-- Quantity -->
 				<div class="row">
 					<div class="col-md-2">
-						<form:label class="control-label" path="quantity">
+						<springform:label class="control-label" path="quantity">
 							<spring:message code="commonlabtest.labtestsample.quantity" />
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:input path="quantity" maxlength="4" class="form-control"
-							id="quantity"></form:input>
+						<springform:input path="quantity" maxlength="4" class="form-control"
+							id="quantity"></springform:input>
 						<span id="quantityError" class="text-danger "> </span>
-						<form:errors path="quantity" cssClass="error" />
+						<springform:errors path="quantity" cssClass="error" />
 					</div>
 				</div>
 				<!--Unit  -->
 				<div class="row">
 					<div class="col-md-2">
-						<form:label class="control-label" path="units">
+						<springform:label class="control-label" path="units">
 							<spring:message code="commonlabtest.labtestsample.unit" />
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="col-md-6">
-						<form:select class="form-control" path="units" id="units">
+						<springform:select class="form-control" path="units" id="units">
 							<c:if test="${not empty testUnits}">
 								<c:forEach var="unit" items="${testUnits}">
-									<form:option item="${unit.getAnswerConcept()}"
-										value="${unit.getAnswerConcept()}">${unit.getAnswerConcept().getName()}</form:option>
+									<springform:option item="${unit.answerConcept}"
+										value="${unit.answerConcept}">${unit.answerConcept.name}</springform:option>
 								</c:forEach>
 							</c:if>
-						</form:select>
+						</springform:select>
 						<span id="unitsError" class="text-danger "> </span>
-						<form:errors path="units" cssClass="error" />
+						<springform:errors path="units" cssClass="error" />
 					</div>
 				</div>
 				<!--Sample Identifier  -->
 				<div class="row">
 					<div class="col-md-2">
-						<form:label class="control-label" path="sampleIdentifier">
+						<springform:label class="control-label" path="sampleIdentifier">
 							<spring:message
 								code="commonlabtest.labtestsample.sampleIdentifier" />
 							<span class="text-danger required">*</span>
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="controls col-md-6">
-						<form:input class="form-control" path="sampleIdentifier"
-							maxlength="50" id="sample_identifier"></form:input>
+						<springform:input class="form-control" path="sampleIdentifier"
+							maxlength="50" id="sample_identifier"></springform:input>
 						<span id="sampleidentifier" class="text-danger "> </span>
-						<form:errors path="sampleIdentifier" cssClass="error" />
+						<springform:errors path="sampleIdentifier" cssClass="error" />
 					</div>
 				</div>
 				<!--collectionDate  -->
 				<div class="row">
 					<div class="col-md-2">
-						<form:label class="control-label" path="collectionDate">
+						<springform:label class="control-label" path="collectionDate">
 							<spring:message code="commonlabtest.labtestsample.collectionDate" />
 							<span class="text-danger required">*</span>
-						</form:label>
+						</springform:label>
 					</div>
 					<div class="controls col-md-6">
-						<form:input class="form-control" path="collectionDate"
-							id="collectionDatePciker" autocomplete="off" readonly="true"></form:input>
+						<springform:input class="form-control" path="collectionDate"
+							id="collectionDatePciker" autocomplete="off" readonly="true"></springform:input>
 						<span id="collectiondate" class="text-danger "> </span>
-						<form:errors path="collectionDate" cssClass="error" />
+						<springform:errors path="collectionDate" cssClass="error" />
 					</div>
 				</div>
 				<!-- Save -->
@@ -218,7 +221,7 @@ legend.scheduler-border {
 						<input type="button" onclick="goTo()" value="Cancel"></input>
 					</div>
 				</div>
-			</form:form>
+			</springform:form>
 		</fieldset>
 		<br>
 		<openmrs:hasPrivilege privilege="Delete CommonLabTest Samples">

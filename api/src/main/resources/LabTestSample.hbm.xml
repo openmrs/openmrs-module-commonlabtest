@@ -22,16 +22,16 @@
 		</property>
         <property name="comments" type="java.lang.String" column="comments" length="255" />
 		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
-		<property name="dateCreated" type="java.lang.String" column="date_created" not-null="true" length="19" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
 		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
-		<property name="dateChanged" type="java.lang.String" column="date_changed" length="19" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
 		<property name="voided" type="java.lang.Boolean" column="voided" length="1" not-null="true" />
 		<many-to-one name="voidedBy" class="org.openmrs.User" column="voided_by" />
-		<property name="dateVoided" type="java.lang.String" column="date_voided" length="19" />
+		<property name="dateVoided" type="java.util.Date" column="date_voided" length="19" />
 		<property name="voidReason" type="java.lang.String" column="void_reason" length="255" />
 		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
-        <property name="collectionDate" type="java.lang.String" column="collection_date" />
-        <property name="processedDate" type="java.lang.String" column="processed_date" />
+        <property name="collectionDate" type="java.util.Date" column="collection_date" />
+        <property name="processedDate" type="java.util.Date" column="processed_date" />
         <property name="quantity" type="java.lang.Double" column="quantity" />
         <property name="units" type="java.lang.String" column="units" length="255" />
     </class>

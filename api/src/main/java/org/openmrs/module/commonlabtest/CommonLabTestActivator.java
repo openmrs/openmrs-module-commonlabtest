@@ -56,10 +56,15 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 		contextRefreshed();
 	}
 
+	// TODO: Deprecate this
 	private void setGlobalProperty(AdministrationService service, String prop, String val) {
+		setGlobalProperty(service, prop, val, "");
+	}
+
+	private void setGlobalProperty(AdministrationService service, String prop, String val, String desc) {
 		GlobalProperty gp = service.getGlobalPropertyObject(prop);
 		if (gp == null) {
-			service.saveGlobalProperty(new GlobalProperty(prop, val));
+			service.saveGlobalProperty(new GlobalProperty(prop, val, desc));
 		} else if (StringUtils.isEmpty(gp.getPropertyValue())) {
 			gp.setPropertyValue(val);
 			service.saveGlobalProperty(gp);
@@ -87,14 +92,16 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 				log.error(e.getMessage());
 			}
 		}
-
 		AdministrationService administrationService = Context.getAdministrationService();
 		setGlobalProperty(administrationService, UPLOAD_FILE_DIRECTORY, path.toString());
-		setGlobalProperty(administrationService, SPECIMEN_TYPE_CONCEPT_UUID, "162476AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		setGlobalProperty(administrationService, SPECIMEN_SITE_CONCEPT_UUID, "159959AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		setGlobalProperty(administrationService, TEST_UNITS_CONCEPT_UUID, "5db4f53e-6218-4ae0-ae4e-5e0343b5d301");
+		setGlobalProperty(administrationService, SPECIMEN_TYPE_CONCEPT_UUID, "162476AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+		    "The UUID of a concept representing a group or set of different types of specimen, e.g. Saliva, Blood, Pus, etc.");
+		setGlobalProperty(administrationService, SPECIMEN_SITE_CONCEPT_UUID, "159959AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+		    "The UUID of a concept representing a group or set of anatomical source site from where the specimen is obtained, e.g. Bone, Tissue, etc.");
+		setGlobalProperty(administrationService, TEST_UNITS_CONCEPT_UUID, "162384AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+		    "The UUID of a concept representing a group or set of various measurement units (also used to measure dosage quantity).");
 		setGlobalProperty(administrationService, UPLOAD_FILE_EXTENSIONS, FILE_EXTENSIONS_NAMES);
-		setGlobalProperty(administrationService, LAB_ORDER_TYPE_UUID, "33ccfcc6-0370-102d-b0e3-001ec94a0cc1");
+		setGlobalProperty(administrationService, LAB_ORDER_TYPE_UUID, "33ccfcc6-0370-102d-b0e3-001ec94a0cc1",
+		    "The UUID of the Order type representing a Lab Test Order.");
 	}
-
 }

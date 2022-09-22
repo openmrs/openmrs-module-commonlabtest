@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.commonlabtest.api.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.openmrs.Concept;
+import org.openmrs.ConceptAnswer;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
@@ -24,6 +26,7 @@ import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.commonlabtest.CommonLabTestActivator;
 import org.openmrs.module.commonlabtest.CommonLabTestConfig;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
@@ -78,6 +81,44 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	}
 
 	/*
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#
+	 * getSpecimenTypeConcepts()
+	 */
+	// TODO: Add unit test for this method
+	@Override
+	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
+	public List<Concept> getSpecimenTypeConcepts() {
+		String uuid = Context.getAdministrationService()
+		        .getGlobalProperty(CommonLabTestActivator.SPECIMEN_TYPE_CONCEPT_UUID);
+		Concept concept = Context.getConceptService().getConceptByUuid(uuid);
+		Collection<ConceptAnswer> answers = concept.getAnswers();
+		List<Concept> members = new ArrayList<Concept>();
+		for (Iterator<ConceptAnswer> iter = answers.iterator(); iter.hasNext();) {
+			members.add(iter.next().getAnswerConcept());
+		}
+		return members;
+	}
+
+	/*
+	 * @see org.openmrs.module.commonlabtest.api.CommonLabTestService#
+	 * getSpecimenSiteConcepts()
+	 */
+	// TODO: Add unit test for this method
+	@Override
+	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
+	public List<Concept> getSpecimenSiteConcepts() {
+		String uuid = Context.getAdministrationService()
+		        .getGlobalProperty(CommonLabTestActivator.SPECIMEN_SITE_CONCEPT_UUID);
+		Concept concept = Context.getConceptService().getConceptByUuid(uuid);
+		Collection<ConceptAnswer> answers = concept.getAnswers();
+		List<Concept> members = new ArrayList<Concept>();
+		for (Iterator<ConceptAnswer> iter = answers.iterator(); iter.hasNext();) {
+			members.add(iter.next().getAnswerConcept());
+		}
+		return members;
+	}
+
+	/*
 	 * @see CommonLabTestService#getEarliestLabTest(org.openmrs.Patient)
 	 */
 	@Override
@@ -113,7 +154,9 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_PRIVILEGE)
 	@Transactional(readOnly = true)
 	public LabTest getLabTest(Integer labTestId) throws APIException {
-		return dao.getLabTest(labTestId);
+		LabTest labTest = dao.getLabTest(labTestId);
+		labTest.setOrder(Context.getOrderService().getOrder(labTest.getTestOrderId()));
+		return labTest;
 	}
 
 	/*

@@ -19,6 +19,7 @@ import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.commonlabtest.CommonLabTestActivator;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
@@ -51,6 +52,22 @@ public interface CommonLabTestService extends OpenmrsService {
 	 * @throws APIException on Exception
 	 */
 	List<LabTestType> getAllLabTestTypes(boolean includeRetired) throws APIException;
+
+	/**
+	 * Return all set member concepts defined in the set of Specimen Type concept see
+	 * {@link CommonLabTestActivator.SPECIMEN_TYPE_CONCEPT_UUID}
+	 * 
+	 * @return {@link Concept} object(s)
+	 */
+	List<Concept> getSpecimenTypeConcepts();
+
+	/**
+	 * Return all set member concepts defined in the set of Specimen Site concept see
+	 * {@link CommonLabTestActivator.SPECIMEN_SITE_CONCEPT_UUID}
+	 * 
+	 * @return {@link Concept} object(s)
+	 */
+	List<Concept> getSpecimenSiteConcepts();
 
 	/**
 	 * Returns first {@link LabTest} object by given {@link Patient}

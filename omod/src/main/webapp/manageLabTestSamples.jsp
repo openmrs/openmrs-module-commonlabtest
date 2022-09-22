@@ -76,7 +76,7 @@ legend.scheduler-border {
 				onclick="navigatedToPatientDashboard();" id="addTestSamples"
 				class="hvr-icon-back"><i
 				class="fa fa-chevron-circle-left hvr-icon"></i> <spring:message
-					code="general.backToDashboard" /> </a>
+					code="commonlabtest.admin.backToDashboard" /> </a>
 		</div>
 		<div class="col-md-2">
 			<c:choose>
@@ -145,12 +145,12 @@ legend.scheduler-border {
 													class="fa fa-edit hvr-icon"></i></span>
 												${testSample.labTestSampleId}</a></td>
 									</openmrs:hasPrivilege>
-									<td>${testSample.getSpecimenType().getName()}</td>
-									<td>${testSample.getSpecimenSite().getName()}</td>
-									<td>${testSample.getSampleIdentifier()}</td>
+									<td>${testSample.specimenType.name}</td>
+									<td>${testSample.specimenSite.name}</td>
+									<td>${testSample.sampleIdentifier}</td>
 									<td><fmt:formatDate value="${testSample.collectionDate}"
 											pattern="yyyy-mm-dd" /></td>
-									<td>${testSample.getStatus()}</td>
+									<td>${testSample.status}</td>
 									<td hidden="true" class="uuid">${testSample.uuid}</td>
 									<openmrs:hasPrivilege
 										privilege="Add CommonLabTest Samples, Edit CommonLabTest Samples">
@@ -169,12 +169,12 @@ legend.scheduler-border {
 													class="fa fa-edit hvr-icon"></i></span>
 												${testSample.labTestSampleId}</a></td>
 									</openmrs:hasPrivilege>
-									<td>${testSample.getSpecimenType().getName()}</td>
-									<td>${testSample.getSpecimenSite().getName()}</td>
-									<td>${testSample.getSampleIdentifier()}</td>
+									<td>${testSample.specimenType.name}</td>
+									<td>${testSample.specimenSite.name}</td>
+									<td>${testSample.sampleIdentifier}</td>
 									<td><fmt:formatDate value="${testSample.collectionDate}"
 											pattern="yyyy-mm-dd" /></td>
-									<td>${testSample.getStatus()}</td>
+									<td>${testSample.status}</td>
 									<td hidden="true" class="uuid">${testSample.uuid}</td>
 									<openmrs:hasPrivilege
 										privilege="Add CommonLabTest Samples, Edit CommonLabTest Samples">
@@ -270,7 +270,7 @@ $(document).ready(function () {
 
 function showalert(message, alerttype) {
     //alertType : .alert-success, .alert-info, .alert-warning & .alert-danger
-    $('#alert_placeholder').append('<div id="alertdiv" class="alert ' + alerttype + '"><a class="close" data-dismiss="alert">×</a><span>' + message + '</span></div>')
+    $('#alert_placeholder').append('<div id="alertdiv" class="alert ' + alerttype + '"><a class="close" data-dismiss="alert">ï¿½</a><span>' + message + '</span></div>')
     autoHide();
 }
 

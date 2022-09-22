@@ -14,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.ConceptAnswer;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.commonlabtest.CommonLabTestActivator;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.LabTestSampleStatus;
@@ -70,33 +71,19 @@ public class LabTestSampleController {
 		} else {
 			labTestSample = commonLabTestService.getLabTestSample(testSampleId);
 		}
-
-		// get Specimen Type .
-		String specimenTypeUuid = Context.getAdministrationService()
-		        .getGlobalProperty("commonlabtest.specimenTypeConceptUuid");
-		Concept specimenType = Context.getConceptService().getConceptByUuid(specimenTypeUuid);
-		if (specimenType != null && specimenType.getSetMembers().size() > 0) {
-			List<Concept> specimenTypeConcepts = specimenType.getSetMembers();
+		// get Specimen Type
+		List<Concept> specimenTypeConcepts = commonLabTestService.getSpecimenTypeConcepts();
+		if (specimenTypeConcepts != null && specimenTypeConcepts.size() > 0) {
 			model.put("specimenType", specimenTypeConcepts);
 		}
 		// get Specimen Site
-		String specimenSiteUuid = Context.getAdministrationService()
-		        .getGlobalProperty("commonlabtest.specimenSiteConceptUuid");
-		Concept specimenSiteSet = Context.getConceptService().getConceptByUuid(specimenSiteUuid);
-		if (specimenSiteSet != null && specimenSiteSet.getAnswers().size() > 0) {
-			Collection<ConceptAnswer> specimenSiteConcepts = specimenSiteSet.getAnswers();
-			List<ConceptAnswer> specimenSiteConceptlist;
-			if (specimenSiteConcepts instanceof List)
-				specimenSiteConceptlist = (List) specimenSiteConcepts;
-			else
-				specimenSiteConceptlist = new ArrayList<ConceptAnswer>(specimenSiteConcepts);
-
-			model.put("specimenSite", specimenSiteConceptlist);
+		List<Concept> specimenSiteConcepts = commonLabTestService.getSpecimenSiteConcepts();
+		if (specimenSiteConcepts != null && specimenSiteConcepts.size() > 0) {
+			model.put("specimenSite", specimenSiteConcepts);
 		}
-
 		// get test units
 		String testUnitsProperty = Context.getAdministrationService()
-		        .getGlobalProperty("commonlabtest.testunitsConceptUuid");
+		        .getGlobalProperty(CommonLabTestActivator.TEST_UNITS_CONCEPT_UUID);
 		Concept testUnitsUuid = Context.getConceptService().getConceptByUuid(testUnitsProperty);
 		if (testUnitsUuid != null && testUnitsUuid.getAnswers().size() > 0) {
 			Collection<ConceptAnswer> testUnitsConcepts = testUnitsUuid.getAnswers();
@@ -146,16 +133,12 @@ public class LabTestSampleController {
 				if (labTestSample.getId() == null)
 					labTestSample.setStatus(LabTestSampleStatus.COLLECTED);
 				commonLabTestService.saveLabTestSample(labTestSample);
-				StringBuilder sb = new StringBuilder();
-				sb.append("Lab Test Sample with Uuid :");
-				sb.append(labTestSample.getUuid());
-				sb.append(" is  saved!");
-				status = sb.toString();
+				status = "Sample saved with UUID:" + labTestSample.getUuid();
 			}
 		}
 		catch (Exception e) {
 			status = "Error! could not save Lab Test Sample";
-			e.printStackTrace();
+			log.error(e.getMessage());
 			model.addAttribute("error", status);
 			if (labTestSample.getLabTestSampleId() == null) {
 				return "redirect:addLabTestSample.form?patientId="
