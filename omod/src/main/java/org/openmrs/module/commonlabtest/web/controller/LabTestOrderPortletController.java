@@ -7,10 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.openmrs.Encounter;
-import org.openmrs.EncounterType;
 import org.openmrs.Order;
 import org.openmrs.Patient;
-import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;

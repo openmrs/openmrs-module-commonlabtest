@@ -377,7 +377,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	 * @see CommonLabTestDAO#getLabTestSamples(org.openmrs.Patient, boolean)
 	 */
 	@Override
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public List<LabTestSample> getLabTestSamples(Patient patient, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
 
@@ -435,7 +435,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	 * @see CommonLabTestDAO#getNLabTests(org.openmrs.Patient, int, boolean, boolean, boolean)
 	 */
 	@Override
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public List<LabTest> getNLabTests(Patient patient, int n, boolean firstNObjects, boolean lastNObjects,
 	        boolean includeVoided) {
 		// Disallow fetching more than 100 records per query
@@ -477,7 +477,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	 *      boolean)
 	 */
 	@Override
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public List<LabTestSample> getNLabTestSamples(Patient patient, LabTestSampleStatus status, int n, boolean firstNObjects,
 	        boolean lastNObjects, boolean includeVoided) {
 		// Disallow fetching more than 100 records per query
@@ -564,7 +564,6 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	 * @return saved {@link org.openmrs.Order} object
 	 */
 	public org.openmrs.Order saveLabTestOrder(org.openmrs.Order order) {
-		OrderType expectedOrderType = order.getOrderType();
 		// Set the right order type
 		List<OrderType> orderTypes = Context.getOrderService().getAllOrderTypes();
 		for (OrderType orderType : orderTypes) {

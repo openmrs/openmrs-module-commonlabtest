@@ -13,8 +13,6 @@ import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
@@ -27,8 +25,6 @@ import org.springframework.aop.AfterReturningAdvice;
  */
 
 public class AfterOrderVoidAdvice implements AfterReturningAdvice {
-
-	private Log log = LogFactory.getLog(this.getClass());
 
 	/*
 	 * (non-Javadoc) * @see

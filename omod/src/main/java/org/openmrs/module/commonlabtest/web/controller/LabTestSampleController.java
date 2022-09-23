@@ -89,7 +89,7 @@ public class LabTestSampleController {
 			Collection<ConceptAnswer> testUnitsConcepts = testUnitsUuid.getAnswers();
 			List<ConceptAnswer> testUnitsConceptlist;
 			if (testUnitsConcepts instanceof List)
-				testUnitsConceptlist = (List) testUnitsConcepts;
+				testUnitsConceptlist = (List<ConceptAnswer>) testUnitsConcepts;
 			else
 				testUnitsConceptlist = new ArrayList<ConceptAnswer>(testUnitsConcepts);
 			model.put("testUnits", testUnitsConceptlist);
@@ -168,11 +168,7 @@ public class LabTestSampleController {
 		}
 		try {
 			commonLabTestService.voidLabTestSample(labTestSample, voidReason);
-			StringBuilder sb = new StringBuilder();
-			sb.append("Lab Test Sample with Uuid :");
-			sb.append(labTestSample.getUuid());
-			sb.append(" is  voided!");
-			status = sb.toString();
+			status = "Lab Test Sample voided! UUID: " + labTestSample.getUuid();
 		}
 		catch (Exception e) {
 			status = "could not void Lab Test Sample";

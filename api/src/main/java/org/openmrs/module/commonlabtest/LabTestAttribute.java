@@ -25,8 +25,6 @@ import org.openmrs.attribute.BaseAttribute;
  */
 public class LabTestAttribute extends BaseAttribute<LabTestAttributeType, LabTest> implements Attribute<LabTestAttributeType, LabTest> {
 
-	private static final long serialVersionUID = 22986710762598701L;
-
 	private Integer labTestAttributeId;
 
 	/**
