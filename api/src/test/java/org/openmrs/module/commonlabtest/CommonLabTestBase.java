@@ -42,6 +42,8 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 
 	private Concept cxrConcept;
 
+	protected Concept tbCultureConcept;
+
 	private Order harryGxpOrder;
 
 	private Order harryCxrOrder;
@@ -127,6 +129,7 @@ public class CommonLabTestBase extends BaseModuleContextSensitiveTest {
 
 		gxpConcept = Context.getConceptService().getConcept(500);
 		cxrConcept = Context.getConceptService().getConcept(600);
+		tbCultureConcept = Context.getConceptService().getConcept(900);
 
 		harryGxpOrder = Context.getOrderService().getOrder(100);
 		harryCxrOrder = Context.getOrderService().getOrder(200);

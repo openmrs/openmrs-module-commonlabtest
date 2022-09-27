@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.openmrs.Concept;
 import org.openmrs.ConceptAnswer;
+import org.openmrs.ConceptClass;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
@@ -78,6 +79,20 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Transactional(readOnly = true)
 	public List<LabTestType> getAllLabTestTypes(boolean includeRetired) throws APIException {
 		return dao.getAllLabTestTypes(includeRetired);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.openmrs.module.commonlabtest.api.CommonLabTestService#getLabTestConcepts(
+	 * )
+	 */
+	@Override
+	public List<Concept> getLabTestConcepts() throws APIException {
+		ConceptClass conceptClass = Context.getConceptService().getConceptClassByName("LabSet");
+		List<Concept> conceptlist = Context.getConceptService().getConceptsByClass(conceptClass);
+		return conceptlist;
 	}
 
 	/*

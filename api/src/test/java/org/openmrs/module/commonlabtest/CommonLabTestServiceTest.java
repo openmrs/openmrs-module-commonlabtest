@@ -28,16 +28,20 @@ import java.util.List;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Concept;
+import org.openmrs.ConceptClass;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.api.APIException;
+import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.db.hibernate.HibernateConceptDAO;
 import org.openmrs.api.db.hibernate.HibernateOrderDAO;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl;
@@ -54,6 +58,9 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 
 	@Mock
 	CommonLabTestDAOImpl dao;
+
+	@Mock
+	ConceptService conceptService;
 
 	@Mock
 	HibernateOrderDAO orderDao;
@@ -103,6 +110,28 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 		List<LabTestType> list = service.getAllLabTestTypes(Boolean.FALSE);
 		assertThat(list, Matchers.hasItems(activeList.toArray(new LabTestType[] {})));
 		verify(dao, times(1)).getAllLabTestTypes(Boolean.FALSE);
+	}
+
+	@Test
+	public final void testLabTestConcepts() {
+		List<Concept> list = service.getLabTestConcepts();
+		assertThat(list, Matchers.hasItems(tbCultureConcept));
+	}
+
+	@Test
+	@Ignore
+	public final void testSpecimenTypeConcepts() {
+		List<Concept> list = service.getSpecimenTypeConcepts();
+		// TODO:
+		// assertThat(list, Matchers.hasItems());
+	}
+
+	@Test
+	@Ignore
+	public final void testSpecimenSiteConcepts() {
+		List<Concept> list = service.getSpecimenSiteConcepts();
+		// TODO:
+		// assertThat(list, Matchers.hasItems());
 	}
 
 	@Test

@@ -54,6 +54,14 @@ public interface CommonLabTestService extends OpenmrsService {
 	List<LabTestType> getAllLabTestTypes(boolean includeRetired) throws APIException;
 
 	/**
+	 * Returns list of objects of {@link Concept} with class/type as LabSet
+	 * 
+	 * @return
+	 * @throws APIException
+	 */
+	List<Concept> getLabTestConcepts() throws APIException;
+
+	/**
 	 * Return all set member concepts defined in the set of Specimen Type concept see
 	 * {@link CommonLabTestActivator.SPECIMEN_TYPE_CONCEPT_UUID}
 	 * 

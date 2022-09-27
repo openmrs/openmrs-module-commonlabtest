@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
-import org.openmrs.ConceptClass;
 import org.openmrs.ConceptName;
 import org.openmrs.api.ConceptNameType;
 import org.openmrs.api.context.Context;
@@ -38,13 +37,10 @@ public class LabTestTypeController {
 
 	private final String SUCCESS_ADD_FORM_VIEW = "/module/commonlabtest/addLabTestType";
 
-	CommonLabTestService commonLabTestService;
-
 	@ModelAttribute("labTestConcepts")
 	public Map<Integer, String> getLabTestConcepts() {
 		Map<Integer, String> map = new HashMap<Integer, String>();
-		ConceptClass conceptClass = Context.getConceptService().getConceptClassByName("LabSet");
-		List<Concept> conceptlist = Context.getConceptService().getConceptsByClass(conceptClass);
+		List<Concept> conceptlist = Context.getService(CommonLabTestService.class).getLabTestConcepts();
 		for (Concept concept : conceptlist) {
 			ConceptName conceptName = concept.getName(Context.getLocale(), ConceptNameType.FULLY_SPECIFIED, null);
 			if (conceptName == null) {
@@ -59,15 +55,13 @@ public class LabTestTypeController {
 	@RequestMapping(method = RequestMethod.GET, value = "/module/commonlabtest/addLabTestType.form")
 	public String showForm(ModelMap model, @RequestParam(value = "uuid", required = false) String uuid,
 	        @RequestParam(value = "error", required = false) String error) {
-		commonLabTestService = Context.getService(CommonLabTestService.class);
 		LabTestType testType;
 		if (uuid == null || uuid.equalsIgnoreCase("")) {
 			testType = new LabTestType();
 		} else {
-			testType = commonLabTestService.getLabTestTypeByUuid(uuid);
+			testType = Context.getService(CommonLabTestService.class).getLabTestTypeByUuid(uuid);
 		}
-		ConceptClass conceptClass = Context.getConceptService().getConceptClassByName("LabSet");
-		List<Concept> conceptlist = Context.getConceptService().getConceptsByClass(conceptClass);
+		List<Concept> conceptlist = Context.getService(CommonLabTestService.class).getLabTestConcepts();
 		model.addAttribute("labTestType", testType);
 		JsonArray jsonArray = new JsonArray();
 		for (Concept c : conceptlist) {
@@ -90,7 +84,6 @@ public class LabTestTypeController {
 	public String onSubmit(ModelMap model, HttpSession httpSession,
 	        @ModelAttribute("anyRequestObject") Object anyRequestObject, HttpServletRequest request,
 	        @ModelAttribute("labTestType") LabTestType labTestType, BindingResult result) {
-		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status = "";
 		// if (Context.getAuthenticatedUser() == null) {
 		// return "redirect:../../login.htm";
@@ -105,7 +98,7 @@ public class LabTestTypeController {
 			}
 		} else {
 			try {
-				commonLabTestService.saveLabTestType(labTestType);
+				Context.getService(CommonLabTestService.class).saveLabTestType(labTestType);
 				StringBuilder sb = new StringBuilder();
 				sb.append("Lab Test Type with Uuid :");
 				sb.append(labTestType.getUuid());
@@ -130,14 +123,13 @@ public class LabTestTypeController {
 	@RequestMapping(method = RequestMethod.POST, value = "/module/commonlabtest/retirelabtesttype.form")
 	public String onRetire(ModelMap model, HttpSession httpSession, HttpServletRequest request,
 	        @RequestParam("uuid") String uuid, @RequestParam("retireReason") String retireReason) {
-		commonLabTestService = Context.getService(CommonLabTestService.class);
-		LabTestType labTestType = commonLabTestService.getLabTestTypeByUuid(uuid);
+		LabTestType labTestType = Context.getService(CommonLabTestService.class).getLabTestTypeByUuid(uuid);
 		String status;
 		if (Context.getAuthenticatedUser() == null) {
 			return "redirect:../../login.htm";
 		}
 		try {
-			commonLabTestService.retireLabTestType(labTestType, retireReason);
+			Context.getService(CommonLabTestService.class).retireLabTestType(labTestType, retireReason);
 			StringBuilder sb = new StringBuilder();
 			sb.append("Lab Test Type with Uuid :");
 			sb.append(labTestType.getUuid());
@@ -162,10 +154,9 @@ public class LabTestTypeController {
 	public String onDelete(ModelMap model, HttpSession httpSession, HttpServletRequest request,
 	        @RequestParam("uuid") String uuid) {
 		LabTestType labTestType = Context.getService(CommonLabTestService.class).getLabTestTypeByUuid(uuid);
-		commonLabTestService = Context.getService(CommonLabTestService.class);
 		String status;
 		try {
-			commonLabTestService.deleteLabTestType(labTestType, true);
+			Context.getService(CommonLabTestService.class).deleteLabTestType(labTestType, true);
 			StringBuilder sb = new StringBuilder();
 			sb.append("Lab Test Type with Uuid :");
 			sb.append(labTestType.getUuid());

@@ -39,7 +39,9 @@
 	<concept concept_id="700" retired="false" datatype_id="2" class_id="1" is_set="false" creator="1"
 		date_created="2016-01-01 00:00:57.0" version="" uuid="deb16ee8-5344-11e8-9c7c-40b034c3cfee" />
 	<concept concept_id="800" retired="false" datatype_id="2" class_id="1" is_set="false" creator="1"
-		date_created="2016-01-01 00:00:57.0" version="" uuid="e721ec30-5344-11e8-9c7c-40b034c3cfee" />
+		date_created="2016-01-01 00:00:57.0" version="" uuid="e721ec30-5344-11e8-9c7c-40b034c3cfee" />		
+    <concept concept_id="900" retired="0" datatype_id="4" class_id="8" is_set="1" creator="1" 
+    	date_created="2008-04-17 12:45:29" version="" uuid="31bf10e0-0370-102d-b0e3-001ec94a0cc1"/>
 
 	<concept_description concept_description_id="500" concept_id="500"
 		description="GeneXpert is a type of bacteriology test for Tuberculosis." locale="en_GB" creator="1" date_created="2014-08-12 00:00:00.0"
@@ -63,6 +65,9 @@
 	<concept_name concept_name_id="800" concept_id="800" name="CHEST XRAY TEST" locale="en_GB" creator="1"
 		date_created="2017-05-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false"
 		uuid="a457ac00-5345-11e8-9c7c-40b034c3cfee" />
+    <concept_name concept_name_id="900" concept_id="900" name="TUBERCULOSIS CULTURE CONSTRUCT" locale="en" 
+    	locale_preferred="0" creator="1" date_created="2008-07-29 17:43:00" concept_name_type="FULLY_SPECIFIED" voided="0" 
+    	uuid="322e1486-0370-102d-b0e3-001ec94a0cc1"/>
 
 	<!-- Patient-Persons -->
 	<person person_id="1000" gender="M" birthdate="1980-07-31" birthdate_estimated="0" dead="0" creator="1"
