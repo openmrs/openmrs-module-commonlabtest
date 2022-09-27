@@ -74,7 +74,14 @@ public class LabTestTypeResourceController extends MetadataDelegatingCrudResourc
 			description.addProperty("referenceConcept");
 			description.addProperty("name");
 			description.addProperty("description");
-			description.addProperty("auditInfo");
+			description.addProperty("creator");
+			description.addProperty("dateCreated");
+			description.addProperty("changedBy");
+			description.addProperty("dateChanged");
+			description.addProperty("retired");
+			description.addProperty("dateRetired");
+			description.addProperty("retiredBy");
+			description.addProperty("retireReason");
 			return description;
 		} else if (representation instanceof RefRepresentation) {
 			description.addProperty("name");

@@ -120,7 +120,14 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 			description.addProperty("labReferenceNumber");
 			description.addProperty("labTestSamples");
 			description.addProperty("attributes", Representation.DEFAULT);
-			description.addProperty("auditInfo");
+			description.addProperty("creator");
+			description.addProperty("dateCreated");
+			description.addProperty("changedBy");
+			description.addProperty("dateChanged");
+			description.addProperty("voided");
+			description.addProperty("dateVoided");
+			description.addProperty("voidedBy");
+			description.addProperty("voidReason");
 			description.addSelfLink();
 			return description;
 		} else if (representation instanceof RefRepresentation) {

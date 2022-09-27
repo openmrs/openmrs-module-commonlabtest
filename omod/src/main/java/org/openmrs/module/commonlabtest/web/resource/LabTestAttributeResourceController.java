@@ -55,7 +55,10 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 			description.addProperty("labTest");
 			description.addProperty("attributeType");
 			description.addProperty("valueReference");
-			description.addProperty("auditInfo");
+			description.addProperty("creator");
+			description.addProperty("dateCreated");
+			description.addProperty("changedBy");
+			description.addProperty("dateChanged");
 			return description;
 		}
 		return description;
