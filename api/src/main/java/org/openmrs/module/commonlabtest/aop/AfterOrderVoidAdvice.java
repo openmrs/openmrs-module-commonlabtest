@@ -36,7 +36,6 @@ public class AfterOrderVoidAdvice implements AfterReturningAdvice {
 	@Override
 	public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
 
-		Logger.getAnonymousLogger().info("======== in After Advice " + method.getName() + "========");
 		CommonLabTestService commonLabTestService;
 
 		if (method.getName().equalsIgnoreCase("voidEncounter")) {
@@ -47,14 +46,14 @@ public class AfterOrderVoidAdvice implements AfterReturningAdvice {
 
 				for (Order o : orders) {
 					if (o.getVoided()) {
-						Logger.getAnonymousLogger().info(" ==== > Order # " + o.getOrderId() + " Voided: " + o.getVoided());
+						Logger.getAnonymousLogger().info("Order: " + o.getOrderId() + " Void: " + o.getVoided());
 						// void corresponding LabTest entity that has one to one mapping to this Order
 						commonLabTestService = Context.getService(CommonLabTestService.class);
 						LabTest labTest = commonLabTestService.getLabTest(o.getOrderId());
 						if (labTest != null) {
 							commonLabTestService.voidLabTest(labTest, o.getVoidReason());
-							Logger.getAnonymousLogger().info(
-							    " ==== > Lab Test # " + labTest.getTestOrderId() + " Voided: " + labTest.getVoided());
+							Logger.getAnonymousLogger()
+							        .info("Lab Test: " + labTest.getTestOrderId() + " Void: " + labTest.getVoided());
 						}
 					}
 				}
@@ -68,14 +67,14 @@ public class AfterOrderVoidAdvice implements AfterReturningAdvice {
 
 				for (Order o : orders) {
 					if (!o.getVoided()) {
-						Logger.getAnonymousLogger().info(" ==== > Order # " + o.getOrderId() + " Voided: " + o.getVoided());
+						Logger.getAnonymousLogger().info("Order: " + o.getOrderId() + " Void: " + o.getVoided());
 						// unvoid corresponding LabTest entity that has one to one mapping to this Order
 						commonLabTestService = Context.getService(CommonLabTestService.class);
 						LabTest labTest = commonLabTestService.getLabTest(o.getOrderId());
 						if (labTest != null) {
 							commonLabTestService.unvoidLabTest(labTest);
-							Logger.getAnonymousLogger().info(
-							    " ==== > Lab Test # " + labTest.getTestOrderId() + " Voided: " + labTest.getVoided());
+							Logger.getAnonymousLogger()
+							        .info("Lab Test: " + labTest.getTestOrderId() + " Void: " + labTest.getVoided());
 						}
 					}
 				}
