@@ -1,8 +1,13 @@
 package org.openmrs.module.commonlabtest.web.resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -13,8 +18,10 @@ import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentat
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
@@ -90,7 +97,14 @@ public class LabTestSampleResourceController extends DataDelegatingCrudResource<
 			description.addProperty("status");
 			description.addProperty("sampleIdentifier");
 			description.addProperty("comments");
-			description.addProperty("auditInfo");
+			description.addProperty("creator");
+			description.addProperty("dateCreated");
+			description.addProperty("changedBy");
+			description.addProperty("dateChanged");
+			description.addProperty("voided");
+			description.addProperty("dateVoided");
+			description.addProperty("voidedBy");
+			description.addProperty("voidReason");
 			return description;
 		} else if (representation instanceof RefRepresentation) {
 			description.addProperty("labTest", Representation.REF);

@@ -66,12 +66,9 @@
 			<plugin>
 				<groupId>net.revelc.code.formatter</groupId>
 				<artifactId>formatter-maven-plugin</artifactId>
-				<version>2.7.1</version>
+				<version>2.11.0</version>
 				<configuration>
-					<directories>
-						<directory>.</directory>
-					</directories>
-					<configFile>../OpenMRSFormatter.xml</configFile>
+					<configFile>${project.basedir}/../OpenMRSFormatter.xml</configFile>
 					<includes>
 						<include>**/*.java</include>
 						<include>**/*.json</include>

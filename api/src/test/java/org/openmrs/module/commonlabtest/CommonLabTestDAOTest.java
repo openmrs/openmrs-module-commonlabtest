@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.Concept;
 import org.openmrs.Order;
@@ -142,10 +141,6 @@ public class CommonLabTestDAOTest extends CommonLabTestBase {
 		    "org.openmrs.customdatatype.datatype.FreeTextDatatype", false);
 		assertThat(classNameList, Matchers.hasSize(2));
 
-		List<LabTestAttributeType> classNameListRetired = dao.getLabTestAttributeTypes(null,
-		    "org.openmrs.customdatatype.datatype.FloatDatatype", true);
-		assertThat(classNameListRetired, Matchers.hasSize(1));
-
 		List<LabTestAttributeType> nameListRetired = dao.getLabTestAttributeTypes("CAD4TB Score", null, true);
 		assertThat(nameListRetired, Matchers.hasSize(1));
 
@@ -153,7 +148,7 @@ public class CommonLabTestDAOTest extends CommonLabTestBase {
 		assertThat(nameList, Matchers.hasSize(1));
 
 		List<LabTestAttributeType> nameWithClassNameListRetired = dao.getLabTestAttributeTypes("CAD4TB Score",
-		    "org.openmrs.customdatatype.datatype.FloatDatatype", true);
+		    "org.openmrs.customdatatype.datatype.FreeTextDatatype", true);
 		assertThat(nameWithClassNameListRetired, Matchers.hasSize(1));
 
 	}
@@ -192,7 +187,7 @@ public class CommonLabTestDAOTest extends CommonLabTestBase {
 	@Test
 	public final void testGetLabTestSamplesByPatient() {
 		List<LabTestSample> list = dao.getLabTestSamples(harry, false);
-		assertThat(list, Matchers.hasSize(1));
+		assertThat(list, Matchers.hasSize(3));
 	}
 
 	@Test
