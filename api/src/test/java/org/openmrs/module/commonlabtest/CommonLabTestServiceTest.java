@@ -297,15 +297,12 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 
 	@Test
 	public final void testGetLabTestsByPatient() {
-		when(dao.getLabTests(isNull(LabTestType.class), any(Patient.class), isNull(String.class), isNull(String.class),
-		    isNull(Concept.class), isNull(Provider.class), isNull(Date.class), isNull(Date.class), any(Boolean.class)))
-		            .thenReturn(Arrays.asList(harryGxp, harryCxr));
-
+		when(dao.getLabTests(isNull(LabTestType.class), any(Patient.class), isNull(Date.class), isNull(Date.class),
+		    any(Boolean.class))).thenReturn(Arrays.asList(harryGxp, harryCxr));
 		List<LabTest> list = service.getLabTests(harry, false);
-		assertThat(list, Matchers.hasItems(harryGxp, harryCxr));
-		verify(dao, times(1)).getLabTests(isNull(LabTestType.class), any(Patient.class), isNull(String.class),
-		    isNull(String.class), isNull(Concept.class), isNull(Provider.class), isNull(Date.class), isNull(Date.class),
-		    any(Boolean.class));
+		assertThat(list, Matchers.containsInAnyOrder(harryGxp, harryCxr));
+		verify(dao, times(1)).getLabTests(isNull(LabTestType.class), any(Patient.class), isNull(Date.class),
+		    isNull(Date.class), any(Boolean.class));
 	}
 
 	@Test

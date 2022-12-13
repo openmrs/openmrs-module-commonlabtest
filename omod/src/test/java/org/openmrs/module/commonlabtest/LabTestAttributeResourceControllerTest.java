@@ -50,10 +50,10 @@ public class LabTestAttributeResourceControllerTest extends MainResourceControll
 	public void shouldSave() throws Exception {
 		String uri = getURI();
 		SimpleObject labTestAttributeObj = new SimpleObject();
-		labTestAttributeObj.add("labTest", "d175e92e-dc93-11e8-d298-40b034c3cfee");
 		// CAD4TB Score
+		labTestAttributeObj.add("labTest", "d175e92e-dc93-11e8-d298-40b034c3cfee");
 		labTestAttributeObj.add("attributeType", "ed8b4caf-478e-11e8-943c-40b034c3cfee");
-		labTestAttributeObj.add("valueReference", "100.0");
+		labTestAttributeObj.add("valueReference", "90.0");
 
 		MockHttpServletRequest newPostRequest = newPostRequest(uri, labTestAttributeObj);
 		MockHttpServletResponse handle = handle(newPostRequest);

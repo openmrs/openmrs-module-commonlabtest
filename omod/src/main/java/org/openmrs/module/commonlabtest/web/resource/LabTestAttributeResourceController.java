@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.customdatatype.NotYetPersistedException;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
+import org.openmrs.module.commonlabtest.LabTestAttributeType;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -127,6 +128,15 @@ public class LabTestAttributeResourceController extends DataDelegatingCrudResour
 		if (attribute == null)
 			return "";
 		return attribute.getValueReference();
+	}
+
+	/**
+	 * @param instance
+	 * @param labTestAttributeType
+	 */
+	@PropertySetter("attributeType")
+	public static void setAttributeType(LabTestAttribute instance, LabTestAttributeType labTestAttributeType) {
+		instance.setAttributeType(labTestAttributeType);
 	}
 
 	/**

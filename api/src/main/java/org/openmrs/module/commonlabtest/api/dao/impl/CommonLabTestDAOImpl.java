@@ -295,6 +295,10 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	public List<LabTest> getLabTests(LabTestType labTestType, Patient patient, String orderNumber, String referenceNumber,
 	        Concept orderConcept, Provider orderer, Date from, Date to, boolean includeVoided) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTest.class);
+		if (patient != null) {
+			criteria.createAlias("order", "o", CriteriaSpecification.INNER_JOIN).setFetchMode("o", FetchMode.JOIN)
+			        .add(Restrictions.eq("o.patient.personId", patient.getPatientId()));
+		}
 		if (labTestType != null) {
 			criteria.add(Restrictions.eq("labTestType", labTestType));
 		}
@@ -307,8 +311,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 		if (!includeVoided) {
 			criteria.add(Restrictions.eq("voided", false));
 		}
-		criteria.addOrder(Order.asc("dateCreated")).addOrder(Order.asc("voided")).list();
-		return criteria.list();
+		return criteria.addOrder(Order.asc("dateCreated")).addOrder(Order.asc("voided")).list();
 	}
 
 	@Override
@@ -379,23 +382,16 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	@Override
 	@SuppressWarnings({ "unchecked" })
 	public List<LabTestSample> getLabTestSamples(Patient patient, boolean includeVoided) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
 
-		criteria.createAlias("labTest", "labTest", CriteriaSpecification.INNER_JOIN).setFetchMode("labTest", FetchMode.JOIN)
-		        // .add(Restrictions.eq("labTest.order.patient.personId",
-		        // patient.getPatientId()))
-		        .createAlias("labTest.order", "order", CriteriaSpecification.INNER_JOIN)
-		        .setFetchMode("order", FetchMode.JOIN)
-		        .add(Restrictions.eq("order.patient.personId", patient.getPatientId()));
-		// .createAlias("labTest", "labTest",
-		// CriteriaSpecification.INNER_JOIN).setFetchMode("labTest", FetchMode.JOIN);
-		// criteria.add(Restrictions.eq("order.patient.patientId",
-		// patient.getPatientId()));
+		StringBuilder queryString = new StringBuilder();
+		queryString.append("from LabTestSample lts where lts.labTest.order.patient.patientId = :patientId");
+		queryString.append(includeVoided ? "" : " and lts.voided = :voided");
+		Query query = sessionFactory.getCurrentSession().createQuery(queryString.toString());
+		query.setInteger("patientId", patient.getPatientId());
 		if (!includeVoided) {
-			criteria.add(Restrictions.eq("voided", false));
+			query.setBoolean("voided", false);
 		}
-		criteria.addOrder(Order.asc("sampleIdentifier")).addOrder(Order.asc("voided")).list();
-		return criteria.list();
+		return query.list();
 	}
 
 	/**

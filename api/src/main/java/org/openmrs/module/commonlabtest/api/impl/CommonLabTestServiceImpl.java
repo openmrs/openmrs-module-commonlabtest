@@ -352,7 +352,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Transactional(readOnly = true)
 	public List<LabTestSample> getLabTestSamples(String labSampleIdentifier, String orderNumber, String labReferenceNumber,
 	        boolean includeVoided) throws APIException {
-		return getLabTestSamples(null, null, null, labSampleIdentifier, null, null, null, includeVoided);
+		// TODO:
+		return null;
 	}
 
 	/*

@@ -231,15 +231,6 @@ public class CommonLabTestDAOTest extends CommonLabTestBase {
 	}
 
 	@Test
-	public final void testPurgeLabTest() {
-		/*
-		 * LabTest test = dao.getLabTest(200); dao.purgeLabTest(test);
-		 * Context.clearSession(); LabTest labTest = dao.getLabTest(200);
-		 * assertNull(labTest);
-		 */
-	}
-
-	@Test
 	public final void testPurgeLabTestAttribute() {
 		LabTestAttribute labTestAttribute = dao.getLabTestAttribute(2);
 		dao.purgeLabTestAttribute(labTestAttribute);
@@ -248,17 +239,6 @@ public class CommonLabTestDAOTest extends CommonLabTestBase {
 		Context.clearSession();
 		LabTestAttribute exists = dao.getLabTestAttributeByUuid(labTestAttribute.getUuid());
 		assertNull(exists);
-	}
-
-	@Test
-	public final void testPurgeLabTestAttributeType() {
-		/*
-		 * LabTestAttributeType labTestAttributeType = dao.getLabTestAttributeType(2);
-		 * dao.purgeLabTestAttributeType(labTestAttributeType); // clear cache
-		 * Context.flushSession(); Context.clearSession(); LabTestAttributeType exists =
-		 * dao.getLabTestAttributeTypeByUuid(labTestAttributeType.getUuid());
-		 * assertNull(exists);
-		 */
 	}
 
 	@Test
@@ -291,48 +271,6 @@ public class CommonLabTestDAOTest extends CommonLabTestBase {
 		LabTest resultLabTest = dao.saveLabTest(labTest);
 		labTest.setLabReferenceNumber("dummy reference");
 		assertThat(resultLabTest, Matchers.hasProperty("labReferenceNumber", Matchers.anything("dummy reference")));
-	}
-
-	@Test
-	@Ignore
-	public final void testSaveLabTestOrder_Create() {
-		// Create CXR order for Hermione
-		/*
-		 * Order testOrder = new TestOrder(); testOrder.setOrderId(Integer.MAX_VALUE);
-		 * testOrder.setOrderType(Context.getOrderService().getOrderType(3));
-		 * testOrder.setConcept(Context.getConceptService().getConcept(600));
-		 * testOrder.setOrderer(Context.getProviderService().getProvider(300));
-		 * Encounter encounter = Context.getEncounterService().getEncounter(1000);
-		 * encounter.setPatient(hermione); testOrder.setEncounter(encounter);
-		 * testOrder.setInstructions("PERFORM CXR"); testOrder.setDateActivated(new
-		 * Date()); testOrder.setAction(Action.NEW);
-		 * testOrder.setOrderReasonNonCoded("Testing"); testOrder.setPatient(hermione);
-		 * testOrder.setUrgency(Urgency.ROUTINE);
-		 * testOrder.setCareSetting(Context.getOrderService().getCareSetting(1)); Order
-		 * savedOrder = dao.saveLabTestOrder(testOrder); assertThat(savedOrder,
-		 * Matchers.hasProperty("orderId", org.hamcrest.Matchers.notNullValue()));
-		 */
-	}
-
-	@Test
-	@Ignore
-	public final void testSaveLabTestOrder_CreateWhenNotFound() {
-		// Create CXR order for Hermione
-		/*
-		 * Order testOrder = new TestOrder(); testOrder.setOrderId(Integer.MAX_VALUE);
-		 * testOrder.setOrderType(Context.getOrderService().getOrderType(3));
-		 * testOrder.setConcept(Context.getConceptService().getConcept(600));
-		 * testOrder.setOrderer(Context.getProviderService().getProvider(300));
-		 * Encounter encounter = Context.getEncounterService().getEncounter(1000);
-		 * encounter.setPatient(hermione); testOrder.setEncounter(encounter);
-		 * testOrder.setInstructions("PERFORM CXR"); testOrder.setDateActivated(new
-		 * Date()); testOrder.setAction(Action.NEW);
-		 * testOrder.setOrderReasonNonCoded("Testing"); testOrder.setPatient(hermione);
-		 * testOrder.setUrgency(Urgency.ROUTINE);
-		 * testOrder.setCareSetting(Context.getOrderService().getCareSetting(1)); Order
-		 * savedOrder = dao.saveLabTestOrder(testOrder); assertThat(savedOrder,
-		 * Matchers.hasProperty("orderId", org.hamcrest.Matchers.notNullValue()));
-		 */
 	}
 
 	@Test

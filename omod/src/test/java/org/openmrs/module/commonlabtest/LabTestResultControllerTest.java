@@ -3,6 +3,7 @@ package org.openmrs.module.commonlabtest;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -17,12 +18,14 @@ public class LabTestResultControllerTest extends BaseModuleWebContextSensitiveTe
 	@Autowired
 	CommonLabTestService commonLabTestService;
 
+	@Before
+	public void setUp() throws Exception {
+		executeDataSet("CommonLabTestService-initialData.xml");
+	}
+
 	@Test
 	public void shouldSaveLabTestResult() throws Exception {
-
-		executeDataSet("CommonLabTestService-initialData.xml");
 		LabTestResultController controller = new LabTestResultController();
-
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setParameter("testAttributeId.2", "2");
 		request.setParameter("concept.3", "500");
@@ -45,10 +48,7 @@ public class LabTestResultControllerTest extends BaseModuleWebContextSensitiveTe
 
 	@Test
 	public void shouldVoid() throws Exception {
-
-		executeDataSet("CommonLabTestService-initialData.xml");
 		LabTestResultController controller = new LabTestResultController();
-
 		MockHttpServletRequest request = new MockHttpServletRequest();
 
 		LabTest labTest = commonLabTestService.getLabTest(100);

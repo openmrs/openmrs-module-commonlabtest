@@ -3,7 +3,13 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="org.openmrs.module.commonlabtest">
     <class name="LabTest" table="commonlabtest_test" lazy="false">
-       	<id name="testOrderId" type="int" column="test_order_id" />
+       	<id name="testOrderId" type="int" >
+			<column name="test_order_id" />
+			<generator class="foreign">
+				<param name="property">order</param>
+			</generator>
+       	</id>
+		<one-to-one name="order" class="org.openmrs.Order" constrained="true"></one-to-one>
         <many-to-one name="labTestType" class="LabTestType" column="test_type_id" not-null="true" />
 		<property name="labReferenceNumber" type="java.lang.String" column="lab_reference_number" length="255" />
         <property name="labInstructions" type="java.lang.String" column="instructions" length="512" />
