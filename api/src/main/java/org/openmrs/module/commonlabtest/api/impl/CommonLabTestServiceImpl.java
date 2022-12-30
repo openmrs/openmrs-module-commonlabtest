@@ -579,7 +579,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		if (labTestAttributes != null) {
 			Set<LabTestAttribute> attributes = new HashSet<LabTestAttribute>();
 			for (LabTestAttribute labTestAttribute : labTestAttributes) {
-				attributes.add(saveLabTestAttribute(labTestAttribute));
+				labTestAttribute = saveLabTestAttribute(labTestAttribute);
+				attributes.add(labTestAttribute);
 			}
 			savedLabTest.setAttributes(attributes);
 		}

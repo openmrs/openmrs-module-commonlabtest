@@ -50,8 +50,6 @@ public class LabTestSample extends BaseOpenmrsData {
 
 	private Date expiryDate;
 
-	// @Temporal(TemporalType.DATE)
-	@Column(name = "processed_date")
 	private Date processedDate;
 
 	private LabTestSampleStatus status = LabTestSampleStatus.COLLECTED;

@@ -563,9 +563,9 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 		// Set the right order type
 		List<OrderType> orderTypes = Context.getOrderService().getAllOrderTypes();
 		for (OrderType orderType : orderTypes) {
-			if (orderType.getName().equalsIgnoreCase("Lab Order"))
-				;
-			order.setOrderType(orderType);
+			if (orderType.getName().equalsIgnoreCase("Lab Order")) {
+				order.setOrderType(orderType);
+			}
 		}
 		boolean createNew = order.getId() == null;
 		if (!createNew) {
@@ -585,10 +585,10 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	 */
 	@Override
 	public LabTest saveLabTest(LabTest labTest) {
-		org.openmrs.Order savedOrder = saveLabTestOrder(labTest.getOrder());
-		labTest.setOrder(savedOrder);
-		labTest.setTestOrderId(savedOrder.getOrderId());
 		Session session = sessionFactory.getCurrentSession();
+		//		org.openmrs.Order savedOrder = saveLabTestOrder(labTest.getOrder());
+		//		labTest.setOrder(savedOrder);
+		//		labTest.setTestOrderId(savedOrder.getOrderId());
 		session.saveOrUpdate(labTest);
 		return labTest;
 	}
@@ -598,7 +598,6 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	 */
 	@Override
 	public LabTestAttribute saveLabTestAttribute(LabTestAttribute labTestAttribute) {
-
 		sessionFactory.getCurrentSession().saveOrUpdate(labTestAttribute);
 		return labTestAttribute;
 	}

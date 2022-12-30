@@ -144,14 +144,19 @@ public class LabTestRequestController {
 				LabTestType labTestType = commonLabTestService.getLabTestType(jsonObject.get("testTypeId").getAsInt());
 				labTest.setLabTestType(labTestType);
 				labTestArray.add(labTest);
-			}
-			for (LabTest labTest : labTestArray) {
-				commonLabTestService.saveLabTest(labTest);
+				try {
+					commonLabTestService.saveLabTest(labTest);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+				finally {
+					labTest = commonLabTestService.getEarliestLabTest(encounter.getPatient());
+				}
 			}
 		}
 		catch (Exception e) {
 			status = "could not save Lab Test Request";
-			e.printStackTrace();
 			model.addAttribute("error", status);
 			boolStatus = Boolean.FALSE;
 		}
