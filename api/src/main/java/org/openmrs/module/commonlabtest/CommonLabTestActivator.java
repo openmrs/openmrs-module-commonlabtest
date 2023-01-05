@@ -48,6 +48,8 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 	File dir = OpenmrsUtil.getDirectoryInApplicationDataDirectory(
 	    Context.getAdministrationService().getGlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_COMPLEX_OBS_DIR));
 
+	String path = dir.getPath() + "/commonLabTestFiles";
+
 	/**
 	 * @see #started()
 	 */
@@ -56,15 +58,30 @@ public class CommonLabTestActivator extends BaseModuleActivator {
 		contextRefreshed();
 	}
 
-	// TODO: Deprecate this
-	private void setGlobalProperty(AdministrationService service, String prop, String val) {
-		setGlobalProperty(service, prop, val, "");
+	private void setGlobalProperty(AdministrationService service, String prop, String val, String desc) {
+
+		conceptService = Context.getConceptService();
+		File f = new File(path);
+		if (!f.exists()) {
+			try {
+				f.mkdirs();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		AdministrationService administrationService = Context.getAdministrationService();
+		setGlobalProperty(administrationService, UPLOAD_FILE_DIRECTORY, path);
+		setGlobalProperty(administrationService, SPECIMEN_TYPE_CONCEPT_UUID, "162476AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		setGlobalProperty(administrationService, SPECIMEN_SITE_CONCEPT_UUID, "159959AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		setGlobalProperty(administrationService, TEST_UNITS_CONCEPT_UUID, "5db4f53e-6218-4ae0-ae4e-5e0343b5d301");
+		setGlobalProperty(administrationService, UPLOAD_FILE_EXTENSIONS, FILE_EXTENSIONS_NAMES);
 	}
 
-	private void setGlobalProperty(AdministrationService service, String prop, String val, String desc) {
+	private static void setGlobalProperty(AdministrationService service, String prop, String val) {
 		GlobalProperty gp = service.getGlobalPropertyObject(prop);
 		if (gp == null) {
-			service.saveGlobalProperty(new GlobalProperty(prop, val, desc));
+			service.saveGlobalProperty(new GlobalProperty(prop, val));
 		} else if (StringUtils.isEmpty(gp.getPropertyValue())) {
 			gp.setPropertyValue(val);
 			service.saveGlobalProperty(gp);
