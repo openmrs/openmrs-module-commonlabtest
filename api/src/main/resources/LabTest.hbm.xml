@@ -9,7 +9,7 @@
 				<param name="property">order</param>
 			</generator>
        	</id>
-		<one-to-one name="order" class="org.openmrs.Order" constrained="true"></one-to-one>
+		<one-to-one name="order" class="org.openmrs.Order" cascade="all"></one-to-one>
         <many-to-one name="labTestType" class="LabTestType" column="test_type_id" not-null="true" />
 		<property name="labReferenceNumber" type="java.lang.String" column="lab_reference_number" length="255" />
         <property name="labInstructions" type="java.lang.String" column="instructions" length="512" />
