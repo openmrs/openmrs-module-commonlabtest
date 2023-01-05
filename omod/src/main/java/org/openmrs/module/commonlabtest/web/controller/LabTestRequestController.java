@@ -64,7 +64,7 @@ public class LabTestRequestController {
 			JsonArray jsonChildArray = new JsonArray();
 			List<LabTestType> labTestTypeList = commonLabTestService.getLabTestTypes(null, null, labTestGroup, null, null,
 			    Boolean.FALSE);
-			if (!(labTestTypeList.size() > 0) || labTestTypeList.equals("") || labTestTypeList.isEmpty()) {
+			if (!(labTestTypeList.size() > 0) || labTestTypeList.isEmpty() || labTestTypeList.isEmpty()) {
 				continue; // skip the current iteration.
 			} else if (labTestTypeList.size() == 1 && labTestGroup.equals(LabTestGroup.OTHER)) {
 				continue;
@@ -137,12 +137,11 @@ public class LabTestRequestController {
 				order.setOrderType(Context.getOrderService().getOrderType(3));
 				order.setDateActivated(encounter.getEncounterDatetime());
 				order.setPatient(Context.getPatientService().getPatient(patientId));
-				Concept concept = Context.getConceptService().getConcept(jsonObject.get("testTypeId").getAsInt());
-				order.setConcept(concept);
+				LabTestType labTestType = commonLabTestService.getLabTestType(jsonObject.get("testTypeId").getAsInt());
+				order.setConcept(labTestType.getReferenceConcept());
 				labTest.setOrder(order);
 				labTest.setLabInstructions(jsonObject.get("labInstructions").getAsString());
 				labTest.setLabReferenceNumber(jsonObject.get("labReferenceNumber").getAsString());
-				LabTestType labTestType = commonLabTestService.getLabTestType(jsonObject.get("testTypeId").getAsInt());
 				labTest.setLabTestType(labTestType);
 				labTestArray.add(labTest);
 			}
