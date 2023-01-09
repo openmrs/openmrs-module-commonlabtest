@@ -54,7 +54,7 @@ public class LabTestOrderPortletController extends PortletController {
 						childJsonObject.addProperty("encounterType",
 						    labTest.getOrder().getEncounter().getEncounterType().getName().toString());
 						childJsonObject.addProperty("changedBy",
-						    (labTest.getChangedBy() == null) ? "" : labTest.getChangedBy().getName());
+						    (labTest.getChangedBy() == null) ? "" : labTest.getChangedBy().getUsername());
 						childJsonObject.addProperty("uuid", labTest.getUuid());
 						List<LabTestAttribute> labTestAttribute = Context.getService(CommonLabTestService.class)
 						        .getLabTestAttributes(labTest.getTestOrderId());
