@@ -39,7 +39,6 @@ import org.openmrs.Provider;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.hibernate.HibernateOrderDAO;
-import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl;
 import org.openmrs.module.commonlabtest.api.impl.CommonLabTestServiceImpl;

@@ -34,7 +34,6 @@ import org.openmrs.Attributable;
 import org.openmrs.BaseCustomizableData;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 
 /**

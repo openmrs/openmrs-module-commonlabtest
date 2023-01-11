@@ -22,7 +22,7 @@ import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
 import org.openmrs.module.commonlabtest.LabTestSample;
-import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
+import org.openmrs.module.commonlabtest.LabTestSampleStatus;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.web.WebConstants;
 import org.springframework.stereotype.Controller;

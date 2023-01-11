@@ -27,8 +27,6 @@ import org.openmrs.Order.Action;
 import org.openmrs.Order.Urgency;
 import org.openmrs.TestOrder;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.commonlabtest.LabTestSample.LabTestSampleStatus;
-import org.openmrs.module.commonlabtest.LabTestType.LabTestGroup;
 import org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
