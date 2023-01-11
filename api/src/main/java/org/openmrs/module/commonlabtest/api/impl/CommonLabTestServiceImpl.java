@@ -352,7 +352,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Transactional(readOnly = true)
 	public List<LabTestSample> getLabTestSamples(String labSampleIdentifier, String orderNumber, String labReferenceNumber,
 	        boolean includeVoided) throws APIException {
-		return getLabTestSamples(null, null, null, labSampleIdentifier, null, null, null, includeVoided);
+		// TODO:
+		return null;
 	}
 
 	/*
@@ -578,7 +579,8 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 		if (labTestAttributes != null) {
 			Set<LabTestAttribute> attributes = new HashSet<LabTestAttribute>();
 			for (LabTestAttribute labTestAttribute : labTestAttributes) {
-				attributes.add(saveLabTestAttribute(labTestAttribute));
+				labTestAttribute = saveLabTestAttribute(labTestAttribute);
+				attributes.add(labTestAttribute);
 			}
 			savedLabTest.setAttributes(attributes);
 		}

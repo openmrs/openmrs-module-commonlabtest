@@ -1,16 +1,11 @@
 package org.openmrs.module.commonlabtest.web.resource;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
-import org.openmrs.Location;
-import org.openmrs.LocationTag;
-import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.commonlabtest.LabTestType;
 import org.openmrs.module.commonlabtest.SimpleConcept;

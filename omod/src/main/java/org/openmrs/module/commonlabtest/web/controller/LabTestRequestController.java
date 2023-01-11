@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
@@ -136,22 +135,26 @@ public class LabTestRequestController {
 				order.setOrderType(Context.getOrderService().getOrderType(3));
 				order.setStartDate(encounter.getEncounterDatetime());
 				order.setPatient(Context.getPatientService().getPatient(patientId));
-				Concept concept = Context.getConceptService().getConcept(jsonObject.get("testTypeId").getAsInt());
-				order.setConcept(concept);
+				LabTestType labTestType = commonLabTestService.getLabTestType(jsonObject.get("testTypeId").getAsInt());
+				order.setConcept(labTestType.getReferenceConcept());
 				labTest.setOrder(order);
 				labTest.setLabInstructions(jsonObject.get("labInstructions").getAsString());
 				labTest.setLabReferenceNumber(jsonObject.get("labReferenceNumber").getAsString());
-				LabTestType labTestType = commonLabTestService.getLabTestType(jsonObject.get("testTypeId").getAsInt());
 				labTest.setLabTestType(labTestType);
 				labTestArray.add(labTest);
-			}
-			for (LabTest labTest : labTestArray) {
-				commonLabTestService.saveLabTest(labTest);
+				try {
+					commonLabTestService.saveLabTest(labTest);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+				finally {
+					labTest = commonLabTestService.getEarliestLabTest(encounter.getPatient());
+				}
 			}
 		}
 		catch (Exception e) {
 			status = "could not save Lab Test Request";
-			e.printStackTrace();
 			model.addAttribute("error", status);
 			boolStatus = Boolean.FALSE;
 		}

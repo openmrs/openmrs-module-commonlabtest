@@ -34,14 +34,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Concept;
-import org.openmrs.ConceptClass;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
-import org.openmrs.api.db.hibernate.HibernateConceptDAO;
 import org.openmrs.api.db.hibernate.HibernateOrderDAO;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
 import org.openmrs.module.commonlabtest.api.dao.impl.CommonLabTestDAOImpl;
@@ -129,8 +127,7 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 	@Test
 	@Ignore
 	public final void testSpecimenSiteConcepts() {
-		List<Concept> list = service.getSpecimenSiteConcepts();
-		// TODO:
+		// List<Concept> list = service.getSpecimenSiteConcepts();
 		// assertThat(list, Matchers.hasItems());
 	}
 
@@ -297,15 +294,12 @@ public class CommonLabTestServiceTest extends CommonLabTestBase {
 
 	@Test
 	public final void testGetLabTestsByPatient() {
-		when(dao.getLabTests(isNull(LabTestType.class), any(Patient.class), isNull(String.class), isNull(String.class),
-		    isNull(Concept.class), isNull(Provider.class), isNull(Date.class), isNull(Date.class), any(Boolean.class)))
-		            .thenReturn(Arrays.asList(harryGxp, harryCxr));
-
+		when(dao.getLabTests(isNull(LabTestType.class), any(Patient.class), isNull(Date.class), isNull(Date.class),
+		    any(Boolean.class))).thenReturn(Arrays.asList(harryGxp, harryCxr));
 		List<LabTest> list = service.getLabTests(harry, false);
-		assertThat(list, Matchers.hasItems(harryGxp, harryCxr));
-		verify(dao, times(1)).getLabTests(isNull(LabTestType.class), any(Patient.class), isNull(String.class),
-		    isNull(String.class), isNull(Concept.class), isNull(Provider.class), isNull(Date.class), isNull(Date.class),
-		    any(Boolean.class));
+		assertThat(list, Matchers.containsInAnyOrder(harryGxp, harryCxr));
+		verify(dao, times(1)).getLabTests(isNull(LabTestType.class), any(Patient.class), isNull(Date.class),
+		    isNull(Date.class), any(Boolean.class));
 	}
 
 	@Test

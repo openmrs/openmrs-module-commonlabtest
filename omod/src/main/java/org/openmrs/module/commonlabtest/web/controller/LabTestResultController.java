@@ -18,6 +18,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.ConceptAnswer;
 import org.openmrs.api.context.Context;
+import org.openmrs.customdatatype.CustomDatatypeUtil;
 import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestAttribute;
 import org.openmrs.module.commonlabtest.LabTestAttributeType;
@@ -141,8 +142,7 @@ public class LabTestResultController {
 					testAttribute.setLabTest(labTest);
 					testAttribute.setAttributeType(labTestAttributeType);
 				}
-				if (dataTypeName.equals("org.openmrs.customdatatype.datatype.ConceptDatatype")
-				        || dataTypeName.equals("Coded")) {
+				if (dataTypeName.contains(".ConceptDatatype") || dataTypeName.equals("Coded")) {
 					valueReference = request.getParameter("concept." + labTestAttributeType.getId());
 					LabTestAttribute existAttributeinner = getExistingAttributeValue(existingLabTestAttributes,
 					    labTestAttributeType.getId());
@@ -162,16 +162,14 @@ public class LabTestResultController {
 						testAttribute.setValueReferenceInternal(valueReference);
 						labTestAttributes.add(testAttribute);
 					}
-				} else if (dataTypeName.equals("org.openmrs.customdatatype.datatype.BooleanDatatype")
-				        || dataTypeName.equals("Boolean")) {
+				} else if (dataTypeName.contains(".BooleanDatatype") || dataTypeName.equals("Boolean")) {
 					valueReference = (request.getParameter("bool." + labTestAttributeType.getId()) == null) ? "false"
 					        : request.getParameter("bool." + labTestAttributeType.getId());
 					testAttribute.setValueReferenceInternal(valueReference);
 					labTestAttributes.add(testAttribute);
 
-				} else if (dataTypeName.equals("org.openmrs.customdatatype.datatype.FreeTextDatatype")
-				        || dataTypeName.equals("Text")
-				        || dataTypeName.equals("org.openmrs.customdatatype.datatype.LongFreeTextDatatype")) {
+				} else if (dataTypeName.contains(".FreeTextDatatype") || dataTypeName.equals("Text")
+				        || dataTypeName.contains(".LongFreeTextDatatype")) {
 
 					valueReference = request.getParameter("valueText." + labTestAttributeType.getId());
 					LabTestAttribute existAttributeinner = getExistingAttributeValue(existingLabTestAttributes,
@@ -191,8 +189,7 @@ public class LabTestResultController {
 						testAttribute.setValueReferenceInternal(valueReference);
 						labTestAttributes.add(testAttribute);
 					}
-				} else if (dataTypeName.equals("org.openmrs.customdatatype.datatype.FloatDatatype")
-				        || dataTypeName.equals("Numeric")) {
+				} else if (dataTypeName.equals(".FloatDatatype") || dataTypeName.equals("Numeric")) {
 					valueReference = request.getParameter("float." + labTestAttributeType.getId());
 					LabTestAttribute existAttributeinner = getExistingAttributeValue(existingLabTestAttributes,
 					    labTestAttributeType.getId());
@@ -211,8 +208,8 @@ public class LabTestResultController {
 						testAttribute.setValueReferenceInternal(valueReference);
 						labTestAttributes.add(testAttribute);
 					}
-				} else if (dataTypeName.endsWith("org.openmrs.customdatatype.datatype.DateDatatype")
-				        || dataTypeName.equals("Datetime") || dataTypeName.equals("Date")) {
+				} else if (dataTypeName.contains(".DateDatatype") || dataTypeName.equals("Datetime")
+				        || dataTypeName.equals("Date")) {
 					valueReference = request.getParameter("date." + labTestAttributeType.getId());
 					LabTestAttribute existAttributeinner = getExistingAttributeValue(existingLabTestAttributes,
 					    labTestAttributeType.getId());
@@ -231,7 +228,7 @@ public class LabTestResultController {
 						testAttribute.setValueReferenceInternal(valueReference);
 						labTestAttributes.add(testAttribute);
 					}
-				} else if (dataTypeName.equals("org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype")) {
+				} else if (dataTypeName.contains(".RegexValidatedTextDatatype")) {
 					valueReference = request.getParameter("regex." + labTestAttributeType.getId());
 					LabTestAttribute existAttributeinner = getExistingAttributeValue(existingLabTestAttributes,
 					    labTestAttributeType.getId());

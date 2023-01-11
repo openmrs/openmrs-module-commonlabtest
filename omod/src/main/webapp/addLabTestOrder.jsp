@@ -101,8 +101,8 @@ legend.scheduler-border {
 			<springform:input path="order.patient" hidden="true" value="${patientId}"></springform:input>
 			<springform:input path="order.concept.conceptId" hidden="true"
 				id="conceptId"></springform:input>
-			<springform:input path="order.orderer.providerId" hidden="true"
-				value="${provider.providerId}"></springform:input>
+<%-- 			<springform:input path="order.orderer.providerId" hidden="true" --%>
+<%-- 				value="${provider.providerId}"></springform:input> --%>
 			<springform:input path="order.orderType.orderTypeId" hidden="true"
 				value="3"></springform:input>
 			<springform:input path="order.orderId" hidden="true" id="orderId"></springform:input>
@@ -189,7 +189,7 @@ legend.scheduler-border {
 
 				</div>
 			</div>
-			<!-- Care Setting-->
+			<!-- Care Setting (committed for v1.9 compatibility)
 			<div class="row">
 				<div class="col-md-3">
 					<springform:label class="control-label"
@@ -213,6 +213,7 @@ legend.scheduler-border {
                     </c:if>
 				</div>
 			</div>
+			-->
 			<!-- Instruction -->
 			<div class="row">
 				<div class="col-md-3">
