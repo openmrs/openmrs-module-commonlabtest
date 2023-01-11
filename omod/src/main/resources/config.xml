@@ -17,7 +17,7 @@
 	<!-- <updateURL>https://modules.openmrs.org/modules/download/@MODULE_ID@/update.rdf</updateURL> -->
 	<!-- /Base Module Properties -->
 	
-	<require_version>2.0.3</require_version>
+	<require_version>2.1.2</require_version>
 
 	<require_modules>
 		<require_module version="${wsrestVersion}">org.openmrs.module.webservices.rest</require_module>
@@ -108,6 +108,7 @@
 		<file>messages.properties</file>
 	</messages>
 	<!-- /Internationalization -->
+	
 	<mappingFiles>
 		CommonLabTestAttribute.hbm.xml
 	</mappingFiles>
