@@ -31,7 +31,8 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/commonlab/labtestorder", supportedClass = LabTest.class, supportedOpenmrsVersions = { "2.0.*,2.1.*" })
+        + "/commonlab/labtestorder", supportedClass = LabTest.class, supportedOpenmrsVersions = {
+                "2.0.*, 2.1.*, 2.2.*, 2.3.*" })
 public class LabTestOrderResourceController extends DataDelegatingCrudResource<LabTest> {
 
 	/**
@@ -77,13 +78,13 @@ public class LabTestOrderResourceController extends DataDelegatingCrudResource<L
 					labTestAttributes.add(attribute);
 				}
 			}
-			// See if the order already exists
-			Order existing = Context.getOrderService().getOrderByUuid(labTest.getOrder().getUuid());
-			if (existing != null) {
-				labTest.setOrder(existing);
-			} else {
+			String uuid = labTest.getOrder().getUuid();
+			Order existing = Context.getOrderService().getOrderByUuid(uuid);
+			if (existing == null) {
 				Order order = Context.getOrderService().saveOrder(labTest.getOrder(), null);
 				labTest.setOrder(order);
+			} else {
+				labTest.setOrder(existing);
 			}
 			return commonLabTestService.saveLabTest(labTest, labTestSample, labTestAttributes);
 		}
