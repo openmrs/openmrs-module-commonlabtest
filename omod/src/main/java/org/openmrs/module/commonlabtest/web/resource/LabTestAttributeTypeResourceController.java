@@ -75,6 +75,8 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 			description.addProperty("labTestType");
 			description.addProperty("description");
 			description.addProperty("sortWeight");
+			description.addProperty("groupName");
+			description.addProperty("multisetName");
 			description.addProperty("maxOccurs");
 			description.addProperty("datatypeClassname");
 			description.addProperty("datatypeConfig");
@@ -86,6 +88,8 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 			description.addProperty("labTestType");
 			description.addProperty("description");
 			description.addProperty("sortWeight");
+			description.addProperty("groupName");
+			description.addProperty("multisetName");
 			description.addProperty("maxOccurs");
 			description.addProperty("datatypeClassname");
 			description.addProperty("datatypeConfig");
@@ -103,6 +107,8 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 		} else if (representation instanceof RefRepresentation) {
 			description.addProperty("name");
 			description.addProperty("labTestType");
+			description.addProperty("groupName");
+			description.addProperty("multisetName");
 			description.addProperty("datatypeClassname");
 		}
 		return description;
