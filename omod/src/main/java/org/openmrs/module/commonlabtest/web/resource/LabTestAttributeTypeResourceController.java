@@ -25,7 +25,7 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
         + "/commonlab/labtestattributetype", supportedClass = LabTestAttributeType.class, supportedOpenmrsVersions = {
-                "2.0.*,2.1.*" })
+                "2.0.*, 2.1.*, 2.2.*, 2.3.*" })
 public class LabTestAttributeTypeResourceController extends MetadataDelegatingCrudResource<LabTestAttributeType> {
 
 	/**
@@ -75,6 +75,8 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 			description.addProperty("labTestType");
 			description.addProperty("description");
 			description.addProperty("sortWeight");
+			description.addProperty("groupName");
+			description.addProperty("multisetName");
 			description.addProperty("maxOccurs");
 			description.addProperty("datatypeClassname");
 			description.addProperty("datatypeConfig");
@@ -86,6 +88,8 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 			description.addProperty("labTestType");
 			description.addProperty("description");
 			description.addProperty("sortWeight");
+			description.addProperty("groupName");
+			description.addProperty("multisetName");
 			description.addProperty("maxOccurs");
 			description.addProperty("datatypeClassname");
 			description.addProperty("datatypeConfig");
@@ -103,6 +107,8 @@ public class LabTestAttributeTypeResourceController extends MetadataDelegatingCr
 		} else if (representation instanceof RefRepresentation) {
 			description.addProperty("name");
 			description.addProperty("labTestType");
+			description.addProperty("groupName");
+			description.addProperty("multisetName");
 			description.addProperty("datatypeClassname");
 		}
 		return description;
