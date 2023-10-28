@@ -283,8 +283,7 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	@Transactional(readOnly = true)
 	public List<LabTestSample> getLabTestSamples(LabTest labTest, Patient patient, LabTestSampleStatus status,
 	        String labSampleIdentifier, Provider collector, Date from, Date to, boolean includeVoided) throws APIException {
-		// TODO
-		return null;
+		return getLabTestSamples(labTest, patient, labSampleIdentifier, null, status, collector, from, to, includeVoided);
 	}
 
 	/*
@@ -338,6 +337,16 @@ public class CommonLabTestServiceImpl extends BaseOpenmrsService implements Comm
 	public List<LabTestSample> getLabTestSamples(LabTestSampleStatus status, Date from, Date to, boolean includeVoided)
 	        throws APIException {
 		return getLabTestSamples(null, null, status, null, null, from, to, includeVoided);
+	}
+
+	@Override
+	@Authorized(CommonLabTestConfig.VIEW_LAB_TEST_SAMPLE_PRIVILEGE)
+	@Transactional(readOnly = true)
+	public List<LabTestSample> getLabTestSamples(LabTest labTest, Patient patient, String sampleIdentifier,
+	        Concept specimenType, LabTestSampleStatus status, Provider collector, Date from, Date to,
+	        boolean includeVoided) {
+		return dao.getLabTestSamples(labTest, patient, sampleIdentifier, specimenType, status, collector, from, to,
+		    includeVoided);
 	}
 
 	/*

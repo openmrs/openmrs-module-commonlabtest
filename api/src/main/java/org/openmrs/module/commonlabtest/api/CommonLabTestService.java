@@ -287,6 +287,24 @@ public interface CommonLabTestService extends OpenmrsService {
 	        throws APIException;
 
 	/**
+	 * Returns a list of {@link LabTestSample} objects by matching the given criteria. At least one of
+	 * the first three parameters must be provided, the rest are optional.
+	 * 
+	 * @param labTest the {@link LabTest} object
+	 * @param patient the {@link Patient} object
+	 * @param sampleIdentifier the identifier of specimen sample
+	 * @param specimenType the {@link Concept} object representing type of specimen
+	 * @param status the {@link LabTestSampleStatus} enumerated type
+	 * @param orderer the {@link Provider} object
+	 * @param from the start {@link Date} object representing start of date of creation
+	 * @param to the end {@link Date} object representing end of date of creation
+	 * @param includeVoided include retired objects
+	 * @return {@link LabTestSample} object(s)
+	 */
+	List<LabTestSample> getLabTestSamples(LabTest labTest, Patient patient, String sampleIdentifier, Concept specimenType,
+	        LabTestSampleStatus status, Provider collector, Date from, Date to, boolean includeVoided) throws APIException;
+
+	/**
 	 * @param labTestTypeId the generated Id
 	 * @return {@link LabTestType} object(s)
 	 * @throws APIException on Exception
