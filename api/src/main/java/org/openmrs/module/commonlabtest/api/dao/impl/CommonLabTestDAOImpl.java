@@ -310,7 +310,7 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 			criteria.add(Restrictions.eq("o.orderer.providerId", orderer.getProviderId()));
 		}
 		if (referenceNumber != null) {
-			criteria.add(Restrictions.ilike("referenceNumber", referenceNumber, MatchMode.START));
+			criteria.add(Restrictions.ilike("labReferenceNumber", referenceNumber, MatchMode.START));
 		}
 		if (from != null && to != null) {
 			criteria.add(Restrictions.between("dateCreated", from, to));
@@ -396,6 +396,49 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	}
 
 	/**
+	 * see CommonLabTestDAO#getLabTestSamples(LabTest, Patient, String, Concept, LabTestSampleStatus,
+	 * Provider, Date, Date, boolean)
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<LabTestSample> getLabTestSamples(LabTest labTest, Patient patient, String sampleIdentifier,
+	        Concept specimenType, LabTestSampleStatus status, Provider collector, Date from, Date to,
+	        boolean includeVoided) {
+		if (labTest == null && patient == null && sampleIdentifier == null) {
+			return null;
+		}
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
+		if (labTest != null) {
+			criteria.add(Restrictions.eq("labTest.testOrderId", labTest.getTestOrderId()));
+		}
+		if (patient != null) {
+			criteria.createAlias("labTest", "labTest").setFetchMode("labTest", FetchMode.JOIN)
+			        .createAlias("labTest.order", "order").setFetchMode("order", FetchMode.JOIN)
+			        .add(Restrictions.eq("order.patient.personId", patient.getPatientId()));
+		}
+		if (sampleIdentifier != null) {
+			criteria.add(Restrictions.ilike("sampleIdentifier", sampleIdentifier, MatchMode.START));
+		}
+		if (specimenType != null) {
+			criteria.add(Restrictions.eq("specimenType.conceptId", specimenType.getConceptId()));
+		}
+		if (status != null) {
+			criteria.add(Restrictions.eq("status", status));
+		}
+		if (collector != null) {
+			criteria.add(Restrictions.eq("collector.providerId", collector.getProviderId()));
+		}
+		if (from != null && to != null) {
+			criteria.add(Restrictions.between("dateCreated", from, to));
+		}
+		if (!includeVoided) {
+			criteria.add(Restrictions.eq("voided", false));
+		}
+		criteria.addOrder(Order.asc("sampleIdentifier"));
+		return criteria.list();
+	}
+
+	/**
 	 * @see CommonLabTestDAO#getLabTestType(java.lang.Integer)
 	 */
 	@Override
@@ -420,13 +463,11 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	public List<LabTest> getNLabTests(Patient patient, int n, boolean firstNObjects, boolean lastNObjects,
 	        boolean includeVoided) {
-		// Disallow fetching more than 100 records per query
-		if (n > MAX_FETCH_LIMIT) {
-			n = MAX_FETCH_LIMIT;
-		}
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTest.class);
 		List<LabTest> firstN = null;
 		List<LabTest> lastN = null;
+		// Disallow fetching more than 100 records per query
+		criteria.setMaxResults(n > MAX_FETCH_LIMIT ? MAX_FETCH_LIMIT : n);
 		if (patient != null) {
 			criteria.createAlias("order", "o", CriteriaSpecification.INNER_JOIN).setFetchMode("o", FetchMode.JOIN)
 			        .add(Restrictions.eq("o.patient.personId", patient.getPatientId()));
@@ -442,7 +483,6 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 			criteria.addOrder(Order.desc("dateCreated"));
 			lastN = criteria.list();
 		}
-		criteria.setMaxResults(n);
 		List<LabTest> list = new ArrayList<LabTest>();
 		if (firstN != null) {
 			list.addAll(firstN);
@@ -462,13 +502,11 @@ public class CommonLabTestDAOImpl implements CommonLabTestDAO {
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	public List<LabTestSample> getNLabTestSamples(Patient patient, LabTestSampleStatus status, int n, boolean firstNObjects,
 	        boolean lastNObjects, boolean includeVoided) {
-		// Disallow fetching more than 100 records per query
-		if (n > MAX_FETCH_LIMIT) {
-			n = MAX_FETCH_LIMIT;
-		}
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LabTestSample.class);
 		List<LabTestSample> firstN = null;
 		List<LabTestSample> lastN = null;
+		// Disallow fetching more than 100 records per query
+		criteria.setMaxResults(n > MAX_FETCH_LIMIT ? MAX_FETCH_LIMIT : n);
 		criteria.createAlias("labTest", "labTest", CriteriaSpecification.INNER_JOIN).setFetchMode("labTest", FetchMode.JOIN)
 		        .createAlias("labTest.order", "order", CriteriaSpecification.INNER_JOIN)
 		        .setFetchMode("order", FetchMode.JOIN)

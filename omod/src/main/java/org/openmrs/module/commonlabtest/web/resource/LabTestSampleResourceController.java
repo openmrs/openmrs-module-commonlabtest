@@ -1,10 +1,17 @@
 package org.openmrs.module.commonlabtest.web.resource;
 
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Patient;
+import org.openmrs.Provider;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.commonlabtest.LabTest;
 import org.openmrs.module.commonlabtest.LabTestSample;
 import org.openmrs.module.commonlabtest.api.CommonLabTestService;
+import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
@@ -13,15 +20,18 @@ import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentat
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
+import org.openmrs.module.webservices.rest.web.resource.api.Searchable;
 import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
         + "/commonlab/labtestsample", supportedClass = LabTestSample.class, supportedOpenmrsVersions = {
                 "2.0.*, 2.1.*, 2.2.*, 2.3.*" })
-public class LabTestSampleResourceController extends DataDelegatingCrudResource<LabTestSample> {
+public class LabTestSampleResourceController extends DataDelegatingCrudResource<LabTestSample> implements Searchable {
 
 	/**
 	 * Logger for this class
@@ -131,5 +141,23 @@ public class LabTestSampleResourceController extends DataDelegatingCrudResource<
 			return "";
 
 		return sample.getSampleIdentifier();
+	}
+
+	@Override
+	protected PageableResult doSearch(RequestContext context) {
+		String labUuid = context.getRequest().getParameter("laborder");
+		String patientUuid = context.getRequest().getParameter("patient");
+		String collectorUuid = context.getRequest().getParameter("collector");
+		String sampleIdentifier = context.getRequest().getParameter("sampleidentifier");
+		String dateFrom = context.getRequest().getParameter("from");
+		String dateTo = context.getRequest().getParameter("to");
+		Date fromDate = dateFrom != null ? (Date) ConversionUtil.convert(dateFrom, Date.class) : null;
+		Date toDate = dateTo != null ? (Date) ConversionUtil.convert(dateTo, Date.class) : null;
+		LabTest labTest = labUuid != null ? commonLabTestService.getLabTestByUuid(labUuid) : null;
+		Patient patient = patientUuid != null ? Context.getPatientService().getPatientByUuid(patientUuid) : null;
+		Provider provider = collectorUuid != null ? Context.getProviderService().getProviderByUuid(collectorUuid) : null;
+		List<LabTestSample> list = commonLabTestService.getLabTestSamples(labTest, patient, null, sampleIdentifier, provider,
+		    fromDate, toDate, false);
+		return new NeedsPaging<LabTestSample>(list, context);
 	}
 }

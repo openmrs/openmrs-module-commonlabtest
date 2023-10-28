@@ -205,6 +205,18 @@ public class CommonLabTestDAOTest extends CommonLabTestBase {
 	}
 
 	@Test
+	public final void testGetLabTestSamples() {
+		List<LabTestSample> list = dao.getLabTestSamples(harryGxp, null, null, null, null, null, null, null, false);
+		assertThat(list, Matchers.hasItem(harrySample));
+		list = dao.getLabTestSamples(null, harry, null, null, null, null, null, null, false);
+		assertThat(list, Matchers.hasItem(harrySample));
+		list = dao.getLabTestSamples(null, harry, null, null, null, null, new Date(0), new Date(), false);
+		assertThat(list, Matchers.hasItem(harrySample));
+		list = dao.getLabTestSamples(null, null, "GXP-IRS12345-1", null, null, null, null, null, false);
+		assertThat(list, Matchers.hasItem(harrySample));
+	}
+
+	@Test
 	public final void testGetLabTestType() {
 		LabTestType retrivedObject = dao.getLabTestType(geneXpert.getId());
 		assertEquals(geneXpert, retrivedObject);
